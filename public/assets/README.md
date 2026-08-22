@@ -1,16 +1,22 @@
 # Landing page assets
 
-فایل‌های تصویری خروجی Figma/Anima را در این پوشه قرار دهید.
+فایل‌های تصویری و SVG خروجی Figma/Anima را در این پوشه قرار دهید.
 
 نام‌های فعلی مورد انتظار:
-- chatgpt-image-1.png
-- hero-cover.jpg
-- image.svg
-- image-2.png
-- image-3.png
-- image-4.png
-- vector-2.svg تا vector-10.svg
-- social-icons.svg
-- footer-logo.png
 
-تا قبل از اضافه‌شدن فایل‌ها، پروژه کامپایل می‌شود اما بعضی تصاویر در مرورگر نمایش داده نمی‌شوند.
+- `chatgpt-image-1.png` — لوگوی هدر
+- `hero-cover.jpg` — تصویر کاور Hero
+- `image.svg` — آیکن پخش Hero
+- `vector-2.svg` تا `vector-10.svg` — آیکن‌های مسیر مشارکت و شرکای سازمانی
+- `frame-3.png` — پروژه سلامت خانواده
+- `frame.png` — پروژه مهارت برای نوجوانان
+- `frame-2.png` — پروژه اشتغال زنان روستایی
+- `image-2.png`
+- `image-3.png`
+- `image-4.png` — تصاویر بخش اخبار
+- `social-icons.svg` — شبکه‌های اجتماعی Footer
+- `footer-logo.png` — لوگوی Footer
+
+آیکن‌های بخش «اثر ماه تا امروز» به‌صورت SVG داخلی در خود کامپوننت پیاده‌سازی شده‌اند و فایل جداگانه لازم ندارند.
+
+تا قبل از اضافه‌شدن assetهای بالا، ساختار و کد صفحه آماده است اما تصاویر مربوطه در مرورگر نمایش داده نمی‌شوند.
