@@ -1,0 +1,88 @@
+name: Localize Codia Assets
+
+on:
+  push:
+    branches: [feat/article-172-guide]
+    paths:
+      - .github/workflows/localize-codia-assets.yml
+
+permissions:
+  contents: write
+
+jobs:
+  localize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/article-172-guide
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Download and rewrite Codia assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import concurrent.futures
+          import re
+          import urllib.request
+
+          root = Path('.')
+          files = list(root.glob('src/**/*.tsx')) + list(root.glob('src/**/*.ts')) + list(root.glob('src/**/*.css'))
+          pattern = re.compile(r"https://static\.codia\.ai/(?:default/)?image/2026-08-22/[A-Za-z0-9-]+\.png")
+          found = {}
+          for path in files:
+              text = path.read_text(encoding='utf-8')
+              for url in pattern.findall(text):
+                  found[url] = url.rsplit('/', 1)[1]
+
+          if not found:
+              raise SystemExit('No Codia assets found to localize.')
+
+          out = Path('public/assets/codia')
+          out.mkdir(parents=True, exist_ok=True)
+          headers = {'User-Agent': 'Mozilla/5.0'}
+
+          def download(item):
+              url, name = item
+              target = out / name
+              req = urllib.request.Request(url, headers=headers)
+              with urllib.request.urlopen(req, timeout=45) as resp:
+                  data = resp.read()
+              if len(data) < 16:
+                  raise RuntimeError(f'Asset too small: {url}')
+              target.write_bytes(data)
+              return name, len(data)
+
+          with concurrent.futures.ThreadPoolExecutor(max_workers=12) as pool:
+              results = list(pool.map(download, found.items()))
+
+          for path in files:
+              text = path.read_text(encoding='utf-8')
+              new = text
+              for url, name in found.items():
+                  new = new.replace(f'url({url})', f"url('/assets/codia/{name}')")
+                  new = new.replace(url, f'/assets/codia/{name}')
+              if new != text:
+                  path.write_text(new, encoding='utf-8')
+
+          print(f'Localized {len(results)} assets, {sum(size for _, size in results)} bytes total')
+          PY
+          if grep -R "static.codia.ai" src; then
+            echo "Remote Codia references remain" >&2
+            exit 1
+          fi
+          npm install
+          npm run build
+      - name: Commit localized assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src public/assets/codia
+          git rm .github/workflows/localize-codia-assets.yml
+          git commit -m "chore(article-172): localize Codia assets"
+          git push origin HEAD:feat/article-172-guide
