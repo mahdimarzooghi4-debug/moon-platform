@@ -15,7 +15,7 @@ export function Article172P06S01() {
           <div className="flex pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col gap-[12px] items-start self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[576]">
             <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[577]">
               <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[578]">
-                <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/ZYxoxBtoW4.png)] bg-cover bg-no-repeat relative overflow-hidden z-[579]" />
+                <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/ZYxoxBtoW4.png')] bg-cover bg-no-repeat relative overflow-hidden z-[579]" />
               </div>
               <span className="h-[25px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[16px] font-bold leading-[25px] text-[#17324d] relative text-right whitespace-nowrap z-[580]">
                 آیا واریز مبالغ مستقیماً به استارتاپ‌ها انجام می‌شود؟
@@ -29,7 +29,7 @@ export function Article172P06S01() {
           <div className="flex pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col gap-[12px] items-start self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[582]">
             <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[583]">
               <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[584]">
-                <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/bTzAcsATTk.png)] bg-cover bg-no-repeat relative overflow-hidden z-[585]" />
+                <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/bTzAcsATTk.png')] bg-cover bg-no-repeat relative overflow-hidden z-[585]" />
               </div>
               <span className="h-[25px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[16px] font-bold leading-[25px] text-[#17324d] relative text-right whitespace-nowrap z-[586]">
                 چرا پرداخت مستقیم به استارتاپ‌ها برای ماده ۱۷۲ پذیرفته نیست؟
@@ -44,7 +44,7 @@ export function Article172P06S01() {
           <div className="flex pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col gap-[12px] items-start self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[588]">
             <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[589]">
               <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[590]">
-                <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/sAfqPeeseY.png)] bg-cover bg-no-repeat relative overflow-hidden z-[591]" />
+                <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/sAfqPeeseY.png')] bg-cover bg-no-repeat relative overflow-hidden z-[591]" />
               </div>
               <span className="h-[25px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[16px] font-bold leading-[25px] text-[#17324d] relative text-right whitespace-nowrap z-[592]">
                 نقش خانه خلاق در این فرآیند چیست؟
@@ -59,7 +59,7 @@ export function Article172P06S01() {
           <div className="flex pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col gap-[12px] items-start self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[594]">
             <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[595]">
               <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[596]">
-                <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/OnxpVHUbhv.png)] bg-cover bg-no-repeat relative overflow-hidden z-[597]" />
+                <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/OnxpVHUbhv.png')] bg-cover bg-no-repeat relative overflow-hidden z-[597]" />
               </div>
               <span className="h-[25px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[16px] font-bold leading-[25px] text-[#17324d] relative text-right whitespace-nowrap z-[598]">
                 آیا ایجاد حساب کاربری برای مودی سازمانی الزامی است؟
@@ -73,7 +73,7 @@ export function Article172P06S01() {
           <div className="flex pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col gap-[12px] items-start self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[600]">
             <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[601]">
               <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[602]">
-                <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/tp9p8O7yzm.png)] bg-cover bg-no-repeat relative overflow-hidden z-[603]" />
+                <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/tp9p8O7yzm.png')] bg-cover bg-no-repeat relative overflow-hidden z-[603]" />
               </div>
               <span className="h-[25px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[16px] font-bold leading-[25px] text-[#17324d] relative text-right whitespace-nowrap z-[604]">
                 چه مدت زمان برای بررسی درخواست مورد نیاز است؟
@@ -87,7 +87,7 @@ export function Article172P06S01() {
           <div className="flex pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col gap-[12px] items-start self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[606]">
             <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[607]">
               <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[608]">
-                <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/MwZut8aJvX.png)] bg-cover bg-no-repeat relative overflow-hidden z-[609]" />
+                <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/MwZut8aJvX.png')] bg-cover bg-no-repeat relative overflow-hidden z-[609]" />
               </div>
               <span className="h-[25px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[16px] font-bold leading-[25px] text-[#17324d] relative text-right whitespace-nowrap z-[610]">
                 آیا اشخاص حقیقی هم می‌توانند گواهی ماده ۱۷۲ دریافت کنند؟
@@ -101,7 +101,7 @@ export function Article172P06S01() {
           <div className="flex pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col gap-[12px] items-start self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[612]">
             <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[613]">
               <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[614]">
-                <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/mjtitQq6BZ.png)] bg-cover bg-no-repeat relative overflow-hidden z-[615]" />
+                <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/mjtitQq6BZ.png')] bg-cover bg-no-repeat relative overflow-hidden z-[615]" />
               </div>
               <span className="h-[25px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[16px] font-bold leading-[25px] text-[#17324d] relative text-right whitespace-nowrap z-[616]">
                 آیا برای مشارکت‌های غیرریالی (کالا یا خدمت) امکان ثبت درخواست
@@ -116,7 +116,7 @@ export function Article172P06S01() {
           <div className="flex pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col gap-[12px] items-start self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[618]">
             <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[619]">
               <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[620]">
-                <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/8CvC9vqCwv.png)] bg-cover bg-no-repeat relative overflow-hidden z-[621]" />
+                <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/8CvC9vqCwv.png')] bg-cover bg-no-repeat relative overflow-hidden z-[621]" />
               </div>
               <span className="h-[25px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[16px] font-bold leading-[25px] text-[#17324d] relative text-right whitespace-nowrap z-[622]">
                 در صورت رد درخواست، آیا امکان اصلاح مدارک وجود دارد؟

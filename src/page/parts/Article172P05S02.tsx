@@ -24,7 +24,7 @@ export function Article172P05S02() {
           </div>
           <div className="flex pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col gap-[12px] items-start self-stretch shrink-0 flex-nowrap bg-[#fcfbf8] rounded-[16px] border-solid border border-[#e4ebf1] relative z-[522]">
             <div className="flex gap-[12px] items-center self-stretch shrink-0 flex-nowrap relative z-[523]">
-              <div className="w-[64px] h-[64px] shrink-0 bg-[url(https://static.codia.ai/default/image/2026-08-22/1bcac914-881a-4083-8498-bd0939351682.png)] bg-cover bg-no-repeat rounded-[12px] relative z-[524]" />
+              <div className="w-[64px] h-[64px] shrink-0 bg-[url('/assets/codia/1bcac914-881a-4083-8498-bd0939351682.png')] bg-cover bg-no-repeat rounded-[12px] relative z-[524]" />
               <div className="flex flex-col gap-[4px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[525]">
                 <span className="flex w-[135px] h-[25px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[16px] font-bold leading-[25px] text-[#17324d] relative text-right whitespace-nowrap z-[526]">
                   اشتغال زنان روستایی

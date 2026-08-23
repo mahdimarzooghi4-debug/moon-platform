@@ -16,10 +16,10 @@ export function Article172P07S02() {
             </span>
             <div className="flex w-[48px] pt-[8px] pr-0 pb-0 pl-0 gap-[12px] items-center shrink-0 flex-nowrap relative z-[679]">
               <div className="flex w-[18px] h-[18px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[680]">
-                <div className="w-[18px] h-[18px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/YdZ1hFUq7K.png)] bg-cover bg-no-repeat relative overflow-hidden z-[681]" />
+                <div className="w-[18px] h-[18px] shrink-0 bg-[url('/assets/codia/YdZ1hFUq7K.png')] bg-cover bg-no-repeat relative overflow-hidden z-[681]" />
               </div>
               <div className="flex w-[18px] h-[18px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[682]">
-                <div className="w-[18px] h-[18px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/gSOMks1WgK.png)] bg-cover bg-no-repeat relative overflow-hidden z-[683]" />
+                <div className="w-[18px] h-[18px] shrink-0 bg-[url('/assets/codia/gSOMks1WgK.png')] bg-cover bg-no-repeat relative overflow-hidden z-[683]" />
               </div>
             </div>
           </div>
@@ -69,7 +69,7 @@ export function Article172P07S02() {
             </span>
           </div>
           <div className="flex w-[298px] h-[182px] flex-col gap-[14px] items-end shrink-0 flex-nowrap relative z-[700]">
-            <div className="w-[210px] h-[70px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/Lo5AmBoAqx.png)] bg-cover bg-no-repeat relative z-[701]" />
+            <div className="w-[210px] h-[70px] shrink-0 bg-[url('/assets/codia/Lo5AmBoAqx.png')] bg-cover bg-no-repeat relative z-[701]" />
             <span className="flex w-[298px] h-[44px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[13px] font-normal leading-[22px] text-[#e4ebf1] relative text-right z-[702]">
               سامانه مشارکت در پروژه‌های اثر اجتماعی با مسیر مالی شفاف و اثر
               قابل‌اندازه‌گیری.

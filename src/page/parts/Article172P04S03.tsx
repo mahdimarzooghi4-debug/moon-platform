@@ -17,7 +17,7 @@ export function Article172P04S03() {
             <div className="flex pt-[24px] pr-[24px] pb-[24px] pl-[24px] flex-col gap-[16px] items-end grow shrink-0 basis-0 flex-nowrap bg-[#fcfbf8] rounded-[16px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[415]">
               <div className="flex w-[44px] pt-[12px] pr-[12px] pb-[12px] pl-[12px] items-start shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[12px] relative z-[416]">
                 <div className="flex w-[20px] h-[20px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[417]">
-                  <div className="w-[20px] h-[20px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/hXbc3xmAFF.png)] bg-cover bg-no-repeat relative overflow-hidden z-[418]" />
+                  <div className="w-[20px] h-[20px] shrink-0 bg-[url('/assets/codia/hXbc3xmAFF.png')] bg-cover bg-no-repeat relative overflow-hidden z-[418]" />
                 </div>
               </div>
               <span className="flex w-[154px] h-[28px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[18px] font-bold leading-[28px] text-[#17324d] relative text-right whitespace-nowrap z-[419]">
@@ -31,7 +31,7 @@ export function Article172P04S03() {
             <div className="flex pt-[24px] pr-[24px] pb-[24px] pl-[24px] flex-col gap-[16px] items-end grow shrink-0 basis-0 flex-nowrap bg-[#fcfbf8] rounded-[16px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[421]">
               <div className="flex w-[44px] pt-[12px] pr-[12px] pb-[12px] pl-[12px] items-start shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[12px] relative z-[422]">
                 <div className="flex w-[20px] h-[20px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[423]">
-                  <div className="w-[20px] h-[20px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/RNJzREVK8r.png)] bg-cover bg-no-repeat relative overflow-hidden z-[424]" />
+                  <div className="w-[20px] h-[20px] shrink-0 bg-[url('/assets/codia/RNJzREVK8r.png')] bg-cover bg-no-repeat relative overflow-hidden z-[424]" />
                 </div>
               </div>
               <span className="flex w-[169px] h-[28px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[18px] font-bold leading-[28px] text-[#17324d] relative text-right whitespace-nowrap z-[425]">
@@ -47,7 +47,7 @@ export function Article172P04S03() {
             <div className="flex pt-[24px] pr-[24px] pb-[24px] pl-[24px] flex-col gap-[16px] items-end grow shrink-0 basis-0 flex-nowrap bg-[#fcfbf8] rounded-[16px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[427]">
               <div className="flex w-[44px] pt-[12px] pr-[12px] pb-[12px] pl-[12px] items-start shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[12px] relative z-[428]">
                 <div className="flex w-[20px] h-[20px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[429]">
-                  <div className="w-[20px] h-[20px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/tuY6B9iPK3.png)] bg-cover bg-no-repeat relative overflow-hidden z-[430]" />
+                  <div className="w-[20px] h-[20px] shrink-0 bg-[url('/assets/codia/tuY6B9iPK3.png')] bg-cover bg-no-repeat relative overflow-hidden z-[430]" />
                 </div>
               </div>
               <span className="flex w-[186px] h-[28px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[18px] font-bold leading-[28px] text-[#17324d] relative text-right whitespace-nowrap z-[431]">
@@ -61,7 +61,7 @@ export function Article172P04S03() {
             <div className="flex pt-[24px] pr-[24px] pb-[24px] pl-[24px] flex-col gap-[16px] items-end grow shrink-0 basis-0 flex-nowrap bg-[#fcfbf8] rounded-[16px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[433]">
               <div className="flex w-[44px] pt-[12px] pr-[12px] pb-[12px] pl-[12px] items-start shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[12px] relative z-[434]">
                 <div className="flex w-[20px] h-[20px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[435]">
-                  <div className="w-[20px] h-[20px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/fgdOCWZi9T.png)] bg-cover bg-no-repeat relative overflow-hidden z-[436]" />
+                  <div className="w-[20px] h-[20px] shrink-0 bg-[url('/assets/codia/fgdOCWZi9T.png')] bg-cover bg-no-repeat relative overflow-hidden z-[436]" />
                 </div>
               </div>
               <span className="flex w-[138px] h-[28px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[18px] font-bold leading-[28px] text-[#17324d] relative text-right whitespace-nowrap z-[437]">

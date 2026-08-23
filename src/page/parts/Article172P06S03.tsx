@@ -20,7 +20,7 @@ export function Article172P06S03() {
             </span>
           </div>
           <div className="flex w-[24px] h-[24px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[642]">
-            <div className="w-[24px] h-[24px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/Vu7wAWzUZ8.png)] bg-cover bg-no-repeat relative overflow-hidden z-[643]" />
+            <div className="w-[24px] h-[24px] shrink-0 bg-[url('/assets/codia/Vu7wAWzUZ8.png')] bg-cover bg-no-repeat relative overflow-hidden z-[643]" />
           </div>
         </div>
         <div className="flex pt-[24px] pr-[24px] pb-[24px] pl-[24px] gap-[16px] items-center self-stretch shrink-0 flex-nowrap bg-[#fcfbf8] rounded-[16px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[644]">
@@ -46,7 +46,7 @@ export function Article172P06S03() {
             </span>
           </div>
           <div className="flex w-[24px] h-[24px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[653]">
-            <div className="w-[24px] h-[24px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/MyEP8r8amq.png)] bg-cover bg-no-repeat relative overflow-hidden z-[654]" />
+            <div className="w-[24px] h-[24px] shrink-0 bg-[url('/assets/codia/MyEP8r8amq.png')] bg-cover bg-no-repeat relative overflow-hidden z-[654]" />
           </div>
         </div>
         <div className="flex pt-[24px] pr-[24px] pb-[24px] pl-[24px] gap-[16px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff8e6] rounded-[16px] border-solid border border-[#f2c94c] relative z-[655]">
@@ -67,7 +67,7 @@ export function Article172P06S03() {
             </span>
           </div>
           <div className="flex w-[24px] h-[24px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[662]">
-            <div className="w-[24px] h-[24px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/jSSZpoRK8H.png)] bg-cover bg-no-repeat relative overflow-hidden z-[663]" />
+            <div className="w-[24px] h-[24px] shrink-0 bg-[url('/assets/codia/jSSZpoRK8H.png')] bg-cover bg-no-repeat relative overflow-hidden z-[663]" />
           </div>
         </div>
       </div>

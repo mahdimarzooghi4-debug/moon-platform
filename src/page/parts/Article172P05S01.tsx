@@ -9,7 +9,7 @@ export function Article172P05S01() {
               اطلاعات حقوقی و مالی شرکت عمومی نمی‌شوند
             </span>
             <div className="flex w-[24px] h-[24px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[472]">
-              <div className="w-[24px] h-[24px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/3XU8bzZt6A.png)] bg-cover bg-no-repeat relative overflow-hidden z-[473]" />
+              <div className="w-[24px] h-[24px] shrink-0 bg-[url('/assets/codia/3XU8bzZt6A.png')] bg-cover bg-no-repeat relative overflow-hidden z-[473]" />
             </div>
           </div>
           <span className="h-[22px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[22px] text-[#60758a] relative text-right whitespace-nowrap z-[474]">
@@ -17,7 +17,7 @@ export function Article172P05S01() {
             ثبتی شرکت‌ها صرفاً برای کارشناسان بررسی‌کننده ذی‌صلاح نمایش داده
             می‌شوند و شامل موارد عدم انتشار عمومی زیر هستند:
           </span>
-          <div className="h-px self-stretch shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/6vfgyTPF2t.png)] bg-cover bg-no-repeat relative z-[475]" />
+          <div className="h-px self-stretch shrink-0 bg-[url('/assets/codia/6vfgyTPF2t.png')] bg-cover bg-no-repeat relative z-[475]" />
           <div className="self-stretch shrink-0 relative z-[476]">
             <div className="flex w-[1136px] h-[22px] justify-between items-center relative z-[485]">
               <div className="flex gap-[10px] justify-end items-center grow shrink-0 basis-0 flex-nowrap relative z-[477]">
@@ -25,7 +25,7 @@ export function Article172P05S01() {
                   کد ملی مدیران و صاحبان امضا
                 </span>
                 <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[479]">
-                  <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/qBjG2pf0GH.png)] bg-cover bg-no-repeat relative overflow-hidden z-[480]" />
+                  <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/qBjG2pf0GH.png')] bg-cover bg-no-repeat relative overflow-hidden z-[480]" />
                 </div>
               </div>
               <div className="flex gap-[10px] justify-end items-center grow shrink-0 basis-0 flex-nowrap relative z-[481]">
@@ -33,7 +33,7 @@ export function Article172P05S01() {
                   شناسه ملی و شماره ثبت ثبتی
                 </span>
                 <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[483]">
-                  <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/UN84gqX4aJ.png)] bg-cover bg-no-repeat relative overflow-hidden z-[484]" />
+                  <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/UN84gqX4aJ.png')] bg-cover bg-no-repeat relative overflow-hidden z-[484]" />
                 </div>
               </div>
               <div className="flex gap-[10px] justify-end items-center grow shrink-0 basis-0 flex-nowrap relative z-[485]">
@@ -41,7 +41,7 @@ export function Article172P05S01() {
                   تصاویر روزنامه رسمی شرکت
                 </span>
                 <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[487]">
-                  <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/uDB8EkYngx.png)] bg-cover bg-no-repeat relative overflow-hidden z-[488]" />
+                  <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/uDB8EkYngx.png')] bg-cover bg-no-repeat relative overflow-hidden z-[488]" />
                 </div>
               </div>
             </div>
@@ -51,7 +51,7 @@ export function Article172P05S01() {
                   تصویر امضای دیجیتال یا فیزیکی
                 </span>
                 <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[491]">
-                  <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/x6nSHfmmLO.png)] bg-cover bg-no-repeat relative overflow-hidden z-[492]" />
+                  <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/x6nSHfmmLO.png')] bg-cover bg-no-repeat relative overflow-hidden z-[492]" />
                 </div>
               </div>
               <div className="flex gap-[10px] justify-end items-center grow shrink-0 basis-0 flex-nowrap relative z-[493]">
@@ -59,7 +59,7 @@ export function Article172P05S01() {
                   کد مودی مالیاتی و اقتصادی
                 </span>
                 <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[495]">
-                  <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/L09pDB1xTv.png)] bg-cover bg-no-repeat relative overflow-hidden z-[496]" />
+                  <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/L09pDB1xTv.png')] bg-cover bg-no-repeat relative overflow-hidden z-[496]" />
                 </div>
               </div>
               <div className="flex gap-[10px] justify-end items-center grow shrink-0 basis-0 flex-nowrap relative z-[497]">
@@ -67,7 +67,7 @@ export function Article172P05S01() {
                   مبالغ دقیق حواله‌های مشارکت تک‌تک
                 </span>
                 <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[499]">
-                  <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/5SxNgBAYnx.png)] bg-cover bg-no-repeat relative overflow-hidden z-[500]" />
+                  <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/5SxNgBAYnx.png')] bg-cover bg-no-repeat relative overflow-hidden z-[500]" />
                 </div>
               </div>
             </div>
@@ -77,7 +77,7 @@ export function Article172P05S01() {
                   فیش‌های بانکی و رسیدهای تراکنش
                 </span>
                 <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[503]">
-                  <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/ui6qadESfo.png)] bg-cover bg-no-repeat relative overflow-hidden z-[504]" />
+                  <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/ui6qadESfo.png')] bg-cover bg-no-repeat relative overflow-hidden z-[504]" />
                 </div>
               </div>
               <div className="flex gap-[10px] justify-end items-center grow shrink-0 basis-0 flex-nowrap relative z-[505]">
@@ -85,7 +85,7 @@ export function Article172P05S01() {
                   آدرس فیزیکی و تلفن‌های مستقیم
                 </span>
                 <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[507]">
-                  <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/48RXdK9KJZ.png)] bg-cover bg-no-repeat relative overflow-hidden z-[508]" />
+                  <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/48RXdK9KJZ.png')] bg-cover bg-no-repeat relative overflow-hidden z-[508]" />
                 </div>
               </div>
               <div className="flex gap-[10px] justify-end items-center grow shrink-0 basis-0 flex-nowrap relative z-[509]">
@@ -93,7 +93,7 @@ export function Article172P05S01() {
                   مکاتبات کارشناسی پرونده در پنل
                 </span>
                 <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[511]">
-                  <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/jfDzoMRB4g.png)] bg-cover bg-no-repeat relative overflow-hidden z-[512]" />
+                  <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/jfDzoMRB4g.png')] bg-cover bg-no-repeat relative overflow-hidden z-[512]" />
                 </div>
               </div>
             </div>

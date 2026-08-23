@@ -20,7 +20,7 @@ export function Article172P03S03() {
                 </span>
               </div>
               <div className="flex w-[18px] h-[18px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[284]">
-                <div className="w-[18px] h-[18px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/fr52VfU4Ow.png)] bg-cover bg-no-repeat relative overflow-hidden z-[285]" />
+                <div className="w-[18px] h-[18px] shrink-0 bg-[url('/assets/codia/fr52VfU4Ow.png')] bg-cover bg-no-repeat relative overflow-hidden z-[285]" />
               </div>
             </div>
             <span className="flex w-[42px] h-[25px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[16px] font-bold leading-[25px] text-[#17324d] relative text-right whitespace-nowrap z-[286]">
@@ -38,7 +38,7 @@ export function Article172P03S03() {
                 </span>
               </div>
               <div className="flex w-[18px] h-[18px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[292]">
-                <div className="w-[18px] h-[18px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/E3TYcf2pTe.png)] bg-cover bg-no-repeat relative overflow-hidden z-[293]" />
+                <div className="w-[18px] h-[18px] shrink-0 bg-[url('/assets/codia/E3TYcf2pTe.png')] bg-cover bg-no-repeat relative overflow-hidden z-[293]" />
               </div>
             </div>
             <span className="flex w-[60px] h-[25px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[16px] font-bold leading-[25px] text-[#17324d] relative text-right whitespace-nowrap z-[294]">
@@ -56,7 +56,7 @@ export function Article172P03S03() {
                 </span>
               </div>
               <div className="flex w-[18px] h-[18px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[300]">
-                <div className="w-[18px] h-[18px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/5bCvT6DKNz.png)] bg-cover bg-no-repeat relative overflow-hidden z-[301]" />
+                <div className="w-[18px] h-[18px] shrink-0 bg-[url('/assets/codia/5bCvT6DKNz.png')] bg-cover bg-no-repeat relative overflow-hidden z-[301]" />
               </div>
             </div>
             <span className="flex w-[83px] h-[25px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[16px] font-bold leading-[25px] text-[#17324d] relative text-right whitespace-nowrap z-[302]">
@@ -74,7 +74,7 @@ export function Article172P03S03() {
                 </span>
               </div>
               <div className="flex w-[18px] h-[18px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[308]">
-                <div className="w-[18px] h-[18px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/3RARZThWnW.png)] bg-cover bg-no-repeat relative overflow-hidden z-[309]" />
+                <div className="w-[18px] h-[18px] shrink-0 bg-[url('/assets/codia/3RARZThWnW.png')] bg-cover bg-no-repeat relative overflow-hidden z-[309]" />
               </div>
             </div>
             <span className="flex w-[87px] h-[25px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[16px] font-bold leading-[25px] text-[#17324d] relative text-right whitespace-nowrap z-[310]">
@@ -92,7 +92,7 @@ export function Article172P03S03() {
                 </span>
               </div>
               <div className="flex w-[18px] h-[18px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[316]">
-                <div className="w-[18px] h-[18px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/WpAkssaAhh.png)] bg-cover bg-no-repeat relative overflow-hidden z-[317]" />
+                <div className="w-[18px] h-[18px] shrink-0 bg-[url('/assets/codia/WpAkssaAhh.png')] bg-cover bg-no-repeat relative overflow-hidden z-[317]" />
               </div>
             </div>
             <span className="flex w-[58px] h-[25px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[16px] font-bold leading-[25px] text-[#17324d] relative text-right whitespace-nowrap z-[318]">

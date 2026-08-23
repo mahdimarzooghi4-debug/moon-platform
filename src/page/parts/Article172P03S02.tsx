@@ -23,7 +23,7 @@ export function Article172P03S02() {
               نمونه اسناد و مستندات بررسی عمومی
             </span>
           </div>
-          <div className="h-px self-stretch shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/iyWC1H6Onp.png)] bg-cover bg-no-repeat relative z-[237]" />
+          <div className="h-px self-stretch shrink-0 bg-[url('/assets/codia/iyWC1H6Onp.png')] bg-cover bg-no-repeat relative z-[237]" />
           <div className="self-stretch shrink-0 relative z-[238]">
             <div className="flex w-[1136px] h-[22px] justify-between items-center relative z-[247]">
               <div className="flex gap-[12px] justify-end items-center grow shrink-0 basis-0 flex-nowrap relative z-[239]">
@@ -31,7 +31,7 @@ export function Article172P03S02() {
                   شناسه ملی شرکت و شماره ثبت اسناد
                 </span>
                 <div className="flex w-[18px] h-[18px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[241]">
-                  <div className="w-[18px] h-[18px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/8D9YjPvTnV.png)] bg-cover bg-no-repeat relative overflow-hidden z-[242]" />
+                  <div className="w-[18px] h-[18px] shrink-0 bg-[url('/assets/codia/8D9YjPvTnV.png')] bg-cover bg-no-repeat relative overflow-hidden z-[242]" />
                 </div>
               </div>
               <div className="flex gap-[12px] justify-end items-center grow shrink-0 basis-0 flex-nowrap relative z-[243]">
@@ -39,7 +39,7 @@ export function Article172P03S02() {
                   کد اقتصادی فعال شخصیت حقوقی
                 </span>
                 <div className="flex w-[18px] h-[18px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[245]">
-                  <div className="w-[18px] h-[18px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/9BDeWGDHzm.png)] bg-cover bg-no-repeat relative overflow-hidden z-[246]" />
+                  <div className="w-[18px] h-[18px] shrink-0 bg-[url('/assets/codia/9BDeWGDHzm.png')] bg-cover bg-no-repeat relative overflow-hidden z-[246]" />
                 </div>
               </div>
               <div className="flex gap-[12px] justify-end items-center grow shrink-0 basis-0 flex-nowrap relative z-[247]">
@@ -47,7 +47,7 @@ export function Article172P03S02() {
                   روزنامه رسمی آخرین تغییرات و صاحبان امضا
                 </span>
                 <div className="flex w-[18px] h-[18px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[249]">
-                  <div className="w-[18px] h-[18px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/qU0fn6vNos.png)] bg-cover bg-no-repeat relative overflow-hidden z-[250]" />
+                  <div className="w-[18px] h-[18px] shrink-0 bg-[url('/assets/codia/qU0fn6vNos.png')] bg-cover bg-no-repeat relative overflow-hidden z-[250]" />
                 </div>
               </div>
             </div>
@@ -57,7 +57,7 @@ export function Article172P03S02() {
                   رسید الکترونیکی پرداخت از درگاه معتبر
                 </span>
                 <div className="flex w-[18px] h-[18px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[253]">
-                  <div className="w-[18px] h-[18px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/jbmfzbig55.png)] bg-cover bg-no-repeat relative overflow-hidden z-[254]" />
+                  <div className="w-[18px] h-[18px] shrink-0 bg-[url('/assets/codia/jbmfzbig55.png')] bg-cover bg-no-repeat relative overflow-hidden z-[254]" />
                 </div>
               </div>
               <div className="flex gap-[12px] justify-end items-center grow shrink-0 basis-0 flex-nowrap relative z-[255]">
@@ -65,7 +65,7 @@ export function Article172P03S02() {
                   نام و جزئیات دقیق پروژه اجتماعی در ماه
                 </span>
                 <div className="flex w-[18px] h-[18px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[257]">
-                  <div className="w-[18px] h-[18px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/UGWjztV1WY.png)] bg-cover bg-no-repeat relative overflow-hidden z-[258]" />
+                  <div className="w-[18px] h-[18px] shrink-0 bg-[url('/assets/codia/UGWjztV1WY.png')] bg-cover bg-no-repeat relative overflow-hidden z-[258]" />
                 </div>
               </div>
               <div className="flex gap-[12px] justify-end items-center grow shrink-0 basis-0 flex-nowrap relative z-[259]">
@@ -73,7 +73,7 @@ export function Article172P03S02() {
                   گواهی هویتی نماینده قانونی معرفی‌شده
                 </span>
                 <div className="flex w-[18px] h-[18px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[261]">
-                  <div className="w-[18px] h-[18px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/LGfxighyfs.png)] bg-cover bg-no-repeat relative overflow-hidden z-[262]" />
+                  <div className="w-[18px] h-[18px] shrink-0 bg-[url('/assets/codia/LGfxighyfs.png')] bg-cover bg-no-repeat relative overflow-hidden z-[262]" />
                 </div>
               </div>
             </div>
@@ -83,7 +83,7 @@ export function Article172P03S02() {
                   نامه رسمی درخواست تاییدیه با امضای مجاز
                 </span>
                 <div className="flex w-[18px] h-[18px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[265]">
-                  <div className="w-[18px] h-[18px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/NhOFHDPuQG.png)] bg-cover bg-no-repeat relative overflow-hidden z-[266]" />
+                  <div className="w-[18px] h-[18px] shrink-0 bg-[url('/assets/codia/NhOFHDPuQG.png')] bg-cover bg-no-repeat relative overflow-hidden z-[266]" />
                 </div>
               </div>
               <div className="flex gap-[12px] justify-end items-center grow shrink-0 basis-0 flex-nowrap relative z-[267]">
@@ -91,7 +91,7 @@ export function Article172P03S02() {
                   مستندات احراز صلاحیت و وضعیت مالیاتی
                 </span>
                 <div className="flex w-[18px] h-[18px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[269]">
-                  <div className="w-[18px] h-[18px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/cqppEoTK1z.png)] bg-cover bg-no-repeat relative overflow-hidden z-[270]" />
+                  <div className="w-[18px] h-[18px] shrink-0 bg-[url('/assets/codia/cqppEoTK1z.png')] bg-cover bg-no-repeat relative overflow-hidden z-[270]" />
                 </div>
               </div>
               <div className="flex gap-[12px] justify-end items-center grow shrink-0 basis-0 flex-nowrap relative z-[271]">
@@ -99,7 +99,7 @@ export function Article172P03S02() {
                   تاییدیه اولیه تحقق شاخص‌های فیزیکی پروژه
                 </span>
                 <div className="flex w-[18px] h-[18px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[273]">
-                  <div className="w-[18px] h-[18px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/6omcF95pPe.png)] bg-cover bg-no-repeat relative overflow-hidden z-[274]" />
+                  <div className="w-[18px] h-[18px] shrink-0 bg-[url('/assets/codia/6omcF95pPe.png')] bg-cover bg-no-repeat relative overflow-hidden z-[274]" />
                 </div>
               </div>
             </div>

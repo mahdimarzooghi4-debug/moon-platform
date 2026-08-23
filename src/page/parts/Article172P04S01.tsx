@@ -7,7 +7,7 @@ export function Article172P04S01() {
           <span className="h-[38px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[24px] font-extrabold leading-[37.5px] text-[#17324d] relative text-right whitespace-nowrap z-[322]">
             رسید پرداخت با گواهی یکسان نیست
           </span>
-          <div className="h-px self-stretch shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/8eSNBxK5nC.png)] bg-cover bg-no-repeat relative z-[323]" />
+          <div className="h-px self-stretch shrink-0 bg-[url('/assets/codia/8eSNBxK5nC.png')] bg-cover bg-no-repeat relative z-[323]" />
           <div className="flex gap-[48px] items-start self-stretch shrink-0 flex-nowrap relative z-[324]">
             <div className="flex flex-col gap-[16px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[325]">
               <span className="flex w-[154px] h-[28px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[18px] font-bold leading-[28px] text-[#17324d] relative text-right whitespace-nowrap z-[326]">
@@ -18,7 +18,7 @@ export function Article172P04S01() {
                   نتیجه بررسی و تایید مدارک و انطباق آن با قوانین ماده ۱۷۲
                 </span>
                 <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[329]">
-                  <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/faVqhygZGy.png)] bg-cover bg-no-repeat relative overflow-hidden z-[330]" />
+                  <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/faVqhygZGy.png')] bg-cover bg-no-repeat relative overflow-hidden z-[330]" />
                 </div>
               </div>
               <div className="flex gap-[8px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[331]">
@@ -26,7 +26,7 @@ export function Article172P04S01() {
                   صادرشده پس از احراز هویت، انطباق نام و تایید تحقق KPI
                 </span>
                 <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[333]">
-                  <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/rA8w34K3up.png)] bg-cover bg-no-repeat relative overflow-hidden z-[334]" />
+                  <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/rA8w34K3up.png')] bg-cover bg-no-repeat relative overflow-hidden z-[334]" />
                 </div>
               </div>
               <div className="flex gap-[8px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[335]">
@@ -34,7 +34,7 @@ export function Article172P04S01() {
                   مستند نهایی قابل ارائه به سازمان امور مالیاتی کشور
                 </span>
                 <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[337]">
-                  <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/default/image/2026-08-22/5db3d19d-8ba7-4384-a6b6-22534465ed05.png)] bg-cover bg-no-repeat relative overflow-hidden z-[338]" />
+                  <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/5db3d19d-8ba7-4384-a6b6-22534465ed05.png')] bg-cover bg-no-repeat relative overflow-hidden z-[338]" />
                 </div>
               </div>
               <div className="flex gap-[8px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[339]">
@@ -42,11 +42,11 @@ export function Article172P04S01() {
                   صدور آن منوط به تایید نهایی مراجع ذی‌صلاح نظارتی است
                 </span>
                 <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[341]">
-                  <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/default/image/2026-08-22/6aaee4ea-9cb2-4b27-866a-9bbbf60372ce.png)] bg-cover bg-no-repeat relative overflow-hidden z-[342]" />
+                  <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/6aaee4ea-9cb2-4b27-866a-9bbbf60372ce.png')] bg-cover bg-no-repeat relative overflow-hidden z-[342]" />
                 </div>
               </div>
             </div>
-            <div className="w-px h-[160px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/kBYXfHvTFM.png)] bg-cover bg-no-repeat relative z-[343]" />
+            <div className="w-px h-[160px] shrink-0 bg-[url('/assets/codia/kBYXfHvTFM.png')] bg-cover bg-no-repeat relative z-[343]" />
             <div className="flex flex-col gap-[16px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[344]">
               <span className="flex w-[150px] h-[28px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[18px] font-bold leading-[28px] text-[#17324d] relative text-right whitespace-nowrap z-[345]">
                 رسید پرداخت عمومی
@@ -56,7 +56,7 @@ export function Article172P04S01() {
                   سند تراکنش مالی موفق و رسید بانکی مستقیم واریز وجه
                 </span>
                 <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[348]">
-                  <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/default/image/2026-08-22/a105e4cc-9729-417b-8f1d-770d6bfa39c4.png)] bg-cover bg-no-repeat relative overflow-hidden z-[349]" />
+                  <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/a105e4cc-9729-417b-8f1d-770d6bfa39c4.png')] bg-cover bg-no-repeat relative overflow-hidden z-[349]" />
                 </div>
               </div>
               <div className="flex gap-[8px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[350]">
@@ -64,7 +64,7 @@ export function Article172P04S01() {
                   صادرشده به صورت خودکار بلافاصله پس از تکمیل پرداخت
                 </span>
                 <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[352]">
-                  <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/default/image/2026-08-22/884afbda-9686-4411-9d01-d27052e1eb7e.png)] bg-cover bg-no-repeat relative overflow-hidden z-[353]" />
+                  <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/884afbda-9686-4411-9d01-d27052e1eb7e.png')] bg-cover bg-no-repeat relative overflow-hidden z-[353]" />
                 </div>
               </div>
               <div className="flex gap-[8px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[354]">
@@ -72,7 +72,7 @@ export function Article172P04S01() {
                   تاییدیه انتقال ریالی وجه به حساب امانی اعلام‌شده
                 </span>
                 <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[356]">
-                  <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/default/image/2026-08-22/4a44f267-5c26-4ec6-8007-e6ca97359149.png)] bg-cover bg-no-repeat relative overflow-hidden z-[357]" />
+                  <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/4a44f267-5c26-4ec6-8007-e6ca97359149.png')] bg-cover bg-no-repeat relative overflow-hidden z-[357]" />
                 </div>
               </div>
               <div className="flex gap-[8px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[358]">
@@ -80,7 +80,7 @@ export function Article172P04S01() {
                   صرفا رسید پرداخت است و فاقد اثر یا رسمیت گواهی ماده ۱۷۲ است
                 </span>
                 <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[360]">
-                  <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/default/image/2026-08-22/3881157d-03f7-424b-b3b5-588bdacd65ca.png)] bg-cover bg-no-repeat relative overflow-hidden z-[361]" />
+                  <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/3881157d-03f7-424b-b3b5-588bdacd65ca.png')] bg-cover bg-no-repeat relative overflow-hidden z-[361]" />
                 </div>
               </div>
             </div>

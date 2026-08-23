@@ -44,7 +44,7 @@ export function Article172Part01() {
               صفحه اصلی
             </span>
           </div>
-          <div className="w-[137px] h-[46px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/G0hxUXvzGQ.png)] bg-cover bg-no-repeat relative z-[16]" />
+          <div className="w-[137px] h-[46px] shrink-0 bg-[url('/assets/codia/G0hxUXvzGQ.png')] bg-cover bg-no-repeat relative z-[16]" />
         </div>
       </div>
       <div className="flex pt-[24px] pr-[120px] pb-0 pl-[120px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[17]">
@@ -58,7 +58,7 @@ export function Article172Part01() {
             <div className="flex flex-col gap-[20px] justify-center items-center grow shrink-0 basis-0 flex-nowrap relative z-[22]">
               <div className="flex w-[88px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] items-start shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[99px] relative z-[23]">
                 <div className="flex w-[48px] h-[48px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[24]">
-                  <div className="w-[48px] h-[48px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/hNPBQzusJX.png)] bg-cover bg-no-repeat relative overflow-hidden z-[25]" />
+                  <div className="w-[48px] h-[48px] shrink-0 bg-[url('/assets/codia/hNPBQzusJX.png')] bg-cover bg-no-repeat relative overflow-hidden z-[25]" />
                 </div>
               </div>
               <div className="flex w-[239px] gap-[8px] items-center shrink-0 flex-nowrap relative z-[26]">
@@ -68,7 +68,7 @@ export function Article172Part01() {
                   </span>
                 </div>
                 <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[29]">
-                  <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/zjsj0Ut6Ts.png)] bg-cover bg-no-repeat relative overflow-hidden z-30" />
+                  <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/zjsj0Ut6Ts.png')] bg-cover bg-no-repeat relative overflow-hidden z-30" />
                 </div>
                 <div className="flex w-[97px] pt-[12px] pr-[12px] pb-[12px] pl-[12px] items-start shrink-0 flex-nowrap bg-[#eaf8f0] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[31]">
                   <span className="flex w-[73px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-bold leading-[20px] text-[#159455] relative text-right whitespace-nowrap z-[32]">
@@ -107,7 +107,7 @@ export function Article172Part01() {
                 نیست.
               </span>
               <div className="flex w-[14px] h-[14px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[44]">
-                <div className="w-[14px] h-[14px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/aAPU7URAz6.png)] bg-cover bg-no-repeat relative overflow-hidden z-[45]" />
+                <div className="w-[14px] h-[14px] shrink-0 bg-[url('/assets/codia/aAPU7URAz6.png')] bg-cover bg-no-repeat relative overflow-hidden z-[45]" />
               </div>
             </div>
           </div>
@@ -130,7 +130,7 @@ export function Article172Part01() {
           </div>
           <div className="flex w-[48px] pt-[12px] pr-[12px] pb-[12px] pl-[12px] items-start shrink-0 flex-nowrap bg-[#fff2cc] rounded-[99px] relative z-[52]">
             <div className="flex w-[24px] h-[24px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[53]">
-              <div className="w-[24px] h-[24px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-22/T4OS0ttuhK.png)] bg-cover bg-no-repeat relative overflow-hidden z-[54]" />
+              <div className="w-[24px] h-[24px] shrink-0 bg-[url('/assets/codia/T4OS0ttuhK.png')] bg-cover bg-no-repeat relative overflow-hidden z-[54]" />
             </div>
           </div>
         </div>
