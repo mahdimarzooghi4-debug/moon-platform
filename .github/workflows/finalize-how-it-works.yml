@@ -24,7 +24,7 @@ jobs:
           ref: feat/how-it-works
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
       - name: Restore canonical page source
         shell: bash
         run: |
@@ -56,7 +56,7 @@ jobs:
             build_code=99
           fi
           set -e
-          remote_refs=$(grep -R 'static.codia.ai' src index.html --exclude-dir=node_modules | wc -l)
+          remote_refs=$(grep -R 'static.codia.ai' src index.html --exclude-dir=node_modules | wc -l || true)
           asset_count=$(find public/assets/codia -type f | wc -l)
           {
             echo "install=$install_code"
