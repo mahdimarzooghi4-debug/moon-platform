@@ -67,9 +67,10 @@ jobs:
             if [ "$install_code" -ne 0 ]; then cat /tmp/install.log; fi
             if [ "$build_code" -ne 0 ] && [ -f /tmp/build.log ]; then cat /tmp/build.log; fi
           } > src/page/.build-check.txt
+          cat src/page/.build-check.txt
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/page/MahHowItWorks.tsx public/assets/codia package-lock.json src/page/.build-check.txt
+          git add src/page/MahHowItWorks.tsx public/assets/codia package-lock.json
           git commit -m "feat(how-it-works): finalize page with local assets" || true
           git push origin HEAD:feat/how-it-works
           test "$install_code" -eq 0
