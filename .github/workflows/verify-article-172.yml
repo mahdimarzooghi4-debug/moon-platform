@@ -1,0 +1,47 @@
+name: Verify Article 172 Frontend
+
+on:
+  push:
+    branches: [feat/article-172-guide]
+    paths:
+      - .github/workflows/verify-article-172.yml
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/article-172-guide
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install and build
+        shell: bash
+        run: |
+          set +e
+          npm install >/tmp/install.log 2>&1
+          install_code=$?
+          if [ "$install_code" -eq 0 ]; then
+            npm run build >/tmp/build.log 2>&1
+            build_code=$?
+          else
+            build_code=99
+          fi
+          set -e
+          {
+            echo "install=$install_code"
+            echo "build=$build_code"
+            if [ "$install_code" -ne 0 ]; then cat /tmp/install.log; fi
+            if [ "$build_code" -ne 0 ] && [ -f /tmp/build.log ]; then cat /tmp/build.log; fi
+          } > src/page/.build-check.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/page/.build-check.txt
+          git commit -m "ci: record article 172 build" || true
+          git push origin HEAD:feat/article-172-guide
+          test "$install_code" -eq 0
+          test "$build_code" -eq 0
