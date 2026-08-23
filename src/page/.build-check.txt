@@ -1,2 +1,0 @@
-install=0
-build=0
