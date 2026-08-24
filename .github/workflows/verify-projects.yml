@@ -10,52 +10,14 @@ on:
       - 'index.html'
       - '.github/workflows/verify-projects.yml'
 
-permissions:
-  contents: write
-
 jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: feat/projects-page
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Localize Codia assets
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p public/assets/codia
-          assets=(
-            1K8NWF9LK4.png
-            4WmcosAXqg.png
-            5ReDQyKQji.png
-            6ziZh6g33X.png
-            CAcbEHF1K2.png
-            KV1OFFCcM5.png
-            PhBELqAvkV.png
-            RtBiSwJPA1.png
-            TpvkH6L2jM.png
-            WLpZUqSSA1.png
-            XYbTZLCAeJ.png
-            bHL1emxNz7.png
-            ifKXzAYXYh.png
-            jz8Ba36cYB.png
-            o323cnZHYy.png
-            oAYg1gNuYc.png
-            rgtYrA0Qsj.png
-            snvQ4MTCsT.png
-            tD3exzUgpG.png
-            ucQ7pG1mB0.png
-            xHKeqLkt6p.png
-            yApWuFZK4U.png
-            zCdp0OaYUQ.png
-          )
-          for f in "${assets[@]}"; do
-            curl -fsSL --retry 3 "https://static.codia.ai/image/2026-08-24/$f" -o "public/assets/codia/$f"
-          done
       - name: Install and verify
         shell: bash
         run: |
@@ -72,12 +34,3 @@ jobs:
           test "$asset_count" -eq 23
           test "$remote_refs" -eq 0
           test "$rtl_count" -gt 100
-      - name: Commit localized assets
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/assets/codia package-lock.json
-          git commit -m "feat(projects): localize assets" || true
-          git push origin HEAD:feat/projects-page
