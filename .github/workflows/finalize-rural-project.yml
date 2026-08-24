@@ -1,0 +1,62 @@
+name: Finalize Rural Women Project Page
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/project-rural-women
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Restore cleaned project
+        shell: bash
+        run: |
+          set -euo pipefail
+          base64 -d .tmp/rural-project/project.tar.gz.b64 | tar -xz
+      - name: Reuse local imagery from completed pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin feat/projects-page:refs/remotes/origin/feat/projects-page --depth=1
+          git fetch origin feat/for-companies:refs/remotes/origin/feat/for-companies --depth=1
+          mkdir -p public/assets/codia
+          for f in 4WmcosAXqg.png XYbTZLCAeJ.png 6ziZh6g33X.png PhBELqAvkV.png CAcbEHF1K2.png 5ReDQyKQji.png; do
+            git show "origin/feat/projects-page:public/assets/codia/$f" > "public/assets/codia/$f"
+          done
+          git show "origin/feat/for-companies:public/assets/codia/484NJFWM9O.png" > public/assets/codia/484NJFWM9O.png
+      - name: Install and verify
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install
+          npm run build
+          remote_refs=$(grep -R 'static.codia.ai' src index.html --exclude-dir=node_modules | wc -l || true)
+          asset_count=$(find public/assets/codia -type f | wc -l)
+          rtl_count=$(grep -R 'dir="rtl"' src/page --include='*.tsx' | wc -l)
+          echo "asset_count=$asset_count"
+          echo "expected_assets=7"
+          echo "remote_codia_refs=$remote_refs"
+          echo "rtl_text_nodes=$rtl_count"
+          test "$asset_count" -eq 7
+          test "$remote_refs" -eq 0
+          test "$rtl_count" -gt 200
+          grep -R '۴۰۰ میلیون' src/page >/dev/null
+          ! grep -R '۲۳۲میلیون' src/page >/dev/null
+      - name: Commit finalized page
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .gitignore index.html package.json package-lock.json postcss.config.js tailwind.config.js vite.config.js src public/assets/codia
+          git commit -m "feat(project): finalize rural women project page" || true
+          git push origin HEAD:feat/project-rural-women
