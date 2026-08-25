@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --default-font-family: "Vazirmatn Variable", "Vazirmatn", Tahoma, Arial,
+    sans-serif;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  direction: rtl;
+  text-align: right;
+  background: #fcfbf8;
+  font-family: var(--default-font-family);
+}
+
+.main-container {
+  overflow: hidden;
+  direction: ltr;
+  text-align: right;
+  font-family: var(--default-font-family);
+}
+
+.main-container span,
+.main-container p {
+  direction: rtl;
+  unicode-bidi: plaintext;
+}
+
+.main-container,
+.main-container * {
+  box-sizing: border-box;
+}
+
+input,
+select,
+textarea,
+button {
+  outline: 0;
+}
