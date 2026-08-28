@@ -54,9 +54,7 @@ export default function Main() {
             <div className="flex flex-col justify-center items-center self-stretch grow shrink-0 basis-0 flex-nowrap relative z-20">
               <div className="w-[320px] h-[320px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-24/277uYCiWAh.png)] bg-cover bg-no-repeat rounded-[50%] absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] z-[21]" />
               <div className="flex w-[236px] flex-col gap-[20px] items-center shrink-0 flex-nowrap relative z-[22]">
-                <span className="h-[188px] shrink-0 basis-auto font-['Vazirmatn'] text-[120px] font-black opacity-[0.15] leading-[187.5px] text-[#2094e3] relative text-left whitespace-nowrap z-[23]">
-                  404
-                </span>
+                <span className="h-[188px] shrink-0 basis-auto font-['Vazirmatn'] text-[120px] font-black opacity-[0.15] leading-[187.5px] text-[#2094e3] relative text-left whitespace-nowrap z-[23]">۴۰۴</span>
                 <div className="flex w-[236px] gap-[32px] items-center shrink-0 flex-nowrap relative z-[24]">
                   <div className="w-[80px] h-[4px] shrink-0 bg-[#2094e3] rounded-[2px] relative z-[25]" />
                   <div className="w-[12px] h-[12px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-24/dtSMSAjTe6.png)] bg-cover bg-no-repeat rounded-[50%] relative z-[26]" />
