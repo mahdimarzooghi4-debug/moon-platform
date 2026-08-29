@@ -21,7 +21,7 @@ body {
 
 .main-container {
   overflow: hidden;
-  direction: ltr;
+  direction: rtl;
 }
 
 .main-container [dir="auto"],
