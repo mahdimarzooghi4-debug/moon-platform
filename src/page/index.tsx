@@ -3,7 +3,7 @@ import "./index.css";
 
 export default function Main() {
   return (
-    <div className="main-container flex w-[1440px] flex-col items-center flex-nowrap bg-[#f7fafc] relative mx-auto my-0">
+    <div dir="rtl" className="main-container flex w-[1440px] min-h-screen flex-col items-center flex-nowrap bg-[#f7fafc] relative mx-auto my-0">
       <div className="flex h-[80px] pt-0 pr-[120px] pb-0 pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] border-solid border-t border-t-[#e8e8e8] relative">
         <div className="flex w-[150px] gap-[8px] items-center shrink-0 flex-nowrap relative z-[1]">
           <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[2]">
@@ -38,38 +38,38 @@ export default function Main() {
               </span>
             </div>
           </div>
-          <div className="flex gap-[12px] justify-center items-start self-stretch shrink-0 flex-nowrap relative z-[17]">
-            <div className="flex w-[52px] h-[56px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#a0aec0] relative z-[18]">
+          <div dir="ltr" className="flex gap-[12px] justify-center items-start self-stretch shrink-0 flex-nowrap relative z-[17]">
+            <div className="flex w-[52px] h-[56px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[18]">
               <span className="flex w-[13px] h-[31px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[20px] font-bold leading-[31px] text-[#1a202c] relative text-center whitespace-nowrap z-[19]">
-                ۸
+                &#8203;
               </span>
             </div>
-            <div className="flex w-[52px] h-[56px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#a0aec0] relative z-20">
+            <div className="flex w-[52px] h-[56px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-20">
               <span className="flex w-[11px] h-[31px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[20px] font-bold leading-[31px] text-[#1a202c] relative text-center whitespace-nowrap z-[21]">
-                ۲
+                &#8203;
               </span>
             </div>
-            <div className="flex w-[52px] h-[56px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#a0aec0] relative z-[22]">
+            <div className="flex w-[52px] h-[56px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[22]">
               <span className="flex w-[13px] h-[31px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[20px] font-bold leading-[31px] text-[#1a202c] relative text-center whitespace-nowrap z-[23]">
-                ۷
+                &#8203;
               </span>
             </div>
-            <div className="flex w-[52px] h-[56px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#a0aec0] relative z-[24]">
+            <div className="flex w-[52px] h-[56px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[24]">
               <span className="flex w-[14px] h-[31px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[20px] font-bold leading-[31px] text-[#1a202c] relative text-center whitespace-nowrap z-[25]">
-                ۳
+                &#8203;
               </span>
             </div>
-            <div className="flex w-[52px] h-[56px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#a0aec0] relative z-[26]">
+            <div className="flex w-[52px] h-[56px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[26]">
               <span className="flex w-[13px] h-[31px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[20px] font-bold leading-[31px] text-[#1a202c] relative text-center whitespace-nowrap z-[27]">
-                ۵
+                &#8203;
               </span>
             </div>
           </div>
           <span className="flex w-[110px] h-[20px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#718096] relative text-center whitespace-nowrap z-[28]">
-            ارسال مجدد کد تا ۱:۰۰
+            ارسال مجدد کد تا ۱:۳۰
           </span>
-          <div className="flex pt-[14px] pr-[32px] pb-[14px] pl-[32px] justify-center items-center self-stretch shrink-0 flex-nowrap rounded-[12px] relative shadow-[0_4px_12px_0_rgba(32,148,227,0.25)] z-[29]">
-            <span className="h-[25px] shrink-0 basis-auto font-['Vazirmatn'] text-[16px] font-semibold leading-[25px] text-[#fff] relative text-left whitespace-nowrap z-30">
+          <div aria-disabled="true" className="flex bg-[#cbd5e1] pt-[14px] pr-[32px] pb-[14px] pl-[32px] justify-center items-center self-stretch shrink-0 flex-nowrap rounded-[12px] relative z-[29]">
+            <span className="h-[25px] shrink-0 basis-auto font-['Vazirmatn'] text-[16px] font-semibold leading-[25px] text-[#94a3b8] relative text-left whitespace-nowrap z-30">
               تأیید و ورود
             </span>
           </div>
