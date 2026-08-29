@@ -21,9 +21,11 @@ body {
 }
 
 .main-container {
-  direction: ltr;
+  direction: rtl;
   overflow: hidden;
 }
+
+input { background: transparent; outline: none; }
 
 .main-container,
 .main-container * {
