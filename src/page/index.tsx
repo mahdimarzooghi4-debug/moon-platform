@@ -3,7 +3,7 @@ import "./index.css";
 
 export default function Main() {
   return (
-    <div className="main-container flex w-[1440px] flex-col items-center flex-nowrap bg-[#f7fafc] relative mx-auto my-0">
+    <div dir="rtl" className="main-container flex w-[1440px] min-h-screen flex-col items-center flex-nowrap bg-[#f7fafc] relative mx-auto my-0">
       {/* Header */}
       <div className="flex h-[80px] pt-0 pr-[120px] pb-0 pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] border-solid border-b border-b-[#e5ebf2] relative">
         <div className="flex w-[154px] gap-[8px] justify-center items-center shrink-0 flex-nowrap relative z-[1]">
@@ -137,9 +137,9 @@ export default function Main() {
             <span className="flex h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#2d3748] relative text-right whitespace-nowrap z-[43]">
               شماره موبایل
             </span>
-            <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[8px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border-2 border-[#fef0ee] relative z-[44]">
+            <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[8px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border-2 border-[#2094e3] relative z-[44]">
               <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[45]">
-                ۰۹۱۲
+                ۰۹۱۲۱۲۳۴۵۶۷
               </span>
               <img
                 src="/assets/codia-login/image_a01dfddd-14be-4156-9eb5-ad192e163fe7.png"
@@ -147,8 +147,17 @@ export default function Main() {
                 alt=""
               />
             </div>
-            <span className="h-[19px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#e53e3e] relative text-right whitespace-nowrap z-[48]">
-              شماره موبایل واردشده معتبر نیست.
+            <span className="h-[19px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#718096] relative text-right whitespace-nowrap z-[48]">
+              کد تأیید به این شماره ارسال می‌شود.
+            </span>
+          </div>
+
+          <div role="alert" className="flex w-full items-center gap-[8px] rounded-[10px] border border-[#feb2b2] bg-[#fef0ee] p-[12px] text-[#9b2c2c]">
+            <span className="flex-1 text-right font-['Vazirmatn'] text-[13px] font-normal">
+              ارسال کد تأیید انجام نشد. لطفاً دوباره تلاش کنید.
+            </span>
+            <span aria-hidden="true" className="flex h-[16px] w-[16px] items-center justify-center rounded-full border border-[#9b2c2c] text-[11px] font-bold">
+              !
             </span>
           </div>
 
