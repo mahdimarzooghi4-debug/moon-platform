@@ -1,94 +1,56 @@
 import React from "react";
 import "./index.css";
 
+const details = [
+  ["پروژه هدف", "اشتغال زنان روستایی (راهکار سبز)"],
+  ["مبلغ تراکنش", "۳۰۰٬۰۰۰ تومان"],
+  ["تاریخ تلاش برای پرداخت", "۲۴ مرداد ۱۴۰۵"],
+  ["کد پیگیری موقت", "MAH-P-۱۴۰۵-۰۰۲۸۴۶"],
+];
+
 export default function Main() {
   return (
-    <div className="main-container flex w-[1440px] flex-col items-center flex-nowrap bg-[#fcfbf8] relative overflow-hidden mx-auto my-0">
-      <div className="flex h-[80px] pt-[16px] pr-[120px] pb-[16px] pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] border-solid border-t border-t-[#e4ebf1] relative">
-        <div className="flex w-[246px] gap-[24px] items-center shrink-0 flex-nowrap relative z-[1]">
-          <span className="flex w-[92px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[2]">
-            مشاهده پروژه‌ها
-          </span>
-          <span className="flex w-[130px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[3]">
-            بازگشت به صفحه اصلی
-          </span>
-        </div>
-        <img
-          className="w-[137px] h-[46px] shrink-0 object-contain relative z-[4]"
-          src="/assets/codia/ULrekjV9pt.png"
-          alt="سامانه ماه"
-        />
-      </div>
-      <div className="flex pt-[96px] pr-[120px] pb-[96px] pl-[120px] flex-col items-center self-stretch shrink-0 flex-nowrap relative z-[5]">
-        <div className="flex w-[640px] pt-[36px] pr-[36px] pb-[36px] pl-[36px] flex-col gap-[28px] items-start shrink-0 flex-nowrap bg-[#fff] rounded-[24px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[6]">
-          <div className="flex flex-col gap-[12px] items-center self-stretch shrink-0 flex-nowrap relative z-[7]">
-            <div className="flex w-[56px] h-[56px] flex-col justify-center items-center shrink-0 flex-nowrap bg-[#fff0f0] rounded-[28px] relative z-[8]">
-              <div className="w-[24px] h-[24px] shrink-0 bg-[url(/assets/codia/SVrJ84ap8X.svg)] bg-cover bg-no-repeat relative overflow-hidden z-[9]" />
-            </div>
-            <span className="flex w-[133px] h-[34px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[22px] font-bold leading-[34px] text-[#17324d] relative text-center whitespace-nowrap z-10">
-              پرداخت ناموفق
+    <div dir="rtl" className="main-container min-h-screen w-[1440px] bg-[#fcfbf8] text-[#17324d] mx-auto">
+      <header className="flex h-[80px] items-center justify-between border-b border-[#e4ebf1] bg-white px-[120px]">
+        <img className="h-[46px] w-[137px] object-contain" src="/assets/codia/ULrekjV9pt.png" alt="سامانه ماه" />
+        <nav className="flex gap-[24px] font-['Vazirmatn'] text-[14px] font-medium text-[#60758a]">
+          <a href="#" className="hover:text-[#2094e3]">بازگشت به صفحه اصلی</a>
+          <a href="#" className="hover:text-[#2094e3]">مشاهده پروژه‌ها</a>
+        </nav>
+      </header>
+
+      <main className="flex justify-center px-[120px] py-[96px]">
+        <section className="w-[640px] rounded-[24px] border border-[#e4ebf1] bg-white p-[36px] shadow-[0_4px_16px_rgba(22,45,71,0.08)]">
+          <div className="flex flex-col items-center gap-[12px] text-center">
+            <div aria-hidden="true" className="clock-icon" />
+            <h1 className="font-['Vazirmatn'] text-[22px] font-bold">در حال بررسی پرداخت</h1>
+            <span className="rounded-[8px] bg-[#eaf5fd] px-[12px] py-[4px] font-['Vazirmatn'] text-[13px] font-semibold text-[#2094e3]">
+              در حال بررسی پرداخت
             </span>
-            <div className="flex w-[103px] pt-[4px] pr-[12px] pb-[4px] pl-[12px] items-start shrink-0 flex-nowrap bg-[#fff0f0] rounded-[8px] relative z-[11]">
-              <span className="flex w-[79px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-semibold leading-[20px] text-[#e53e3e] relative text-right whitespace-nowrap z-[12]">
-                پرداخت ناموفق
-              </span>
-            </div>
-            <span className="flex w-[568px] h-[44px] justify-center items-start self-stretch shrink-0 font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-center z-[13]">
-              این تراکنش به‌عنوان مشارکت ثبت نشده است. تراکنش با خطا از سوی بانک
-              یا انصراف کاربر مواجه شده است.
-            </span>
+            <p className="font-['Vazirmatn'] text-[14px] leading-[22px] text-[#60758a]">
+              نتیجه نهایی تراکنش هنوز از درگاه دریافت نشده است. این فرایند ممکن است چند دقیقه زمان ببرد.
+            </p>
           </div>
-          <div className="h-px self-stretch shrink-0 bg-[url(/assets/codia/x0OV68yuTN.svg)] bg-cover bg-no-repeat relative z-[14]" />
-          <div className="flex flex-col gap-[16px] items-start self-stretch shrink-0 flex-nowrap relative z-[15]">
-            <div className="flex justify-between items-start self-stretch shrink-0 flex-nowrap relative z-[16]">
-              <span className="flex w-[190px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[17]">
-                اشتغال زنان روستایی (راهکار سبز)
-              </span>
-              <span className="flex w-[60px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[18]">
-                پروژه هدف
-              </span>
-            </div>
-            <div className="flex justify-between items-start self-stretch shrink-0 flex-nowrap relative z-[19]">
-              <span className="flex w-[80px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-20">
-                ۳۰۰٬۰۰۰ تومان
-              </span>
-              <span className="flex w-[70px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[21]">
-                مبلغ تراکنش
-              </span>
-            </div>
-            <div className="flex justify-between items-start self-stretch shrink-0 flex-nowrap relative z-[22]">
-              <span className="flex w-[80px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[23]">
-                ۲۴ مرداد ۱۴۰۵
-              </span>
-              <span className="flex w-[132px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[24]">
-                تاریخ تلاش برای پرداخت
-              </span>
-            </div>
-            <div className="flex justify-between items-start self-stretch shrink-0 flex-nowrap relative z-[25]">
-              <span className="flex w-[132px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[26]">
-                MAH-P-۱۴۰۵-۰۰۲۸۴۶
-              </span>
-              <span className="flex w-[93px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[27]">
-                کد پیگیری موقت
-              </span>
-            </div>
+
+          <div className="my-[28px] h-px bg-[#e4ebf1]" />
+
+          <dl className="space-y-[16px] font-['Vazirmatn'] text-[14px]">
+            {details.map(([label, value]) => (
+              <div key={label} className="flex items-center justify-between">
+                <dt className="text-[#60758a]">{label}</dt>
+                <dd dir="auto" className="font-semibold text-[#17324d]">{value}</dd>
+              </div>
+            ))}
+          </dl>
+
+          <div className="my-[28px] h-px bg-[#e4ebf1]" />
+          <div role="status" className="flex items-center justify-center gap-[8px] text-[#d69e2e]">
+            <span aria-hidden="true" className="warning-icon">!</span>
+            <p className="font-['Vazirmatn'] text-[13px]">تا مشخص‌شدن وضعیت، پرداخت مجدد انجام ندهید.</p>
           </div>
-          <div className="flex pt-[16px] pr-[16px] pb-[16px] pl-[16px] gap-[12px] items-start self-stretch shrink-0 flex-nowrap bg-[#fff9e6] rounded-[12px] border-solid border border-[#d69e2e] relative z-[28]">
-            <span className="flex w-[506px] h-[40px] justify-end items-start grow shrink-0 basis-0 font-['Vazirmatn'] text-[13px] font-normal leading-[20.313px] text-[#d69e2e] relative text-right z-[29]">
-              اگر مبلغی از حساب شما کسر شده باشد، بازگشت آن مطابق فرایند شبکه
-              بانکی (معمولاً تا ۷۲ ساعت آینده) انجام خواهد شد.
-            </span>
-            <div className="w-[18px] h-[18px] shrink-0 bg-[url(/assets/codia/ZTAPNzC382.svg)] bg-cover bg-no-repeat relative overflow-hidden z-30" />
-          </div>
-          <div className="h-px self-stretch shrink-0 bg-[url(/assets/codia/miz7zi58Bi.svg)] bg-cover bg-no-repeat relative z-[31]" />
-          <div className="flex flex-col gap-[16px] items-center self-stretch shrink-0 flex-nowrap relative z-[32]">
-            <div className="flex w-[100px] h-[100px] p-0 gap-[12px] justify-center items-start shrink-0 flex-nowrap relative z-[33]" />
-            <span className="flex w-[97px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#2094e3] relative text-right underline whitespace-nowrap z-[34]">
-              تماس با پشتیبانی
-            </span>
-          </div>
-        </div>
-      </div>
+          <div className="h-[100px]" aria-hidden="true" />
+        </section>
+      </main>
     </div>
   );
 }
