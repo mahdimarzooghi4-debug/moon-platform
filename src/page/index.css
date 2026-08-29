@@ -24,8 +24,23 @@ body {
 }
 
 .main-container {
-  direction: ltr;
+  direction: rtl;
   overflow: hidden;
+}
+
+.print-page { box-sizing: border-box; font-family: "Vazirmatn Variable", "Vazirmatn", sans-serif; }
+.print-page * { box-sizing: border-box; }
+.report-section { margin-top: 14px; font-size: 11px; }
+.report-section h2 { margin-bottom: 7px; border-bottom: 1px solid #ccc; padding-bottom: 7px; font-size: 12px; font-weight: 800; }
+.report-section p { line-height: 20px; }
+.print-page table { width: 100%; border-collapse: collapse; text-align: right; }
+.print-page th, .print-page td { border: 1px solid #c7ccd2; padding: 6px 8px; }
+.print-page th { background: #e1e6ee; font-size: 10px; font-weight: 800; }
+
+@media print {
+  @page { size: A4; margin: 0; }
+  body { background: white; }
+  .print-page { width: 210mm; height: 297mm; }
 }
 
 .main-container,
