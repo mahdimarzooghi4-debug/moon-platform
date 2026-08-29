@@ -5,6 +5,7 @@ type SidebarItem = {
   label: string;
   icon: string;
   active?: boolean;
+  key?: React.Key;
 };
 
 type Kpi = {
@@ -253,7 +254,7 @@ function SidebarSection({ title, items }: { title: string; items: SidebarItem[] 
   );
 }
 
-function KpiCard({ item }: { item: Kpi }) {
+function KpiCard({ item }: { item: Kpi; key?: React.Key }) {
   return (
     <div
       className="flex h-[144px] min-w-0 flex-1 flex-col items-end gap-[6px] rounded-[20px] border border-[#e4ebf1] bg-white p-[18px]"
@@ -361,7 +362,7 @@ function TableHeader() {
   );
 }
 
-function TableRow({ row }: { row: FaqRow }) {
+function TableRow({ row }: { row: FaqRow; key?: React.Key }) {
   return (
     <div className="flex h-[64px] w-full items-center gap-[16px] border-b border-[#e4ebf1] p-[12px]">
       <div className="flex w-[65px] shrink-0 items-start justify-center">
@@ -422,9 +423,47 @@ function Pagination() {
   );
 }
 
+function Label({children}:{children: React.ReactNode}) {
+  return <label className="mb-2 block text-[13px] font-bold text-[#17324d]">{children}</label>;
+}
+
+function FieldBox({children, className = ""}:{children: React.ReactNode; className?: string}) {
+  return <div className={`rounded-xl border border-[#dbe4ec] bg-white px-4 py-3 text-[13px] text-[#17324d] ${className}`}>{children}</div>;
+}
+
+function FaqEditorDrawer() {
+  return (
+    <>
+      <div className="absolute inset-0 z-40 bg-[#17324d]/35" aria-hidden="true" />
+      <aside dir="rtl" className="absolute left-0 top-0 z-50 flex h-[1584px] w-[570px] flex-col bg-white text-right shadow-[12px_0_36px_rgba(23,50,77,0.18)]">
+        <header className="flex h-[74px] shrink-0 items-center justify-between border-b border-[#e4ebf1] px-6">
+          <div><h2 className="text-[20px] font-extrabold text-[#17324d]">افزودن سوال جدید</h2><p className="mt-1 text-[12px] text-[#60758a]">اطلاعات سوال و پاسخ را تکمیل کنید.</p></div>
+          <button className="grid h-9 w-9 place-items-center rounded-lg border border-[#e4ebf1] text-[22px] text-[#60758a]">×</button>
+        </header>
+        <div className="min-h-0 flex-1 overflow-hidden px-6 py-5">
+          <div>
+            <div className="flex items-center justify-between"><Label>سؤال</Label><span className="text-[11px] text-[#60758a]">۵۸ / ۱۵۰ کاراکتر</span></div>
+            <FieldBox>آیا برای مشارکت فردی به ساخت حساب کاربری نیاز دارم؟</FieldBox>
+          </div>
+          <div className="mt-4"><Label>پاسخ</Label><div className="rounded-xl border border-[#dbe4ec] bg-white"><div className="flex h-10 items-center gap-4 border-b bg-[#f8fafb] px-3 text-[#60758a]"><b>ب</b><i>ک</i><span>• فهرست</span><span>↗ پیوند</span></div><p className="min-h-[108px] px-4 py-3 text-[13px] leading-7 text-[#17324d]">خیر، شما می‌توانید بدون ساخت حساب کاربری و صرفاً با پرداخت مستقیم، در طرح‌ها مشارکت کنید. با این حال داشتن حساب کاربری امکان دریافت سوابق و کدهای رهگیری را همواره در اختیارتان قرار می‌دهد.</p></div></div>
+          <div className="mt-4 grid grid-cols-2 gap-3"><div><Label>دسته‌بندی</Label><FieldBox>حساب کاربری <span className="float-left">⌄</span></FieldBox></div><div><Label>ترتیب نمایش</Label><FieldBox>۱</FieldBox></div></div>
+          <div className="mt-4"><Label>برچسب‌ها</Label><FieldBox className="flex flex-wrap gap-2 py-2">{["مشارکت بدون حساب","ورود","شماره همراه","OTP"].map(x=><span key={x} className="rounded-full bg-[#eaf5fd] px-3 py-1 text-[11px] text-[#2094e3]">{x} ×</span>)}</FieldBox></div>
+          <div className="mt-4"><Label>محل نمایش</Label><div className="space-y-2 rounded-xl border border-[#dbe4ec] p-3 text-[12px]">{[["صفحه اصلی سامانه","mah-landing-page"],["صفحه اختصاصی سوالات متداول","mah-faq"],["صفحه راهنمای کاربری","mah-how-it-works"]].map(([x,id])=><label className="flex items-center gap-2" key={id}><input type="checkbox" defaultChecked className="accent-[#2094e3]"/><span>{x}</span><code dir="ltr" className="mr-auto rounded bg-[#f4f6f8] px-2 py-0.5 text-[10px] text-[#60758a]">{id}</code></label>)}</div></div>
+          <div className="mt-4 rounded-xl border border-[#f59e0b] bg-[#fff7df] p-3 text-[12px]"><b className="text-[#9a5b04]">ممکن است سوال مشابهی وجود داشته باشد</b><p className="mt-1 text-[#60758a]">پیش از ثبت، سوال مشابه را بررسی کنید. <a className="font-bold text-[#2094e3] underline">مشاهده سوال مشابه</a></p></div>
+          <details open className="mt-4 rounded-xl border border-[#dbe4ec] p-4"><summary className="cursor-pointer text-[13px] font-bold">منبع و ارجاع</summary><div className="mt-3 grid grid-cols-2 gap-3"><div><Label>عنوان منبع</Label><FieldBox>آیین‌نامه اجرایی ماده ۱۷۲</FieldBox></div><div><Label>پیوند منبع</Label><FieldBox><span dir="ltr" className="block truncate">https://mah.ir/docs/art-172</span></FieldBox></div></div></details>
+          <label className="mt-4 flex items-start gap-2 text-[12px]"><input type="checkbox" defaultChecked className="mt-1 accent-[#2094e3]"/><span>این پاسخ شامل موضوعات حقوقی، مالیاتی، پرداخت یا ماده ۱۷۲ است و به بازبینی حقوقی نیاز دارد.</span></label>
+          <div className="mt-4 grid grid-cols-2 gap-3"><div><Label>بازبین پیشنهادی</Label><FieldBox>داود هاشمی (کارشناس حقوقی)</FieldBox></div><div><Label>تاریخ بازبینی</Label><FieldBox>۲۱ آبان ۱۴۰۵</FieldBox></div></div>
+          <div className="mt-4"><Label>یادداشت داخلی</Label><FieldBox className="min-h-[68px]">تغییرات جزئی در ادبیات ارجاع به پنل کاربری انجام گرفت.</FieldBox></div>
+        </div>
+        <footer className="shrink-0 border-t border-[#e4ebf1] bg-white px-6 py-4"><div className="mb-3 text-[11px] font-bold text-[#159455]">ذخیره شد</div><div className="flex gap-2"><button className="rounded-xl bg-[#2094e3] px-4 py-3 text-[13px] font-bold text-white">ارسال برای بازبینی</button><button className="rounded-xl border border-[#2094e3] px-4 py-3 text-[13px] font-bold text-[#2094e3]">پیش‌نمایش</button><button className="mr-auto rounded-xl border border-[#dbe4ec] px-4 py-3 text-[13px] font-bold text-[#60758a]">ذخیره پیش‌نویس</button></div></footer>
+      </aside>
+    </>
+  );
+}
+
 export default function Main() {
   return (
-    <div dir="ltr" className="main-container mx-auto flex h-[1584px] w-[1440px] flex-nowrap items-start bg-[#f4f6f8]">
+    <div dir="rtl" className="main-container relative mx-auto flex h-[1584px] w-[1440px] flex-row-reverse flex-nowrap items-start bg-[#f4f6f8]">
       <main className="flex min-w-0 flex-1 self-stretch flex-col items-start gap-[24px] px-[40px] pb-[40px] pt-[24px]">
         <header className="flex h-[56px] w-full shrink-0 items-center justify-between border-b border-[#e4ebf1] pb-[16px]">
           <div className="flex h-[39px] w-[399px] shrink-0 items-center gap-[16px]">
@@ -529,6 +568,7 @@ export default function Main() {
           </button>
         </div>
       </aside>
+      <FaqEditorDrawer />
     </div>
   );
 }
