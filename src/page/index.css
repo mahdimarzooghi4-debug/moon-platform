@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --default-font-family: "Vazirmatn Variable", "Vazirmatn", Tahoma, Arial,
+    sans-serif;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  direction: rtl;
+  text-align: right;
+  background: #f4f6f8;
+  font-family: var(--default-font-family);
+}
+
+.main-container {
+  overflow: hidden;
+  direction: rtl;
+  text-align: right;
+}
+
+.main-container,
+.main-container * {
+  box-sizing: border-box;
+}
+
+input,
+select,
+textarea,
+button {
+  outline: 0;
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #e3e9f0 25%, #f1f4f7 50%, #e3e9f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  to { background-position: -200% 0; }
+}
