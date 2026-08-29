@@ -24,9 +24,11 @@ body {
 }
 
 .main-container {
-  direction: ltr;
+  direction: rtl;
   overflow: hidden;
 }
+
+a { color: inherit; text-decoration: none; }
 
 .main-container,
 .main-container * {
