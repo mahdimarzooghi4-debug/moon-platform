@@ -1,9 +1,8 @@
-name: Verify frontend integration
+name: Integrate Search Error
 
 on:
   push:
     branches:
-      - integration/frontend-foundation
       - integration/landing-frontend
   workflow_dispatch:
 
@@ -15,14 +14,115 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  integrate:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Checkout
+      - name: Checkout integration branch
         uses: actions/checkout@v4
+        with:
+          ref: integration/landing-frontend
+          fetch-depth: 0
 
-      - name: Setup Node
+      - name: Migrate pinned search error state
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_SHA="b837e73d2af2e19b6789070ea00f3a861f4714e6"
+          TARGET="src/search-results/states/error"
+          EXPECTED_TSX="e0b3eb5b33bee94919557db379b788e2aa6dbeb8"
+          EXPECTED_CSS="c186ff82f55d46cfbba38f3d86bfc11e0ca4fddd"
+          ASSETS=(
+            "public/assets/codia/KfnAquFgHV.svg"
+            "public/assets/codia/UCKdxXgzyP.svg"
+            "public/assets/codia/ajdK7upxvW.svg"
+            "public/assets/codia/i5VQk4B5mO.png"
+            "public/assets/codia/inDgM5038E.svg"
+            "public/assets/codia/mhYC38XNZL.svg"
+            "public/assets/codia/nKGrvtCUPv.png"
+          )
+          EXPECTED_ASSET_SHAS=(
+            "9704e20b0543a391500d67ac9d2634c09f2e5ce6"
+            "ede4b0f420116229fa1f1ff77552221b6db3f016"
+            "ef36c804f5ee53a55adb917c4f87175dd91685c6"
+            "420cf408b0681f568474d1e9232078ca1368e47e"
+            "6da514c42fc5162d0d70ca2d67cf7e9ebed9cc2b"
+            "43e1cbf2cf4dbed0b9b03463836d3de2479a9c1d"
+            "b41d325f6fedd470de49aa75b4768cced118781e"
+          )
+
+          git fetch origin "$SOURCE_SHA"
+          test "$(git rev-parse "$SOURCE_SHA:src/page/index.tsx")" = "$EXPECTED_TSX"
+          test "$(git rev-parse "$SOURCE_SHA:src/page/index.css")" = "$EXPECTED_CSS"
+          test ! -e "$TARGET"
+
+          if git show "$SOURCE_SHA:src/page/index.tsx" | grep -Fq "static.codia.ai"; then
+            echo "remote Codia dependency detected"
+            exit 1
+          fi
+
+          mapfile -t SOURCE_ASSETS < <(git ls-tree -r --name-only "$SOURCE_SHA" public/assets/codia | sort)
+          mapfile -t EXPECTED_ASSETS < <(printf '%s\n' "${ASSETS[@]}" | sort)
+          test "${#SOURCE_ASSETS[@]}" -eq 7
+          diff -u <(printf '%s\n' "${EXPECTED_ASSETS[@]}") <(printf '%s\n' "${SOURCE_ASSETS[@]}")
+
+          mkdir -p "$TARGET"
+          git show "$SOURCE_SHA:src/page/index.tsx" > "$TARGET/index.tsx"
+          git show "$SOURCE_SHA:src/page/index.css" > "$TARGET/index.css"
+          test "$(git hash-object "$TARGET/index.tsx")" = "$EXPECTED_TSX"
+          test "$(git hash-object "$TARGET/index.css")" = "$EXPECTED_CSS"
+
+          for i in "${!ASSETS[@]}"; do
+            asset="${ASSETS[$i]}"
+            expected="${EXPECTED_ASSET_SHAS[$i]}"
+            source_blob="$(git rev-parse "$SOURCE_SHA:$asset")"
+            test "$source_blob" = "$expected"
+            if git cat-file -e "HEAD:$asset" 2>/dev/null; then
+              current_blob="$(git rev-parse "HEAD:$asset")"
+              test "$current_blob" = "$source_blob"
+            else
+              mkdir -p "$(dirname "$asset")"
+              git show "$SOURCE_SHA:$asset" > "$asset"
+            fi
+            test "$(git hash-object "$asset")" = "$source_blob"
+          done
+
+          while IFS= read -r ref; do
+            test -f "public${ref}"
+          done < <(grep -oE '/assets/codia/[A-Za-z0-9._-]+' "$TARGET/index.tsx" | sort -u)
+
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('src/app/router.tsx')
+          s = p.read_text()
+          lazy_anchor = 'const SearchResultsLoadingPage = lazy(() => import("../search-results/states/loading"));\n'
+          lazy_line = 'const SearchResultsErrorPage = lazy(() => import("../search-results/states/error"));\n'
+          element_anchor = 'const searchResultsLoadingElement = lazyElement(SearchResultsLoadingPage);\n'
+          element_line = 'const searchResultsErrorElement = lazyElement(SearchResultsErrorPage);\n'
+          route_anchor = '        <Route path="/search/states/loading" element={searchResultsLoadingElement} />\n'
+          route_line = '        <Route path="/search/states/error" element={searchResultsErrorElement} />\n'
+          assert s.count(lazy_anchor) == 1
+          assert s.count(element_anchor) == 1
+          assert s.count(route_anchor) == 1
+          assert lazy_line not in s
+          assert element_line not in s
+          assert route_line not in s
+          s = s.replace(lazy_anchor, lazy_anchor + lazy_line)
+          s = s.replace(element_anchor, element_anchor + element_line)
+          s = s.replace(route_anchor, route_anchor + route_line)
+          assert s.count(lazy_line) == 1
+          assert s.count(element_line) == 1
+          assert s.count(route_line) == 1
+          p.write_text(s)
+          PY
+
+          git add "$TARGET" src/app/router.tsx "${ASSETS[@]}"
+          test -z "$(git diff --cached --name-only | grep -vE '^(src/search-results/states/error/|src/app/router.tsx$|public/assets/codia/(KfnAquFgHV.svg|UCKdxXgzyP.svg|ajdK7upxvW.svg|i5VQk4B5mO.png|inDgM5038E.svg|mhYC38XNZL.svg|nKGrvtCUPv.png)$)' || true)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "feat(landing): integrate search error state"
+
+      - name: Setup Node 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -34,14 +134,15 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Keep lockfile reproducible
+      - name: Verify package-lock reproducibility
+        shell: bash
         run: |
-          if git diff --quiet -- package-lock.json; then
-            echo "package-lock.json is already in sync"
-            exit 0
+          set -euo pipefail
+          if ! git diff --quiet -- package-lock.json; then
+            echo "package-lock.json changed during install"
+            git diff -- package-lock.json
+            exit 1
           fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add package-lock.json
-          git commit -m "chore(frontend): sync package lock"
-          git push
+
+      - name: Push verified integration
+        run: git push origin HEAD:integration/landing-frontend
