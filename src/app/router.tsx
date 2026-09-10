@@ -14,6 +14,8 @@ const ImpactReportsListPage = lazy(() => import("../impact-reports-list"));
 const ProjectImpactReportPage = lazy(() => import("../project-impact-report"));
 const ParticipationCheckoutPage = lazy(() => import("../participation-checkout"));
 const ParticipationModalPage = lazy(() => import("../participation-modal"));
+const PaymentResultSuccessPage = lazy(() => import("../payment-result/success"));
+const PaymentResultFailedPage = lazy(() => import("../payment-result/failed"));
 const FaqPage = lazy(() => import("../faq"));
 const ContactSupportPage = lazy(() => import("../contact-support"));
 const NewsListPage = lazy(() => import("../news-list"));
@@ -46,6 +48,8 @@ const impactReportsListElement = lazyElement(ImpactReportsListPage);
 const projectImpactReportElement = lazyElement(ProjectImpactReportPage);
 const participationCheckoutElement = lazyElement(ParticipationCheckoutPage);
 const participationModalElement = lazyElement(ParticipationModalPage);
+const paymentResultSuccessElement = lazyElement(PaymentResultSuccessPage);
+const paymentResultFailedElement = lazyElement(PaymentResultFailedPage);
 const faqElement = lazyElement(FaqPage);
 const contactSupportElement = lazyElement(ContactSupportPage);
 const newsListElement = lazyElement(NewsListPage);
@@ -86,6 +90,8 @@ export function AppRouter() {
         <Route path="/participation/checkout" element={participationCheckoutElement} />
         <Route path="/projects/:projectId/participate" element={participationCheckoutElement} />
         <Route path="/participation/modal" element={participationModalElement} />
+        <Route path="/payment/result/success" element={paymentResultSuccessElement} />
+        <Route path="/payment/result/failed" element={paymentResultFailedElement} />
         <Route path="/faq" element={faqElement} />
         <Route path="/contact" element={contactSupportElement} />
         <Route path="/contact-support" element={contactSupportElement} />
