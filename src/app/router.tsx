@@ -17,6 +17,7 @@ const ImpactReportsListNoResultsPage = lazy(() => import("../impact-reports-list
 const ProjectImpactReportPage = lazy(() => import("../project-impact-report"));
 const ProjectImpactReportFinalPage = lazy(() => import("../project-impact-report/states/final"));
 const ProjectImpactReportPendingPage = lazy(() => import("../project-impact-report/states/pending"));
+const ProjectImpactReportPrintPage = lazy(() => import("../project-impact-report/print"));
 const ParticipationCheckoutPage = lazy(() => import("../participation-checkout"));
 const ParticipationCheckoutFundedPage = lazy(() => import("../participation-checkout/funded"));
 const ParticipationCheckoutLoadingPage = lazy(() => import("../participation-checkout/loading"));
@@ -77,6 +78,7 @@ const impactReportsListNoResultsElement = lazyElement(ImpactReportsListNoResults
 const projectImpactReportElement = lazyElement(ProjectImpactReportPage);
 const projectImpactReportFinalElement = lazyElement(ProjectImpactReportFinalPage);
 const projectImpactReportPendingElement = lazyElement(ProjectImpactReportPendingPage);
+const projectImpactReportPrintElement = lazyElement(ProjectImpactReportPrintPage);
 const participationCheckoutElement = lazyElement(ParticipationCheckoutPage);
 const participationCheckoutFundedElement = lazyElement(ParticipationCheckoutFundedPage);
 const participationCheckoutLoadingElement = lazyElement(ParticipationCheckoutLoadingPage);
@@ -144,6 +146,7 @@ export function AppRouter() {
         <Route path="/impact-reports" element={impactReportsListElement} />
         <Route path="/projects/impact-report/states/final" element={projectImpactReportFinalElement} />
         <Route path="/projects/impact-report/states/pending" element={projectImpactReportPendingElement} />
+        <Route path="/projects/impact-report/print" element={projectImpactReportPrintElement} />
         <Route path="/projects/:projectId/impact-report" element={projectImpactReportElement} />
         <Route path="/participation/checkout" element={participationCheckoutElement} />
         <Route path="/projects/:projectId/participate" element={participationCheckoutElement} />
