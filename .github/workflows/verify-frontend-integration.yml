@@ -21,77 +21,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Merge approved loading and redirecting participation states
-        if: github.ref == 'refs/heads/integration/landing-frontend' && !contains(github.event.head_commit.message, '[landing-merge-bot]')
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git fetch origin feat/participation-checkout-loading feat/participation-checkout-redirecting
-
-          base_sha="$(git rev-parse HEAD)"
-
-          # Loading carries local Codia assets. Never overwrite an existing asset
-          # with different bytes: stop the batch instead.
-          while IFS= read -r path; do
-            if git cat-file -e "HEAD:$path" 2>/dev/null; then
-              current_sha="$(git rev-parse "HEAD:$path")"
-              incoming_sha="$(git rev-parse "origin/feat/participation-checkout-loading:$path")"
-              if [ "$current_sha" != "$incoming_sha" ]; then
-                echo "::error::Asset collision with different content: $path"
-                exit 1
-              fi
-            fi
-          done < <(git ls-tree -r --name-only origin/feat/participation-checkout-loading public/assets/codia)
-
-          for branch in feat/participation-checkout-loading feat/participation-checkout-redirecting; do
-            if git merge-base --is-ancestor "origin/$branch" HEAD; then
-              echo "$branch already integrated"
-            else
-              git merge --no-ff -X ours "origin/$branch" -m "merge(landing): integrate ${branch#feat/} [landing-merge-bot]"
-            fi
-          done
-
-          # Keep shared integration shell and Auth byte-for-byte unchanged.
-          git restore --source="$base_sha" --staged --worktree -- \
-            .github \
-            .gitignore \
-            index.html \
-            package.json \
-            package-lock.json \
-            postcss.config.js \
-            tailwind.config.js \
-            vite.config.js \
-            src/App.tsx \
-            src/main.tsx \
-            src/page
-
-          mkdir -p src/participation-checkout/loading src/participation-checkout/redirecting
-          git show origin/feat/participation-checkout-loading:src/page/index.tsx > src/participation-checkout/loading/index.tsx
-          git show origin/feat/participation-checkout-loading:src/page/index.css > src/participation-checkout/loading/index.css
-          git show origin/feat/participation-checkout-redirecting:src/page/index.tsx > src/participation-checkout/redirecting/index.tsx
-          git show origin/feat/participation-checkout-redirecting:src/page/index.css > src/participation-checkout/redirecting/index.css
-
-          git add -A src/participation-checkout/loading src/participation-checkout/redirecting
-          if ! git diff --cached --quiet; then
-            git commit -m "chore(landing): isolate loading and redirecting participation states [landing-merge-bot]"
-          fi
-
-          git diff --exit-code "$base_sha" -- \
-            .github \
-            .gitignore \
-            index.html \
-            package.json \
-            package-lock.json \
-            postcss.config.js \
-            tailwind.config.js \
-            vite.config.js \
-            src/App.tsx \
-            src/main.tsx \
-            src/page
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -109,18 +38,10 @@ jobs:
         run: |
           if git diff --quiet -- package-lock.json; then
             echo "package-lock.json is already in sync"
-          else
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add package-lock.json
-            git commit -m "chore(frontend): sync package lock [landing-merge-bot]"
+            exit 0
           fi
-
-      - name: Push verified integration
-        if: github.ref == 'refs/heads/integration/landing-frontend'
-        run: |
-          if [ "$(git rev-parse HEAD)" = "$(git rev-parse origin/integration/landing-frontend)" ]; then
-            echo "Nothing to push"
-          else
-            git push origin HEAD:integration/landing-frontend
-          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          git commit -m "chore(frontend): sync package lock"
+          git push
