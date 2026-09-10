@@ -21,59 +21,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Merge Figma-aligned participation track form and OTP
-        if: github.ref == 'refs/heads/integration/landing-frontend'
-        run: |
-          set -euo pipefail
-          BASE_SHA=$(git rev-parse HEAD)
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git fetch origin fix/participation-track-form-figma feat/participation-track-otp
-
-          # Refuse to overwrite an existing asset with different content.
-          while IFS= read -r asset; do
-            [ -z "$asset" ] && continue
-            if git cat-file -e "$BASE_SHA:$asset" 2>/dev/null; then
-              base_blob=$(git rev-parse "$BASE_SHA:$asset")
-              incoming_blob=$(git rev-parse "origin/fix/participation-track-form-figma:$asset")
-              if [ "$base_blob" != "$incoming_blob" ]; then
-                echo "Asset collision: $asset"
-                exit 1
-              fi
-            fi
-          done < <(git ls-tree -r --name-only origin/fix/participation-track-form-figma -- public/assets/)
-
-          if ! git merge-base --is-ancestor origin/fix/participation-track-form-figma HEAD; then
-            git merge --no-ff -X ours origin/fix/participation-track-form-figma -m "merge: Figma-aligned participation tracking form"
-          fi
-          if ! git merge-base --is-ancestor origin/feat/participation-track-otp HEAD; then
-            git merge --no-ff -X ours origin/feat/participation-track-otp -m "merge: participation tracking OTP"
-          fi
-
-          # Keep integration infrastructure and Auth exactly as they were at the safe checkpoint.
-          git restore --source="$BASE_SHA" --staged --worktree -- .github .gitignore index.html package.json package-lock.json postcss.config.js tailwind.config.js vite.config.js src/App.tsx src/main.tsx src/page
-
-          # Preserve the approved Figma-derived sources under feature namespaces.
-          mkdir -p src/participation-track/form src/participation-track/otp
-          git show origin/fix/participation-track-form-figma:src/page/index.tsx > src/participation-track/form/index.tsx
-          git show origin/fix/participation-track-form-figma:src/page/index.css > src/participation-track/form/index.css
-          git show origin/feat/participation-track-otp:src/page/index.tsx > src/participation-track/otp/index.tsx
-          git show origin/feat/participation-track-otp:src/page/index.css > src/participation-track/otp/index.css
-
-          # Copy only the checked Figma assets from the form branch.
-          while IFS= read -r asset; do
-            [ -z "$asset" ] && continue
-            mkdir -p "$(dirname "$asset")"
-            git show "origin/fix/participation-track-form-figma:$asset" > "$asset"
-          done < <(git ls-tree -r --name-only origin/fix/participation-track-form-figma -- public/assets/)
-
-          git add src/participation-track public/assets .github .gitignore index.html package.json package-lock.json postcss.config.js tailwind.config.js vite.config.js src/App.tsx src/main.tsx src/page
-          if ! git diff --cached --quiet; then
-            git commit -m "feat(landing): integrate participation tracking form and OTP"
-          fi
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -97,12 +44,4 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add package-lock.json
           git commit -m "chore(frontend): sync package lock"
-
-      - name: Push verified integration
-        if: github.ref == 'refs/heads/integration/landing-frontend'
-        run: |
-          if [ "$(git rev-parse HEAD)" != "${{ github.sha }}" ]; then
-            git push origin HEAD:integration/landing-frontend
-          else
-            echo "No integration commit to push"
-          fi
+          git push
