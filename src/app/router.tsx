@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import CompanyRegistrationPage from "../features/company-registration";
+import StartupRegistrationPage from "../features/startup-registration";
 import AuthEntryPage from "../page";
 
 /**
@@ -14,6 +15,7 @@ export function AppRouter() {
         <Route path="/" element={<AuthEntryPage />} />
         <Route path="/auth" element={<AuthEntryPage />} />
         <Route path="/register/company" element={<CompanyRegistrationPage />} />
+        <Route path="/register/startup" element={<StartupRegistrationPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
