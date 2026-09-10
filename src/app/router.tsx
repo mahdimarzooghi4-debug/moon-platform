@@ -13,6 +13,7 @@ const ImpactOverviewPage = lazy(() => import("../impact-overview"));
 const ImpactReportsListPage = lazy(() => import("../impact-reports-list"));
 const ImpactReportsListLoadingPage = lazy(() => import("../impact-reports-list/states/loading"));
 const ImpactReportsListEmptyPage = lazy(() => import("../impact-reports-list/states/empty"));
+const ImpactReportsListNoResultsPage = lazy(() => import("../impact-reports-list/states/no-results"));
 const ProjectImpactReportPage = lazy(() => import("../project-impact-report"));
 const ProjectImpactReportFinalPage = lazy(() => import("../project-impact-report/states/final"));
 const ProjectImpactReportPendingPage = lazy(() => import("../project-impact-report/states/pending"));
@@ -72,6 +73,7 @@ const impactOverviewElement = lazyElement(ImpactOverviewPage);
 const impactReportsListElement = lazyElement(ImpactReportsListPage);
 const impactReportsListLoadingElement = lazyElement(ImpactReportsListLoadingPage);
 const impactReportsListEmptyElement = lazyElement(ImpactReportsListEmptyPage);
+const impactReportsListNoResultsElement = lazyElement(ImpactReportsListNoResultsPage);
 const projectImpactReportElement = lazyElement(ProjectImpactReportPage);
 const projectImpactReportFinalElement = lazyElement(ProjectImpactReportFinalPage);
 const projectImpactReportPendingElement = lazyElement(ProjectImpactReportPendingPage);
@@ -138,6 +140,7 @@ export function AppRouter() {
         <Route path="/impact-overview" element={impactOverviewElement} />
         <Route path="/impact-reports/states/loading" element={impactReportsListLoadingElement} />
         <Route path="/impact-reports/states/empty" element={impactReportsListEmptyElement} />
+        <Route path="/impact-reports/states/no-results" element={impactReportsListNoResultsElement} />
         <Route path="/impact-reports" element={impactReportsListElement} />
         <Route path="/projects/impact-report/states/final" element={projectImpactReportFinalElement} />
         <Route path="/projects/impact-report/states/pending" element={projectImpactReportPendingElement} />
