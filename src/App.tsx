@@ -1,10 +1,10 @@
-import React from 'react';
-import Page from './page';
+import { AppProviders } from "./app/AppProviders";
+import { AppRouter } from "./app/router";
 
 export default function App() {
   return (
-    <div>
-      <Page />
-    </div>
+    <AppProviders>
+      <AppRouter />
+    </AppProviders>
   );
 }
