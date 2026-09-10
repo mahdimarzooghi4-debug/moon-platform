@@ -5,26 +5,26 @@ import StartupRegistrationPage from "../features/startup-registration";
 import AuthEntryPage from "../page";
 
 const LandingPage = lazy(() => import("../landing/MahLandingPage"));
+const AboutPage = lazy(() => import("../about/MahAbout"));
+const ForCompaniesPage = lazy(() => import("../companies/MahForCompanies"));
+const ForStartupsPage = lazy(() => import("../startups/MahForStartups"));
 const ProjectsPage = lazy(() => import("../features/projects/MahProjects"));
 const ProjectDetailsPage = lazy(() => import("../features/project-details"));
 
-const landingElement = (
-  <Suspense fallback={null}>
-    <LandingPage />
-  </Suspense>
-);
+function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
+  return (
+    <Suspense fallback={null}>
+      <Page />
+    </Suspense>
+  );
+}
 
-const projectsElement = (
-  <Suspense fallback={null}>
-    <ProjectsPage />
-  </Suspense>
-);
-
-const projectDetailsElement = (
-  <Suspense fallback={null}>
-    <ProjectDetailsPage />
-  </Suspense>
-);
+const landingElement = lazyElement(LandingPage);
+const aboutElement = lazyElement(AboutPage);
+const companiesElement = lazyElement(ForCompaniesPage);
+const startupsElement = lazyElement(ForStartupsPage);
+const projectsElement = lazyElement(ProjectsPage);
+const projectDetailsElement = lazyElement(ProjectDetailsPage);
 
 /**
  * Routes are introduced around the existing Figma-derived screens so their
@@ -36,6 +36,11 @@ export function AppRouter() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={landingElement} />
+        <Route path="/about" element={aboutElement} />
+        <Route path="/companies" element={companiesElement} />
+        <Route path="/for-companies" element={companiesElement} />
+        <Route path="/startups" element={startupsElement} />
+        <Route path="/for-startups" element={startupsElement} />
         <Route path="/auth" element={<AuthEntryPage />} />
         <Route path="/register/company" element={<CompanyRegistrationPage />} />
         <Route path="/register/startup" element={<StartupRegistrationPage />} />
