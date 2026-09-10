@@ -13,6 +13,7 @@ const ImpactOverviewPage = lazy(() => import("../impact-overview"));
 const ImpactReportsListPage = lazy(() => import("../impact-reports-list"));
 const ProjectImpactReportPage = lazy(() => import("../project-impact-report"));
 const ProjectImpactReportFinalPage = lazy(() => import("../project-impact-report/states/final"));
+const ProjectImpactReportPendingPage = lazy(() => import("../project-impact-report/states/pending"));
 const ParticipationCheckoutPage = lazy(() => import("../participation-checkout"));
 const ParticipationCheckoutFundedPage = lazy(() => import("../participation-checkout/funded"));
 const ParticipationCheckoutLoadingPage = lazy(() => import("../participation-checkout/loading"));
@@ -68,6 +69,7 @@ const impactOverviewElement = lazyElement(ImpactOverviewPage);
 const impactReportsListElement = lazyElement(ImpactReportsListPage);
 const projectImpactReportElement = lazyElement(ProjectImpactReportPage);
 const projectImpactReportFinalElement = lazyElement(ProjectImpactReportFinalPage);
+const projectImpactReportPendingElement = lazyElement(ProjectImpactReportPendingPage);
 const participationCheckoutElement = lazyElement(ParticipationCheckoutPage);
 const participationCheckoutFundedElement = lazyElement(ParticipationCheckoutFundedPage);
 const participationCheckoutLoadingElement = lazyElement(ParticipationCheckoutLoadingPage);
@@ -129,6 +131,7 @@ export function AppRouter() {
         <Route path="/impact-overview" element={impactOverviewElement} />
         <Route path="/impact-reports" element={impactReportsListElement} />
         <Route path="/projects/impact-report/states/final" element={projectImpactReportFinalElement} />
+        <Route path="/projects/impact-report/states/pending" element={projectImpactReportPendingElement} />
         <Route path="/projects/:projectId/impact-report" element={projectImpactReportElement} />
         <Route path="/participation/checkout" element={participationCheckoutElement} />
         <Route path="/projects/:projectId/participate" element={participationCheckoutElement} />
