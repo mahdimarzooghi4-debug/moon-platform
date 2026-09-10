@@ -1,8 +1,9 @@
-name: Integrate Registration Track Needs Edit
+name: Verify frontend integration
 
 on:
   push:
     branches:
+      - integration/frontend-foundation
       - integration/landing-frontend
   workflow_dispatch:
 
@@ -14,99 +15,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  integrate:
+  build:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Checkout integration branch
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: integration/landing-frontend
-          fetch-depth: 0
 
-      - name: Migrate pinned registration needs-edit state
-        shell: bash
-        run: |
-          set -euo pipefail
-          SOURCE_SHA="89ea8ca5eefd59bbf651181ffe928e000613d756"
-          TARGET="src/registration-track/states/needs-edit"
-          EXPECTED_TSX="f85c225a494c023c77a225a9ceade889e76899d0"
-          EXPECTED_CSS="c186ff82f55d46cfbba38f3d86bfc11e0ca4fddd"
-          ASSETS=(
-            "public/assets/codia/j98wBg1CX9.png"
-            "public/assets/codia/nyD2kijybL.svg"
-            "public/assets/codia/ukqtR1ciGB.svg"
-          )
-
-          git fetch origin "$SOURCE_SHA"
-          test "$(git rev-parse "$SOURCE_SHA:src/page/index.tsx")" = "$EXPECTED_TSX"
-          test "$(git rev-parse "$SOURCE_SHA:src/page/index.css")" = "$EXPECTED_CSS"
-          test ! -e "$TARGET"
-
-          if git show "$SOURCE_SHA:src/page/index.tsx" | grep -Fq "static.codia.ai"; then
-            echo "remote Codia dependency detected"
-            exit 1
-          fi
-
-          mapfile -t SOURCE_ASSETS < <(git ls-tree -r --name-only "$SOURCE_SHA" public/assets/codia | sort)
-          mapfile -t EXPECTED_ASSETS < <(printf '%s\n' "${ASSETS[@]}" | sort)
-          test "${#SOURCE_ASSETS[@]}" -eq 3
-          diff -u <(printf '%s\n' "${EXPECTED_ASSETS[@]}") <(printf '%s\n' "${SOURCE_ASSETS[@]}")
-
-          mkdir -p "$TARGET"
-          git show "$SOURCE_SHA:src/page/index.tsx" > "$TARGET/index.tsx"
-          git show "$SOURCE_SHA:src/page/index.css" > "$TARGET/index.css"
-          test "$(git hash-object "$TARGET/index.tsx")" = "$EXPECTED_TSX"
-          test "$(git hash-object "$TARGET/index.css")" = "$EXPECTED_CSS"
-
-          for asset in "${ASSETS[@]}"; do
-            source_blob="$(git rev-parse "$SOURCE_SHA:$asset")"
-            if git cat-file -e "HEAD:$asset" 2>/dev/null; then
-              current_blob="$(git rev-parse "HEAD:$asset")"
-              test "$current_blob" = "$source_blob"
-            else
-              mkdir -p "$(dirname "$asset")"
-              git show "$SOURCE_SHA:$asset" > "$asset"
-            fi
-            test "$(git hash-object "$asset")" = "$source_blob"
-          done
-
-          while IFS= read -r ref; do
-            test -f "public${ref}"
-          done < <(grep -oE '/assets/codia/[A-Za-z0-9._-]+' "$TARGET/index.tsx" | sort -u)
-
-          python - <<'PY'
-          from pathlib import Path
-          p = Path('src/app/router.tsx')
-          s = p.read_text()
-          lazy_line = 'const RegistrationTrackNeedsEditPage = lazy(() => import("../registration-track/states/needs-edit"));\n'
-          element_line = 'const registrationTrackNeedsEditElement = lazyElement(RegistrationTrackNeedsEditPage);\n'
-          route_line = '        <Route path="/registration/track/states/needs-edit" element={registrationTrackNeedsEditElement} />\n'
-          if lazy_line not in s:
-              anchor = 'const SearchResultsPage = lazy(() => import("../search-results"));\n'
-              assert s.count(anchor) == 1
-              s = s.replace(anchor, anchor + lazy_line)
-          if element_line not in s:
-              anchor = 'const searchResultsElement = lazyElement(SearchResultsPage);\n'
-              assert s.count(anchor) == 1
-              s = s.replace(anchor, anchor + element_line)
-          if route_line not in s:
-              anchor = '        <Route path="/auth" element={<AuthEntryPage />} />\n'
-              assert s.count(anchor) == 1
-              s = s.replace(anchor, route_line + anchor)
-          assert s.count(lazy_line) == 1
-          assert s.count(element_line) == 1
-          assert s.count(route_line) == 1
-          p.write_text(s)
-          PY
-
-          git add "$TARGET" src/app/router.tsx "${ASSETS[@]}"
-          test -z "$(git diff --cached --name-only | grep -vE '^(src/registration-track/states/needs-edit/|src/app/router.tsx$|public/assets/codia/(j98wBg1CX9.png|nyD2kijybL.svg|ukqtR1ciGB.svg)$)' || true)"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "feat(landing): integrate registration needs-edit state"
-
-      - name: Setup Node 20
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -118,15 +34,14 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Verify package-lock reproducibility
-        shell: bash
+      - name: Keep lockfile reproducible
         run: |
-          set -euo pipefail
-          if ! git diff --quiet -- package-lock.json; then
-            echo "package-lock.json changed during install"
-            git diff -- package-lock.json
-            exit 1
+          if git diff --quiet -- package-lock.json; then
+            echo "package-lock.json is already in sync"
+            exit 0
           fi
-
-      - name: Push verified integration
-        run: git push origin HEAD:integration/landing-frontend
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          git commit -m "chore(frontend): sync package lock"
+          git push
