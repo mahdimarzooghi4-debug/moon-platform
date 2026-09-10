@@ -4,8 +4,15 @@ import CompanyRegistrationPage from "../features/company-registration";
 import StartupRegistrationPage from "../features/startup-registration";
 import AuthEntryPage from "../page";
 
+const LandingPage = lazy(() => import("../landing/MahLandingPage"));
 const ProjectsPage = lazy(() => import("../features/projects/MahProjects"));
 const ProjectDetailsPage = lazy(() => import("../features/project-details"));
+
+const landingElement = (
+  <Suspense fallback={null}>
+    <LandingPage />
+  </Suspense>
+);
 
 const projectsElement = (
   <Suspense fallback={null}>
@@ -28,7 +35,7 @@ export function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<AuthEntryPage />} />
+        <Route path="/" element={landingElement} />
         <Route path="/auth" element={<AuthEntryPage />} />
         <Route path="/register/company" element={<CompanyRegistrationPage />} />
         <Route path="/register/startup" element={<StartupRegistrationPage />} />
