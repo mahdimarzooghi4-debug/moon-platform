@@ -46,6 +46,7 @@ const PrivacyPolicyPage = lazy(() => import("../privacy-policy"));
 const TermsPage = lazy(() => import("../terms"));
 const Article172GuidePage = lazy(() => import("../article-172-guide"));
 const SearchResultsPage = lazy(() => import("../search-results"));
+const SearchResultsInitialPage = lazy(() => import("../search-results/states/initial"));
 const RegistrationTrackNeedsEditPage = lazy(() => import("../registration-track/states/needs-edit"));
 const RegistrationTrackRejectedPage = lazy(() => import("../registration-track/states/rejected"));
 const NotFoundPage = lazy(() => import("../not-found"));
@@ -109,6 +110,7 @@ const privacyPolicyElement = lazyElement(PrivacyPolicyPage);
 const termsElement = lazyElement(TermsPage);
 const article172GuideElement = lazyElement(Article172GuidePage);
 const searchResultsElement = lazyElement(SearchResultsPage);
+const searchResultsInitialElement = lazyElement(SearchResultsInitialPage);
 const registrationTrackNeedsEditElement = lazyElement(RegistrationTrackNeedsEditPage);
 const registrationTrackRejectedElement = lazyElement(RegistrationTrackRejectedPage);
 const notFoundElement = lazyElement(NotFoundPage);
@@ -188,6 +190,7 @@ export function AppRouter() {
         <Route path="/privacy-policy" element={privacyPolicyElement} />
         <Route path="/terms" element={termsElement} />
         <Route path="/article-172-guide" element={article172GuideElement} />
+        <Route path="/search/states/initial" element={searchResultsInitialElement} />
         <Route path="/search" element={searchResultsElement} />
         <Route path="/404" element={notFoundElement} />
         <Route path="/registration/track/states/needs-edit" element={registrationTrackNeedsEditElement} />
