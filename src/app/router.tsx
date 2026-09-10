@@ -11,6 +11,7 @@ const ForStartupsPage = lazy(() => import("../startups/MahForStartups"));
 const HowItWorksPage = lazy(() => import("../how-it-works/MahHowItWorks"));
 const ImpactOverviewPage = lazy(() => import("../impact-overview"));
 const ImpactReportsListPage = lazy(() => import("../impact-reports-list"));
+const ImpactReportsListLoadingPage = lazy(() => import("../impact-reports-list/states/loading"));
 const ProjectImpactReportPage = lazy(() => import("../project-impact-report"));
 const ProjectImpactReportFinalPage = lazy(() => import("../project-impact-report/states/final"));
 const ProjectImpactReportPendingPage = lazy(() => import("../project-impact-report/states/pending"));
@@ -68,6 +69,7 @@ const startupsElement = lazyElement(ForStartupsPage);
 const howItWorksElement = lazyElement(HowItWorksPage);
 const impactOverviewElement = lazyElement(ImpactOverviewPage);
 const impactReportsListElement = lazyElement(ImpactReportsListPage);
+const impactReportsListLoadingElement = lazyElement(ImpactReportsListLoadingPage);
 const projectImpactReportElement = lazyElement(ProjectImpactReportPage);
 const projectImpactReportFinalElement = lazyElement(ProjectImpactReportFinalPage);
 const projectImpactReportPendingElement = lazyElement(ProjectImpactReportPendingPage);
@@ -132,6 +134,7 @@ export function AppRouter() {
         <Route path="/how-it-works" element={howItWorksElement} />
         <Route path="/impact" element={impactOverviewElement} />
         <Route path="/impact-overview" element={impactOverviewElement} />
+        <Route path="/impact-reports/states/loading" element={impactReportsListLoadingElement} />
         <Route path="/impact-reports" element={impactReportsListElement} />
         <Route path="/projects/impact-report/states/final" element={projectImpactReportFinalElement} />
         <Route path="/projects/impact-report/states/pending" element={projectImpactReportPendingElement} />
