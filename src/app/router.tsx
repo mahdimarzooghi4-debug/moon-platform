@@ -14,6 +14,9 @@ const FaqPage = lazy(() => import("../faq"));
 const ContactSupportPage = lazy(() => import("../contact-support"));
 const NewsListPage = lazy(() => import("../news-list"));
 const NewsDetailsPage = lazy(() => import("../news-details"));
+const PrivacyPolicyPage = lazy(() => import("../privacy-policy"));
+const TermsPage = lazy(() => import("../terms"));
+const Article172GuidePage = lazy(() => import("../article-172-guide"));
 const ProjectsPage = lazy(() => import("../features/projects/MahProjects"));
 const ProjectDetailsPage = lazy(() => import("../features/project-details"));
 
@@ -35,6 +38,9 @@ const faqElement = lazyElement(FaqPage);
 const contactSupportElement = lazyElement(ContactSupportPage);
 const newsListElement = lazyElement(NewsListPage);
 const newsDetailsElement = lazyElement(NewsDetailsPage);
+const privacyPolicyElement = lazyElement(PrivacyPolicyPage);
+const termsElement = lazyElement(TermsPage);
+const article172GuideElement = lazyElement(Article172GuidePage);
 const projectsElement = lazyElement(ProjectsPage);
 const projectDetailsElement = lazyElement(ProjectDetailsPage);
 
@@ -61,6 +67,9 @@ export function AppRouter() {
         <Route path="/contact-support" element={contactSupportElement} />
         <Route path="/news" element={newsListElement} />
         <Route path="/news/:newsId" element={newsDetailsElement} />
+        <Route path="/privacy-policy" element={privacyPolicyElement} />
+        <Route path="/terms" element={termsElement} />
+        <Route path="/article-172-guide" element={article172GuideElement} />
         <Route path="/auth" element={<AuthEntryPage />} />
         <Route path="/register/company" element={<CompanyRegistrationPage />} />
         <Route path="/register/startup" element={<StartupRegistrationPage />} />
