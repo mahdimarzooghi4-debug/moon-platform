@@ -21,6 +21,63 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Merge participation tracking pending and completed states
+        if: github.ref == 'refs/heads/integration/landing-frontend'
+        run: |
+          set -euo pipefail
+          BASE_SHA=$(git rev-parse HEAD)
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin feat/participation-track-pending feat/participation-track-completed
+
+          # Refuse to overwrite any existing asset with different content.
+          for ref in feat/participation-track-pending feat/participation-track-completed; do
+            while IFS= read -r asset; do
+              [ -z "$asset" ] && continue
+              if git cat-file -e "$BASE_SHA:$asset" 2>/dev/null; then
+                base_blob=$(git rev-parse "$BASE_SHA:$asset")
+                incoming_blob=$(git rev-parse "origin/$ref:$asset")
+                if [ "$base_blob" != "$incoming_blob" ]; then
+                  echo "Asset collision from $ref: $asset"
+                  exit 1
+                fi
+              fi
+            done < <(git ls-tree -r --name-only "origin/$ref" -- public/assets/)
+          done
+
+          if ! git merge-base --is-ancestor origin/feat/participation-track-pending HEAD; then
+            git merge --no-ff -X ours origin/feat/participation-track-pending -m "merge: participation tracking pending state"
+          fi
+          if ! git merge-base --is-ancestor origin/feat/participation-track-completed HEAD; then
+            git merge --no-ff -X ours origin/feat/participation-track-completed -m "merge: participation tracking completed state"
+          fi
+
+          # Keep integration infrastructure and Auth exactly as they were at the safe checkpoint.
+          git restore --source="$BASE_SHA" --staged --worktree -- .github .gitignore index.html package.json package-lock.json postcss.config.js tailwind.config.js vite.config.js src/App.tsx src/main.tsx src/page
+
+          # Preserve the approved Figma-derived sources under feature namespaces.
+          mkdir -p src/participation-track/pending src/participation-track/completed
+          git show origin/feat/participation-track-pending:src/page/index.tsx > src/participation-track/pending/index.tsx
+          git show origin/feat/participation-track-pending:src/page/index.css > src/participation-track/pending/index.css
+          git show origin/feat/participation-track-completed:src/page/index.tsx > src/participation-track/completed/index.tsx
+          git show origin/feat/participation-track-completed:src/page/index.css > src/participation-track/completed/index.css
+
+          # Copy only collision-checked assets from both states.
+          for ref in feat/participation-track-pending feat/participation-track-completed; do
+            while IFS= read -r asset; do
+              [ -z "$asset" ] && continue
+              mkdir -p "$(dirname "$asset")"
+              git show "origin/$ref:$asset" > "$asset"
+            done < <(git ls-tree -r --name-only "origin/$ref" -- public/assets/)
+          done
+
+          git add src/participation-track public/assets .github .gitignore index.html package.json package-lock.json postcss.config.js tailwind.config.js vite.config.js src/App.tsx src/main.tsx src/page
+          if ! git diff --cached --quiet; then
+            git commit -m "feat(landing): integrate participation tracking pending and completed states"
+          fi
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -44,4 +101,12 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add package-lock.json
           git commit -m "chore(frontend): sync package lock"
-          git push
+
+      - name: Push verified integration
+        if: github.ref == 'refs/heads/integration/landing-frontend'
+        run: |
+          if [ "$(git rev-parse HEAD)" != "${{ github.sha }}" ]; then
+            git push origin HEAD:integration/landing-frontend
+          else
+            echo "No integration commit to push"
+          fi
