@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import CompanyRegistrationPage from "../features/company-registration";
 import StartupRegistrationPage from "../features/startup-registration";
 import AuthEntryPage from "../page";
@@ -17,6 +17,8 @@ const NewsDetailsPage = lazy(() => import("../news-details"));
 const PrivacyPolicyPage = lazy(() => import("../privacy-policy"));
 const TermsPage = lazy(() => import("../terms"));
 const Article172GuidePage = lazy(() => import("../article-172-guide"));
+const SearchResultsPage = lazy(() => import("../search-results"));
+const NotFoundPage = lazy(() => import("../not-found"));
 const ProjectsPage = lazy(() => import("../features/projects/MahProjects"));
 const ProjectDetailsPage = lazy(() => import("../features/project-details"));
 
@@ -41,6 +43,8 @@ const newsDetailsElement = lazyElement(NewsDetailsPage);
 const privacyPolicyElement = lazyElement(PrivacyPolicyPage);
 const termsElement = lazyElement(TermsPage);
 const article172GuideElement = lazyElement(Article172GuidePage);
+const searchResultsElement = lazyElement(SearchResultsPage);
+const notFoundElement = lazyElement(NotFoundPage);
 const projectsElement = lazyElement(ProjectsPage);
 const projectDetailsElement = lazyElement(ProjectDetailsPage);
 
@@ -70,12 +74,14 @@ export function AppRouter() {
         <Route path="/privacy-policy" element={privacyPolicyElement} />
         <Route path="/terms" element={termsElement} />
         <Route path="/article-172-guide" element={article172GuideElement} />
+        <Route path="/search" element={searchResultsElement} />
+        <Route path="/404" element={notFoundElement} />
         <Route path="/auth" element={<AuthEntryPage />} />
         <Route path="/register/company" element={<CompanyRegistrationPage />} />
         <Route path="/register/startup" element={<StartupRegistrationPage />} />
         <Route path="/projects" element={projectsElement} />
         <Route path="/projects/:projectId" element={projectDetailsElement} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={notFoundElement} />
       </Routes>
     </BrowserRouter>
   );
