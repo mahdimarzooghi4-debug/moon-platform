@@ -21,6 +21,48 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Merge approved startup public batch
+        if: github.ref == 'refs/heads/integration/landing-frontend' && !contains(github.event.head_commit.message, '[landing-merge-bot]')
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin feat/startups-directory feat/startup-public-profile
+
+          for branch in feat/startups-directory feat/startup-public-profile; do
+            while IFS= read -r path; do
+              if git cat-file -e "HEAD:$path" 2>/dev/null; then
+                current_sha="$(git rev-parse "HEAD:$path")"
+                incoming_sha="$(git rev-parse "origin/$branch:$path")"
+                if [ "$current_sha" != "$incoming_sha" ]; then
+                  echo "::error::Asset collision with different content from $branch: $path"
+                  exit 1
+                fi
+              fi
+            done < <(git ls-tree -r --name-only "origin/$branch" public/assets)
+          done
+
+          for branch in feat/startups-directory feat/startup-public-profile; do
+            if git merge-base --is-ancestor "origin/$branch" HEAD; then
+              echo "$branch already integrated"
+            else
+              git merge --no-ff -X ours "origin/$branch" -m "merge(landing): integrate ${branch#feat/} [landing-merge-bot]"
+            fi
+          done
+
+          mkdir -p src/startups-directory src/startup-public-profile
+          git show origin/feat/startups-directory:src/page/index.tsx > src/startups-directory/index.tsx
+          git show origin/feat/startups-directory:src/page/index.css > src/startups-directory/index.css
+          git show origin/feat/startup-public-profile:src/page/index.tsx > src/startup-public-profile/index.tsx
+          git show origin/feat/startup-public-profile:src/page/index.css > src/startup-public-profile/index.css
+
+          if ! git diff --quiet || [ -n "$(git status --porcelain)" ]; then
+            git add -A src/startups-directory src/startup-public-profile
+            git commit -m "chore(landing): isolate startup public sources [landing-merge-bot]"
+          fi
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -38,10 +80,18 @@ jobs:
         run: |
           if git diff --quiet -- package-lock.json; then
             echo "package-lock.json is already in sync"
-            exit 0
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add package-lock.json
+            git commit -m "chore(frontend): sync package lock [landing-merge-bot]"
           fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add package-lock.json
-          git commit -m "chore(frontend): sync package lock"
-          git push
+
+      - name: Push verified integration
+        if: github.ref == 'refs/heads/integration/landing-frontend'
+        run: |
+          if [ "$(git rev-parse HEAD)" = "$(git rev-parse origin/integration/landing-frontend)" ]; then
+            echo "Nothing to push"
+          else
+            git push origin HEAD:integration/landing-frontend
+          fi
