@@ -24,35 +24,24 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Merge approved payment pending/canceled batch
+      - name: Merge approved funded participation state
         if: github.ref == 'refs/heads/integration/landing-frontend' && !contains(github.event.head_commit.message, '[landing-merge-bot]')
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git fetch origin feat/payment-result-pending feat/payment-result-canceled
+          git fetch origin feat/participation-checkout-project-funded
 
           base_sha="$(git rev-parse HEAD)"
+          branch="feat/participation-checkout-project-funded"
 
-          while IFS= read -r path; do
-            if git cat-file -e "HEAD:$path" 2>/dev/null; then
-              current_sha="$(git rev-parse "HEAD:$path")"
-              incoming_sha="$(git rev-parse "origin/feat/payment-result-canceled:$path")"
-              if [ "$current_sha" != "$incoming_sha" ]; then
-                echo "::error::Asset collision with different content: $path"
-                exit 1
-              fi
-            fi
-          done < <(git ls-tree -r --name-only origin/feat/payment-result-canceled public/assets)
+          if git merge-base --is-ancestor "origin/$branch" HEAD; then
+            echo "$branch already integrated"
+          else
+            git merge --no-ff -X ours "origin/$branch" -m "merge(landing): integrate participation checkout funded state [landing-merge-bot]"
+          fi
 
-          for branch in feat/payment-result-pending feat/payment-result-canceled; do
-            if git merge-base --is-ancestor "origin/$branch" HEAD; then
-              echo "$branch already integrated"
-            else
-              git merge --no-ff -X ours "origin/$branch" -m "merge(landing): integrate ${branch#feat/} [landing-merge-bot]"
-            fi
-          done
-
+          # Keep the shared integration shell and Auth page byte-for-byte intact.
           git restore --source="$base_sha" --staged --worktree -- \
             .github \
             .gitignore \
@@ -66,15 +55,13 @@ jobs:
             src/main.tsx \
             src/page
 
-          mkdir -p src/payment-result/pending src/payment-result/canceled
-          git show origin/feat/payment-result-pending:src/page/index.tsx > src/payment-result/pending/index.tsx
-          git show origin/feat/payment-result-pending:src/page/index.css > src/payment-result/pending/index.css
-          git show origin/feat/payment-result-canceled:src/page/index.tsx > src/payment-result/canceled/index.tsx
-          git show origin/feat/payment-result-canceled:src/page/index.css > src/payment-result/canceled/index.css
+          mkdir -p src/participation-checkout/funded
+          git show origin/feat/participation-checkout-project-funded:src/page/index.tsx > src/participation-checkout/funded/index.tsx
+          git show origin/feat/participation-checkout-project-funded:src/page/index.css > src/participation-checkout/funded/index.css
 
-          git add -A src/payment-result/pending src/payment-result/canceled
+          git add -A src/participation-checkout/funded
           if ! git diff --cached --quiet; then
-            git commit -m "chore(landing): isolate pending and canceled payment states [landing-merge-bot]"
+            git commit -m "chore(landing): isolate funded participation state [landing-merge-bot]"
           fi
 
           git diff --exit-code "$base_sha" -- \
