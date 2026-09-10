@@ -32,6 +32,8 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin feat/impact-reports-list feat/project-impact-report
 
+          base_sha="$(git rev-parse HEAD)"
+
           while IFS= read -r path; do
             if git cat-file -e "HEAD:$path" 2>/dev/null; then
               current_sha="$(git rev-parse "HEAD:$path")"
@@ -51,18 +53,47 @@ jobs:
             fi
           done
 
+          # Feature branches were generated as standalone apps under src/page.
+          # Restore the known-good integration shell exactly, then copy only the
+          # approved visual sources into namespaced feature directories.
+          git restore --source="$base_sha" --staged --worktree -- \
+            .github \
+            .gitignore \
+            index.html \
+            package.json \
+            package-lock.json \
+            postcss.config.js \
+            tailwind.config.js \
+            vite.config.js \
+            src/App.tsx \
+            src/main.tsx \
+            src/page
+
           mkdir -p src/impact-reports-list src/project-impact-report
           git show origin/feat/impact-reports-list:src/page/index.tsx > src/impact-reports-list/index.tsx
           git show origin/feat/impact-reports-list:src/page/index.css > src/impact-reports-list/index.css
           git show origin/feat/project-impact-report:src/page/index.tsx > src/project-impact-report/index.tsx
           git show origin/feat/project-impact-report:src/page/index.css > src/project-impact-report/index.css
 
-          git rm -f --ignore-unmatch .github/workflows/verify-build.yml
-
-          if ! git diff --quiet || [ -n "$(git status --porcelain)" ]; then
-            git add -A src/impact-reports-list src/project-impact-report .github/workflows || true
+          git add -A src/impact-reports-list src/project-impact-report
+          if ! git diff --cached --quiet; then
             git commit -m "chore(landing): isolate public reporting sources [landing-merge-bot]"
           fi
+
+          # Safety assertion: merging a standalone Figma snapshot must never
+          # alter the shared app shell or the current Auth page.
+          git diff --exit-code "$base_sha" -- \
+            .github \
+            .gitignore \
+            index.html \
+            package.json \
+            package-lock.json \
+            postcss.config.js \
+            tailwind.config.js \
+            vite.config.js \
+            src/App.tsx \
+            src/main.tsx \
+            src/page
 
       - name: Setup Node
         uses: actions/setup-node@v4
