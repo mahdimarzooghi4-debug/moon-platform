@@ -21,35 +21,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Merge approved landing batch
-        if: github.ref == 'refs/heads/integration/landing-frontend' && !contains(github.event.head_commit.message, '[landing-merge-bot]')
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git fetch origin feat/how-it-works feat/impact-overview
-
-          for branch in feat/how-it-works feat/impact-overview; do
-            if git merge-base --is-ancestor "origin/$branch" HEAD; then
-              echo "$branch already integrated"
-            else
-              git merge --no-ff -X ours "origin/$branch" -m "merge(landing): integrate ${branch#feat/} [landing-merge-bot]"
-            fi
-          done
-
-          mkdir -p src/how-it-works src/impact-overview
-          git show origin/feat/how-it-works:src/page/MahHowItWorks.tsx > src/how-it-works/MahHowItWorks.tsx
-          git show origin/feat/how-it-works:src/page/index.css > src/how-it-works/index.css
-          git show origin/feat/impact-overview:src/page/index.tsx > src/impact-overview/index.tsx
-          git show origin/feat/impact-overview:src/page/index.css > src/impact-overview/index.css
-          rm -f src/page/MahHowItWorks.tsx src/page/index.ts
-
-          if ! git diff --quiet || [ -n "$(git status --porcelain)" ]; then
-            git add -A src/how-it-works src/impact-overview src/page
-            git commit -m "chore(landing): isolate public page sources [landing-merge-bot]"
-          fi
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -67,18 +38,10 @@ jobs:
         run: |
           if git diff --quiet -- package-lock.json; then
             echo "package-lock.json is already in sync"
-          else
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add package-lock.json
-            git commit -m "chore(frontend): sync package lock [landing-merge-bot]"
+            exit 0
           fi
-
-      - name: Push verified integration
-        if: github.ref == 'refs/heads/integration/landing-frontend'
-        run: |
-          if [ "$(git rev-parse HEAD)" = "$(git rev-parse origin/integration/landing-frontend)" ]; then
-            echo "Nothing to push"
-          else
-            git push origin HEAD:integration/landing-frontend
-          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          git commit -m "chore(frontend): sync package lock"
+          git push
