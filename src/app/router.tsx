@@ -10,6 +10,8 @@ const ForCompaniesPage = lazy(() => import("../companies/MahForCompanies"));
 const ForStartupsPage = lazy(() => import("../startups/MahForStartups"));
 const HowItWorksPage = lazy(() => import("../how-it-works/MahHowItWorks"));
 const ImpactOverviewPage = lazy(() => import("../impact-overview"));
+const ImpactReportsListPage = lazy(() => import("../impact-reports-list"));
+const ProjectImpactReportPage = lazy(() => import("../project-impact-report"));
 const FaqPage = lazy(() => import("../faq"));
 const ContactSupportPage = lazy(() => import("../contact-support"));
 const NewsListPage = lazy(() => import("../news-list"));
@@ -38,6 +40,8 @@ const companiesElement = lazyElement(ForCompaniesPage);
 const startupsElement = lazyElement(ForStartupsPage);
 const howItWorksElement = lazyElement(HowItWorksPage);
 const impactOverviewElement = lazyElement(ImpactOverviewPage);
+const impactReportsListElement = lazyElement(ImpactReportsListPage);
+const projectImpactReportElement = lazyElement(ProjectImpactReportPage);
 const faqElement = lazyElement(FaqPage);
 const contactSupportElement = lazyElement(ContactSupportPage);
 const newsListElement = lazyElement(NewsListPage);
@@ -73,6 +77,8 @@ export function AppRouter() {
         <Route path="/how-it-works" element={howItWorksElement} />
         <Route path="/impact" element={impactOverviewElement} />
         <Route path="/impact-overview" element={impactOverviewElement} />
+        <Route path="/impact-reports" element={impactReportsListElement} />
+        <Route path="/projects/:projectId/impact-report" element={projectImpactReportElement} />
         <Route path="/faq" element={faqElement} />
         <Route path="/contact" element={contactSupportElement} />
         <Route path="/contact-support" element={contactSupportElement} />
