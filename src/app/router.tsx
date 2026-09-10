@@ -14,6 +14,8 @@ const ImpactReportsListPage = lazy(() => import("../impact-reports-list"));
 const ProjectImpactReportPage = lazy(() => import("../project-impact-report"));
 const ParticipationCheckoutPage = lazy(() => import("../participation-checkout"));
 const ParticipationCheckoutFundedPage = lazy(() => import("../participation-checkout/funded"));
+const ParticipationCheckoutLoadingPage = lazy(() => import("../participation-checkout/loading"));
+const ParticipationCheckoutRedirectingPage = lazy(() => import("../participation-checkout/redirecting"));
 const ParticipationModalPage = lazy(() => import("../participation-modal"));
 const PaymentResultSuccessPage = lazy(() => import("../payment-result/success"));
 const PaymentResultFailedPage = lazy(() => import("../payment-result/failed"));
@@ -52,6 +54,8 @@ const impactReportsListElement = lazyElement(ImpactReportsListPage);
 const projectImpactReportElement = lazyElement(ProjectImpactReportPage);
 const participationCheckoutElement = lazyElement(ParticipationCheckoutPage);
 const participationCheckoutFundedElement = lazyElement(ParticipationCheckoutFundedPage);
+const participationCheckoutLoadingElement = lazyElement(ParticipationCheckoutLoadingPage);
+const participationCheckoutRedirectingElement = lazyElement(ParticipationCheckoutRedirectingPage);
 const participationModalElement = lazyElement(ParticipationModalPage);
 const paymentResultSuccessElement = lazyElement(PaymentResultSuccessPage);
 const paymentResultFailedElement = lazyElement(PaymentResultFailedPage);
@@ -99,6 +103,10 @@ export function AppRouter() {
         <Route path="/projects/:projectId/participate" element={participationCheckoutElement} />
         <Route path="/participation/checkout/funded" element={participationCheckoutFundedElement} />
         <Route path="/projects/:projectId/participate/funded" element={participationCheckoutFundedElement} />
+        <Route path="/participation/checkout/loading" element={participationCheckoutLoadingElement} />
+        <Route path="/projects/:projectId/participate/loading" element={participationCheckoutLoadingElement} />
+        <Route path="/participation/checkout/redirecting" element={participationCheckoutRedirectingElement} />
+        <Route path="/projects/:projectId/participate/redirecting" element={participationCheckoutRedirectingElement} />
         <Route path="/participation/modal" element={participationModalElement} />
         <Route path="/payment/result/success" element={paymentResultSuccessElement} />
         <Route path="/payment/result/failed" element={paymentResultFailedElement} />
