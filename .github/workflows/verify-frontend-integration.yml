@@ -21,6 +21,59 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Merge participation tracking list and details
+        if: github.ref == 'refs/heads/integration/landing-frontend'
+        run: |
+          set -euo pipefail
+          BASE_SHA=$(git rev-parse HEAD)
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin feat/participation-track-list feat/participation-track-details
+
+          # Refuse to overwrite an existing details asset with different content.
+          while IFS= read -r asset; do
+            [ -z "$asset" ] && continue
+            if git cat-file -e "$BASE_SHA:$asset" 2>/dev/null; then
+              base_blob=$(git rev-parse "$BASE_SHA:$asset")
+              incoming_blob=$(git rev-parse "origin/feat/participation-track-details:$asset")
+              if [ "$base_blob" != "$incoming_blob" ]; then
+                echo "Asset collision: $asset"
+                exit 1
+              fi
+            fi
+          done < <(git ls-tree -r --name-only origin/feat/participation-track-details -- public/assets/)
+
+          if ! git merge-base --is-ancestor origin/feat/participation-track-list HEAD; then
+            git merge --no-ff -X ours origin/feat/participation-track-list -m "merge: participation tracking list"
+          fi
+          if ! git merge-base --is-ancestor origin/feat/participation-track-details HEAD; then
+            git merge --no-ff -X ours origin/feat/participation-track-details -m "merge: participation tracking details"
+          fi
+
+          # Keep integration infrastructure and Auth exactly as they were at the safe checkpoint.
+          git restore --source="$BASE_SHA" --staged --worktree -- .github .gitignore index.html package.json package-lock.json postcss.config.js tailwind.config.js vite.config.js src/App.tsx src/main.tsx src/page
+
+          # Preserve the approved Figma-derived sources under feature namespaces.
+          mkdir -p src/participation-track/list src/participation-track/details
+          git show origin/feat/participation-track-list:src/page/index.tsx > src/participation-track/list/index.tsx
+          git show origin/feat/participation-track-list:src/page/index.css > src/participation-track/list/index.css
+          git show origin/feat/participation-track-details:src/page/index.tsx > src/participation-track/details/index.tsx
+          git show origin/feat/participation-track-details:src/page/index.css > src/participation-track/details/index.css
+
+          # Copy only collision-checked details assets.
+          while IFS= read -r asset; do
+            [ -z "$asset" ] && continue
+            mkdir -p "$(dirname "$asset")"
+            git show "origin/feat/participation-track-details:$asset" > "$asset"
+          done < <(git ls-tree -r --name-only origin/feat/participation-track-details -- public/assets/)
+
+          git add src/participation-track public/assets .github .gitignore index.html package.json package-lock.json postcss.config.js tailwind.config.js vite.config.js src/App.tsx src/main.tsx src/page
+          if ! git diff --cached --quiet; then
+            git commit -m "feat(landing): integrate participation tracking list and details"
+          fi
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -44,4 +97,12 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add package-lock.json
           git commit -m "chore(frontend): sync package lock"
-          git push
+
+      - name: Push verified integration
+        if: github.ref == 'refs/heads/integration/landing-frontend'
+        run: |
+          if [ "$(git rev-parse HEAD)" != "${{ github.sha }}" ]; then
+            git push origin HEAD:integration/landing-frontend
+          else
+            echo "No integration commit to push"
+          fi
