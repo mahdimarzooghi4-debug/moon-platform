@@ -1,154 +1,28 @@
-name: Integrate Impact Reports No Results
+name: Verify frontend integration
 
 on:
   push:
     branches:
+      - integration/frontend-foundation
       - integration/landing-frontend
+  workflow_dispatch:
 
 permissions:
   contents: write
 
+concurrency:
+  group: frontend-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  integrate:
+  build:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Checkout integration branch
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: integration/landing-frontend
-          fetch-depth: 0
 
-      - name: Migrate pinned no-results state
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          SOURCE_BRANCH="feat/impact-reports-list-no-results"
-          SOURCE_SHA="f0310445cf193e350e934b972f52d7cd8ac869da"
-          TARGET_DIR="src/impact-reports-list/states/no-results"
-          ROUTER="src/app/router.tsx"
-
-          git fetch --no-tags origin "$SOURCE_BRANCH:refs/remotes/origin/$SOURCE_BRANCH"
-          ACTUAL_SOURCE_SHA="$(git rev-parse "refs/remotes/origin/$SOURCE_BRANCH")"
-          if [[ "$ACTUAL_SOURCE_SHA" != "$SOURCE_SHA" ]]; then
-            echo "Source branch moved: expected $SOURCE_SHA, got $ACTUAL_SOURCE_SHA" >&2
-            exit 1
-          fi
-
-          if [[ -e "$TARGET_DIR" ]]; then
-            echo "Refusing to overwrite existing target: $TARGET_DIR" >&2
-            exit 1
-          fi
-
-          mkdir -p "$TARGET_DIR"
-          git show "$SOURCE_SHA:src/page/index.tsx" > "$TARGET_DIR/index.tsx"
-          git show "$SOURCE_SHA:src/page/index.css" > "$TARGET_DIR/index.css"
-
-          test "$(git hash-object "$TARGET_DIR/index.tsx")" = "$(git rev-parse "$SOURCE_SHA:src/page/index.tsx")"
-          test "$(git hash-object "$TARGET_DIR/index.css")" = "$(git rev-parse "$SOURCE_SHA:src/page/index.css")"
-
-          if grep -R -n -F 'static.codia.ai' "$TARGET_DIR"; then
-            echo "External Codia asset reference found; refusing migration" >&2
-            exit 1
-          fi
-
-          mapfile -t SOURCE_ASSETS < <(git ls-tree -r --name-only "$SOURCE_SHA" -- public/assets)
-          if [[ "${#SOURCE_ASSETS[@]}" -ne 16 ]]; then
-            echo "Expected exactly 16 source assets, found ${#SOURCE_ASSETS[@]}" >&2
-            exit 1
-          fi
-
-          handled=0
-          for path in "${SOURCE_ASSETS[@]}"; do
-            source_blob="$(git rev-parse "$SOURCE_SHA:$path")"
-            if [[ -e "$path" ]]; then
-              target_blob="$(git hash-object "$path")"
-              if [[ "$target_blob" != "$source_blob" ]]; then
-                echo "Asset collision with different content: $path" >&2
-                exit 1
-              fi
-              echo "Reusing exact asset: $path"
-            else
-              mkdir -p "$(dirname "$path")"
-              git show "$SOURCE_SHA:$path" > "$path"
-              test "$(git hash-object "$path")" = "$source_blob"
-              echo "Copied source asset: $path"
-            fi
-            handled=$((handled + 1))
-          done
-          test "$handled" -eq "${#SOURCE_ASSETS[@]}"
-
-          python - <<'PY'
-          from pathlib import Path
-          import re
-
-          target = Path("src/impact-reports-list/states/no-results")
-          refs = set()
-          for path in (target / "index.tsx", target / "index.css"):
-              refs.update(re.findall(r"/assets/[A-Za-z0-9_./-]+", path.read_text()))
-          if not refs:
-              raise SystemExit("No /assets references found in migrated state")
-          missing = [ref for ref in sorted(refs) if not Path("public" + ref).is_file()]
-          if missing:
-              raise SystemExit("Missing referenced assets: " + ", ".join(missing))
-          print(f"Verified {len(refs)} referenced assets")
-          PY
-
-          python - <<'PY'
-          from pathlib import Path
-
-          path = Path("src/app/router.tsx")
-          text = path.read_text()
-
-          import_anchor = 'const ImpactReportsListEmptyPage = lazy(() => import("../impact-reports-list/states/empty"));\n'
-          new_import = 'const ImpactReportsListNoResultsPage = lazy(() => import("../impact-reports-list/states/no-results"));\n'
-          element_anchor = 'const impactReportsListEmptyElement = lazyElement(ImpactReportsListEmptyPage);\n'
-          new_element = 'const impactReportsListNoResultsElement = lazyElement(ImpactReportsListNoResultsPage);\n'
-          route_anchor = '        <Route path="/impact-reports/states/empty" element={impactReportsListEmptyElement} />\n'
-          new_route = '        <Route path="/impact-reports/states/no-results" element={impactReportsListNoResultsElement} />\n'
-
-          for anchor, addition, label in (
-              (import_anchor, new_import, "import"),
-              (element_anchor, new_element, "element"),
-              (route_anchor, new_route, "route"),
-          ):
-              if addition not in text:
-                  if text.count(anchor) != 1:
-                      raise SystemExit(f"Expected one {label} anchor, found {text.count(anchor)}")
-                  text = text.replace(anchor, anchor + addition, 1)
-
-          base_route = '        <Route path="/impact-reports" element={impactReportsListElement} />\n'
-          if text.count(new_import) != 1 or text.count(new_element) != 1 or text.count(new_route) != 1:
-              raise SystemExit("Router patch is not unique")
-          if text.index(new_route) > text.index(base_route):
-              raise SystemExit("No-results route must precede base impact-reports route")
-
-          path.write_text(text)
-          PY
-
-          git add "$TARGET_DIR" "$ROUTER"
-          for path in "${SOURCE_ASSETS[@]}"; do
-            git add "$path"
-          done
-
-          mapfile -t STAGED < <(git diff --cached --name-only)
-          if [[ "${#STAGED[@]}" -eq 0 ]]; then
-            echo "Nothing staged" >&2
-            exit 1
-          fi
-          for path in "${STAGED[@]}"; do
-            case "$path" in
-              "$TARGET_DIR"/*|public/assets/*|"$ROUTER") ;;
-              *) echo "Unexpected staged path: $path" >&2; exit 1 ;;
-            esac
-          done
-
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "feat(landing): integrate impact reports no-results state"
-
-      - name: Setup Node 20
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -160,18 +34,14 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Verify package-lock reproducibility
-        shell: bash
+      - name: Keep lockfile reproducible
         run: |
-          set -euo pipefail
           if git diff --quiet -- package-lock.json; then
-            echo "package-lock.json unchanged"
+            echo "package-lock.json is already in sync"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add package-lock.json
-          git commit -m "chore: sync package-lock after frontend integration"
-
-      - name: Push verified integration
-        run: git push origin HEAD:integration/landing-frontend
+          git commit -m "chore(frontend): sync package lock"
+          git push
