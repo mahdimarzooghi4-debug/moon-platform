@@ -1,109 +1,28 @@
-name: Integrate Public Impact Report Print
+name: Verify frontend integration
 
 on:
   push:
     branches:
+      - integration/frontend-foundation
       - integration/landing-frontend
+  workflow_dispatch:
 
 permissions:
   contents: write
 
+concurrency:
+  group: frontend-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  integrate:
+  build:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Checkout integration branch
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: integration/landing-frontend
-          fetch-depth: 0
 
-      - name: Migrate pinned printable impact report
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          SOURCE_BRANCH="feat/public-impact-report-print"
-          SOURCE_SHA="0d649308a22c8a6c9b88d00451b8ed711a2abe3f"
-          TARGET_DIR="src/project-impact-report/print"
-          ROUTER="src/app/router.tsx"
-
-          git fetch --no-tags origin "$SOURCE_BRANCH:refs/remotes/origin/$SOURCE_BRANCH"
-          ACTUAL_SOURCE_SHA="$(git rev-parse "refs/remotes/origin/$SOURCE_BRANCH")"
-          if [[ "$ACTUAL_SOURCE_SHA" != "$SOURCE_SHA" ]]; then
-            echo "Source branch moved: expected $SOURCE_SHA, got $ACTUAL_SOURCE_SHA" >&2
-            exit 1
-          fi
-
-          if [[ -e "$TARGET_DIR" ]]; then
-            echo "Refusing to overwrite existing target: $TARGET_DIR" >&2
-            exit 1
-          fi
-
-          mkdir -p "$TARGET_DIR"
-          git show "$SOURCE_SHA:src/page/index.tsx" > "$TARGET_DIR/index.tsx"
-          git show "$SOURCE_SHA:src/page/index.css" > "$TARGET_DIR/index.css"
-
-          test "$(git hash-object "$TARGET_DIR/index.tsx")" = "$(git rev-parse "$SOURCE_SHA:src/page/index.tsx")"
-          test "$(git hash-object "$TARGET_DIR/index.css")" = "$(git rev-parse "$SOURCE_SHA:src/page/index.css")"
-
-          if grep -R -n -E 'static\.codia\.ai|/assets/' "$TARGET_DIR"; then
-            echo "Unexpected external/local asset dependency found in printable report" >&2
-            exit 1
-          fi
-
-          python - <<'PY'
-          from pathlib import Path
-
-          path = Path("src/app/router.tsx")
-          text = path.read_text()
-
-          import_anchor = 'const ProjectImpactReportPendingPage = lazy(() => import("../project-impact-report/states/pending"));\n'
-          new_import = 'const ProjectImpactReportPrintPage = lazy(() => import("../project-impact-report/print"));\n'
-          element_anchor = 'const projectImpactReportPendingElement = lazyElement(ProjectImpactReportPendingPage);\n'
-          new_element = 'const projectImpactReportPrintElement = lazyElement(ProjectImpactReportPrintPage);\n'
-          route_anchor = '        <Route path="/projects/impact-report/states/pending" element={projectImpactReportPendingElement} />\n'
-          new_route = '        <Route path="/projects/impact-report/print" element={projectImpactReportPrintElement} />\n'
-
-          for anchor, addition, label in (
-              (import_anchor, new_import, "import"),
-              (element_anchor, new_element, "element"),
-              (route_anchor, new_route, "route"),
-          ):
-              if addition not in text:
-                  if text.count(anchor) != 1:
-                      raise SystemExit(f"Expected one {label} anchor, found {text.count(anchor)}")
-                  text = text.replace(anchor, anchor + addition, 1)
-
-          dynamic_route = '        <Route path="/projects/:projectId/impact-report" element={projectImpactReportElement} />\n'
-          if text.count(new_import) != 1 or text.count(new_element) != 1 or text.count(new_route) != 1:
-              raise SystemExit("Router patch is not unique")
-          if text.index(new_route) > text.index(dynamic_route):
-              raise SystemExit("Print route must precede dynamic project impact-report route")
-
-          path.write_text(text)
-          PY
-
-          git add "$TARGET_DIR" "$ROUTER"
-
-          mapfile -t STAGED < <(git diff --cached --name-only)
-          if [[ "${#STAGED[@]}" -eq 0 ]]; then
-            echo "Nothing staged" >&2
-            exit 1
-          fi
-          for path in "${STAGED[@]}"; do
-            case "$path" in
-              "$TARGET_DIR"/*|"$ROUTER") ;;
-              *) echo "Unexpected staged path: $path" >&2; exit 1 ;;
-            esac
-          done
-
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "feat(landing): integrate printable public impact report"
-
-      - name: Setup Node 20
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -115,18 +34,14 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Verify package-lock reproducibility
-        shell: bash
+      - name: Keep lockfile reproducible
         run: |
-          set -euo pipefail
           if git diff --quiet -- package-lock.json; then
-            echo "package-lock.json unchanged"
+            echo "package-lock.json is already in sync"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add package-lock.json
-          git commit -m "chore: sync package-lock after frontend integration"
-
-      - name: Push verified integration
-        run: git push origin HEAD:integration/landing-frontend
+          git commit -m "chore(frontend): sync package lock"
+          git push
