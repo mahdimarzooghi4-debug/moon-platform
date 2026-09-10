@@ -21,72 +21,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Integrate project impact report final state
-        if: github.ref == 'refs/heads/integration/landing-frontend'
-        shell: bash
-        run: |
-          set -euo pipefail
-          SOURCE_SHA='93de6345a1f3bb8a9d478317f6ee9c64a1c56559'
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git fetch origin 'feat/project-impact-report-final:refs/remotes/origin/feat/project-impact-report-final'
-          test "$(git rev-parse origin/feat/project-impact-report-final)" = "$SOURCE_SHA"
-
-          test -f public/assets/codia/qreWA0b9ix.png
-          test -f public/assets/codia/j0Pvw1w6QL.png
-
-          mkdir -p src/project-impact-report/states/final
-          git show "$SOURCE_SHA:src/page/index.tsx" > src/project-impact-report/states/final/index.tsx
-          git show "$SOURCE_SHA:src/page/index.css" > src/project-impact-report/states/final/index.css
-
-          test "$(git hash-object src/project-impact-report/states/final/index.tsx)" = "$(git rev-parse "$SOURCE_SHA:src/page/index.tsx")"
-          test "$(git hash-object src/project-impact-report/states/final/index.css)" = "$(git rev-parse "$SOURCE_SHA:src/page/index.css")"
-          ! grep -R 'static.codia.ai' src/project-impact-report/states/final
-
-          python - <<'PY'
-          from pathlib import Path
-
-          path = Path('src/app/router.tsx')
-          text = path.read_text()
-
-          additions = [
-              (
-                  'const ProjectImpactReportPage = lazy(() => import("../project-impact-report"));',
-                  'const ProjectImpactReportFinalPage = lazy(() => import("../project-impact-report/states/final"));',
-                  'after',
-              ),
-              (
-                  'const projectImpactReportElement = lazyElement(ProjectImpactReportPage);',
-                  'const projectImpactReportFinalElement = lazyElement(ProjectImpactReportFinalPage);',
-                  'after',
-              ),
-              (
-                  '        <Route path="/projects/:projectId/impact-report" element={projectImpactReportElement} />',
-                  '        <Route path="/projects/impact-report/states/final" element={projectImpactReportFinalElement} />',
-                  'before',
-              ),
-          ]
-
-          for anchor, addition, position in additions:
-              if addition in text:
-                  continue
-              if text.count(anchor) != 1:
-                  raise SystemExit(f'Expected exactly one router anchor: {anchor}')
-              if position == 'after':
-                  text = text.replace(anchor, anchor + '\n' + addition, 1)
-              else:
-                  text = text.replace(anchor, addition + '\n' + anchor, 1)
-
-          path.write_text(text)
-          PY
-
-          git add src/project-impact-report/states/final src/app/router.tsx
-          if ! git diff --cached --quiet; then
-            git commit -m "feat(landing): integrate project impact report final state"
-          fi
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -110,12 +44,4 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add package-lock.json
           git commit -m "chore(frontend): sync package lock"
-
-      - name: Push verified integration
-        if: github.ref == 'refs/heads/integration/landing-frontend'
-        run: |
-          if [ "$(git rev-parse HEAD)" != "${{ github.sha }}" ]; then
-            git push origin HEAD:integration/landing-frontend
-          else
-            echo "No integration commit to push"
-          fi
+          git push
