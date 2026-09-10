@@ -19,6 +19,8 @@ const TermsPage = lazy(() => import("../terms"));
 const Article172GuidePage = lazy(() => import("../article-172-guide"));
 const SearchResultsPage = lazy(() => import("../search-results"));
 const NotFoundPage = lazy(() => import("../not-found"));
+const StartupsDirectoryPage = lazy(() => import("../startups-directory"));
+const StartupPublicProfilePage = lazy(() => import("../startup-public-profile"));
 const ProjectsPage = lazy(() => import("../features/projects/MahProjects"));
 const ProjectDetailsPage = lazy(() => import("../features/project-details"));
 
@@ -45,6 +47,8 @@ const termsElement = lazyElement(TermsPage);
 const article172GuideElement = lazyElement(Article172GuidePage);
 const searchResultsElement = lazyElement(SearchResultsPage);
 const notFoundElement = lazyElement(NotFoundPage);
+const startupsDirectoryElement = lazyElement(StartupsDirectoryPage);
+const startupPublicProfileElement = lazyElement(StartupPublicProfilePage);
 const projectsElement = lazyElement(ProjectsPage);
 const projectDetailsElement = lazyElement(ProjectDetailsPage);
 
@@ -63,6 +67,9 @@ export function AppRouter() {
         <Route path="/for-companies" element={companiesElement} />
         <Route path="/startups" element={startupsElement} />
         <Route path="/for-startups" element={startupsElement} />
+        <Route path="/startups-directory" element={startupsDirectoryElement} />
+        <Route path="/startups/directory" element={startupsDirectoryElement} />
+        <Route path="/startups/:startupId" element={startupPublicProfileElement} />
         <Route path="/how-it-works" element={howItWorksElement} />
         <Route path="/impact" element={impactOverviewElement} />
         <Route path="/impact-overview" element={impactOverviewElement} />
