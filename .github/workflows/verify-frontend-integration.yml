@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - integration/frontend-foundation
+      - integration/landing-frontend
   workflow_dispatch:
 
 permissions:
