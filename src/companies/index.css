@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --default-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Ubuntu, "Helvetica Neue", Helvetica, Arial, "PingFang SC",
+    "Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei",
+    "Source Han Sans CN", sans-serif;
+}
+
+.main-container {
+  overflow: hidden;
+}
+
+.main-container,
+.main-container * {
+  box-sizing: border-box;
+}
+
+input,
+select,
+textarea,
+button {
+  outline: 0;
+}
+
+html {
+  direction: rtl;
+  font-family: "Vazirmatn Variable", "Vazirmatn", sans-serif;
+  background: #fcfbf8;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: #fcfbf8;
+}
+
+button, input, select, textarea {
+  font: inherit;
+}
