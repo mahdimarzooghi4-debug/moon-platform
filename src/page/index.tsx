@@ -164,13 +164,6 @@ export default function Main() {
               جهت فعال‌سازی دکمه ورود، ابتدا نوع حساب خود را از بالا انتخاب کنید.
             </p>
           </div>
-        </section>
-
-        <div className="mb-7 grid grid-cols-4 gap-4">
-          {kpis.map((kpi) => <article key={kpi.title} className="rounded-[18px] border border-[#e4ebf1] bg-white p-5">
-            <div className="mb-4 flex items-center justify-between"><span className="text-[13px] font-bold text-[#60758a]">{kpi.title}</span><span className="rounded-lg bg-[#eaf5fd] px-2 py-1 text-[12px] font-bold text-[#2094e3]">{kpi.percent}</span></div>
-            <strong className="block text-[26px] text-[#17324d]">{kpi.value}</strong><span className="mt-2 block text-[12px] text-[#8091a2]">{kpi.target}</span>
-          </article>)}
         </div>
       </main>
 
