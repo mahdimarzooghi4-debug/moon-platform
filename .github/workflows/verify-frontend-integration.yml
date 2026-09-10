@@ -21,78 +21,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Integrate project impact report pending state
-        if: github.ref == 'refs/heads/integration/landing-frontend'
-        shell: bash
-        run: |
-          set -euo pipefail
-          SOURCE_SHA='7e99230376d67b97673142fb96a572242552877c'
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git fetch origin 'feat/project-impact-report-pending:refs/remotes/origin/feat/project-impact-report-pending'
-          test "$(git rev-parse origin/feat/project-impact-report-pending)" = "$SOURCE_SHA"
-
-          test -f public/assets/codia/qreWA0b9ix.png
-          test -f public/assets/codia/j0Pvw1w6QL.png
-
-          TARGET='src/project-impact-report/states/pending'
-          if [ -e "$TARGET/index.tsx" ] || [ -e "$TARGET/index.css" ]; then
-            echo "Pending impact report target already exists; refusing overwrite"
-            exit 1
-          fi
-
-          mkdir -p "$TARGET"
-          git show "$SOURCE_SHA:src/page/index.tsx" > "$TARGET/index.tsx"
-          git show "$SOURCE_SHA:src/page/index.css" > "$TARGET/index.css"
-
-          test "$(git hash-object "$TARGET/index.tsx")" = "$(git rev-parse "$SOURCE_SHA:src/page/index.tsx")"
-          test "$(git hash-object "$TARGET/index.css")" = "$(git rev-parse "$SOURCE_SHA:src/page/index.css")"
-          ! grep -R 'static.codia.ai' "$TARGET"
-
-          python - <<'PY'
-          from pathlib import Path
-
-          path = Path('src/app/router.tsx')
-          text = path.read_text()
-
-          additions = [
-              (
-                  'const ProjectImpactReportFinalPage = lazy(() => import("../project-impact-report/states/final"));',
-                  'const ProjectImpactReportPendingPage = lazy(() => import("../project-impact-report/states/pending"));',
-                  'after',
-              ),
-              (
-                  'const projectImpactReportFinalElement = lazyElement(ProjectImpactReportFinalPage);',
-                  'const projectImpactReportPendingElement = lazyElement(ProjectImpactReportPendingPage);',
-                  'after',
-              ),
-              (
-                  '        <Route path="/projects/:projectId/impact-report" element={projectImpactReportElement} />',
-                  '        <Route path="/projects/impact-report/states/pending" element={projectImpactReportPendingElement} />',
-                  'before',
-              ),
-          ]
-
-          for anchor, addition, position in additions:
-              if addition in text:
-                  continue
-              if text.count(anchor) != 1:
-                  raise SystemExit(f'Expected exactly one router anchor: {anchor}')
-              if position == 'after':
-                  text = text.replace(anchor, anchor + '\n' + addition, 1)
-              else:
-                  text = text.replace(anchor, addition + '\n' + anchor, 1)
-
-          path.write_text(text)
-          PY
-
-          git add "$TARGET" src/app/router.tsx
-          if ! git diff --cached --quiet; then
-            git commit -m "feat(landing): integrate project impact report pending state"
-          fi
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -116,12 +44,4 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add package-lock.json
           git commit -m "chore(frontend): sync package lock"
-
-      - name: Push verified integration
-        if: github.ref == 'refs/heads/integration/landing-frontend'
-        run: |
-          if [ "$(git rev-parse HEAD)" != "${{ github.sha }}" ]; then
-            git push origin HEAD:integration/landing-frontend
-          else
-            echo "No integration commit to push"
-          fi
+          git push
