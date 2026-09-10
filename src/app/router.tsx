@@ -44,6 +44,8 @@ const NotFoundPage = lazy(() => import("../not-found"));
 const StartupsDirectoryPage = lazy(() => import("../startups-directory"));
 const StartupPublicProfilePage = lazy(() => import("../startup-public-profile"));
 const ProjectsPage = lazy(() => import("../features/projects/MahProjects"));
+const ProjectsLoadingPage = lazy(() => import("../features/projects/states/loading"));
+const ProjectsEmptyPage = lazy(() => import("../features/projects/states/empty"));
 const ProjectDetailsPage = lazy(() => import("../features/project-details"));
 
 function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
@@ -94,6 +96,8 @@ const notFoundElement = lazyElement(NotFoundPage);
 const startupsDirectoryElement = lazyElement(StartupsDirectoryPage);
 const startupPublicProfileElement = lazyElement(StartupPublicProfilePage);
 const projectsElement = lazyElement(ProjectsPage);
+const projectsLoadingElement = lazyElement(ProjectsLoadingPage);
+const projectsEmptyElement = lazyElement(ProjectsEmptyPage);
 const projectDetailsElement = lazyElement(ProjectDetailsPage);
 
 /**
@@ -161,6 +165,8 @@ export function AppRouter() {
         <Route path="/register/company" element={<CompanyRegistrationPage />} />
         <Route path="/register/startup" element={<StartupRegistrationPage />} />
         <Route path="/projects" element={projectsElement} />
+        <Route path="/projects/states/loading" element={projectsLoadingElement} />
+        <Route path="/projects/states/empty" element={projectsEmptyElement} />
         <Route path="/projects/:projectId" element={projectDetailsElement} />
         <Route path="*" element={notFoundElement} />
       </Routes>
