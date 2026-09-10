@@ -55,7 +55,7 @@ jobs:
           rm -f .github/workflows/verify-build.yml
 
           if ! git diff --quiet || [ -n "$(git status --porcelain)" ]; then
-            git add -A src/faq src/contact-support src/page .github/workflows/verify-build.yml || true
+            git add -A src/faq src/contact-support src/page .github/workflows
             git commit -m "chore(landing): isolate faq and contact sources [landing-merge-bot]"
           fi
 
