@@ -21,6 +21,103 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Integrate impact reports loading state
+        if: github.ref == 'refs/heads/integration/landing-frontend'
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_SHA='d5c2c55007e0cb8fb1265e3d129a6d8cff4f7ca6'
+          TARGET='src/impact-reports-list/states/loading'
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin 'feat/impact-reports-list-loading:refs/remotes/origin/feat/impact-reports-list-loading'
+          test "$(git rev-parse origin/feat/impact-reports-list-loading)" = "$SOURCE_SHA"
+
+          if [ -e "$TARGET" ]; then
+            echo "Impact reports loading target already exists; refusing overwrite"
+            exit 1
+          fi
+
+          mkdir -p "$TARGET"
+          git show "$SOURCE_SHA:src/page/index.tsx" > "$TARGET/index.tsx"
+          git show "$SOURCE_SHA:src/page/index.css" > "$TARGET/index.css"
+          test "$(git hash-object "$TARGET/index.tsx")" = "$(git rev-parse "$SOURCE_SHA:src/page/index.tsx")"
+          test "$(git hash-object "$TARGET/index.css")" = "$(git rev-parse "$SOURCE_SHA:src/page/index.css")"
+          ! grep -R 'static.codia.ai' "$TARGET"
+
+          SOURCE_ASSET_COUNT="$(git ls-tree -r --name-only "$SOURCE_SHA" public/assets | wc -l | tr -d ' ')"
+          test "$SOURCE_ASSET_COUNT" -gt 0
+          COPIED_ASSET_COUNT=0
+          REUSED_ASSET_COUNT=0
+          while IFS= read -r asset; do
+            [ -n "$asset" ] || continue
+            source_blob="$(git rev-parse "$SOURCE_SHA:$asset")"
+            if [ -e "$asset" ]; then
+              if [ "$(git hash-object "$asset")" != "$source_blob" ]; then
+                echo "Asset collision: $asset"
+                exit 1
+              fi
+              REUSED_ASSET_COUNT=$((REUSED_ASSET_COUNT + 1))
+              continue
+            fi
+            mkdir -p "$(dirname "$asset")"
+            git show "$SOURCE_SHA:$asset" > "$asset"
+            test "$(git hash-object "$asset")" = "$source_blob"
+            COPIED_ASSET_COUNT=$((COPIED_ASSET_COUNT + 1))
+          done < <(git ls-tree -r --name-only "$SOURCE_SHA" public/assets)
+          test $((COPIED_ASSET_COUNT + REUSED_ASSET_COUNT)) -eq "$SOURCE_ASSET_COUNT"
+          echo "Impact reports loading assets: source=$SOURCE_ASSET_COUNT copied=$COPIED_ASSET_COUNT reused=$REUSED_ASSET_COUNT"
+
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          target = Path('src/impact-reports-list/states/loading')
+          text = (target / 'index.tsx').read_text()
+          refs = sorted(set(re.findall(r'/assets/([A-Za-z0-9._/-]+)', text)))
+          missing = [ref for ref in refs if not (Path('public/assets') / ref).is_file()]
+          if missing:
+              raise SystemExit(f'Missing referenced assets: {missing}')
+
+          path = Path('src/app/router.tsx')
+          router = path.read_text()
+          additions = [
+              (
+                  'const ImpactReportsListPage = lazy(() => import("../impact-reports-list"));',
+                  'const ImpactReportsListLoadingPage = lazy(() => import("../impact-reports-list/states/loading"));',
+                  'after',
+              ),
+              (
+                  'const impactReportsListElement = lazyElement(ImpactReportsListPage);',
+                  'const impactReportsListLoadingElement = lazyElement(ImpactReportsListLoadingPage);',
+                  'after',
+              ),
+              (
+                  '        <Route path="/impact-reports" element={impactReportsListElement} />',
+                  '        <Route path="/impact-reports/states/loading" element={impactReportsListLoadingElement} />',
+                  'before',
+              ),
+          ]
+          for anchor, addition, position in additions:
+              if addition in router:
+                  continue
+              if router.count(anchor) != 1:
+                  raise SystemExit(f'Expected exactly one router anchor: {anchor}')
+              if position == 'after':
+                  router = router.replace(anchor, anchor + '\n' + addition, 1)
+              else:
+                  router = router.replace(anchor, addition + '\n' + anchor, 1)
+          path.write_text(router)
+          PY
+
+          git add "$TARGET" public/assets src/app/router.tsx
+          if ! git diff --cached --quiet; then
+            git commit -m "feat(landing): integrate impact reports loading state"
+          fi
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -44,4 +141,12 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add package-lock.json
           git commit -m "chore(frontend): sync package lock"
-          git push
+
+      - name: Push verified integration
+        if: github.ref == 'refs/heads/integration/landing-frontend'
+        run: |
+          if [ "$(git rev-parse HEAD)" != "${{ github.sha }}" ]; then
+            git push origin HEAD:integration/landing-frontend
+          else
+            echo "No integration commit to push"
+          fi
