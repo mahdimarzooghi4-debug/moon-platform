@@ -44,10 +44,10 @@ jobs:
           git show origin/feat/how-it-works:src/page/index.css > src/how-it-works/index.css
           git show origin/feat/impact-overview:src/page/index.tsx > src/impact-overview/index.tsx
           git show origin/feat/impact-overview:src/page/index.css > src/impact-overview/index.css
-          rm -f src/page/MahHowItWorks.tsx
+          rm -f src/page/MahHowItWorks.tsx src/page/index.ts
 
           if ! git diff --quiet || [ -n "$(git status --porcelain)" ]; then
-            git add src/how-it-works src/impact-overview src/page/MahHowItWorks.tsx || true
+            git add -A src/how-it-works src/impact-overview src/page
             git commit -m "chore(landing): isolate public page sources [landing-merge-bot]"
           fi
 
