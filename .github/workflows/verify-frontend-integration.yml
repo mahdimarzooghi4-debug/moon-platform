@@ -21,6 +21,106 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Integrate startup profile no-projects state
+        if: github.ref == 'refs/heads/integration/landing-frontend'
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_SHA='faf78d5f7a4a63024e7bcb2c1627ea5095e0a937'
+          TARGET='src/startup-public-profile/states/no-projects'
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin 'feat/startup-public-profile-no-projects:refs/remotes/origin/feat/startup-public-profile-no-projects'
+          test "$(git rev-parse origin/feat/startup-public-profile-no-projects)" = "$SOURCE_SHA"
+
+          if [ -e "$TARGET" ]; then
+            echo "Startup no-projects target already exists; refusing overwrite"
+            exit 1
+          fi
+
+          mkdir -p "$TARGET"
+          git show "$SOURCE_SHA:src/page/index.tsx" > "$TARGET/index.tsx"
+          git show "$SOURCE_SHA:src/page/index.css" > "$TARGET/index.css"
+          test "$(git hash-object "$TARGET/index.tsx")" = "$(git rev-parse "$SOURCE_SHA:src/page/index.tsx")"
+          test "$(git hash-object "$TARGET/index.css")" = "$(git rev-parse "$SOURCE_SHA:src/page/index.css")"
+          ! grep -R 'static.codia.ai' "$TARGET"
+
+          SOURCE_ASSET_COUNT="$(git ls-tree -r --name-only "$SOURCE_SHA" public/assets/codia | wc -l | tr -d ' ')"
+          test "$SOURCE_ASSET_COUNT" -gt 0
+          COPIED_ASSET_COUNT=0
+          REUSED_ASSET_COUNT=0
+          while IFS= read -r asset; do
+            [ -n "$asset" ] || continue
+            dest="$asset"
+            mkdir -p "$(dirname "$dest")"
+            source_blob="$(git rev-parse "$SOURCE_SHA:$asset")"
+            if [ -e "$dest" ]; then
+              if [ "$(git hash-object "$dest")" != "$source_blob" ]; then
+                echo "Asset collision: $asset"
+                exit 1
+              fi
+              REUSED_ASSET_COUNT=$((REUSED_ASSET_COUNT + 1))
+              continue
+            fi
+            git show "$SOURCE_SHA:$asset" > "$dest"
+            test "$(git hash-object "$dest")" = "$source_blob"
+            COPIED_ASSET_COUNT=$((COPIED_ASSET_COUNT + 1))
+          done < <(git ls-tree -r --name-only "$SOURCE_SHA" public/assets/codia)
+          test $((COPIED_ASSET_COUNT + REUSED_ASSET_COUNT)) -eq "$SOURCE_ASSET_COUNT"
+          echo "Startup no-projects assets: source=$SOURCE_ASSET_COUNT copied=$COPIED_ASSET_COUNT reused=$REUSED_ASSET_COUNT"
+
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          target = Path('src/startup-public-profile/states/no-projects')
+          text = (target / 'index.tsx').read_text()
+          refs = sorted(set(re.findall(r'/assets/codia/([A-Za-z0-9._-]+)', text)))
+          if not refs:
+              raise SystemExit('Expected Codia asset references in startup no-projects snapshot')
+          missing = [name for name in refs if not (Path('public/assets/codia') / name).is_file()]
+          if missing:
+              raise SystemExit(f'Missing referenced Codia assets: {missing}')
+
+          path = Path('src/app/router.tsx')
+          router = path.read_text()
+          additions = [
+              (
+                  'const StartupPublicProfilePage = lazy(() => import("../startup-public-profile"));',
+                  'const StartupPublicProfileNoProjectsPage = lazy(() => import("../startup-public-profile/states/no-projects"));',
+                  'after',
+              ),
+              (
+                  'const startupPublicProfileElement = lazyElement(StartupPublicProfilePage);',
+                  'const startupPublicProfileNoProjectsElement = lazyElement(StartupPublicProfileNoProjectsPage);',
+                  'after',
+              ),
+              (
+                  '        <Route path="/startups/:startupId" element={startupPublicProfileElement} />',
+                  '        <Route path="/startups/profile/states/no-projects" element={startupPublicProfileNoProjectsElement} />',
+                  'before',
+              ),
+          ]
+          for anchor, addition, position in additions:
+              if addition in router:
+                  continue
+              if router.count(anchor) != 1:
+                  raise SystemExit(f'Expected exactly one router anchor: {anchor}')
+              if position == 'after':
+                  router = router.replace(anchor, anchor + '\n' + addition, 1)
+              else:
+                  router = router.replace(anchor, addition + '\n' + anchor, 1)
+          path.write_text(router)
+          PY
+
+          git add "$TARGET" public/assets/codia src/app/router.tsx
+          if ! git diff --cached --quiet; then
+            git commit -m "feat(landing): integrate startup profile no-projects state"
+          fi
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -44,4 +144,12 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add package-lock.json
           git commit -m "chore(frontend): sync package lock"
-          git push
+
+      - name: Push verified integration
+        if: github.ref == 'refs/heads/integration/landing-frontend'
+        run: |
+          if [ "$(git rev-parse HEAD)" != "${{ github.sha }}" ]; then
+            git push origin HEAD:integration/landing-frontend
+          else
+            echo "No integration commit to push"
+          fi
