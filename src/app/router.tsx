@@ -21,6 +21,8 @@ const ParticipationCheckoutUnavailablePage = lazy(() => import("../participation
 const ParticipationModalPage = lazy(() => import("../participation-modal"));
 const ParticipationTrackFormPage = lazy(() => import("../participation-track/form"));
 const ParticipationTrackOtpPage = lazy(() => import("../participation-track/otp"));
+const ParticipationTrackListPage = lazy(() => import("../participation-track/list"));
+const ParticipationTrackDetailsPage = lazy(() => import("../participation-track/details"));
 const PaymentResultSuccessPage = lazy(() => import("../payment-result/success"));
 const PaymentResultFailedPage = lazy(() => import("../payment-result/failed"));
 const PaymentResultPendingPage = lazy(() => import("../payment-result/pending"));
@@ -65,6 +67,8 @@ const participationCheckoutUnavailableElement = lazyElement(ParticipationCheckou
 const participationModalElement = lazyElement(ParticipationModalPage);
 const participationTrackFormElement = lazyElement(ParticipationTrackFormPage);
 const participationTrackOtpElement = lazyElement(ParticipationTrackOtpPage);
+const participationTrackListElement = lazyElement(ParticipationTrackListPage);
+const participationTrackDetailsElement = lazyElement(ParticipationTrackDetailsPage);
 const paymentResultSuccessElement = lazyElement(PaymentResultSuccessPage);
 const paymentResultFailedElement = lazyElement(PaymentResultFailedPage);
 const paymentResultPendingElement = lazyElement(PaymentResultPendingPage);
@@ -123,6 +127,9 @@ export function AppRouter() {
         <Route path="/participation/track" element={participationTrackFormElement} />
         <Route path="/participation/track/form" element={participationTrackFormElement} />
         <Route path="/participation/track/otp" element={participationTrackOtpElement} />
+        <Route path="/participation/track/list" element={participationTrackListElement} />
+        <Route path="/participation/track/details" element={participationTrackDetailsElement} />
+        <Route path="/participation/track/:participationId" element={participationTrackDetailsElement} />
         <Route path="/payment/result/success" element={paymentResultSuccessElement} />
         <Route path="/payment/result/failed" element={paymentResultFailedElement} />
         <Route path="/payment/result/pending" element={paymentResultPendingElement} />
