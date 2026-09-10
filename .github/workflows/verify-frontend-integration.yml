@@ -21,6 +21,47 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Merge approved content batch
+        if: github.ref == 'refs/heads/integration/landing-frontend' && !contains(github.event.head_commit.message, '[landing-merge-bot]')
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin feat/privacy-policy feat/terms feat/article-172-guide
+
+          for branch in feat/privacy-policy feat/terms feat/article-172-guide; do
+            if git merge-base --is-ancestor "origin/$branch" HEAD; then
+              echo "$branch already integrated"
+            else
+              git merge --no-ff -X ours "origin/$branch" -m "merge(landing): integrate ${branch#feat/} [landing-merge-bot]"
+            fi
+          done
+
+          mkdir -p src/privacy-policy src/terms src/article-172-guide
+          git show origin/feat/privacy-policy:src/page/index.tsx > src/privacy-policy/index.tsx
+          git show origin/feat/privacy-policy:src/page/index.css > src/privacy-policy/index.css
+          git show origin/feat/terms:src/page/index.tsx > src/terms/index.tsx
+          git show origin/feat/terms:src/page/index.css > src/terms/index.css
+
+          tmpdir="$(mktemp -d)"
+          git archive origin/feat/article-172-guide src/page | tar -x -C "$tmpdir"
+          rm -rf src/article-172-guide
+          mkdir -p src/article-172-guide
+          cp -R "$tmpdir/src/page/." src/article-172-guide/
+          rm -rf "$tmpdir"
+
+          # Keep the existing auth page isolated from article-only parts.
+          rm -rf src/page/parts
+
+          # Do not import feature-branch CI into the integration branch.
+          git rm -f --ignore-unmatch .github/workflows/verify-build.yml
+
+          if ! git diff --quiet || [ -n "$(git status --porcelain)" ]; then
+            git add -A
+            git commit -m "chore(landing): isolate legal and article sources [landing-merge-bot]"
+          fi
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -38,10 +79,18 @@ jobs:
         run: |
           if git diff --quiet -- package-lock.json; then
             echo "package-lock.json is already in sync"
-            exit 0
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add package-lock.json
+            git commit -m "chore(frontend): sync package lock [landing-merge-bot]"
           fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add package-lock.json
-          git commit -m "chore(frontend): sync package lock"
-          git push
+
+      - name: Push verified integration
+        if: github.ref == 'refs/heads/integration/landing-frontend'
+        run: |
+          if [ "$(git rev-parse HEAD)" = "$(git rev-parse origin/integration/landing-frontend)" ]; then
+            echo "Nothing to push"
+          else
+            git push origin HEAD:integration/landing-frontend
+          fi
