@@ -46,6 +46,7 @@ const PrivacyPolicyPage = lazy(() => import("../privacy-policy"));
 const TermsPage = lazy(() => import("../terms"));
 const Article172GuidePage = lazy(() => import("../article-172-guide"));
 const SearchResultsPage = lazy(() => import("../search-results"));
+const RegistrationTrackNeedsEditPage = lazy(() => import("../registration-track/states/needs-edit"));
 const NotFoundPage = lazy(() => import("../not-found"));
 const StartupsDirectoryPage = lazy(() => import("../startups-directory"));
 const StartupPublicProfilePage = lazy(() => import("../startup-public-profile"));
@@ -107,6 +108,7 @@ const privacyPolicyElement = lazyElement(PrivacyPolicyPage);
 const termsElement = lazyElement(TermsPage);
 const article172GuideElement = lazyElement(Article172GuidePage);
 const searchResultsElement = lazyElement(SearchResultsPage);
+const registrationTrackNeedsEditElement = lazyElement(RegistrationTrackNeedsEditPage);
 const notFoundElement = lazyElement(NotFoundPage);
 const startupsDirectoryElement = lazyElement(StartupsDirectoryPage);
 const startupPublicProfileElement = lazyElement(StartupPublicProfilePage);
@@ -186,6 +188,7 @@ export function AppRouter() {
         <Route path="/article-172-guide" element={article172GuideElement} />
         <Route path="/search" element={searchResultsElement} />
         <Route path="/404" element={notFoundElement} />
+        <Route path="/registration/track/states/needs-edit" element={registrationTrackNeedsEditElement} />
         <Route path="/auth" element={<AuthEntryPage />} />
         <Route path="/register/company" element={<CompanyRegistrationPage />} />
         <Route path="/register/startup" element={<StartupRegistrationPage />} />
