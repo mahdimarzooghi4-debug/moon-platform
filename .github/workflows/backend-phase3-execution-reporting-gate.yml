@@ -1,0 +1,105 @@
+name: Backend Phase 3 Execution Reporting Gate
+
+on:
+  push:
+    branches:
+      - feat/backend-phase-3-execution
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_DB: moon
+          POSTGRES_USER: moon
+          POSTGRES_PASSWORD: moon-phase3-execution-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U moon -d moon"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore Moon.Platform.slnx
+
+      - name: Build with warnings as errors
+        run: dotnet build Moon.Platform.slnx --no-restore --configuration Release -warnaserror
+
+      - name: Install EF tool
+        run: dotnet tool install --global dotnet-ef --version 10.0.12
+
+      - name: Generate Phase 3 execution reporting migration when absent
+        id: migration
+        env:
+          ConnectionStrings__Postgres: Host=localhost;Port=5432;Database=moon;Username=moon;Password=moon-phase3-execution-only
+        run: |
+          set -euo pipefail
+          if grep -R -Fq 'partial class Phase3ExecutionReporting' src/Moon.Platform.Api/Infrastructure/Persistence/Migrations; then
+            echo 'generated=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          dotnet ef migrations add Phase3ExecutionReporting \
+            --project src/Moon.Platform.Api/Moon.Platform.Api.csproj \
+            --startup-project src/Moon.Platform.Api/Moon.Platform.Api.csproj
+          echo 'generated=true' >> "$GITHUB_OUTPUT"
+
+      - name: Commit generated migration
+        if: steps.migration.outputs.generated == 'true'
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/Moon.Platform.Api/Infrastructure/Persistence/Migrations
+          git commit -m 'chore(execution): add generated phase 3 reporting migration'
+          git push origin HEAD:feat/backend-phase-3-execution
+
+      - name: Stop after migration commit
+        if: steps.migration.outputs.generated == 'true'
+        run: echo 'Migration committed; a follow-up push will execute the full gate.'
+
+      - name: Verify committed migrations match model
+        if: steps.migration.outputs.generated != 'true'
+        run: dotnet ef migrations has-pending-model-changes --project src/Moon.Platform.Api/Moon.Platform.Api.csproj --startup-project src/Moon.Platform.Api/Moon.Platform.Api.csproj
+
+      - name: Test full backend against PostgreSQL 18
+        if: steps.migration.outputs.generated != 'true'
+        env:
+          TEST_POSTGRES: Host=localhost;Port=5432;Database=moon;Username=moon;Password=moon-phase3-execution-only
+        run: dotnet test Moon.Platform.slnx --no-build --configuration Release
+
+      - name: Execution reporting smoke checks
+        if: steps.migration.outputs.generated != 'true'
+        run: |
+          set -euo pipefail
+          test -f src/Moon.Platform.Api/Modules/Execution/ExecutionModels.cs
+          test -f src/Moon.Platform.Api/Modules/Execution/ExecutionService.cs
+          test -f src/Moon.Platform.Api/Modules/Execution/ExecutionEndpoints.cs
+          test -f src/Moon.Platform.Api/Modules/Execution/ExecutionIntegrityInterceptor.cs
+          test -f tests/Moon.Platform.Tests/Phase3ExecutionReportingTests.cs
+          grep -Fq 'execution_stage_blocked' src/Moon.Platform.Api/Modules/Execution/ExecutionService.cs
+          grep -Fq 'execution.report.approved' src/Moon.Platform.Api/Modules/Execution/ExecutionService.cs
+          grep -Fq 'ExecutionPolicies.Reviewer' src/Moon.Platform.Api/Program.cs
+          grep -Fq 'Approved_report_is_required_before_next_stage_can_accept_work' tests/Moon.Platform.Tests/Phase3ExecutionReportingTests.cs
