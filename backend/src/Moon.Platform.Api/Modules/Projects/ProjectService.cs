@@ -17,10 +17,32 @@ public interface IProjectService
         string? ipAddress,
         CancellationToken cancellationToken = default);
 
+    Task<ProjectOperationResult> CreateAsync(
+        Guid organizationId,
+        string title,
+        string description,
+        long? fundingTargetMinor,
+        string? fundingTargetCurrency,
+        string actorSubject,
+        string correlationId,
+        string? ipAddress,
+        CancellationToken cancellationToken = default);
+
     Task<ProjectOperationResult> AddVersionAsync(
         Guid projectId,
         string title,
         string description,
+        string actorSubject,
+        string correlationId,
+        string? ipAddress,
+        CancellationToken cancellationToken = default);
+
+    Task<ProjectOperationResult> AddVersionAsync(
+        Guid projectId,
+        string title,
+        string description,
+        long? fundingTargetMinor,
+        string? fundingTargetCurrency,
         string actorSubject,
         string correlationId,
         string? ipAddress,
@@ -48,16 +70,37 @@ public interface IProjectService
 
 public sealed class ProjectService(MoonDbContext dbContext, IAuditWriter auditWriter) : IProjectService
 {
-    public async Task<ProjectOperationResult> CreateAsync(
+    public Task<ProjectOperationResult> CreateAsync(
         Guid organizationId,
         string title,
         string description,
         string actorSubject,
         string correlationId,
         string? ipAddress,
+        CancellationToken cancellationToken = default) =>
+        CreateAsync(
+            organizationId,
+            title,
+            description,
+            null,
+            null,
+            actorSubject,
+            correlationId,
+            ipAddress,
+            cancellationToken);
+
+    public async Task<ProjectOperationResult> CreateAsync(
+        Guid organizationId,
+        string title,
+        string description,
+        long? fundingTargetMinor,
+        string? fundingTargetCurrency,
+        string actorSubject,
+        string correlationId,
+        string? ipAddress,
         CancellationToken cancellationToken = default)
     {
-        var validation = ValidateVersionInput(title, description);
+        var validation = ValidateVersionInput(title, description, fundingTargetMinor, fundingTargetCurrency, out var normalizedCurrency);
         if (validation is not null)
         {
             return validation;
@@ -81,6 +124,8 @@ public sealed class ProjectService(MoonDbContext dbContext, IAuditWriter auditWr
             VersionNumber = 1,
             Title = title.Trim(),
             Description = description.Trim(),
+            FundingTargetMinor = fundingTargetMinor,
+            FundingTargetCurrency = normalizedCurrency,
             CreatedBySubject = actorSubject
         };
 
@@ -103,7 +148,9 @@ public sealed class ProjectService(MoonDbContext dbContext, IAuditWriter auditWr
                 project.Status,
                 project.CurrentVersionNumber,
                 VersionId = version.Id,
-                version.VersionNumber
+                version.VersionNumber,
+                version.FundingTargetMinor,
+                version.FundingTargetCurrency
             }),
             IpAddress: ipAddress), cancellationToken);
 
@@ -111,16 +158,37 @@ public sealed class ProjectService(MoonDbContext dbContext, IAuditWriter auditWr
         return ProjectOperationResult.Success(await BuildViewAsync(project, cancellationToken));
     }
 
-    public async Task<ProjectOperationResult> AddVersionAsync(
+    public Task<ProjectOperationResult> AddVersionAsync(
         Guid projectId,
         string title,
         string description,
         string actorSubject,
         string correlationId,
         string? ipAddress,
+        CancellationToken cancellationToken = default) =>
+        AddVersionAsync(
+            projectId,
+            title,
+            description,
+            null,
+            null,
+            actorSubject,
+            correlationId,
+            ipAddress,
+            cancellationToken);
+
+    public async Task<ProjectOperationResult> AddVersionAsync(
+        Guid projectId,
+        string title,
+        string description,
+        long? fundingTargetMinor,
+        string? fundingTargetCurrency,
+        string actorSubject,
+        string correlationId,
+        string? ipAddress,
         CancellationToken cancellationToken = default)
     {
-        var validation = ValidateVersionInput(title, description);
+        var validation = ValidateVersionInput(title, description, fundingTargetMinor, fundingTargetCurrency, out var normalizedCurrency);
         if (validation is not null)
         {
             return validation;
@@ -161,6 +229,8 @@ public sealed class ProjectService(MoonDbContext dbContext, IAuditWriter auditWr
             VersionNumber = nextVersionNumber,
             Title = title.Trim(),
             Description = description.Trim(),
+            FundingTargetMinor = fundingTargetMinor,
+            FundingTargetCurrency = normalizedCurrency,
             CreatedBySubject = actorSubject
         };
         project.CurrentVersionNumber = nextVersionNumber;
@@ -179,6 +249,8 @@ public sealed class ProjectService(MoonDbContext dbContext, IAuditWriter auditWr
             {
                 nextVersion.Id,
                 nextVersion.VersionNumber,
+                nextVersion.FundingTargetMinor,
+                nextVersion.FundingTargetCurrency,
                 previousVersionLocked = currentVersion.VersionNumber
             }),
             IpAddress: ipAddress), cancellationToken);
@@ -239,7 +311,9 @@ public sealed class ProjectService(MoonDbContext dbContext, IAuditWriter auditWr
                 project.Status,
                 project.SubmittedAtUtc,
                 project.CurrentVersionNumber,
-                currentVersion.IsLocked
+                currentVersion.IsLocked,
+                currentVersion.FundingTargetMinor,
+                currentVersion.FundingTargetCurrency
             }),
             IpAddress: ipAddress), cancellationToken);
 
@@ -329,6 +403,8 @@ public sealed class ProjectService(MoonDbContext dbContext, IAuditWriter auditWr
                 project.PublishedAtUtc,
                 CurrentVersionId = currentVersion.Id,
                 currentVersion.VersionNumber,
+                currentVersion.FundingTargetMinor,
+                currentVersion.FundingTargetCurrency,
                 EvaluationId = evaluation.Id,
                 DecisionId = decision.Id
             }),
@@ -385,6 +461,8 @@ public sealed class ProjectService(MoonDbContext dbContext, IAuditWriter auditWr
                 x.VersionNumber,
                 x.Title,
                 x.Description,
+                x.FundingTargetMinor,
+                x.FundingTargetCurrency,
                 x.IsLocked,
                 x.CreatedBySubject,
                 x.CreatedAtUtc,
@@ -405,8 +483,15 @@ public sealed class ProjectService(MoonDbContext dbContext, IAuditWriter auditWr
             versions);
     }
 
-    private static ProjectOperationResult? ValidateVersionInput(string title, string description)
+    private static ProjectOperationResult? ValidateVersionInput(
+        string title,
+        string description,
+        long? fundingTargetMinor,
+        string? fundingTargetCurrency,
+        out string? normalizedCurrency)
     {
+        normalizedCurrency = null;
+
         if (string.IsNullOrWhiteSpace(title) || title.Trim().Length > 200)
         {
             return ProjectOperationResult.Failure("project_invalid_title", "Title is required and must be at most 200 characters.");
@@ -415,6 +500,33 @@ public sealed class ProjectService(MoonDbContext dbContext, IAuditWriter auditWr
         if (description is null || description.Trim().Length > 8000)
         {
             return ProjectOperationResult.Failure("project_invalid_description", "Description must be at most 8000 characters.");
+        }
+
+        if (fundingTargetMinor is null && string.IsNullOrWhiteSpace(fundingTargetCurrency))
+        {
+            return null;
+        }
+
+        if (fundingTargetMinor is null || string.IsNullOrWhiteSpace(fundingTargetCurrency))
+        {
+            return ProjectOperationResult.Failure(
+                "project_funding_target_incomplete",
+                "Funding target amount and currency must be supplied together.");
+        }
+
+        if (fundingTargetMinor <= 0)
+        {
+            return ProjectOperationResult.Failure(
+                "project_funding_target_invalid",
+                "Funding target amount must be greater than zero.");
+        }
+
+        normalizedCurrency = fundingTargetCurrency.Trim().ToUpperInvariant();
+        if (normalizedCurrency.Length != 3 || !normalizedCurrency.All(char.IsLetter))
+        {
+            return ProjectOperationResult.Failure(
+                "project_funding_target_currency_invalid",
+                "Funding target currency must be a three-letter alphabetic code.");
         }
 
         return null;
