@@ -1,0 +1,94 @@
+stages:
+  - verify
+  - package
+
+default:
+  interruptible: true
+
+frontend_verify:
+  stage: verify
+  image: node:20-alpine
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - .npm/
+  variables:
+    npm_config_cache: "$CI_PROJECT_DIR/.npm"
+  script:
+    - npm ci --no-audit --no-fund
+    - npm run build
+
+backend_verify:
+  stage: verify
+  image: mcr.microsoft.com/dotnet/sdk:10.0
+  services:
+    - name: postgres:18
+      alias: postgres
+    - name: rabbitmq:4-management
+      alias: rabbitmq
+  variables:
+    POSTGRES_DB: moon
+    POSTGRES_USER: moon
+    POSTGRES_PASSWORD: moon-ci-only
+    RABBITMQ_DEFAULT_USER: moon
+    RABBITMQ_DEFAULT_PASS: moon-ci-only
+    TEST_POSTGRES: "Host=postgres;Port=5432;Database=moon;Username=moon;Password=moon-ci-only"
+    TEST_RABBITMQ_HOST: rabbitmq
+    TEST_RABBITMQ_USER: moon
+    TEST_RABBITMQ_PASSWORD: moon-ci-only
+  before_script:
+    - export PATH="$PATH:/root/.dotnet/tools"
+    - dotnet tool install --global dotnet-ef --version 10.0.12
+    - for i in $(seq 1 60); do (echo > /dev/tcp/postgres/5432) >/dev/null 2>&1 && break; sleep 1; done
+    - for i in $(seq 1 60); do (echo > /dev/tcp/rabbitmq/5672) >/dev/null 2>&1 && break; sleep 1; done
+    - (echo > /dev/tcp/postgres/5432) >/dev/null 2>&1
+    - (echo > /dev/tcp/rabbitmq/5672) >/dev/null 2>&1
+  script:
+    - cd backend
+    - dotnet restore Moon.Platform.slnx
+    - dotnet build Moon.Platform.slnx -c Release --no-restore -warnaserror
+    - dotnet ef migrations has-pending-model-changes --project src/Moon.Platform.Api/Moon.Platform.Api.csproj --startup-project src/Moon.Platform.Api/Moon.Platform.Api.csproj
+    - dotnet test Moon.Platform.slnx -c Release --no-build --no-restore --logger "console;verbosity=normal"
+
+.container_job:
+  stage: package
+  image: docker:27-cli
+  services:
+    - name: docker:27-dind
+      alias: docker
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    - test -n "$CI_REGISTRY"
+    - test -n "$CI_REGISTRY_USER"
+    - test -n "$CI_REGISTRY_PASSWORD"
+    - test -n "$CI_REGISTRY_IMAGE"
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+  rules:
+    - if: '$CI_COMMIT_BRANCH'
+
+package_backend:
+  extends: .container_job
+  needs:
+    - backend_verify
+  script:
+    - export IMAGE="$CI_REGISTRY_IMAGE/backend"
+    - docker build --pull -f backend/Dockerfile -t "$IMAGE:$CI_COMMIT_SHA" -t "$IMAGE:$CI_COMMIT_REF_SLUG" backend
+    - docker push "$IMAGE:$CI_COMMIT_SHA"
+    - docker push "$IMAGE:$CI_COMMIT_REF_SLUG"
+
+package_frontend:
+  extends: .container_job
+  needs:
+    - frontend_verify
+  script:
+    - test -n "$VITE_OIDC_AUTHORITY"
+    - test -n "$VITE_OIDC_CLIENT_ID"
+    - test -n "$VITE_API_BASE_URL"
+    - export IMAGE="$CI_REGISTRY_IMAGE/frontend"
+    - docker build --pull -f Dockerfile --build-arg VITE_OIDC_AUTHORITY="$VITE_OIDC_AUTHORITY" --build-arg VITE_OIDC_CLIENT_ID="$VITE_OIDC_CLIENT_ID" --build-arg VITE_API_BASE_URL="$VITE_API_BASE_URL" -t "$IMAGE:$CI_COMMIT_SHA" -t "$IMAGE:$CI_COMMIT_REF_SLUG" .
+    - docker push "$IMAGE:$CI_COMMIT_SHA"
+    - docker push "$IMAGE:$CI_COMMIT_REF_SLUG"
