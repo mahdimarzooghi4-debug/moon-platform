@@ -5,6 +5,7 @@ on:
     branches:
       - integration/frontend-foundation
       - integration/landing-frontend
+      - integration/creative-house-frontend
   workflow_dispatch:
 
 permissions:
