@@ -35,3 +35,57 @@
 .admin-detail-actions .admin-users-button-primary {
   min-width: 160px;
 }
+
+.admin-revenue-schedule {
+  width: 1160px;
+  height: 126px;
+  box-sizing: border-box;
+  padding: 12px 22px 16px;
+  flex: 0 0 auto;
+  border: 1px solid #d6e5f2;
+  border-radius: 12px;
+  background: #e8f5fc;
+  text-align: right;
+  direction: rtl;
+}
+
+.admin-revenue-schedule h2,
+.admin-revenue-schedule p {
+  margin: 0;
+}
+
+.admin-revenue-schedule h2 {
+  color: #17334f;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.admin-revenue-schedule p {
+  color: #61758a;
+  font-size: 10px;
+  line-height: 20px;
+}
+
+.admin-revenue-tiers {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(5, 210px);
+  gap: 8px;
+  direction: ltr;
+}
+
+.admin-revenue-tier {
+  height: 38px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #d6e5f2;
+  border-radius: 8px;
+  background: #fff;
+  color: #17334f;
+  font-size: 10px;
+  font-weight: 500;
+  direction: rtl;
+}
