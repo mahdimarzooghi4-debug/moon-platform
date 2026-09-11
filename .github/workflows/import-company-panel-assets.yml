@@ -1,0 +1,57 @@
+name: Import Company Panel dashboard assets
+
+on:
+  push:
+    branches:
+      - feat/company-panel-assets
+
+permissions:
+  contents: write
+
+jobs:
+  import-assets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Verify pinned base
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "da7b028fcdb9ae273470280aa780e60e8010a48d"
+          test "$(git rev-parse HEAD^:.github/workflows/verify-frontend-integration.yml)" = "39906066a9546d895c4334a96607648b31593474"
+
+      - name: Download exact Figma exports
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p public/assets/company-panel
+          curl -fsSL --retry 3 'https://www.figma.com/api/mcp/asset/d76f97bb-5dbe-42aa-9926-aee2a1249d4c.png' -o public/assets/company-panel/logo.png
+          curl -fsSL --retry 3 'https://www.figma.com/api/mcp/asset/0a443802-b681-47c2-b904-d327a0d42c90.svg' -o public/assets/company-panel/kpi-projects.svg
+          curl -fsSL --retry 3 'https://www.figma.com/api/mcp/asset/a9beeefc-8fb4-4055-b8da-63e4ea54dc9e.svg' -o public/assets/company-panel/kpi-participations.svg
+          curl -fsSL --retry 3 'https://www.figma.com/api/mcp/asset/f9cb0ddd-1690-4736-be8c-e90b95dc92d7.svg' -o public/assets/company-panel/kpi-amount.svg
+          curl -fsSL --retry 3 'https://www.figma.com/api/mcp/asset/066e03db-e9df-46fc-bc92-c66d1403936e.svg' -o public/assets/company-panel/kpi-certificate.svg
+          curl -fsSL --retry 3 'https://www.figma.com/api/mcp/asset/a41206b5-440a-42ea-9c1d-1ae1bf0fa226.svg' -o public/assets/company-panel/nav-dashboard.svg
+          curl -fsSL --retry 3 'https://www.figma.com/api/mcp/asset/b3cc03c6-d0a9-460c-8bf1-e4222726e249.svg' -o public/assets/company-panel/nav-social-projects.svg
+          curl -fsSL --retry 3 'https://www.figma.com/api/mcp/asset/c28ed8bb-be5d-4441-acd4-32983d39fe21.svg' -o public/assets/company-panel/nav-participations.svg
+          curl -fsSL --retry 3 'https://www.figma.com/api/mcp/asset/de0559a9-bba2-4ccd-9d88-2167f19fc516.svg' -o public/assets/company-panel/nav-reports.svg
+          curl -fsSL --retry 3 'https://www.figma.com/api/mcp/asset/59ae313a-d456-4d50-8135-49ca9e21c333.svg' -o public/assets/company-panel/nav-certificate.svg
+          curl -fsSL --retry 3 'https://www.figma.com/api/mcp/asset/b8154a1f-3354-46d8-9de6-3f222ca26c18.svg' -o public/assets/company-panel/nav-account.svg
+          curl -fsSL --retry 3 'https://www.figma.com/api/mcp/asset/fb6b9208-0fe7-4c2e-83a9-91ff4e8e65a5.svg' -o public/assets/company-panel/nav-logout.svg
+          test "$(find public/assets/company-panel -type f -size +0c | wc -l)" -eq 12
+          for f in public/assets/company-panel/*; do printf '%s %s\n' "$(git hash-object "$f")" "$f"; done | sort
+
+      - name: Commit assets and remove temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/import-company-panel-assets.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/assets/company-panel .github/workflows/import-company-panel-assets.yml
+          git commit -m "feat(company-panel): import dashboard Figma assets"
+          git push origin HEAD:feat/company-panel-assets
