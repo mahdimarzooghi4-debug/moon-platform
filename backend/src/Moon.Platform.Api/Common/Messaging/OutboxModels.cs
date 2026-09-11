@@ -1,4 +1,7 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 
 namespace Moon.Platform.Api.Common.Messaging;
 
@@ -9,22 +12,43 @@ public static class IntegrationEventTypes
     public const string FundingThresholdReached = "FundingThresholdReached";
 }
 
+[Table("outbox_messages", Schema = "moon")]
+[Index(nameof(DeduplicationKey), IsUnique = true)]
+[Index(nameof(PublishedAtUtc), nameof(DeadLetteredAtUtc), nameof(NextAttemptAtUtc))]
+[Index(nameof(LockedUntilUtc))]
 public sealed class OutboxMessage
 {
     public Guid Id { get; init; } = Guid.NewGuid();
+
+    [MaxLength(120)]
     public string EventType { get; init; } = string.Empty;
+
+    [MaxLength(120)]
     public string AggregateType { get; init; } = string.Empty;
+
+    [MaxLength(200)]
     public string AggregateId { get; init; } = string.Empty;
+
+    [MaxLength(240)]
     public string DeduplicationKey { get; init; } = string.Empty;
+
     public string PayloadJson { get; init; } = string.Empty;
+
+    [MaxLength(128)]
     public string CorrelationId { get; init; } = string.Empty;
+
     public DateTimeOffset OccurredAtUtc { get; init; } = DateTimeOffset.UtcNow;
     public DateTimeOffset NextAttemptAtUtc { get; set; } = DateTimeOffset.UtcNow;
     public int PublishAttempts { get; set; }
     public DateTimeOffset? LockedUntilUtc { get; set; }
+
+    [MaxLength(200)]
     public string? LockedBy { get; set; }
+
     public DateTimeOffset? PublishedAtUtc { get; set; }
     public DateTimeOffset? DeadLetteredAtUtc { get; set; }
+
+    [MaxLength(2000)]
     public string? LastError { get; set; }
 }
 
