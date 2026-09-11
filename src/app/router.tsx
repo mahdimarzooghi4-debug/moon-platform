@@ -95,6 +95,13 @@ const CompanyParticipationsPage = lazy(() => import("../features/company-panel/p
 const CompanyParticipationDetailPage = lazy(() => import("../features/company-panel/participation-detail"));
 const CompanyReportsPage = lazy(() => import("../features/company-panel/reports"));
 const CompanyReportDetailPage = lazy(() => import("../features/company-panel/report-detail"));
+const CompanyArticle172CertificatesPage = lazy(() => import("../features/company-panel/certificates"));
+const CompanyArticle172CertificateDetailPage = lazy(() => import("../features/company-panel/certificate-detail"));
+const CompanyArticle172CertificateIssuedPage = lazy(() => import("../features/company-panel/certificate-issued"));
+const CompanyOrganizationAccountPage = lazy(() => import("../features/company-panel/account"));
+const CompanyEditOrganizationInfoPage = lazy(() => import("../features/company-panel/account-edit-organization"));
+const CompanyEditOrganizationRepresentativePage = lazy(() => import("../features/company-panel/account-edit-representative"));
+const CompanyEditTaxAndDocumentsPage = lazy(() => import("../features/company-panel/account-edit-tax-documents"));
 
 function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
   return (
@@ -195,6 +202,13 @@ const companyParticipationsElement = lazyElement(CompanyParticipationsPage);
 const companyParticipationDetailElement = lazyElement(CompanyParticipationDetailPage);
 const companyReportsElement = lazyElement(CompanyReportsPage);
 const companyReportDetailElement = lazyElement(CompanyReportDetailPage);
+const companyArticle172CertificatesElement = lazyElement(CompanyArticle172CertificatesPage);
+const companyArticle172CertificateDetailElement = lazyElement(CompanyArticle172CertificateDetailPage);
+const companyArticle172CertificateIssuedElement = lazyElement(CompanyArticle172CertificateIssuedPage);
+const companyOrganizationAccountElement = lazyElement(CompanyOrganizationAccountPage);
+const companyEditOrganizationInfoElement = lazyElement(CompanyEditOrganizationInfoPage);
+const companyEditOrganizationRepresentativeElement = lazyElement(CompanyEditOrganizationRepresentativePage);
+const companyEditTaxAndDocumentsElement = lazyElement(CompanyEditTaxAndDocumentsPage);
 
 /**
  * Routes are introduced around the existing Figma-derived screens so their
@@ -303,6 +317,13 @@ export function AppRouter() {
         <Route path="/panel/company/participations/:participationId" element={companyParticipationDetailElement} />
         <Route path="/panel/company/reports" element={companyReportsElement} />
         <Route path="/panel/company/reports/:reportId" element={companyReportDetailElement} />
+        <Route path="/panel/company/certificates" element={companyArticle172CertificatesElement} />
+        <Route path="/panel/company/certificates/:certificateId/issued" element={companyArticle172CertificateIssuedElement} />
+        <Route path="/panel/company/certificates/:certificateId" element={companyArticle172CertificateDetailElement} />
+        <Route path="/panel/company/account" element={companyOrganizationAccountElement} />
+        <Route path="/panel/company/account/edit/organization" element={companyEditOrganizationInfoElement} />
+        <Route path="/panel/company/account/edit/representative" element={companyEditOrganizationRepresentativeElement} />
+        <Route path="/panel/company/account/edit/tax-documents" element={companyEditTaxAndDocumentsElement} />
         <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/fund-released" element={startupProjectStageFundReleasedElement} />
         <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/evaluation/approved" element={startupProjectStageEvaluationElement} />
         <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/submitted" element={startupProjectStageReportSubmittedElement} />
