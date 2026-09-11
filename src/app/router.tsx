@@ -72,6 +72,20 @@ const CreativeHouseStartupEvaluationsPage = lazy(() => import("../panels/creativ
 const CreativeHouseStartupEvaluationDetailPage = lazy(() => import("../panels/creative-house/startup-evaluation-detail"));
 const CreativeHouseProjectEvaluationsPage = lazy(() => import("../panels/creative-house/project-evaluations"));
 
+const CreativeHouseProjectEvaluationDetailPage = lazy(() => import("../panels/creative-house/project-evaluation-detail"));
+
+const CreativeHouseMilestoneEvaluationsPage = lazy(() => import("../panels/creative-house/milestone-evaluations"));
+
+const CreativeHouseMilestoneEvaluationDetailPage = lazy(() => import("../panels/creative-house/milestone-evaluation-detail"));
+
+const CreativeHouseReportsPage = lazy(() => import("../panels/creative-house/reports"));
+
+const CreativeHouseEvaluationHistoryPage = lazy(() => import("../panels/creative-house/evaluation-history"));
+
+const CreativeHouseSettingsPage = lazy(() => import("../panels/creative-house/settings"));
+
+const CreativeHouseReportDetailPage = lazy(() => import("../panels/creative-house/report-detail"));
+
 function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
   return (
     <Suspense fallback={null}>
@@ -84,6 +98,20 @@ const creativeHouseDashboardElement = lazyElement(CreativeHouseDashboardPage);
 const creativeHouseStartupEvaluationsElement = lazyElement(CreativeHouseStartupEvaluationsPage);
 const creativeHouseStartupEvaluationDetailElement = lazyElement(CreativeHouseStartupEvaluationDetailPage);
 const creativeHouseProjectEvaluationsElement = lazyElement(CreativeHouseProjectEvaluationsPage);
+
+const creativeHouseProjectEvaluationDetailElement = lazyElement(CreativeHouseProjectEvaluationDetailPage);
+
+const creativeHouseMilestoneEvaluationsElement = lazyElement(CreativeHouseMilestoneEvaluationsPage);
+
+const creativeHouseMilestoneEvaluationDetailElement = lazyElement(CreativeHouseMilestoneEvaluationDetailPage);
+
+const creativeHouseReportsElement = lazyElement(CreativeHouseReportsPage);
+
+const creativeHouseEvaluationHistoryElement = lazyElement(CreativeHouseEvaluationHistoryPage);
+
+const creativeHouseSettingsElement = lazyElement(CreativeHouseSettingsPage);
+
+const creativeHouseReportDetailElement = lazyElement(CreativeHouseReportDetailPage);
 
 const landingElement = lazyElement(LandingPage);
 const aboutElement = lazyElement(AboutPage);
@@ -226,6 +254,13 @@ export function AppRouter() {
         <Route path="/panel/creative-house/startup-evaluations" element={creativeHouseStartupEvaluationsElement} />
         <Route path="/panel/creative-house/startup-evaluations/detail" element={creativeHouseStartupEvaluationDetailElement} />
         <Route path="/panel/creative-house/project-evaluations" element={creativeHouseProjectEvaluationsElement} />
+        <Route path="/panel/creative-house/project-evaluations/detail" element={creativeHouseProjectEvaluationDetailElement} />
+        <Route path="/panel/creative-house/milestone-evaluations" element={creativeHouseMilestoneEvaluationsElement} />
+        <Route path="/panel/creative-house/milestone-evaluations/detail" element={creativeHouseMilestoneEvaluationDetailElement} />
+        <Route path="/panel/creative-house/reports" element={creativeHouseReportsElement} />
+        <Route path="/panel/creative-house/evaluation-history" element={creativeHouseEvaluationHistoryElement} />
+        <Route path="/panel/creative-house/settings" element={creativeHouseSettingsElement} />
+        <Route path="/panel/creative-house/reports/detail" element={creativeHouseReportDetailElement} />
         <Route path="/auth" element={<AuthEntryPage />} />
         <Route path="/register/company/states/step2" element={companyRegistrationStep2Element} />
         <Route path="/register/company/status" element={companyRegistrationStatusElement} />
