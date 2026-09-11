@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Moon.Platform.Api.Common.Auditing;
+using Moon.Platform.Api.Common.Messaging;
 using Moon.Platform.Api.Infrastructure.Persistence;
 using Moon.Platform.Api.Modules.Projects;
 using Npgsql;
@@ -32,8 +33,13 @@ public interface ILedgerService
         CancellationToken cancellationToken = default);
 }
 
-public sealed class LedgerService(MoonDbContext dbContext, IAuditWriter auditWriter) : ILedgerService
+public sealed class LedgerService(
+    MoonDbContext dbContext,
+    IAuditWriter auditWriter,
+    IOutboxWriter? outboxWriter = null) : ILedgerService
 {
+    private readonly IOutboxWriter _outboxWriter = outboxWriter ?? new OutboxWriter(dbContext);
+
     public async Task<LedgerOperationResult> PostReconciledPaymentAsync(
         Guid paymentId,
         string idempotencyKey,
@@ -77,7 +83,7 @@ public sealed class LedgerService(MoonDbContext dbContext, IAuditWriter auditWri
                 "Only reconciled payments can be posted to the ledger.");
         }
 
-        var existingPosting = await dbContext.Set<LedgerJournal>()
+        var existingPosting = await dbContext.LedgerJournals
             .AsNoTracking()
             .Include(x => x.Entries)
             .SingleOrDefaultAsync(
@@ -102,6 +108,15 @@ public sealed class LedgerService(MoonDbContext dbContext, IAuditWriter auditWri
                 project => project.Id,
                 (commitment, project) => new { commitment.ProjectId, project.OrganizationId })
             .SingleAsync(cancellationToken);
+
+        var lockedProject = await dbContext.Projects
+            .FromSqlInterpolated($"SELECT * FROM moon.projects WHERE \"Id\" = {scope.ProjectId} FOR UPDATE")
+            .SingleAsync(cancellationToken);
+
+        var currentVersion = await dbContext.ProjectVersions.AsNoTracking()
+            .SingleAsync(
+                x => x.ProjectId == lockedProject.Id && x.VersionNumber == lockedProject.CurrentVersionNumber,
+                cancellationToken);
 
         var journal = new LedgerJournal
         {
@@ -135,7 +150,7 @@ public sealed class LedgerService(MoonDbContext dbContext, IAuditWriter auditWri
             Journal = journal
         });
 
-        dbContext.Set<LedgerJournal>().Add(journal);
+        dbContext.LedgerJournals.Add(journal);
 
         try
         {
@@ -154,6 +169,16 @@ public sealed class LedgerService(MoonDbContext dbContext, IAuditWriter auditWri
             scope.OrganizationId,
             actorSubject,
             "ledger.payment.posted",
+            correlationId,
+            ipAddress,
+            cancellationToken);
+
+        await EnqueueFundingThresholdIfReachedAsync(
+            lockedProject,
+            currentVersion,
+            journal,
+            scope.OrganizationId,
+            actorSubject,
             correlationId,
             ipAddress,
             cancellationToken);
@@ -199,7 +224,7 @@ public sealed class LedgerService(MoonDbContext dbContext, IAuditWriter auditWri
         }
 
         await using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
-        var original = await dbContext.Set<LedgerJournal>()
+        var original = await dbContext.LedgerJournals
             .FromSqlInterpolated($"SELECT * FROM moon.ledger_journals WHERE \"Id\" = {journalId} FOR UPDATE")
             .SingleOrDefaultAsync(cancellationToken);
         if (original is null)
@@ -216,7 +241,7 @@ public sealed class LedgerService(MoonDbContext dbContext, IAuditWriter auditWri
                 "A reversal journal cannot itself be reversed. Create the appropriate new business transaction instead.");
         }
 
-        var existingReversal = await dbContext.Set<LedgerJournal>()
+        var existingReversal = await dbContext.LedgerJournals
             .AsNoTracking()
             .Include(x => x.Entries)
             .SingleOrDefaultAsync(x => x.ReversesJournalId == original.Id, cancellationToken);
@@ -232,7 +257,7 @@ public sealed class LedgerService(MoonDbContext dbContext, IAuditWriter auditWri
                     "Ledger journal has already been reversed.");
         }
 
-        var originalEntries = await dbContext.Set<LedgerEntry>()
+        var originalEntries = await dbContext.LedgerEntries
             .AsNoTracking()
             .Where(x => x.JournalId == original.Id)
             .OrderBy(x => x.Id)
@@ -271,7 +296,7 @@ public sealed class LedgerService(MoonDbContext dbContext, IAuditWriter auditWri
             });
         }
 
-        dbContext.Set<LedgerJournal>().Add(reversal);
+        dbContext.LedgerJournals.Add(reversal);
 
         try
         {
@@ -323,7 +348,76 @@ public sealed class LedgerService(MoonDbContext dbContext, IAuditWriter auditWri
             return ProjectBalanceOperationResult.Failure("project_not_found", "Project was not found.");
         }
 
-        var amount = await dbContext.Set<LedgerEntry>()
+        var amount = await GetAllocableAmountAsync(projectId, currency, cancellationToken);
+        return ProjectBalanceOperationResult.Success(new ProjectAllocableBalanceView(projectId, currency, amount));
+    }
+
+    private async Task EnqueueFundingThresholdIfReachedAsync(
+        Project project,
+        ProjectVersion version,
+        LedgerJournal journal,
+        Guid organizationId,
+        string actorSubject,
+        string correlationId,
+        string? ipAddress,
+        CancellationToken cancellationToken)
+    {
+        if (version.FundingTargetMinor is not > 0
+            || string.IsNullOrWhiteSpace(version.FundingTargetCurrency)
+            || !string.Equals(version.FundingTargetCurrency, journal.Currency, StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        var allocableAmount = await GetAllocableAmountAsync(project.Id, journal.Currency, cancellationToken);
+        if (allocableAmount < version.FundingTargetMinor.Value)
+        {
+            return;
+        }
+
+        var reachedAt = DateTimeOffset.UtcNow;
+        var integrationEvent = new FundingThresholdReachedEvent(
+            project.Id,
+            version.Id,
+            version.FundingTargetMinor.Value,
+            allocableAmount,
+            journal.Currency,
+            reachedAt);
+
+        await _outboxWriter.EnqueueAsync(new OutboxWriteRequest(
+            IntegrationEventTypes.FundingThresholdReached,
+            "project",
+            project.Id.ToString(),
+            $"funding-threshold-reached:{project.Id:N}",
+            IntegrationEventSerialization.ToJson(integrationEvent),
+            correlationId,
+            reachedAt), cancellationToken);
+
+        await auditWriter.AppendAsync(new AuditWriteRequest(
+            actorSubject,
+            "funding.threshold.reached",
+            "project",
+            project.Id.ToString(),
+            correlationId,
+            organizationId.ToString(),
+            project.Id.ToString(),
+            AfterJson: JsonSerializer.Serialize(new
+            {
+                ProjectVersionId = version.Id,
+                FundingTargetMinor = version.FundingTargetMinor.Value,
+                version.FundingTargetCurrency,
+                AllocableAmountMinor = allocableAmount,
+                ReachedAtUtc = reachedAt,
+                LedgerJournalId = journal.Id
+            }),
+            IpAddress: ipAddress), cancellationToken);
+    }
+
+    private async Task<long> GetAllocableAmountAsync(
+        Guid projectId,
+        string currency,
+        CancellationToken cancellationToken) =>
+        await dbContext.LedgerEntries
             .AsNoTracking()
             .Where(x =>
                 x.ProjectId == projectId
@@ -331,9 +425,6 @@ public sealed class LedgerService(MoonDbContext dbContext, IAuditWriter auditWri
                 && x.AccountCode == LedgerAccountCodes.ProjectFunds)
             .Select(x => (long?)(x.Side == LedgerEntrySides.Credit ? x.AmountMinor : -x.AmountMinor))
             .SumAsync(cancellationToken) ?? 0L;
-
-        return ProjectBalanceOperationResult.Success(new ProjectAllocableBalanceView(projectId, currency, amount));
-    }
 
     private static LedgerOperationResult? NormalizeIdempotencyKey(string idempotencyKey, out string normalized)
     {
@@ -358,7 +449,7 @@ public sealed class LedgerService(MoonDbContext dbContext, IAuditWriter auditWri
         string actorSubject,
         string idempotencyKey,
         CancellationToken cancellationToken) =>
-        await dbContext.Set<LedgerJournal>()
+        await dbContext.LedgerJournals
             .AsNoTracking()
             .Include(x => x.Entries)
             .SingleOrDefaultAsync(
@@ -377,7 +468,7 @@ public sealed class LedgerService(MoonDbContext dbContext, IAuditWriter auditWri
             return ResolvePostingReplay(idempotent, paymentId);
         }
 
-        var posted = await dbContext.Set<LedgerJournal>()
+        var posted = await dbContext.LedgerJournals
             .AsNoTracking()
             .Include(x => x.Entries)
             .SingleOrDefaultAsync(
@@ -401,7 +492,7 @@ public sealed class LedgerService(MoonDbContext dbContext, IAuditWriter auditWri
             return ResolveReversalReplay(idempotent, journalId, reason);
         }
 
-        var reversal = await dbContext.Set<LedgerJournal>()
+        var reversal = await dbContext.LedgerJournals
             .AsNoTracking()
             .Include(x => x.Entries)
             .SingleOrDefaultAsync(x => x.ReversesJournalId == journalId, cancellationToken);
