@@ -8,7 +8,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - moon-postgres:/var/lib/postgresql/data
+      - moon-postgres:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-moon} -d ${POSTGRES_DB:-moon}"]
       interval: 5s
