@@ -406,3 +406,4 @@ export default function FundManagerResources() {
       </div>
     </div>
   );
+}
