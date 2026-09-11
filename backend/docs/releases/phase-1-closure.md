@@ -1,8 +1,10 @@
 # Backend Phase 1 Closure
 
-Status: Implementation gate candidate
+Status: GREEN — implementation gate passed
 
 Branch: `feat/backend-phase-1-project`
+
+Gate evidence: GitHub Actions verification run `34632250611` succeeded on commit `ceab003860a7ba0fa581ecdabfea29b7347fb9b9`.
 
 ## Scope
 
@@ -32,12 +34,12 @@ Phase 1 implements the approved-project lifecycle required by the technical base
 - A project cannot publish before approval or without the matching completed conflict-free evaluation, approval decision, and locked current version.
 - A published project cannot be republished or mutated.
 
-## Gate
+## Gate result
 
-The temporary GitHub Actions closure gate is verification-only. It runs the full .NET solution against PostgreSQL 18, treats warnings as errors, verifies committed EF migrations have no pending model changes, executes the complete test suite, and performs source-level checks for the required Phase 1 endpoints and guards.
+The closure gate ran the full .NET solution against PostgreSQL 18, treated warnings as errors, verified committed EF migrations had no pending model changes, executed the complete backend test suite, and checked the required Phase 1 endpoints and persistence guards. The successful run reported 7 passed tests, 0 failed tests, 0 warnings, and 0 build errors.
 
-The technical baseline specifies GitLab CI + Container Registry for the formal delivery pipeline. GitHub Actions verification does not resolve that production CI/CD decision and must not be represented as formal GitLab CI acceptance.
+The temporary GitHub Actions closure gate is verification-only. The technical baseline specifies GitLab CI + Container Registry for the formal delivery pipeline. GitHub Actions verification does not resolve that production CI/CD decision and must not be represented as formal GitLab CI acceptance.
 
-## Closure rule
+## Closure
 
-Phase 1 implementation may be marked GREEN only after the closure gate succeeds on the committed migration set. Production/platform acceptance remains separate and is deferred to the final platform integration and environment acceptance gates.
+Phase 1 implementation is GREEN. Production/platform acceptance remains separate and is deferred to the final platform integration and environment acceptance gates.
