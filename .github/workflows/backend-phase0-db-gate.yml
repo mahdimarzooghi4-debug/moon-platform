@@ -1,0 +1,73 @@
+name: Backend Phase 0 DB Gate
+
+on:
+  push:
+    branches:
+      - feat/backend-phase-0-foundation
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_DB: moon
+          POSTGRES_USER: moon
+          POSTGRES_PASSWORD: moon-local-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U moon -d moon"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      TEST_POSTGRES: Host=localhost;Port=5432;Database=moon;Username=moon;Password=moon-local-only
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore backend/Moon.Platform.slnx
+
+      - name: Install EF tool
+        run: dotnet tool install --global dotnet-ef --version 10.0.12
+
+      - name: Generate Phase 0 migration
+        run: |
+          dotnet ef migrations add Phase0Foundation \
+            --project backend/src/Moon.Platform.Api/Moon.Platform.Api.csproj \
+            --startup-project backend/src/Moon.Platform.Api/Moon.Platform.Api.csproj \
+            --output-dir Infrastructure/Persistence/Migrations
+
+      - name: Build
+        run: dotnet build backend/Moon.Platform.slnx --configuration Release --no-restore
+
+      - name: Test against PostgreSQL 18
+        run: dotnet test backend/tests/Moon.Platform.Tests/Moon.Platform.Tests.csproj --configuration Release --no-build
+
+      - name: Validate configuration and scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker compose -f backend/docker-compose.yml config >/dev/null
+          python -m json.tool backend/keycloak/moon-realm.json >/dev/null
+          test -f backend/src/Moon.Platform.Api/Common/Auditing/AuditWriter.cs
+          test -f backend/src/Moon.Platform.Api/Common/Authorization/OrganizationAccess.cs
+          test -f backend/src/Moon.Platform.Api/Modules/Identity/SystemRoles.cs
+          test "$(find backend/src/Moon.Platform.Api/Infrastructure/Persistence/Migrations -name '*.cs' | wc -l)" -ge 3
+          ! grep -R -E -i --exclude-dir=bin --exclude-dir=obj '(kyc|sheba|shahkar)' backend/src backend/Directory.Packages.props
+
+      - name: Upload generated migration
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase0-migration
+          path: backend/src/Moon.Platform.Api/Infrastructure/Persistence/Migrations
+          if-no-files-found: error
