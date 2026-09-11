@@ -1,0 +1,43 @@
+name: Import Company Panel certificate assets
+
+on:
+  push:
+    branches: [feat/company-panel-certificate-assets]
+    paths: [.github/workflows/import-company-certificate-assets.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  import-certificate-assets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout pinned asset branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Verify pinned source
+        run: |
+          set -euo pipefail
+          SOURCE=ba7ba75d22b2641fa762dda634eb201bcb839c0f
+          test "$(git rev-parse HEAD^)" = "$SOURCE"
+          test "$(git rev-parse "$SOURCE^{tree}")" = "7c079ec8ce4d129c5c7a8557f3cabba867e1e6dc"
+          test "$(git rev-parse "$SOURCE:.github/workflows/verify-frontend-integration.yml")" = "39906066a9546d895c4334a96607648b31593474"
+      - name: Download exact Figma certificate assets
+        run: |
+          set -euo pipefail
+          mkdir -p public/assets/company-panel
+          curl -fsSL --retry 3 'https://www.figma.com/api/mcp/asset/055fd5e8-c937-4420-87e1-3febe29972f9.png' -o public/assets/company-panel/emdad-logo-official.png
+          curl -fsSL --retry 3 'https://www.figma.com/api/mcp/asset/df057506-312e-49bd-9e1d-0190032cf043.svg' -o public/assets/company-panel/certificate-corner.svg
+          curl -fsSL --retry 3 'https://www.figma.com/api/mcp/asset/a809a935-64a9-4b3f-9811-230533007471.svg' -o public/assets/company-panel/emdad-stamp.svg
+          for f in public/assets/company-panel/emdad-logo-official.png public/assets/company-panel/certificate-corner.svg public/assets/company-panel/emdad-stamp.svg; do test -s "$f"; printf '%s %s\n' "$(git hash-object "$f")" "$f"; done
+      - name: Commit clean certificate asset import
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/import-company-certificate-assets.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/assets/company-panel/emdad-logo-official.png public/assets/company-panel/certificate-corner.svg public/assets/company-panel/emdad-stamp.svg
+          test "$(git diff --cached --name-only | sort | tr '\n' '|')" = ".github/workflows/import-company-certificate-assets.yml|public/assets/company-panel/certificate-corner.svg|public/assets/company-panel/emdad-logo-official.png|public/assets/company-panel/emdad-stamp.svg|"
+          git commit -m "feat(company-panel): import certificate assets"
+          git push origin HEAD:feat/company-panel-certificate-assets
