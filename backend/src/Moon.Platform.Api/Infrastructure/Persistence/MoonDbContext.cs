@@ -19,6 +19,8 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
     public DbSet<ProjectEvaluation> ProjectEvaluations => Set<ProjectEvaluation>();
     public DbSet<ProjectDecision> ProjectDecisions => Set<ProjectDecision>();
     public DbSet<FundingCommitment> FundingCommitments => Set<FundingCommitment>();
+    public DbSet<FundingPayment> FundingPayments => Set<FundingPayment>();
+    public DbSet<PaymentWebhookReceipt> PaymentWebhookReceipts => Set<PaymentWebhookReceipt>();
 
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {
@@ -28,6 +30,8 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
         GuardDecisionsAppendOnly();
         GuardPublishedProjects();
         GuardCommitmentTerms();
+        GuardPaymentTerms();
+        GuardWebhookReceiptsAppendOnly();
         return base.SaveChanges(acceptAllChangesOnSuccess);
     }
 
@@ -39,6 +43,8 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
         GuardDecisionsAppendOnly();
         GuardPublishedProjects();
         GuardCommitmentTerms();
+        GuardPaymentTerms();
+        GuardWebhookReceiptsAppendOnly();
         return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
 
@@ -150,6 +156,40 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
             entity.HasOne<Project>().WithMany().HasForeignKey(x => x.ProjectId).OnDelete(DeleteBehavior.Restrict);
         });
 
+        modelBuilder.Entity<FundingPayment>(entity =>
+        {
+            entity.ToTable("funding_payments");
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.InitiatedBySubject).HasMaxLength(200).IsRequired();
+            entity.Property(x => x.Currency).HasMaxLength(3).IsRequired();
+            entity.Property(x => x.Status).HasMaxLength(32).IsRequired();
+            entity.Property(x => x.IdempotencyKey).HasMaxLength(128).IsRequired();
+            entity.Property(x => x.Provider).HasMaxLength(80).IsRequired();
+            entity.Property(x => x.ProviderReference).HasMaxLength(200);
+            entity.Property(x => x.RedirectUrl).HasMaxLength(2000);
+            entity.Property(x => x.IntentFailureCode).HasMaxLength(120);
+            entity.Property(x => x.ReconciliationIdempotencyKey).HasMaxLength(128);
+            entity.Property(x => x.ReconciledBySubject).HasMaxLength(200);
+            entity.HasIndex(x => new { x.InitiatedBySubject, x.IdempotencyKey }).IsUnique();
+            entity.HasIndex(x => new { x.Provider, x.ProviderReference }).IsUnique();
+            entity.HasIndex(x => new { x.CommitmentId, x.Status });
+            entity.HasOne<FundingCommitment>().WithMany().HasForeignKey(x => x.CommitmentId).OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<PaymentWebhookReceipt>(entity =>
+        {
+            entity.ToTable("payment_webhook_receipts");
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.Provider).HasMaxLength(80).IsRequired();
+            entity.Property(x => x.EventId).HasMaxLength(128).IsRequired();
+            entity.Property(x => x.ProviderReference).HasMaxLength(200).IsRequired();
+            entity.Property(x => x.PayloadVersion).HasMaxLength(32).IsRequired();
+            entity.Property(x => x.PayloadSha256).HasMaxLength(64).IsRequired();
+            entity.HasIndex(x => new { x.Provider, x.EventId }).IsUnique();
+            entity.HasIndex(x => x.PaymentId);
+            entity.HasOne<FundingPayment>().WithMany().HasForeignKey(x => x.PaymentId).OnDelete(DeleteBehavior.Restrict);
+        });
+
         modelBuilder.Entity<AuditEvent>(entity =>
         {
             entity.ToTable("audit_events");
@@ -252,6 +292,45 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
         if (illegalMutation)
         {
             throw new InvalidOperationException("Funding commitment terms are immutable and commitments cannot be deleted.");
+        }
+    }
+
+    private void GuardPaymentTerms()
+    {
+        var illegalMutation = ChangeTracker.Entries<FundingPayment>()
+            .Any(entry =>
+                entry.State == EntityState.Deleted
+                || entry.State == EntityState.Modified
+                && (entry.OriginalValues.GetValue<Guid>(nameof(FundingPayment.CommitmentId))
+                        != entry.CurrentValues.GetValue<Guid>(nameof(FundingPayment.CommitmentId))
+                    || entry.OriginalValues.GetValue<string>(nameof(FundingPayment.InitiatedBySubject))
+                        != entry.CurrentValues.GetValue<string>(nameof(FundingPayment.InitiatedBySubject))
+                    || entry.OriginalValues.GetValue<long>(nameof(FundingPayment.AmountMinor))
+                        != entry.CurrentValues.GetValue<long>(nameof(FundingPayment.AmountMinor))
+                    || entry.OriginalValues.GetValue<string>(nameof(FundingPayment.Currency))
+                        != entry.CurrentValues.GetValue<string>(nameof(FundingPayment.Currency))
+                    || entry.OriginalValues.GetValue<string>(nameof(FundingPayment.IdempotencyKey))
+                        != entry.CurrentValues.GetValue<string>(nameof(FundingPayment.IdempotencyKey))
+                    || entry.OriginalValues.GetValue<DateTimeOffset>(nameof(FundingPayment.CreatedAtUtc))
+                        != entry.CurrentValues.GetValue<DateTimeOffset>(nameof(FundingPayment.CreatedAtUtc))
+                    || !string.IsNullOrEmpty(entry.OriginalValues.GetValue<string?>(nameof(FundingPayment.ProviderReference)))
+                        && entry.OriginalValues.GetValue<string?>(nameof(FundingPayment.ProviderReference))
+                            != entry.CurrentValues.GetValue<string?>(nameof(FundingPayment.ProviderReference))));
+
+        if (illegalMutation)
+        {
+            throw new InvalidOperationException("Payment amount, currency, commitment, identity, idempotency key, and provider reference are immutable.");
+        }
+    }
+
+    private void GuardWebhookReceiptsAppendOnly()
+    {
+        var illegalMutation = ChangeTracker.Entries<PaymentWebhookReceipt>()
+            .Any(entry => entry.State is EntityState.Modified or EntityState.Deleted);
+
+        if (illegalMutation)
+        {
+            throw new InvalidOperationException("Validated payment webhook receipts are append-only.");
         }
     }
 }
