@@ -105,6 +105,7 @@ const FundManagerFinancialHistoryDetailPage = lazy(() => import("../panels/fund-
 const FundManagerFundingFlowControlPage = lazy(() => import("../panels/fund-manager/funding-flow-control"));
 const FundManagerActionOverlay = lazy(() => import("../panels/fund-manager/overlays/action"));
 const FundManagerPaginationOverlay = lazy(() => import("../panels/fund-manager/overlays/pagination"));
+const FundManagerLogoutOverlay = lazy(() => import("../panels/fund-manager/overlays/logout"));
 
 function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
   return (
@@ -132,6 +133,7 @@ const fundManagerFinancialHistoryDetailElement = lazyElement(FundManagerFinancia
 const fundManagerFundingFlowControlElement = lazyElement(FundManagerFundingFlowControlPage);
 const fundManagerActionOverlayElement = lazyElement(FundManagerActionOverlay);
 const fundManagerPaginationOverlayElement = lazyElement(FundManagerPaginationOverlay);
+const fundManagerLogoutOverlayElement = lazyElement(FundManagerLogoutOverlay);
 
 const landingElement = lazyElement(LandingPage);
 const aboutElement = lazyElement(AboutPage);
@@ -308,6 +310,7 @@ export function AppRouter() {
         <Route path="/panel/fund-manager/funding-flow-control" element={fundManagerFundingFlowControlElement} />
         <Route path="/panel/fund-manager/overlays/action" element={fundManagerActionOverlayElement} />
         <Route path="/panel/fund-manager/overlays/pagination" element={fundManagerPaginationOverlayElement} />
+        <Route path="/panel/fund-manager/overlays/logout" element={fundManagerLogoutOverlayElement} />
         <Route path="/auth" element={<AuthEntryPage />} />
         <Route path="/register/company/states/step2" element={companyRegistrationStep2Element} />
         <Route path="/register/company/status" element={companyRegistrationStatusElement} />
