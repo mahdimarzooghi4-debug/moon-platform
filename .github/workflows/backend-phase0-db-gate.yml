@@ -5,9 +5,6 @@ on:
     branches:
       - feat/backend-phase-0-foundation
 
-permissions:
-  contents: write
-
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -40,18 +37,17 @@ jobs:
       - name: Restore
         run: dotnet restore backend/Moon.Platform.slnx
 
+      - name: Build with warnings as errors
+        run: dotnet build backend/Moon.Platform.slnx --configuration Release --no-restore --warnaserror
+
       - name: Install EF tool
         run: dotnet tool install --global dotnet-ef --version 10.0.12
 
-      - name: Generate Phase 0 migration
+      - name: Verify committed migration matches model
         run: |
-          dotnet ef migrations add Phase0Foundation \
+          dotnet ef migrations has-pending-model-changes \
             --project backend/src/Moon.Platform.Api/Moon.Platform.Api.csproj \
-            --startup-project backend/src/Moon.Platform.Api/Moon.Platform.Api.csproj \
-            --output-dir Infrastructure/Persistence/Migrations
-
-      - name: Build
-        run: dotnet build backend/Moon.Platform.slnx --configuration Release --no-restore
+            --startup-project backend/src/Moon.Platform.Api/Moon.Platform.Api.csproj
 
       - name: Test against PostgreSQL 18
         run: dotnet test backend/tests/Moon.Platform.Tests/Moon.Platform.Tests.csproj --configuration Release --no-build
@@ -65,23 +61,10 @@ jobs:
           test -f backend/src/Moon.Platform.Api/Common/Auditing/AuditWriter.cs
           test -f backend/src/Moon.Platform.Api/Common/Authorization/OrganizationAccess.cs
           test -f backend/src/Moon.Platform.Api/Modules/Identity/SystemRoles.cs
-          test "$(find backend/src/Moon.Platform.Api/Infrastructure/Persistence/Migrations -name '*.cs' | wc -l)" -ge 3
+          test -f backend/src/Moon.Platform.Api/Infrastructure/Persistence/Migrations/MoonDbContextModelSnapshot.cs
+          test "$(find backend/src/Moon.Platform.Api/Infrastructure/Persistence/Migrations -name '*.cs' | wc -l)" -eq 3
+          grep -Fq 'organization-member' backend/src/Moon.Platform.Api/Common/Authorization/OrganizationAccess.cs
+          grep -Fq 'Audit events are append-only' backend/src/Moon.Platform.Api/Infrastructure/Persistence/MoonDbContext.cs
+          grep -Fq '"clientId": "moon-api"' backend/keycloak/moon-realm.json
+          grep -Fq '"clientId": "moon-web"' backend/keycloak/moon-realm.json
           ! grep -R -E -i --exclude-dir=bin --exclude-dir=obj '(kyc|sheba|shahkar)' backend/src backend/Directory.Packages.props
-
-      - name: Commit generated migration
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add backend/src/Moon.Platform.Api/Infrastructure/Persistence/Migrations
-          git diff --cached --quiet && exit 0
-          git commit -m "feat(backend): add generated phase 0 migration"
-          git push origin HEAD:feat/backend-phase-0-foundation
-
-      - name: Upload generated migration
-        uses: actions/upload-artifact@v4
-        with:
-          name: phase0-migration
-          path: backend/src/Moon.Platform.Api/Infrastructure/Persistence/Migrations
-          if-no-files-found: error
