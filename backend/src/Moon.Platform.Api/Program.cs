@@ -53,27 +53,33 @@ builder.Services.AddDbContext<MoonDbContext>((serviceProvider, options) =>
 builder.Services.Configure<PaymentOptions>(builder.Configuration.GetSection(PaymentOptions.SectionName));
 builder.Services.Configure<MessagingOptions>(builder.Configuration.GetSection(MessagingOptions.SectionName));
 
-var configuredMessagingTransport = builder.Configuration[$"{MessagingOptions.SectionName}:Transport"] ?? "InMemory";
-builder.Services.AddMassTransit(registration =>
+var outboxDispatchEnabled = builder.Configuration.GetValue<bool>($"{MessagingOptions.SectionName}:OutboxDispatchEnabled");
+if (outboxDispatchEnabled)
 {
-    if (string.Equals(configuredMessagingTransport, "RabbitMQ", StringComparison.OrdinalIgnoreCase))
+    var configuredMessagingTransport = builder.Configuration[$"{MessagingOptions.SectionName}:Transport"] ?? "InMemory";
+    builder.Services.AddMassTransit(registration =>
     {
-        registration.UsingRabbitMq((context, cfg) =>
+        if (string.Equals(configuredMessagingTransport, "RabbitMQ", StringComparison.OrdinalIgnoreCase))
         {
-            var options = context.GetRequiredService<IOptions<MessagingOptions>>().Value;
-            cfg.Host(options.RabbitMqHost, options.RabbitMqVirtualHost, host =>
+            registration.UsingRabbitMq((context, cfg) =>
             {
-                host.Username(options.RabbitMqUsername);
-                host.Password(options.RabbitMqPassword);
+                var options = context.GetRequiredService<IOptions<MessagingOptions>>().Value;
+                cfg.Host(options.RabbitMqHost, options.RabbitMqVirtualHost, host =>
+                {
+                    host.Username(options.RabbitMqUsername);
+                    host.Password(options.RabbitMqPassword);
+                });
+                cfg.ConfigureEndpoints(context);
             });
-            cfg.ConfigureEndpoints(context);
-        });
-    }
-    else
-    {
-        registration.UsingInMemory((context, cfg) => cfg.ConfigureEndpoints(context));
-    }
-});
+        }
+        else
+        {
+            registration.UsingInMemory((context, cfg) => cfg.ConfigureEndpoints(context));
+        }
+    });
+
+    builder.Services.AddHostedService<OutboxDispatcher>();
+}
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
@@ -92,7 +98,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 builder.Services.AddScoped<IAuditWriter, AuditWriter>();
 builder.Services.AddScoped<IOutboxWriter, OutboxWriter>();
-builder.Services.AddHostedService<OutboxDispatcher>();
 builder.Services.AddScoped<IIdentitySyncService, IdentitySyncService>();
 builder.Services.AddScoped<IAdminAccessService, AdminAccessService>();
 builder.Services.AddScoped<IOrganizationAccessService, OrganizationAccessService>();
