@@ -5,6 +5,9 @@ on:
     branches:
       - feat/backend-phase-0-foundation
 
+permissions:
+  contents: write
+
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -64,6 +67,17 @@ jobs:
           test -f backend/src/Moon.Platform.Api/Modules/Identity/SystemRoles.cs
           test "$(find backend/src/Moon.Platform.Api/Infrastructure/Persistence/Migrations -name '*.cs' | wc -l)" -ge 3
           ! grep -R -E -i --exclude-dir=bin --exclude-dir=obj '(kyc|sheba|shahkar)' backend/src backend/Directory.Packages.props
+
+      - name: Commit generated migration
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add backend/src/Moon.Platform.Api/Infrastructure/Persistence/Migrations
+          git diff --cached --quiet && exit 0
+          git commit -m "feat(backend): add generated phase 0 migration"
+          git push origin HEAD:feat/backend-phase-0-foundation
 
       - name: Upload generated migration
         uses: actions/upload-artifact@v4
