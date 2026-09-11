@@ -1,9 +1,8 @@
-name: Verify frontend integration
+name: Integrate Company Registration Status
 
 on:
   push:
     branches:
-      - integration/frontend-foundation
       - integration/landing-frontend
   workflow_dispatch:
 
@@ -15,14 +14,105 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  integrate:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Checkout
+      - name: Checkout integration branch
         uses: actions/checkout@v4
+        with:
+          ref: integration/landing-frontend
+          fetch-depth: 0
 
-      - name: Setup Node
+      - name: Migrate pinned company registration status
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_SHA="edf5cbbe79b8d05f45081ed9d79e951db57954c5"
+          TARGET="src/features/company-registration/status"
+          EXPECTED_TSX="99534189d931c637dc9439be1cea3f32eb4dcd6b"
+          EXPECTED_CSS="cd4e5c3a8c08cb6c639acf21b0cd155e2529ed51"
+          ASSETS=(
+            "public/assets/active-status.png"
+            "public/assets/arrow-left.png"
+            "public/assets/check.png"
+            "public/assets/info.png"
+            "public/assets/logo.png"
+          )
+          EXPECTED_ASSET_SHAS=(
+            "86505d913fccd7a0641a6987efff7cd405d12fe2"
+            "58b807c6db90fca74255a753bdccb703608d1350"
+            "2a14a0443b19f9ae589a4db34432e172d975df16"
+            "a8075e387b25183b4d2b5645c13b29b18b70fced"
+            "7b078d126eb3a20362c8f7c331a9c42dab88bc23"
+          )
+
+          git fetch origin "$SOURCE_SHA"
+          test "$(git rev-parse "$SOURCE_SHA:src/page/index.tsx")" = "$EXPECTED_TSX"
+          test "$(git rev-parse "$SOURCE_SHA:src/page/index.css")" = "$EXPECTED_CSS"
+          test ! -e "$TARGET"
+          if git show "$SOURCE_SHA:src/page/index.tsx" | grep -Fq "static.codia.ai"; then
+            echo "remote Codia dependency detected"
+            exit 1
+          fi
+
+          mapfile -t SOURCE_ASSETS < <(git ls-tree -r --name-only "$SOURCE_SHA" public/assets | sort)
+          mapfile -t EXPECTED_ASSETS < <(printf '%s\n' "${ASSETS[@]}" | sort)
+          test "${#SOURCE_ASSETS[@]}" -eq 5
+          diff -u <(printf '%s\n' "${EXPECTED_ASSETS[@]}") <(printf '%s\n' "${SOURCE_ASSETS[@]}")
+
+          mkdir -p "$TARGET"
+          git show "$SOURCE_SHA:src/page/index.tsx" > "$TARGET/index.tsx"
+          git show "$SOURCE_SHA:src/page/index.css" > "$TARGET/index.css"
+          test "$(git hash-object "$TARGET/index.tsx")" = "$EXPECTED_TSX"
+          test "$(git hash-object "$TARGET/index.css")" = "$EXPECTED_CSS"
+
+          for i in "${!ASSETS[@]}"; do
+            asset="${ASSETS[$i]}"
+            expected="${EXPECTED_ASSET_SHAS[$i]}"
+            source_blob="$(git rev-parse "$SOURCE_SHA:$asset")"
+            test "$source_blob" = "$expected"
+            if git cat-file -e "HEAD:$asset" 2>/dev/null; then
+              test "$(git rev-parse "HEAD:$asset")" = "$source_blob"
+            else
+              mkdir -p "$(dirname "$asset")"
+              git show "$SOURCE_SHA:$asset" > "$asset"
+            fi
+            test "$(git hash-object "$asset")" = "$source_blob"
+          done
+
+          while IFS= read -r ref; do
+            test -f "public${ref}"
+          done < <(grep -oE '/assets/[A-Za-z0-9._/-]+' "$TARGET/index.tsx" | sort -u)
+
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('src/app/router.tsx')
+          s = p.read_text()
+          lazy_anchor = 'const CompanyRegistrationStep2Page = lazy(() => import("../features/company-registration/states/step2"));\n'
+          lazy_line = 'const CompanyRegistrationStatusPage = lazy(() => import("../features/company-registration/status"));\n'
+          element_anchor = 'const companyRegistrationStep2Element = lazyElement(CompanyRegistrationStep2Page);\n'
+          element_line = 'const companyRegistrationStatusElement = lazyElement(CompanyRegistrationStatusPage);\n'
+          route_anchor = '        <Route path="/register/company" element={<CompanyRegistrationPage />} />\n'
+          route_line = '        <Route path="/register/company/status" element={companyRegistrationStatusElement} />\n'
+          assert s.count(lazy_anchor) == 1
+          assert s.count(element_anchor) == 1
+          assert s.count(route_anchor) == 1
+          assert lazy_line not in s and element_line not in s and route_line not in s
+          s = s.replace(lazy_anchor, lazy_anchor + lazy_line)
+          s = s.replace(element_anchor, element_anchor + element_line)
+          s = s.replace(route_anchor, route_line + route_anchor)
+          assert s.count(lazy_line) == 1 and s.count(element_line) == 1 and s.count(route_line) == 1
+          p.write_text(s)
+          PY
+
+          git add "$TARGET" src/app/router.tsx "${ASSETS[@]}"
+          test -z "$(git diff --cached --name-only | grep -vE '^(src/features/company-registration/status/|src/app/router.tsx$|public/assets/(active-status.png|arrow-left.png|check.png|info.png|logo.png)$)' || true)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "feat(landing): integrate company registration status"
+
+      - name: Setup Node 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -34,14 +124,15 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Keep lockfile reproducible
+      - name: Verify package-lock reproducibility
+        shell: bash
         run: |
-          if git diff --quiet -- package-lock.json; then
-            echo "package-lock.json is already in sync"
-            exit 0
+          set -euo pipefail
+          if ! git diff --quiet -- package-lock.json; then
+            echo "package-lock.json changed during install"
+            git diff -- package-lock.json
+            exit 1
           fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add package-lock.json
-          git commit -m "chore(frontend): sync package lock"
-          git push
+
+      - name: Push verified integration
+        run: git push origin HEAD:integration/landing-frontend
