@@ -1,0 +1,44 @@
+.startup-profile-product-edit-page { min-height: 900px; background: #f5f8fb; }
+.startup-profile-product-edit-content { width: calc(100% - 224px); min-height: 900px; padding: 22px 28px 40px; box-sizing: border-box; background: #f5f8fb; direction: rtl; color: #17324d; }
+.startup-profile-product-edit-topbar { height: 54px; background: #fff; display: flex; align-items: center; justify-content: space-between; }
+.startup-profile-product-edit-topbar h1, .startup-profile-product-edit-topbar p, .startup-profile-product-edit-card h2, .startup-profile-product-edit-card h3, .startup-profile-product-edit-actions h2, .startup-profile-product-edit-actions p { margin: 0; }
+.startup-profile-product-edit-topbar h1 { font-size: 22px; line-height: 30px; font-weight: 500; }
+.startup-profile-product-edit-topbar p { color: #60758a; font-size: 11px; line-height: 19px; }
+.startup-profile-product-edit-topbar > a { width: 174px; height: 44px; border: 1px solid #e4ebf1; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #2094e3; text-decoration: none; font-size: 12px; font-weight: 500; }
+.startup-profile-product-edit-tabs { height: 58px; margin-top: 18px; padding: 7px 32px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; box-sizing: border-box; background: #fff; border: 1px solid #e4ebf1; border-radius: 12px; }
+.startup-profile-product-edit-tabs a, .startup-profile-product-edit-tabs span { height: 42px; display: flex; align-items: center; justify-content: center; border-radius: 10px; font-size: 12px; font-weight: 500; text-decoration: none; box-sizing: border-box; }
+.startup-profile-product-edit-tabs a { border: 1px solid #e4ebf1; color: #2094e3; }
+.startup-profile-product-edit-tabs span { background: #2094e3; color: #fff; }
+.startup-profile-product-edit-columns { display: grid; grid-template-columns: 578px minmax(0, 1fr); gap: 24px; margin-top: 18px; }
+.startup-profile-product-edit-card { height: 538px; padding: 18px 23px; box-sizing: border-box; background: #fff; border: 1px solid #e4ebf1; border-radius: 14px; overflow: hidden; }
+.startup-profile-product-edit-card h2 { font-size: 18px; line-height: 30px; font-weight: 500; }
+.startup-profile-product-edit-lead { margin: -2px 0 6px; color: #60758a; font-size: 10px; line-height: 20px; }
+.startup-profile-product-edit-narrative { display: block; margin-top: 8px; }
+.startup-profile-product-edit-narrative > span, .startup-profile-product-edit-label, .startup-profile-product-edit-revenue > span { display: block; margin-bottom: 5px; color: #60758a; font-size: 10px; line-height: 18px; }
+.startup-profile-product-edit-narrative textarea { width: 100%; height: 68px; resize: none; padding: 8px 12px; box-sizing: border-box; border: 1px solid #e4ebf1; border-radius: 10px; background: #fff; color: #17324d; font: inherit; font-size: 11px; line-height: 17px; text-align: right; outline: none; }
+.startup-profile-product-edit-narrative:last-child textarea { height: 58px; }
+.startup-profile-product-edit-narrative textarea:focus, .startup-profile-product-edit-revenue input:focus { border-color: #2094e3; }
+.startup-profile-product-edit-label { margin-top: 5px; }
+.startup-profile-product-edit-chips { display: grid; grid-template-columns: repeat(3, 128px); justify-content: start; gap: 10px; direction: rtl; }
+.startup-profile-product-edit-chips span { height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: #eaf6fe; color: #2094e3; font-size: 10px; font-weight: 500; }
+.startup-profile-product-edit-revenue { display: block; margin-top: 13px; }
+.startup-profile-product-edit-revenue input { width: 100%; height: 44px; border: 1px solid #e4ebf1; border-radius: 10px; padding: 0 12px; box-sizing: border-box; color: #17324d; background: #fff; font: inherit; font-size: 11px; text-align: right; outline: none; }
+.startup-profile-product-edit-card h3 { margin-top: 14px; font-size: 13px; line-height: 24px; font-weight: 500; }
+.startup-profile-product-edit-metrics { margin-top: 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 14px; }
+.startup-profile-product-edit-metrics > div { height: 52px; padding: 5px 10px; box-sizing: border-box; border-radius: 9px; background: #f5f8fb; }
+.startup-profile-product-edit-metrics span, .startup-profile-product-edit-members span { display: block; color: #60758a; font-size: 9px; line-height: 18px; }
+.startup-profile-product-edit-metrics strong { display: block; font-size: 12px; line-height: 23px; font-weight: 500; }
+.startup-profile-product-edit-members { margin-top: 3px; display: grid; gap: 8px; }
+.startup-profile-product-edit-members > div { height: 46px; padding: 4px 20px; box-sizing: border-box; border-radius: 9px; background: #f5f8fb; }
+.startup-profile-product-edit-members strong { display: block; font-size: 11px; line-height: 18px; font-weight: 500; }
+.startup-profile-product-edit-add { width: 220px; height: 40px; margin-top: 8px; border: 1px solid #e4ebf1; border-radius: 10px; background: #fff; color: #2094e3; font: inherit; font-size: 12px; font-weight: 500; }
+.startup-profile-product-edit-actions { height: 134px; margin-top: 18px; padding: 16px 28px; display: flex; align-items: flex-start; justify-content: space-between; box-sizing: border-box; background: #fff; border: 1px solid #e4ebf1; border-radius: 14px; }
+.startup-profile-product-edit-actions h2 { font-size: 18px; line-height: 26px; font-weight: 500; }
+.startup-profile-product-edit-actions p { color: #60758a; font-size: 10px; line-height: 22px; }
+.startup-profile-product-edit-action-buttons { align-self: center; display: flex; gap: 14px; direction: ltr; }
+.startup-profile-product-edit-action-buttons a, .startup-profile-product-edit-action-buttons button { height: 44px; padding: 0 20px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; font: inherit; font-size: 12px; font-weight: 500; text-decoration: none; white-space: nowrap; }
+.startup-profile-product-edit-action-buttons button { width: 190px; border: 0; background: #2094e3; color: #fff; cursor: pointer; }
+.startup-profile-product-edit-action-buttons a { border: 1px solid #e4ebf1; background: #fff; color: #2094e3; }
+.startup-profile-product-edit-action-buttons a:first-of-type { width: 130px; }
+.startup-profile-product-edit-action-buttons a:last-of-type { width: 230px; }
+@media (max-width: 1100px) { .startup-profile-product-edit-content { width: 100%; } .startup-profile-product-edit-columns { grid-template-columns: 1fr; } .startup-profile-product-edit-card { height: auto; } .startup-profile-product-edit-actions { height: auto; flex-direction: column; gap: 16px; } .startup-profile-product-edit-action-buttons { flex-wrap: wrap; } }
