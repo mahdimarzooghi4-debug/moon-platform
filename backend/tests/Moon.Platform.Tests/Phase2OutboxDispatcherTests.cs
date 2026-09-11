@@ -38,6 +38,7 @@ public sealed class Phase2OutboxDispatcherTests : IAsyncLifetime
 
         var rabbitUser = Environment.GetEnvironmentVariable("TEST_RABBITMQ_USER") ?? "moon";
         var rabbitPassword = Environment.GetEnvironmentVariable("TEST_RABBITMQ_PASSWORD") ?? "moon-phase2-final-only";
+        var receivedEnvelope = new TaskCompletionSource<IntegrationEventEnvelope>(TaskCreationOptions.RunContinuationsAsynchronously);
 
         var services = new ServiceCollection();
         services.AddLogging(builder => builder.SetMinimumLevel(LogLevel.Warning));
@@ -69,14 +70,25 @@ public sealed class Phase2OutboxDispatcherTests : IAsyncLifetime
                     host.Username(options.RabbitMqUsername);
                     host.Password(options.RabbitMqPassword);
                 });
+
+                cfg.ReceiveEndpoint("phase2-outbox-quorum-probe", endpoint =>
+                {
+                    endpoint.SetQueueArgument("x-queue-type", "quorum");
+                    endpoint.Handler<IntegrationEventEnvelope>(messageContext =>
+                    {
+                        receivedEnvelope.TrySetResult(messageContext.Message);
+                        return Task.CompletedTask;
+                    });
+                });
             });
         });
 
         await using var provider = services.BuildServiceProvider();
+        Guid seededMessageId;
         await using (var seedScope = provider.CreateAsyncScope())
         {
             var db = seedScope.ServiceProvider.GetRequiredService<MoonDbContext>();
-            db.OutboxMessages.Add(new OutboxMessage
+            var message = new OutboxMessage
             {
                 EventType = IntegrationEventTypes.FundingCommitted,
                 AggregateType = "funding_commitment",
@@ -84,7 +96,9 @@ public sealed class Phase2OutboxDispatcherTests : IAsyncLifetime
                 DeduplicationKey = $"dispatcher-test-{Guid.NewGuid():N}",
                 PayloadJson = "{\"test\":true}",
                 CorrelationId = "dispatcher-integration-test"
-            });
+            };
+            seededMessageId = message.Id;
+            db.OutboxMessages.Add(message);
             await db.SaveChangesAsync();
         }
 
@@ -113,11 +127,16 @@ public sealed class Phase2OutboxDispatcherTests : IAsyncLifetime
                 }
             }
 
+            var received = await receivedEnvelope.Task.WaitAsync(timeout.Token);
+
             Assert.NotNull(published);
             Assert.NotNull(published.PublishedAtUtc);
             Assert.Null(published.DeadLetteredAtUtc);
             Assert.Null(published.LastError);
             Assert.True(published.PublishAttempts >= 1);
+            Assert.Equal(seededMessageId, received.MessageId);
+            Assert.Equal(IntegrationEventTypes.FundingCommitted, received.EventType);
+            Assert.Equal("dispatcher-integration-test", received.CorrelationId);
         }
         finally
         {
