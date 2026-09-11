@@ -3,6 +3,7 @@ using Moon.Platform.Api.Common.Auditing;
 using Moon.Platform.Api.Common.Authorization;
 using Moon.Platform.Api.Infrastructure.Persistence;
 using Moon.Platform.Api.Modules.Identity;
+using Xunit;
 
 namespace Moon.Platform.Tests;
 
