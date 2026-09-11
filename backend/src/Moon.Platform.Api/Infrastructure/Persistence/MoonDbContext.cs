@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Moon.Platform.Api.Common.Auditing;
+using Moon.Platform.Api.Common.Messaging;
 using Moon.Platform.Api.Modules.Evaluations;
 using Moon.Platform.Api.Modules.Funding;
 using Moon.Platform.Api.Modules.Identity;
@@ -21,6 +22,9 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
     public DbSet<FundingCommitment> FundingCommitments => Set<FundingCommitment>();
     public DbSet<FundingPayment> FundingPayments => Set<FundingPayment>();
     public DbSet<PaymentWebhookReceipt> PaymentWebhookReceipts => Set<PaymentWebhookReceipt>();
+    public DbSet<LedgerJournal> LedgerJournals => Set<LedgerJournal>();
+    public DbSet<LedgerEntry> LedgerEntries => Set<LedgerEntry>();
+    public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
 
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {
@@ -109,6 +113,7 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
             entity.HasKey(x => x.Id);
             entity.Property(x => x.Title).HasMaxLength(200).IsRequired();
             entity.Property(x => x.Description).HasMaxLength(8000).IsRequired();
+            entity.Property(x => x.FundingTargetCurrency).HasMaxLength(3);
             entity.Property(x => x.CreatedBySubject).HasMaxLength(200).IsRequired();
             entity.HasIndex(x => new { x.ProjectId, x.VersionNumber }).IsUnique();
             entity.HasOne<Project>().WithMany().HasForeignKey(x => x.ProjectId).OnDelete(DeleteBehavior.Restrict);
