@@ -67,6 +67,7 @@ const ProjectsEmptyPage = lazy(() => import("../features/projects/states/empty")
 const ProjectsErrorPage = lazy(() => import("../features/projects/states/error"));
 const ProjectDetailsPage = lazy(() => import("../features/project-details"));
 const ProjectRuralWomenPage = lazy(() => import("../features/project-details/variants/rural-women"));
+
 const StartupPanelDashboardPage = lazy(() => import("../features/startup-panel"));
 const StartupPanelProjectsPage = lazy(() => import("../features/startup-panel/projects"));
 const StartupProjectCreatePage = lazy(() => import("../features/startup-panel/project-create"));
@@ -86,6 +87,7 @@ const StartupProfileEditProductTeamPage = lazy(() => import("../features/startup
 const StartupProfileEditImpactDocumentsPage = lazy(() => import("../features/startup-panel/profile-edit-impact-documents"));
 const StartupFinancingFeePage = lazy(() => import("../features/startup-panel/financing-fee"));
 const StartupSettingsPage = lazy(() => import("../features/startup-panel/settings"));
+
 const CompanyPanelDashboardPage = lazy(() => import("../features/company-panel"));
 const CompanyProjectsPage = lazy(() => import("../features/company-panel/projects"));
 const CompanyProjectDetailPage = lazy(() => import("../features/company-panel/project-detail"));
@@ -104,7 +106,6 @@ const CompanyEditOrganizationRepresentativePage = lazy(() => import("../features
 const CompanyEditTaxAndDocumentsPage = lazy(() => import("../features/company-panel/account-edit-tax-documents"));
 
 const AdminPanelDashboardPage = lazy(() => import("../features/admin-panel"));
-
 const AdminUsersRolesPage = lazy(() => import("../features/admin-panel/users"));
 const AdminAddUserPage = lazy(() => import("../features/admin-panel/users-new"));
 const AdminRoleManagementPage = lazy(() => import("../features/admin-panel/roles"));
@@ -123,6 +124,47 @@ const AdminContentManagementPage = lazy(() => import("../features/admin-panel/co
 const AdminSettingsPage = lazy(() => import("../features/admin-panel/settings"));
 const AdminAccessPolicyPage = lazy(() => import("../features/admin-panel/access-policy"));
 
+const CreativeHouseDashboardPage = lazy(() => import("../panels/creative-house"));
+const CreativeHouseStartupEvaluationsPage = lazy(() => import("../panels/creative-house/startup-evaluations"));
+const CreativeHouseStartupEvaluationDetailPage = lazy(() => import("../panels/creative-house/startup-evaluation-detail"));
+const CreativeHouseProjectEvaluationsPage = lazy(() => import("../panels/creative-house/project-evaluations"));
+const CreativeHouseProjectEvaluationDetailPage = lazy(() => import("../panels/creative-house/project-evaluation-detail"));
+const CreativeHouseMilestoneEvaluationsPage = lazy(() => import("../panels/creative-house/milestone-evaluations"));
+const CreativeHouseMilestoneEvaluationDetailPage = lazy(() => import("../panels/creative-house/milestone-evaluation-detail"));
+const CreativeHouseReportsPage = lazy(() => import("../panels/creative-house/reports"));
+const CreativeHouseEvaluationHistoryPage = lazy(() => import("../panels/creative-house/evaluation-history"));
+const CreativeHouseSettingsPage = lazy(() => import("../panels/creative-house/settings"));
+const CreativeHouseReportDetailPage = lazy(() => import("../panels/creative-house/report-detail"));
+
+const FundManagerDashboardPage = lazy(() => import("../panels/fund-manager"));
+const FundManagerResourcesPage = lazy(() => import("../panels/fund-manager/resources"));
+const FundManagerResourceDetailPage = lazy(() => import("../panels/fund-manager/resource-detail"));
+const FundManagerInvestmentsPage = lazy(() => import("../panels/fund-manager/investments"));
+const FundManagerInvestmentDetailPage = lazy(() => import("../panels/fund-manager/investment-detail"));
+const FundManagerProfitReturnsPage = lazy(() => import("../panels/fund-manager/profit-returns"));
+const FundManagerProfitReturnDetailPage = lazy(() => import("../panels/fund-manager/profit-return-detail"));
+const FundManagerCycleReturnsPage = lazy(() => import("../panels/fund-manager/cycle-returns"));
+const FundManagerCycleReturnDetailPage = lazy(() => import("../panels/fund-manager/cycle-return-detail"));
+const FundManagerProfitSplitPage = lazy(() => import("../panels/fund-manager/profit-split"));
+const FundManagerProfitSplitDetailPage = lazy(() => import("../panels/fund-manager/profit-split-detail"));
+const FundManagerReportsPage = lazy(() => import("../panels/fund-manager/reports"));
+
+const EmdadDashboardPage = lazy(() => import("../panels/emdad"));
+const EmdadReleaseRequestsPage = lazy(() => import("../panels/emdad/release-requests"));
+const EmdadReleaseRequestDetailPage = lazy(() => import("../panels/emdad/release-requests/detail"));
+const EmdadReleaseSuccessPage = lazy(() => import("../panels/emdad/release-requests/success"));
+const EmdadArticle172ApprovalsPage = lazy(() => import("../panels/emdad/article172-approvals"));
+const EmdadArticle172RequestDetailPage = lazy(() => import("../panels/emdad/article172-approvals/detail"));
+const EmdadArticle172SuccessPage = lazy(() => import("../panels/emdad/article172-approvals/success"));
+const EmdadPaymentHistoryPage = lazy(() => import("../panels/emdad/payment-history"));
+const EmdadPaymentDetailPage = lazy(() => import("../panels/emdad/payment-history/detail"));
+const EmdadFinancialReportsPage = lazy(() => import("../panels/emdad/financial-reports"));
+const EmdadFundSynergyPage = lazy(() => import("../panels/emdad/fund-synergy"));
+const EmdadFundSynergyAllocationPage = lazy(() => import("../panels/emdad/fund-synergy/allocation"));
+const EmdadFundSynergySuccessPage = lazy(() => import("../panels/emdad/fund-synergy/success"));
+const EmdadFundSynergyHistoryPage = lazy(() => import("../panels/emdad/fund-synergy-history"));
+const EmdadFundReturnsPage = lazy(() => import("../panels/emdad/fund-returns"));
+
 function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
   return (
     <Suspense fallback={null}>
@@ -131,272 +173,195 @@ function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
   );
 }
 
-const landingElement = lazyElement(LandingPage);
-const aboutElement = lazyElement(AboutPage);
-const companiesElement = lazyElement(ForCompaniesPage);
-const startupsElement = lazyElement(ForStartupsPage);
-const howItWorksElement = lazyElement(HowItWorksPage);
-const impactOverviewElement = lazyElement(ImpactOverviewPage);
-const impactReportsListElement = lazyElement(ImpactReportsListPage);
-const impactReportsListLoadingElement = lazyElement(ImpactReportsListLoadingPage);
-const impactReportsListEmptyElement = lazyElement(ImpactReportsListEmptyPage);
-const impactReportsListNoResultsElement = lazyElement(ImpactReportsListNoResultsPage);
-const projectImpactReportElement = lazyElement(ProjectImpactReportPage);
-const projectImpactReportFinalElement = lazyElement(ProjectImpactReportFinalPage);
-const projectImpactReportPendingElement = lazyElement(ProjectImpactReportPendingPage);
-const projectImpactReportPrintElement = lazyElement(ProjectImpactReportPrintPage);
-const participationCheckoutElement = lazyElement(ParticipationCheckoutPage);
-const participationCheckoutFundedElement = lazyElement(ParticipationCheckoutFundedPage);
-const participationCheckoutLoadingElement = lazyElement(ParticipationCheckoutLoadingPage);
-const participationCheckoutRedirectingElement = lazyElement(ParticipationCheckoutRedirectingPage);
-const participationCheckoutPaymentErrorElement = lazyElement(ParticipationCheckoutPaymentErrorPage);
-const participationCheckoutUnavailableElement = lazyElement(ParticipationCheckoutUnavailablePage);
-const participationModalElement = lazyElement(ParticipationModalPage);
-const participationTrackFormElement = lazyElement(ParticipationTrackFormPage);
-const participationTrackOtpElement = lazyElement(ParticipationTrackOtpPage);
-const participationTrackListElement = lazyElement(ParticipationTrackListPage);
-const participationTrackDetailsElement = lazyElement(ParticipationTrackDetailsPage);
-const participationTrackPendingElement = lazyElement(ParticipationTrackPendingPage);
-const participationTrackCompletedElement = lazyElement(ParticipationTrackCompletedPage);
-const participationTrackFailedElement = lazyElement(ParticipationTrackFailedPage);
-const participationTrackEmptyElement = lazyElement(ParticipationTrackEmptyPage);
-const paymentResultSuccessElement = lazyElement(PaymentResultSuccessPage);
-const paymentResultFailedElement = lazyElement(PaymentResultFailedPage);
-const paymentResultPendingElement = lazyElement(PaymentResultPendingPage);
-const paymentResultCanceledElement = lazyElement(PaymentResultCanceledPage);
-const paymentResultErrorsElement = lazyElement(PaymentResultErrorsPage);
-const faqElement = lazyElement(FaqPage);
-const contactSupportElement = lazyElement(ContactSupportPage);
-const newsListElement = lazyElement(NewsListPage);
-const newsDetailsElement = lazyElement(NewsDetailsPage);
-const privacyPolicyElement = lazyElement(PrivacyPolicyPage);
-const termsElement = lazyElement(TermsPage);
-const article172GuideElement = lazyElement(Article172GuidePage);
-const searchResultsElement = lazyElement(SearchResultsPage);
-const searchResultsInitialElement = lazyElement(SearchResultsInitialPage);
-const searchResultsLoadingElement = lazyElement(SearchResultsLoadingPage);
-const searchResultsErrorElement = lazyElement(SearchResultsErrorPage);
-const registrationTrackNeedsEditElement = lazyElement(RegistrationTrackNeedsEditPage);
-const registrationTrackRejectedElement = lazyElement(RegistrationTrackRejectedPage);
-const startupRegistrationStep2Element = lazyElement(StartupRegistrationStep2Page);
-const startupRegistrationStep3Element = lazyElement(StartupRegistrationStep3Page);
-const startupRegistrationStep4Element = lazyElement(StartupRegistrationStep4Page);
-const companyRegistrationStep2Element = lazyElement(CompanyRegistrationStep2Page);
-const companyRegistrationStatusElement = lazyElement(CompanyRegistrationStatusPage);
-const notFoundElement = lazyElement(NotFoundPage);
-const startupsDirectoryElement = lazyElement(StartupsDirectoryPage);
-const startupPublicProfileElement = lazyElement(StartupPublicProfilePage);
-const startupPublicProfileNoProjectsElement = lazyElement(StartupPublicProfileNoProjectsPage);
-const startupShareSheetElement = lazyElement(StartupShareSheetPage);
-const projectsElement = lazyElement(ProjectsPage);
-const projectsLoadingElement = lazyElement(ProjectsLoadingPage);
-const projectsEmptyElement = lazyElement(ProjectsEmptyPage);
-const projectsErrorElement = lazyElement(ProjectsErrorPage);
-const projectDetailsElement = lazyElement(ProjectDetailsPage);
-const projectRuralWomenElement = lazyElement(ProjectRuralWomenPage);
-const startupPanelDashboardElement = lazyElement(StartupPanelDashboardPage);
-const startupPanelProjectsElement = lazyElement(StartupPanelProjectsPage);
-const startupProjectCreateElement = lazyElement(StartupProjectCreatePage);
-const startupProjectSubmittedElement = lazyElement(StartupProjectSubmittedPage);
-const startupProjectDetailElement = lazyElement(StartupProjectDetailPage);
-const startupProjectStagesElement = lazyElement(StartupProjectStagesPage);
-const startupProjectStageDetailElement = lazyElement(StartupProjectStageDetailPage);
-const startupProjectStageReportElement = lazyElement(StartupProjectStageReportPage);
-const startupProjectStageReportSubmittedElement = lazyElement(StartupProjectStageReportSubmittedPage);
-const startupProjectStageEvaluationElement = lazyElement(StartupProjectStageEvaluationPage);
-const startupProjectStageFundReleasedElement = lazyElement(StartupProjectStageFundReleasedPage);
-const startupReportsElement = lazyElement(StartupReportsPage);
-const startupReportDetailElement = lazyElement(StartupReportDetailPage);
-const startupProfileElement = lazyElement(StartupProfilePage);
-const startupProfileEditBasicElement = lazyElement(StartupProfileEditBasicPage);
-const startupProfileEditProductTeamElement = lazyElement(StartupProfileEditProductTeamPage);
-const startupProfileEditImpactDocumentsElement = lazyElement(StartupProfileEditImpactDocumentsPage);
-const startupFinancingFeeElement = lazyElement(StartupFinancingFeePage);
-const startupSettingsElement = lazyElement(StartupSettingsPage);
-const companyPanelDashboardElement = lazyElement(CompanyPanelDashboardPage);
-const companyProjectsElement = lazyElement(CompanyProjectsPage);
-const companyProjectDetailElement = lazyElement(CompanyProjectDetailPage);
-const companyProjectParticipationElement = lazyElement(CompanyProjectParticipationPage);
-const companyPaymentSuccessElement = lazyElement(CompanyPaymentSuccessPage);
-const companyParticipationsElement = lazyElement(CompanyParticipationsPage);
-const companyParticipationDetailElement = lazyElement(CompanyParticipationDetailPage);
-const companyReportsElement = lazyElement(CompanyReportsPage);
-const companyReportDetailElement = lazyElement(CompanyReportDetailPage);
-const companyArticle172CertificatesElement = lazyElement(CompanyArticle172CertificatesPage);
-const companyArticle172CertificateDetailElement = lazyElement(CompanyArticle172CertificateDetailPage);
-const companyArticle172CertificateIssuedElement = lazyElement(CompanyArticle172CertificateIssuedPage);
-const companyOrganizationAccountElement = lazyElement(CompanyOrganizationAccountPage);
-const companyEditOrganizationInfoElement = lazyElement(CompanyEditOrganizationInfoPage);
-const companyEditOrganizationRepresentativeElement = lazyElement(CompanyEditOrganizationRepresentativePage);
-const companyEditTaxAndDocumentsElement = lazyElement(CompanyEditTaxAndDocumentsPage);
-
-const adminPanelDashboardElement = lazyElement(AdminPanelDashboardPage);
-
-const adminUsersRolesElement = lazyElement(AdminUsersRolesPage);
-const adminAddUserElement = lazyElement(AdminAddUserPage);
-const adminRoleManagementElement = lazyElement(AdminRoleManagementPage);
-const adminUserDetailElement = lazyElement(AdminUserDetailPage);
-const adminOrganizationsElement = lazyElement(AdminOrganizationsPage);
-const adminOrganizationDetailElement = lazyElement(AdminOrganizationDetailPage);
-const adminProjectsElement = lazyElement(AdminProjectsPage);
-const adminProjectDetailElement = lazyElement(AdminProjectDetailPage);
-const adminFundingElement = lazyElement(AdminFundingPage);
-const adminFundingDetailElement = lazyElement(AdminFundingDetailPage);
-const adminRevenuesElement = lazyElement(AdminRevenuesPage);
-const adminRevenueDetailElement = lazyElement(AdminRevenueDetailPage);
-const adminReportsElement = lazyElement(AdminReportsPage);
-const adminReportDetailElement = lazyElement(AdminReportDetailPage);
-const adminContentManagementElement = lazyElement(AdminContentManagementPage);
-const adminSettingsElement = lazyElement(AdminSettingsPage);
-const adminAccessPolicyElement = lazyElement(AdminAccessPolicyPage);
-
-/**
- * Routes are introduced around the existing Figma-derived screens so their
- * visual markup stays unchanged. Future feature branches should be integrated
- * here instead of replacing App.tsx.
- */
 export function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={landingElement} />
-        <Route path="/about" element={aboutElement} />
-        <Route path="/companies" element={companiesElement} />
-        <Route path="/for-companies" element={companiesElement} />
-        <Route path="/startups" element={startupsElement} />
-        <Route path="/for-startups" element={startupsElement} />
-        <Route path="/startups-directory" element={startupsDirectoryElement} />
-        <Route path="/startups/directory" element={startupsDirectoryElement} />
-        <Route path="/startups/profile/states/no-projects" element={startupPublicProfileNoProjectsElement} />
-        <Route path="/startups/profile/share" element={startupShareSheetElement} />
-        <Route path="/startups/:startupId" element={startupPublicProfileElement} />
-        <Route path="/how-it-works" element={howItWorksElement} />
-        <Route path="/impact" element={impactOverviewElement} />
-        <Route path="/impact-overview" element={impactOverviewElement} />
-        <Route path="/impact-reports/states/loading" element={impactReportsListLoadingElement} />
-        <Route path="/impact-reports/states/empty" element={impactReportsListEmptyElement} />
-        <Route path="/impact-reports/states/no-results" element={impactReportsListNoResultsElement} />
-        <Route path="/impact-reports" element={impactReportsListElement} />
-        <Route path="/projects/impact-report/states/final" element={projectImpactReportFinalElement} />
-        <Route path="/projects/impact-report/states/pending" element={projectImpactReportPendingElement} />
-        <Route path="/projects/impact-report/print" element={projectImpactReportPrintElement} />
-        <Route path="/projects/:projectId/impact-report" element={projectImpactReportElement} />
-        <Route path="/participation/checkout" element={participationCheckoutElement} />
-        <Route path="/projects/:projectId/participate" element={participationCheckoutElement} />
-        <Route path="/participation/checkout/funded" element={participationCheckoutFundedElement} />
-        <Route path="/projects/:projectId/participate/funded" element={participationCheckoutFundedElement} />
-        <Route path="/participation/checkout/loading" element={participationCheckoutLoadingElement} />
-        <Route path="/projects/:projectId/participate/loading" element={participationCheckoutLoadingElement} />
-        <Route path="/participation/checkout/redirecting" element={participationCheckoutRedirectingElement} />
-        <Route path="/projects/:projectId/participate/redirecting" element={participationCheckoutRedirectingElement} />
-        <Route path="/participation/checkout/payment-error" element={participationCheckoutPaymentErrorElement} />
-        <Route path="/projects/:projectId/participate/payment-error" element={participationCheckoutPaymentErrorElement} />
-        <Route path="/participation/checkout/unavailable" element={participationCheckoutUnavailableElement} />
-        <Route path="/projects/:projectId/participate/unavailable" element={participationCheckoutUnavailableElement} />
-        <Route path="/participation/modal" element={participationModalElement} />
-        <Route path="/participation/track" element={participationTrackFormElement} />
-        <Route path="/participation/track/form" element={participationTrackFormElement} />
-        <Route path="/participation/track/otp" element={participationTrackOtpElement} />
-        <Route path="/participation/track/list" element={participationTrackListElement} />
-        <Route path="/participation/track/details" element={participationTrackDetailsElement} />
-        <Route path="/participation/track/pending" element={participationTrackPendingElement} />
-        <Route path="/participation/track/completed" element={participationTrackCompletedElement} />
-        <Route path="/participation/track/failed" element={participationTrackFailedElement} />
-        <Route path="/participation/track/empty" element={participationTrackEmptyElement} />
-        <Route path="/participation/track/:participationId" element={participationTrackDetailsElement} />
-        <Route path="/payment/result/success" element={paymentResultSuccessElement} />
-        <Route path="/payment/result/failed" element={paymentResultFailedElement} />
-        <Route path="/payment/result/pending" element={paymentResultPendingElement} />
-        <Route path="/payment/result/canceled" element={paymentResultCanceledElement} />
-        <Route path="/payment/result/errors" element={paymentResultErrorsElement} />
-        <Route path="/faq" element={faqElement} />
-        <Route path="/contact" element={contactSupportElement} />
-        <Route path="/contact-support" element={contactSupportElement} />
-        <Route path="/news" element={newsListElement} />
-        <Route path="/news/:newsId" element={newsDetailsElement} />
-        <Route path="/privacy-policy" element={privacyPolicyElement} />
-        <Route path="/terms" element={termsElement} />
-        <Route path="/article-172-guide" element={article172GuideElement} />
-        <Route path="/search/states/initial" element={searchResultsInitialElement} />
-        <Route path="/search/states/loading" element={searchResultsLoadingElement} />
-        <Route path="/search/states/error" element={searchResultsErrorElement} />
-        <Route path="/search" element={searchResultsElement} />
-        <Route path="/404" element={notFoundElement} />
-        <Route path="/registration/track/states/needs-edit" element={registrationTrackNeedsEditElement} />
-        <Route path="/registration/track/states/rejected" element={registrationTrackRejectedElement} />
+        <Route path="/" element={lazyElement(LandingPage)} />
+        <Route path="/about" element={lazyElement(AboutPage)} />
+        <Route path="/companies" element={lazyElement(ForCompaniesPage)} />
+        <Route path="/for-companies" element={lazyElement(ForCompaniesPage)} />
+        <Route path="/startups" element={lazyElement(ForStartupsPage)} />
+        <Route path="/for-startups" element={lazyElement(ForStartupsPage)} />
+        <Route path="/startups-directory" element={lazyElement(StartupsDirectoryPage)} />
+        <Route path="/startups/directory" element={lazyElement(StartupsDirectoryPage)} />
+        <Route path="/startups/profile/states/no-projects" element={lazyElement(StartupPublicProfileNoProjectsPage)} />
+        <Route path="/startups/profile/share" element={lazyElement(StartupShareSheetPage)} />
+        <Route path="/startups/:startupId" element={lazyElement(StartupPublicProfilePage)} />
+        <Route path="/how-it-works" element={lazyElement(HowItWorksPage)} />
+        <Route path="/impact" element={lazyElement(ImpactOverviewPage)} />
+        <Route path="/impact-overview" element={lazyElement(ImpactOverviewPage)} />
+        <Route path="/impact-reports/states/loading" element={lazyElement(ImpactReportsListLoadingPage)} />
+        <Route path="/impact-reports/states/empty" element={lazyElement(ImpactReportsListEmptyPage)} />
+        <Route path="/impact-reports/states/no-results" element={lazyElement(ImpactReportsListNoResultsPage)} />
+        <Route path="/impact-reports" element={lazyElement(ImpactReportsListPage)} />
+        <Route path="/projects/impact-report/states/final" element={lazyElement(ProjectImpactReportFinalPage)} />
+        <Route path="/projects/impact-report/states/pending" element={lazyElement(ProjectImpactReportPendingPage)} />
+        <Route path="/projects/impact-report/print" element={lazyElement(ProjectImpactReportPrintPage)} />
+        <Route path="/projects/:projectId/impact-report" element={lazyElement(ProjectImpactReportPage)} />
+        <Route path="/participation/checkout" element={lazyElement(ParticipationCheckoutPage)} />
+        <Route path="/projects/:projectId/participate" element={lazyElement(ParticipationCheckoutPage)} />
+        <Route path="/participation/checkout/funded" element={lazyElement(ParticipationCheckoutFundedPage)} />
+        <Route path="/projects/:projectId/participate/funded" element={lazyElement(ParticipationCheckoutFundedPage)} />
+        <Route path="/participation/checkout/loading" element={lazyElement(ParticipationCheckoutLoadingPage)} />
+        <Route path="/projects/:projectId/participate/loading" element={lazyElement(ParticipationCheckoutLoadingPage)} />
+        <Route path="/participation/checkout/redirecting" element={lazyElement(ParticipationCheckoutRedirectingPage)} />
+        <Route path="/projects/:projectId/participate/redirecting" element={lazyElement(ParticipationCheckoutRedirectingPage)} />
+        <Route path="/participation/checkout/payment-error" element={lazyElement(ParticipationCheckoutPaymentErrorPage)} />
+        <Route path="/projects/:projectId/participate/payment-error" element={lazyElement(ParticipationCheckoutPaymentErrorPage)} />
+        <Route path="/participation/checkout/unavailable" element={lazyElement(ParticipationCheckoutUnavailablePage)} />
+        <Route path="/projects/:projectId/participate/unavailable" element={lazyElement(ParticipationCheckoutUnavailablePage)} />
+        <Route path="/participation/modal" element={lazyElement(ParticipationModalPage)} />
+        <Route path="/participation/track" element={lazyElement(ParticipationTrackFormPage)} />
+        <Route path="/participation/track/form" element={lazyElement(ParticipationTrackFormPage)} />
+        <Route path="/participation/track/otp" element={lazyElement(ParticipationTrackOtpPage)} />
+        <Route path="/participation/track/list" element={lazyElement(ParticipationTrackListPage)} />
+        <Route path="/participation/track/details" element={lazyElement(ParticipationTrackDetailsPage)} />
+        <Route path="/participation/track/pending" element={lazyElement(ParticipationTrackPendingPage)} />
+        <Route path="/participation/track/completed" element={lazyElement(ParticipationTrackCompletedPage)} />
+        <Route path="/participation/track/failed" element={lazyElement(ParticipationTrackFailedPage)} />
+        <Route path="/participation/track/empty" element={lazyElement(ParticipationTrackEmptyPage)} />
+        <Route path="/participation/track/:participationId" element={lazyElement(ParticipationTrackDetailsPage)} />
+        <Route path="/payment/result/success" element={lazyElement(PaymentResultSuccessPage)} />
+        <Route path="/payment/result/failed" element={lazyElement(PaymentResultFailedPage)} />
+        <Route path="/payment/result/pending" element={lazyElement(PaymentResultPendingPage)} />
+        <Route path="/payment/result/canceled" element={lazyElement(PaymentResultCanceledPage)} />
+        <Route path="/payment/result/errors" element={lazyElement(PaymentResultErrorsPage)} />
+        <Route path="/faq" element={lazyElement(FaqPage)} />
+        <Route path="/contact" element={lazyElement(ContactSupportPage)} />
+        <Route path="/contact-support" element={lazyElement(ContactSupportPage)} />
+        <Route path="/news" element={lazyElement(NewsListPage)} />
+        <Route path="/news/:newsId" element={lazyElement(NewsDetailsPage)} />
+        <Route path="/privacy-policy" element={lazyElement(PrivacyPolicyPage)} />
+        <Route path="/terms" element={lazyElement(TermsPage)} />
+        <Route path="/article-172-guide" element={lazyElement(Article172GuidePage)} />
+        <Route path="/search/states/initial" element={lazyElement(SearchResultsInitialPage)} />
+        <Route path="/search/states/loading" element={lazyElement(SearchResultsLoadingPage)} />
+        <Route path="/search/states/error" element={lazyElement(SearchResultsErrorPage)} />
+        <Route path="/search" element={lazyElement(SearchResultsPage)} />
+        <Route path="/404" element={lazyElement(NotFoundPage)} />
+        <Route path="/registration/track/states/needs-edit" element={lazyElement(RegistrationTrackNeedsEditPage)} />
+        <Route path="/registration/track/states/rejected" element={lazyElement(RegistrationTrackRejectedPage)} />
+
         <Route path="/auth" element={<AuthEntryPage />} />
-        <Route path="/register/company/states/step2" element={companyRegistrationStep2Element} />
-        <Route path="/register/company/status" element={companyRegistrationStatusElement} />
+        <Route path="/register/company/states/step2" element={lazyElement(CompanyRegistrationStep2Page)} />
+        <Route path="/register/company/status" element={lazyElement(CompanyRegistrationStatusPage)} />
         <Route path="/register/company" element={<CompanyRegistrationPage />} />
-        <Route path="/register/startup/states/step2" element={startupRegistrationStep2Element} />
-        <Route path="/register/startup/states/step3" element={startupRegistrationStep3Element} />
-        <Route path="/register/startup/states/step4" element={startupRegistrationStep4Element} />
+        <Route path="/register/startup/states/step2" element={lazyElement(StartupRegistrationStep2Page)} />
+        <Route path="/register/startup/states/step3" element={lazyElement(StartupRegistrationStep3Page)} />
+        <Route path="/register/startup/states/step4" element={lazyElement(StartupRegistrationStep4Page)} />
         <Route path="/register/startup" element={<StartupRegistrationPage />} />
-        <Route path="/panel/startup" element={startupPanelDashboardElement} />
-        <Route path="/panel/startup/projects" element={startupPanelProjectsElement} />
-        <Route path="/panel/startup/projects/new" element={startupProjectCreateElement} />
-        <Route path="/panel/startup/projects/new/step-2" element={startupProjectCreateElement} />
-        <Route path="/panel/startup/projects/new/step-3" element={startupProjectCreateElement} />
-        <Route path="/panel/startup/projects/new/step-4" element={startupProjectCreateElement} />
-        <Route path="/panel/startup/projects/submitted" element={startupProjectSubmittedElement} />
-        <Route path="/panel/startup/stages" element={startupProjectStagesElement} />
-        <Route path="/panel/startup/reports/:reportId" element={startupReportDetailElement} />
-        <Route path="/panel/startup/reports" element={startupReportsElement} />
-        <Route path="/panel/startup/profile/edit/impact-documents" element={startupProfileEditImpactDocumentsElement} />
-        <Route path="/panel/startup/profile/edit/product-team" element={startupProfileEditProductTeamElement} />
-        <Route path="/panel/startup/profile/edit" element={startupProfileEditBasicElement} />
-        <Route path="/panel/startup/profile" element={startupProfileElement} />
-        <Route path="/panel/startup/financing-fee" element={startupFinancingFeeElement} />
-        <Route path="/panel/startup/settings" element={startupSettingsElement} />
-        <Route path="/panel/company" element={companyPanelDashboardElement} />
-        <Route path="/panel/company/projects" element={companyProjectsElement} />
-        <Route path="/panel/company/projects/:projectId" element={companyProjectDetailElement} />
-        <Route path="/panel/company/projects/:projectId/participate" element={companyProjectParticipationElement} />
-        <Route path="/panel/company/projects/:projectId/participate/success" element={companyPaymentSuccessElement} />
-        <Route path="/panel/company/participations" element={companyParticipationsElement} />
-        <Route path="/panel/company/participations/:participationId" element={companyParticipationDetailElement} />
-        <Route path="/panel/company/reports" element={companyReportsElement} />
-        <Route path="/panel/company/reports/:reportId" element={companyReportDetailElement} />
-        <Route path="/panel/company/certificates" element={companyArticle172CertificatesElement} />
-        <Route path="/panel/company/certificates/:certificateId/issued" element={companyArticle172CertificateIssuedElement} />
-        <Route path="/panel/company/certificates/:certificateId" element={companyArticle172CertificateDetailElement} />
-        <Route path="/panel/company/account" element={companyOrganizationAccountElement} />
-        <Route path="/panel/company/account/edit/organization" element={companyEditOrganizationInfoElement} />
-        <Route path="/panel/company/account/edit/representative" element={companyEditOrganizationRepresentativeElement} />
-        <Route path="/panel/company/account/edit/tax-documents" element={companyEditTaxAndDocumentsElement} />
-        <Route path="/panel/admin" element={adminPanelDashboardElement} />
-        <Route path="/panel/admin/users/new" element={adminAddUserElement} />
-        <Route path="/panel/admin/roles" element={adminRoleManagementElement} />
-        <Route path="/panel/admin/users/:userId" element={adminUserDetailElement} />
-        <Route path="/panel/admin/users" element={adminUsersRolesElement} />
-        <Route path="/panel/admin/organizations/:organizationId" element={adminOrganizationDetailElement} />
-        <Route path="/panel/admin/organizations" element={adminOrganizationsElement} />
-        <Route path="/panel/admin/projects/:projectId" element={adminProjectDetailElement} />
-        <Route path="/panel/admin/projects" element={adminProjectsElement} />
-        <Route path="/panel/admin/funding/:fundingId" element={adminFundingDetailElement} />
-        <Route path="/panel/admin/funding" element={adminFundingElement} />
-        <Route path="/panel/admin/revenues/:revenueId" element={adminRevenueDetailElement} />
-        <Route path="/panel/admin/revenues" element={adminRevenuesElement} />
-        <Route path="/panel/admin/reports/:reportId" element={adminReportDetailElement} />
-        <Route path="/panel/admin/reports" element={adminReportsElement} />
-        <Route path="/panel/admin/content" element={adminContentManagementElement} />
-        <Route path="/panel/admin/settings/access-policy" element={adminAccessPolicyElement} />
-        <Route path="/panel/admin/settings" element={adminSettingsElement} />
-        <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/fund-released" element={startupProjectStageFundReleasedElement} />
-        <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/evaluation/approved" element={startupProjectStageEvaluationElement} />
-        <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/submitted" element={startupProjectStageReportSubmittedElement} />
-        <Route path="/panel/startup/projects/:projectId/stages/:stageId/report" element={startupProjectStageReportElement} />
-        <Route path="/panel/startup/projects/:projectId/stages/:stageId/in-progress" element={startupProjectStageDetailElement} />
-        <Route path="/panel/startup/projects/:projectId/stages/:stageId" element={startupProjectStageDetailElement} />
-        <Route path="/panel/startup/projects/:projectId/stages" element={startupProjectStagesElement} />
-        <Route path="/panel/startup/projects/:projectId" element={startupProjectDetailElement} />
-        <Route path="/projects" element={projectsElement} />
-        <Route path="/projects/states/loading" element={projectsLoadingElement} />
-        <Route path="/projects/states/empty" element={projectsEmptyElement} />
-        <Route path="/projects/states/error" element={projectsErrorElement} />
-        <Route path="/projects/variants/rural-women" element={projectRuralWomenElement} />
-        <Route path="/projects/:projectId" element={projectDetailsElement} />
-        <Route path="*" element={notFoundElement} />
+
+        <Route path="/panel/startup" element={lazyElement(StartupPanelDashboardPage)} />
+        <Route path="/panel/startup/projects" element={lazyElement(StartupPanelProjectsPage)} />
+        <Route path="/panel/startup/projects/new" element={lazyElement(StartupProjectCreatePage)} />
+        <Route path="/panel/startup/projects/new/step-2" element={lazyElement(StartupProjectCreatePage)} />
+        <Route path="/panel/startup/projects/new/step-3" element={lazyElement(StartupProjectCreatePage)} />
+        <Route path="/panel/startup/projects/new/step-4" element={lazyElement(StartupProjectCreatePage)} />
+        <Route path="/panel/startup/projects/submitted" element={lazyElement(StartupProjectSubmittedPage)} />
+        <Route path="/panel/startup/stages" element={lazyElement(StartupProjectStagesPage)} />
+        <Route path="/panel/startup/reports/:reportId" element={lazyElement(StartupReportDetailPage)} />
+        <Route path="/panel/startup/reports" element={lazyElement(StartupReportsPage)} />
+        <Route path="/panel/startup/profile/edit/impact-documents" element={lazyElement(StartupProfileEditImpactDocumentsPage)} />
+        <Route path="/panel/startup/profile/edit/product-team" element={lazyElement(StartupProfileEditProductTeamPage)} />
+        <Route path="/panel/startup/profile/edit" element={lazyElement(StartupProfileEditBasicPage)} />
+        <Route path="/panel/startup/profile" element={lazyElement(StartupProfilePage)} />
+        <Route path="/panel/startup/financing-fee" element={lazyElement(StartupFinancingFeePage)} />
+        <Route path="/panel/startup/settings" element={lazyElement(StartupSettingsPage)} />
+
+        <Route path="/panel/company" element={lazyElement(CompanyPanelDashboardPage)} />
+        <Route path="/panel/company/projects" element={lazyElement(CompanyProjectsPage)} />
+        <Route path="/panel/company/projects/:projectId" element={lazyElement(CompanyProjectDetailPage)} />
+        <Route path="/panel/company/projects/:projectId/participate" element={lazyElement(CompanyProjectParticipationPage)} />
+        <Route path="/panel/company/projects/:projectId/participate/success" element={lazyElement(CompanyPaymentSuccessPage)} />
+        <Route path="/panel/company/participations" element={lazyElement(CompanyParticipationsPage)} />
+        <Route path="/panel/company/participations/:participationId" element={lazyElement(CompanyParticipationDetailPage)} />
+        <Route path="/panel/company/reports" element={lazyElement(CompanyReportsPage)} />
+        <Route path="/panel/company/reports/:reportId" element={lazyElement(CompanyReportDetailPage)} />
+        <Route path="/panel/company/certificates" element={lazyElement(CompanyArticle172CertificatesPage)} />
+        <Route path="/panel/company/certificates/:certificateId/issued" element={lazyElement(CompanyArticle172CertificateIssuedPage)} />
+        <Route path="/panel/company/certificates/:certificateId" element={lazyElement(CompanyArticle172CertificateDetailPage)} />
+        <Route path="/panel/company/account" element={lazyElement(CompanyOrganizationAccountPage)} />
+        <Route path="/panel/company/account/edit/organization" element={lazyElement(CompanyEditOrganizationInfoPage)} />
+        <Route path="/panel/company/account/edit/representative" element={lazyElement(CompanyEditOrganizationRepresentativePage)} />
+        <Route path="/panel/company/account/edit/tax-documents" element={lazyElement(CompanyEditTaxAndDocumentsPage)} />
+
+        <Route path="/panel/admin" element={lazyElement(AdminPanelDashboardPage)} />
+        <Route path="/panel/admin/users/new" element={lazyElement(AdminAddUserPage)} />
+        <Route path="/panel/admin/roles" element={lazyElement(AdminRoleManagementPage)} />
+        <Route path="/panel/admin/users/:userId" element={lazyElement(AdminUserDetailPage)} />
+        <Route path="/panel/admin/users" element={lazyElement(AdminUsersRolesPage)} />
+        <Route path="/panel/admin/organizations/:organizationId" element={lazyElement(AdminOrganizationDetailPage)} />
+        <Route path="/panel/admin/organizations" element={lazyElement(AdminOrganizationsPage)} />
+        <Route path="/panel/admin/projects/:projectId" element={lazyElement(AdminProjectDetailPage)} />
+        <Route path="/panel/admin/projects" element={lazyElement(AdminProjectsPage)} />
+        <Route path="/panel/admin/funding/:fundingId" element={lazyElement(AdminFundingDetailPage)} />
+        <Route path="/panel/admin/funding" element={lazyElement(AdminFundingPage)} />
+        <Route path="/panel/admin/revenues/:revenueId" element={lazyElement(AdminRevenueDetailPage)} />
+        <Route path="/panel/admin/revenues" element={lazyElement(AdminRevenuesPage)} />
+        <Route path="/panel/admin/reports/:reportId" element={lazyElement(AdminReportDetailPage)} />
+        <Route path="/panel/admin/reports" element={lazyElement(AdminReportsPage)} />
+        <Route path="/panel/admin/content" element={lazyElement(AdminContentManagementPage)} />
+        <Route path="/panel/admin/settings/access-policy" element={lazyElement(AdminAccessPolicyPage)} />
+        <Route path="/panel/admin/settings" element={lazyElement(AdminSettingsPage)} />
+
+        <Route path="/panel/creative-house" element={lazyElement(CreativeHouseDashboardPage)} />
+        <Route path="/panel/creative-house/startup-evaluations" element={lazyElement(CreativeHouseStartupEvaluationsPage)} />
+        <Route path="/panel/creative-house/startup-evaluations/detail" element={lazyElement(CreativeHouseStartupEvaluationDetailPage)} />
+        <Route path="/panel/creative-house/project-evaluations" element={lazyElement(CreativeHouseProjectEvaluationsPage)} />
+        <Route path="/panel/creative-house/project-evaluations/detail" element={lazyElement(CreativeHouseProjectEvaluationDetailPage)} />
+        <Route path="/panel/creative-house/milestone-evaluations" element={lazyElement(CreativeHouseMilestoneEvaluationsPage)} />
+        <Route path="/panel/creative-house/milestone-evaluations/detail" element={lazyElement(CreativeHouseMilestoneEvaluationDetailPage)} />
+        <Route path="/panel/creative-house/reports" element={lazyElement(CreativeHouseReportsPage)} />
+        <Route path="/panel/creative-house/evaluation-history" element={lazyElement(CreativeHouseEvaluationHistoryPage)} />
+        <Route path="/panel/creative-house/settings" element={lazyElement(CreativeHouseSettingsPage)} />
+        <Route path="/panel/creative-house/reports/detail" element={lazyElement(CreativeHouseReportDetailPage)} />
+
+        <Route path="/panel/fund-manager" element={lazyElement(FundManagerDashboardPage)} />
+        <Route path="/panel/fund-manager/resources" element={lazyElement(FundManagerResourcesPage)} />
+        <Route path="/panel/fund-manager/resources/detail" element={lazyElement(FundManagerResourceDetailPage)} />
+        <Route path="/panel/fund-manager/investments" element={lazyElement(FundManagerInvestmentsPage)} />
+        <Route path="/panel/fund-manager/investments/detail" element={lazyElement(FundManagerInvestmentDetailPage)} />
+        <Route path="/panel/fund-manager/profit-returns" element={lazyElement(FundManagerProfitReturnsPage)} />
+        <Route path="/panel/fund-manager/profit-returns/detail" element={lazyElement(FundManagerProfitReturnDetailPage)} />
+        <Route path="/panel/fund-manager/cycle-returns" element={lazyElement(FundManagerCycleReturnsPage)} />
+        <Route path="/panel/fund-manager/cycle-returns/detail" element={lazyElement(FundManagerCycleReturnDetailPage)} />
+        <Route path="/panel/fund-manager/profit-split" element={lazyElement(FundManagerProfitSplitPage)} />
+        <Route path="/panel/fund-manager/profit-split/detail" element={lazyElement(FundManagerProfitSplitDetailPage)} />
+        <Route path="/panel/fund-manager/reports" element={lazyElement(FundManagerReportsPage)} />
+
+        <Route path="/panel/emdad" element={lazyElement(EmdadDashboardPage)} />
+        <Route path="/panel/emdad/release-requests" element={lazyElement(EmdadReleaseRequestsPage)} />
+        <Route path="/panel/emdad/release-requests/detail" element={lazyElement(EmdadReleaseRequestDetailPage)} />
+        <Route path="/panel/emdad/release-requests/success" element={lazyElement(EmdadReleaseSuccessPage)} />
+        <Route path="/panel/emdad/article172-approvals" element={lazyElement(EmdadArticle172ApprovalsPage)} />
+        <Route path="/panel/emdad/article172-approvals/detail" element={lazyElement(EmdadArticle172RequestDetailPage)} />
+        <Route path="/panel/emdad/article172-approvals/success" element={lazyElement(EmdadArticle172SuccessPage)} />
+        <Route path="/panel/emdad/payment-history" element={lazyElement(EmdadPaymentHistoryPage)} />
+        <Route path="/panel/emdad/payment-history/detail" element={lazyElement(EmdadPaymentDetailPage)} />
+        <Route path="/panel/emdad/financial-reports" element={lazyElement(EmdadFinancialReportsPage)} />
+        <Route path="/panel/emdad/fund-synergy" element={lazyElement(EmdadFundSynergyPage)} />
+        <Route path="/panel/emdad/fund-synergy/allocation" element={lazyElement(EmdadFundSynergyAllocationPage)} />
+        <Route path="/panel/emdad/fund-synergy/success" element={lazyElement(EmdadFundSynergySuccessPage)} />
+        <Route path="/panel/emdad/fund-synergy/history" element={lazyElement(EmdadFundSynergyHistoryPage)} />
+        <Route path="/panel/emdad/fund-returns" element={lazyElement(EmdadFundReturnsPage)} />
+
+        <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/fund-released" element={lazyElement(StartupProjectStageFundReleasedPage)} />
+        <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/evaluation/approved" element={lazyElement(StartupProjectStageEvaluationPage)} />
+        <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/submitted" element={lazyElement(StartupProjectStageReportSubmittedPage)} />
+        <Route path="/panel/startup/projects/:projectId/stages/:stageId/report" element={lazyElement(StartupProjectStageReportPage)} />
+        <Route path="/panel/startup/projects/:projectId/stages/:stageId/in-progress" element={lazyElement(StartupProjectStageDetailPage)} />
+        <Route path="/panel/startup/projects/:projectId/stages/:stageId" element={lazyElement(StartupProjectStageDetailPage)} />
+        <Route path="/panel/startup/projects/:projectId/stages" element={lazyElement(StartupProjectStagesPage)} />
+        <Route path="/panel/startup/projects/:projectId" element={lazyElement(StartupProjectDetailPage)} />
+
+        <Route path="/projects" element={lazyElement(ProjectsPage)} />
+        <Route path="/projects/states/loading" element={lazyElement(ProjectsLoadingPage)} />
+        <Route path="/projects/states/empty" element={lazyElement(ProjectsEmptyPage)} />
+        <Route path="/projects/states/error" element={lazyElement(ProjectsErrorPage)} />
+        <Route path="/projects/variants/rural-women" element={lazyElement(ProjectRuralWomenPage)} />
+        <Route path="/projects/:projectId" element={lazyElement(ProjectDetailsPage)} />
+        <Route path="*" element={lazyElement(NotFoundPage)} />
       </Routes>
     </BrowserRouter>
   );
