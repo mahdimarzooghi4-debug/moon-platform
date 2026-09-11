@@ -1,5 +1,5 @@
 import "../index.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const imgChatGptImage1 = "/assets/creative-house/startup-evaluations/logo.png";
 const imgWaitingClockIcon = "/assets/creative-house/startup-evaluations/waiting-clock.svg";
@@ -16,6 +16,8 @@ const imgSettingsIcon = "/assets/creative-house/startup-evaluations/nav-settings
 const imgLogoutIcon = "/assets/creative-house/startup-evaluations/nav-logout.svg";
 
 export default function AyenehStartupEvaluations() {
+  const navigate = useNavigate();
+
   return (
     <div className="creative-house-dashboard bg-[#f5f8fb] relative w-full h-full" data-node-id="1739:2" data-name="ayeneh-startup-evaluations">
       <div className="absolute bg-[#f5f8fb] h-[900px] left-0 overflow-clip top-0 w-[1216px]" data-node-id="1739:3" data-name="Main Content">
@@ -102,7 +104,7 @@ export default function AyenehStartupEvaluations() {
               تأیید این مرحله باعث فعال شدن پنل استارتاپ می‌شود.
             </p>
           </div>
-          <button className="absolute bg-[#f5f8fb] block border border-[#e4ebf1] border-solid cursor-pointer h-[38px] left-[17px] overflow-clip rounded-[10px] top-[19px] w-[290px]" data-node-id="1740:26" data-name="search-box">
+          <button onClick={() => navigate("/panel/creative-house/overlays/search")} className="absolute bg-[#f5f8fb] block border border-[#e4ebf1] border-solid cursor-pointer h-[38px] left-[17px] overflow-clip rounded-[10px] top-[19px] w-[290px]" data-node-id="1740:26" data-name="search-box">
             <div className="-translate-x-full -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-normal h-[38px] justify-center leading-[0] left-[273px] text-[#60758a] text-[12px] text-right top-[18px] w-[260px]" data-node-id="1740:27">
               <p className="leading-[normal]" dir="auto">
                 جست‌وجوی نام استارتاپ یا مدیر
@@ -177,13 +179,13 @@ export default function AyenehStartupEvaluations() {
             </div>
           </div>
           <div className="absolute bg-white border border-[#e4ebf1] border-solid h-[70px] left-[17px] overflow-clip rounded-[10px] top-[175px] w-[1124px]" data-node-id="1740:45" data-name="startup-row-1">
-            <a className="absolute bg-[#2094e3] block cursor-pointer h-[36px] left-[17px] overflow-clip rounded-[9px] top-[16px] w-[104px]" data-node-id="1740:46" data-name="action-button">
+            <Link to="/panel/creative-house/startup-evaluations/detail" className="absolute bg-[#2094e3] block cursor-pointer h-[36px] left-[17px] overflow-clip rounded-[9px] top-[16px] w-[104px]" data-node-id="1740:46" data-name="action-button">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-medium h-[36px] justify-center leading-[0] left-[52px] text-[12px] text-center text-white top-[18px] w-[104px]" data-node-id="1740:47">
                 <p className="leading-[normal]" dir="auto">
                   شروع ارزیابی
                 </p>
               </div>
-            </a>
+            </Link>
             <div className="absolute bg-[#fff7e6] h-[30px] left-[145px] overflow-clip rounded-[8px] top-[19px] w-[126px]" data-node-id="1740:48" data-name="status-chip">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-medium h-[30px] justify-center leading-[0] left-[63px] text-[#c27a10] text-[12px] text-center top-[15px] w-[126px]" data-node-id="1740:49">
                 <p className="leading-[normal]" dir="auto">
@@ -216,13 +218,13 @@ export default function AyenehStartupEvaluations() {
             </div>
           </div>
           <div className="absolute bg-white border border-[#e4ebf1] border-solid h-[70px] left-[17px] overflow-clip rounded-[10px] top-[257px] w-[1124px]" data-node-id="1740:55" data-name="startup-row-2">
-            <a className="absolute bg-[#2094e3] block cursor-pointer h-[36px] left-[17px] overflow-clip rounded-[9px] top-[16px] w-[104px]" data-node-id="1740:56" data-name="action-button">
+            <Link to="/panel/creative-house/startup-evaluations/detail" className="absolute bg-[#2094e3] block cursor-pointer h-[36px] left-[17px] overflow-clip rounded-[9px] top-[16px] w-[104px]" data-node-id="1740:56" data-name="action-button">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-medium h-[36px] justify-center leading-[0] left-[52px] text-[12px] text-center text-white top-[18px] w-[104px]" data-node-id="1740:57">
                 <p className="leading-[normal]" dir="auto">
                   ادامه ارزیابی
                 </p>
               </div>
-            </a>
+            </Link>
             <div className="absolute bg-[#eaf6fe] h-[30px] left-[145px] overflow-clip rounded-[8px] top-[19px] w-[126px]" data-node-id="1740:58" data-name="status-chip">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-medium h-[30px] justify-center leading-[0] left-[63px] text-[#2094e3] text-[12px] text-center top-[15px] w-[126px]" data-node-id="1740:59">
                 <p className="leading-[normal]" dir="auto">
@@ -255,13 +257,13 @@ export default function AyenehStartupEvaluations() {
             </div>
           </div>
           <div className="absolute bg-white border border-[#e4ebf1] border-solid h-[70px] left-[17px] overflow-clip rounded-[10px] top-[339px] w-[1124px]" data-node-id="1740:65" data-name="startup-row-3">
-            <a className="absolute bg-[#f5f8fb] block border border-[#e4ebf1] border-solid cursor-pointer h-[36px] left-[17px] overflow-clip rounded-[9px] top-[16px] w-[104px]" data-node-id="1740:66" data-name="action-button">
+            <Link to="/panel/creative-house/startup-evaluations/detail" className="absolute bg-[#f5f8fb] block border border-[#e4ebf1] border-solid cursor-pointer h-[36px] left-[17px] overflow-clip rounded-[9px] top-[16px] w-[104px]" data-node-id="1740:66" data-name="action-button">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-medium h-[36px] justify-center leading-[0] left-[51px] text-[#17324d] text-[12px] text-center top-[17px] w-[104px]" data-node-id="1740:67">
                 <p className="leading-[normal]" dir="auto">
                   مشاهده
                 </p>
               </div>
-            </a>
+            </Link>
             <div className="absolute bg-[#fdeeee] h-[30px] left-[145px] overflow-clip rounded-[8px] top-[19px] w-[126px]" data-node-id="1740:68" data-name="status-chip">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-medium h-[30px] justify-center leading-[0] left-[63px] text-[#be4040] text-[12px] text-center top-[15px] w-[126px]" data-node-id="1740:69">
                 <p className="leading-[normal]" dir="auto">
@@ -294,13 +296,13 @@ export default function AyenehStartupEvaluations() {
             </div>
           </div>
           <div className="absolute bg-white border border-[#e4ebf1] border-solid h-[70px] left-[17px] overflow-clip rounded-[10px] top-[421px] w-[1124px]" data-node-id="1740:75" data-name="startup-row-4">
-            <a className="absolute bg-[#f5f8fb] block border border-[#e4ebf1] border-solid cursor-pointer h-[36px] left-[17px] overflow-clip rounded-[9px] top-[16px] w-[104px]" data-node-id="1740:76" data-name="action-button">
+            <Link to="/panel/creative-house/startup-evaluations/detail" className="absolute bg-[#f5f8fb] block border border-[#e4ebf1] border-solid cursor-pointer h-[36px] left-[17px] overflow-clip rounded-[9px] top-[16px] w-[104px]" data-node-id="1740:76" data-name="action-button">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-medium h-[36px] justify-center leading-[0] left-[51px] text-[#17324d] text-[12px] text-center top-[17px] w-[104px]" data-node-id="1740:77">
                 <p className="leading-[normal]" dir="auto">
                   مشاهده
                 </p>
               </div>
-            </a>
+            </Link>
             <div className="absolute bg-[#eaf8f0] h-[30px] left-[145px] overflow-clip rounded-[8px] top-[19px] w-[126px]" data-node-id="1740:78" data-name="status-chip">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-medium h-[30px] justify-center leading-[0] left-[63px] text-[#159455] text-[12px] text-center top-[15px] w-[126px]" data-node-id="1740:79">
                 <p className="leading-[normal]" dir="auto">
@@ -333,13 +335,13 @@ export default function AyenehStartupEvaluations() {
             </div>
           </div>
           <div className="absolute bg-white border border-[#e4ebf1] border-solid h-[70px] left-[17px] overflow-clip rounded-[10px] top-[503px] w-[1124px]" data-node-id="1740:85" data-name="startup-row-5">
-            <a className="absolute bg-[#f5f8fb] block border border-[#e4ebf1] border-solid cursor-pointer h-[36px] left-[17px] overflow-clip rounded-[9px] top-[16px] w-[104px]" data-node-id="1740:86" data-name="action-button">
+            <Link to="/panel/creative-house/startup-evaluations/detail" className="absolute bg-[#f5f8fb] block border border-[#e4ebf1] border-solid cursor-pointer h-[36px] left-[17px] overflow-clip rounded-[9px] top-[16px] w-[104px]" data-node-id="1740:86" data-name="action-button">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-medium h-[36px] justify-center leading-[0] left-[51px] text-[#17324d] text-[12px] text-center top-[17px] w-[104px]" data-node-id="1740:87">
                 <p className="leading-[normal]" dir="auto">
                   مشاهده
                 </p>
               </div>
-            </a>
+            </Link>
             <div className="absolute bg-[#fdeeee] h-[30px] left-[145px] overflow-clip rounded-[8px] top-[19px] w-[126px]" data-node-id="1740:88" data-name="status-chip">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-medium h-[30px] justify-center leading-[0] left-[63px] text-[#be4040] text-[12px] text-center top-[15px] w-[126px]" data-node-id="1740:89">
                 <p className="leading-[normal]" dir="auto">
@@ -377,7 +379,7 @@ export default function AyenehStartupEvaluations() {
                 صفحه ۱ از ۳
               </p>
             </div>
-            <button className="absolute bg-white block border border-[#dde7f0] border-solid cursor-pointer left-[432px] overflow-clip rounded-[8px] w-[34px] h-[34px] top-[2px]" data-node-id="1816:2798" data-name="page-button">
+            <button onClick={() => navigate("/panel/creative-house/overlays/pagination")} className="absolute bg-white block border border-[#dde7f0] border-solid cursor-pointer left-[432px] overflow-clip rounded-[8px] w-[34px] h-[34px] top-[2px]" data-node-id="1816:2798" data-name="page-button">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-normal justify-center leading-[0] left-[16px] w-[34px] h-[34px] text-[#60758a] text-[13px] text-center top-[16px]" data-node-id="1816:2799">
                 <p className="leading-[normal]" dir="auto">
                   ‹
@@ -391,21 +393,21 @@ export default function AyenehStartupEvaluations() {
                 </p>
               </div>
             </div>
-            <button className="absolute bg-white block border border-[#dde7f0] border-solid cursor-pointer left-[516px] overflow-clip rounded-[8px] w-[34px] h-[34px] top-[2px]" data-node-id="1816:2802" data-name="page-button">
+            <button onClick={() => navigate("/panel/creative-house/overlays/pagination")} className="absolute bg-white block border border-[#dde7f0] border-solid cursor-pointer left-[516px] overflow-clip rounded-[8px] w-[34px] h-[34px] top-[2px]" data-node-id="1816:2802" data-name="page-button">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-normal justify-center leading-[0] left-[16px] w-[34px] h-[34px] text-[#60758a] text-[13px] text-center top-[16px]" data-node-id="1816:2803">
                 <p className="leading-[normal]" dir="auto">
                   ۲
                 </p>
               </div>
             </button>
-            <button className="absolute bg-white block border border-[#dde7f0] border-solid cursor-pointer left-[558px] overflow-clip rounded-[8px] w-[34px] h-[34px] top-[2px]" data-node-id="1816:2804" data-name="page-button">
+            <button onClick={() => navigate("/panel/creative-house/overlays/pagination")} className="absolute bg-white block border border-[#dde7f0] border-solid cursor-pointer left-[558px] overflow-clip rounded-[8px] w-[34px] h-[34px] top-[2px]" data-node-id="1816:2804" data-name="page-button">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-normal justify-center leading-[0] left-[16px] w-[34px] h-[34px] text-[#60758a] text-[13px] text-center top-[16px]" data-node-id="1816:2805">
                 <p className="leading-[normal]" dir="auto">
                   ۳
                 </p>
               </div>
             </button>
-            <button className="absolute bg-white block border border-[#dde7f0] border-solid cursor-pointer left-[600px] overflow-clip rounded-[8px] w-[34px] h-[34px] top-[2px]" data-node-id="1816:2806" data-name="page-button">
+            <button onClick={() => navigate("/panel/creative-house/overlays/pagination")} className="absolute bg-white block border border-[#dde7f0] border-solid cursor-pointer left-[600px] overflow-clip rounded-[8px] w-[34px] h-[34px] top-[2px]" data-node-id="1816:2806" data-name="page-button">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-normal justify-center leading-[0] left-[16px] w-[34px] h-[34px] text-[#60758a] text-[13px] text-center top-[16px]" data-node-id="1816:2807">
                 <p className="leading-[normal]" dir="auto">
                   ›

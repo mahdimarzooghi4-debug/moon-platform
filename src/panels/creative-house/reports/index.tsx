@@ -1,5 +1,5 @@
 import "../index.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const imgChatGptImage1 = "/assets/creative-house/reports/logo.png";
 const imgFrame = "/assets/creative-house/reports/asset-1.svg";
@@ -16,6 +16,8 @@ const imgSettingsIcon = "/assets/creative-house/reports/asset-11.svg";
 const imgLogoutIcon = "/assets/creative-house/reports/asset-12.svg";
 
 export default function AyenehReports() {
+  const navigate = useNavigate();
+
   return (
     <div className="creative-house-dashboard bg-[#f5f8fb] relative w-full h-full" data-node-id="1791:2" data-name="ayeneh-reports">
       <div className="absolute bg-[#f5f8fb] h-[900px] left-0 overflow-clip top-0 w-[1216px]" data-node-id="1791:3" data-name="Main Content">
@@ -329,7 +331,7 @@ export default function AyenehReports() {
                 </p>
               </div>
             </div>
-            <a className="[word-break:break-word] absolute bg-white block border border-[#edf1f4] border-solid cursor-pointer h-[38px] leading-[0] left-[13px] overflow-clip rounded-[8px] text-[10.5px] text-right top-[95px] w-[1096px]" data-node-id="1791:251" data-name="report-row-1">
+            <Link to="/panel/creative-house/reports/detail" className="[word-break:break-word] absolute bg-white block border border-[#edf1f4] border-solid cursor-pointer h-[38px] leading-[0] left-[13px] overflow-clip rounded-[8px] text-[10.5px] text-right top-[95px] w-[1096px]" data-node-id="1791:251" data-name="report-row-1">
               <div className="-translate-x-full -translate-y-1/2 absolute flex flex-col font-['Vazirmatn:SemiBold'] font-semibold h-[38px] justify-center left-[99px] text-[#2094e3] top-[18px] w-[100px]" data-node-id="1791:252">
                 <p className="leading-[normal]" dir="auto">
                   مشاهده
@@ -365,8 +367,8 @@ export default function AyenehReports() {
                   گزارش ارزیابی نهایی طرح اشتغال زنان روستایی
                 </p>
               </div>
-            </a>
-            <a className="[word-break:break-word] absolute bg-white block border border-[#edf1f4] border-solid cursor-pointer h-[38px] leading-[0] left-[13px] overflow-clip rounded-[8px] text-[10.5px] text-right top-[139px] w-[1096px]" data-node-id="1791:259" data-name="report-row-2">
+            </Link>
+            <Link to="/panel/creative-house/reports/detail" className="[word-break:break-word] absolute bg-white block border border-[#edf1f4] border-solid cursor-pointer h-[38px] leading-[0] left-[13px] overflow-clip rounded-[8px] text-[10.5px] text-right top-[139px] w-[1096px]" data-node-id="1791:259" data-name="report-row-2">
               <div className="-translate-x-full -translate-y-1/2 absolute flex flex-col font-['Vazirmatn:SemiBold'] font-semibold h-[38px] justify-center left-[99px] text-[#2094e3] top-[18px] w-[100px]" data-node-id="1791:260">
                 <p className="leading-[normal]" dir="auto">
                   مشاهده
@@ -402,8 +404,8 @@ export default function AyenehReports() {
                   گزارش پیشرفت فاز دوم توانمندسازی مهارت نوجوانان
                 </p>
               </div>
-            </a>
-            <a className="[word-break:break-word] absolute bg-white block border border-[#edf1f4] border-solid cursor-pointer h-[38px] leading-[0] left-[13px] overflow-clip rounded-[8px] text-[10.5px] text-right top-[183px] w-[1096px]" data-node-id="1791:267" data-name="report-row-3">
+            </Link>
+            <Link to="/panel/creative-house/reports/detail" className="[word-break:break-word] absolute bg-white block border border-[#edf1f4] border-solid cursor-pointer h-[38px] leading-[0] left-[13px] overflow-clip rounded-[8px] text-[10.5px] text-right top-[183px] w-[1096px]" data-node-id="1791:267" data-name="report-row-3">
               <div className="-translate-x-full -translate-y-1/2 absolute flex flex-col font-['Vazirmatn:SemiBold'] font-semibold h-[38px] justify-center left-[99px] text-[#2094e3] top-[18px] w-[100px]" data-node-id="1791:268">
                 <p className="leading-[normal]" dir="auto">
                   مشاهده
@@ -439,8 +441,8 @@ export default function AyenehReports() {
                   گواهی تأیید میدانی تجهیز مراکز درمانی سیستان
                 </p>
               </div>
-            </a>
-            <a className="[word-break:break-word] absolute bg-white block border border-[#edf1f4] border-solid cursor-pointer h-[38px] leading-[0] left-[13px] overflow-clip rounded-[8px] text-[10.5px] text-right top-[227px] w-[1096px]" data-node-id="1791:275" data-name="report-row-4">
+            </Link>
+            <Link to="/panel/creative-house/reports/detail" className="[word-break:break-word] absolute bg-white block border border-[#edf1f4] border-solid cursor-pointer h-[38px] leading-[0] left-[13px] overflow-clip rounded-[8px] text-[10.5px] text-right top-[227px] w-[1096px]" data-node-id="1791:275" data-name="report-row-4">
               <div className="-translate-x-full -translate-y-1/2 absolute flex flex-col font-['Vazirmatn:SemiBold'] font-semibold h-[38px] justify-center left-[99px] text-[#2094e3] top-[18px] w-[100px]" data-node-id="1791:276">
                 <p className="leading-[normal]" dir="auto">
                   مشاهده
@@ -476,7 +478,7 @@ export default function AyenehReports() {
                   گزارش مالی و پیشرفت کارگاه خیاطی هرمزگان
                 </p>
               </div>
-            </a>
+            </Link>
             <div className="-translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-normal h-[20px] justify-center leading-[0] left-[17px] text-[#60758a] text-[11px] top-[285px] w-[120px]" data-node-id="1791:283">
               <p className="leading-[normal]" dir="auto">
                 صفحه ۱ از ۲
@@ -487,7 +489,7 @@ export default function AyenehReports() {
                 <p className="leading-[normal]">۱</p>
               </div>
             </div>
-            <button className="absolute bg-white block border border-[#dde6ed] border-solid cursor-pointer h-[28px] left-[475px] overflow-clip rounded-[7px] top-[267px] w-[30px]" data-node-id="1791:286" data-name="page-2">
+            <button onClick={() => navigate("/panel/creative-house/overlays/pagination")} className="absolute bg-white block border border-[#dde6ed] border-solid cursor-pointer h-[28px] left-[475px] overflow-clip rounded-[7px] top-[267px] w-[30px]" data-node-id="1791:286" data-name="page-2">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-medium h-[28px] justify-center leading-[0] left-[14px] text-[#60758a] text-[11px] text-center top-[13px] w-[30px]" data-node-id="1791:287">
                 <p className="leading-[normal]">۲</p>
               </div>
@@ -497,7 +499,7 @@ export default function AyenehReports() {
                 <p className="leading-[normal]">‹</p>
               </div>
             </div>
-            <button className="absolute bg-white block border border-[#dde6ed] border-solid cursor-pointer h-[28px] left-[551px] overflow-clip rounded-[7px] top-[267px] w-[34px]" data-node-id="1791:290" data-name="next">
+            <button onClick={() => navigate("/panel/creative-house/overlays/pagination")} className="absolute bg-white block border border-[#dde6ed] border-solid cursor-pointer h-[28px] left-[551px] overflow-clip rounded-[7px] top-[267px] w-[34px]" data-node-id="1791:290" data-name="next">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-medium h-[28px] justify-center leading-[0] left-[16px] text-[#60758a] text-[16px] text-center top-[13px] w-[34px]" data-node-id="1791:291">
                 <p className="leading-[normal]">›</p>
               </div>

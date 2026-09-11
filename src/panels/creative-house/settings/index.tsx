@@ -1,5 +1,5 @@
 import "../index.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const imgChatGptImage1 = "/assets/creative-house/settings/logo.png";
 const imgAccountIcon = "/assets/creative-house/settings/asset-1.svg";
@@ -17,6 +17,8 @@ const imgSettingsIcon = "/assets/creative-house/settings/asset-12.svg";
 const imgLogoutIcon = "/assets/creative-house/settings/asset-13.svg";
 
 export default function AyenehSettings() {
+  const navigate = useNavigate();
+
   return (
     <div className="creative-house-dashboard bg-[#f5f8fb] relative w-full h-full" data-node-id="1805:2" data-name="ayeneh-settings">
       <div className="absolute bg-[#f5f8fb] content-stretch flex flex-col gap-[16px] h-[900px] items-start left-0 overflow-clip px-[28px] py-[22px] top-0 w-[1216px]" data-node-id="1805:3" data-name="Main Content">
@@ -166,7 +168,7 @@ export default function AyenehSettings() {
                 لینک‌های رسمی نمایش‌داده‌شده در لندینگ
               </p>
             </div>
-            <button className="[word-break:break-word] absolute bg-white block border border-[#e4ebf1] border-solid cursor-pointer font-sans font-normal h-[34px] leading-[0] left-[19px] overflow-clip rounded-[8px] top-[83px] w-[484px]" data-node-id="1805:238" data-name="legal-row-0">
+            <button onClick={() => navigate("/panel/creative-house/overlays/legal")} className="[word-break:break-word] absolute bg-white block border border-[#e4ebf1] border-solid cursor-pointer font-sans font-normal h-[34px] leading-[0] left-[19px] overflow-clip rounded-[8px] top-[83px] w-[484px]" data-node-id="1805:238" data-name="legal-row-0">
               <div className="-translate-x-full -translate-y-1/2 absolute flex flex-col h-[34px] justify-center left-[463px] text-[#17324d] text-[13px] text-right top-[16px] w-[284px]" data-node-id="1805:239">
                 <p className="leading-[normal]" dir="auto">
                   قوانین و مقررات
@@ -178,7 +180,7 @@ export default function AyenehSettings() {
                 </p>
               </div>
             </button>
-            <button className="[word-break:break-word] absolute bg-white block border border-[#e4ebf1] border-solid cursor-pointer font-sans font-normal h-[34px] leading-[0] left-[19px] overflow-clip rounded-[8px] top-[125px] w-[484px]" data-node-id="1805:241" data-name="legal-row-1">
+            <button onClick={() => navigate("/panel/creative-house/overlays/legal")} className="[word-break:break-word] absolute bg-white block border border-[#e4ebf1] border-solid cursor-pointer font-sans font-normal h-[34px] leading-[0] left-[19px] overflow-clip rounded-[8px] top-[125px] w-[484px]" data-node-id="1805:241" data-name="legal-row-1">
               <div className="-translate-x-full -translate-y-1/2 absolute flex flex-col h-[34px] justify-center left-[463px] text-[#17324d] text-[13px] text-right top-[16px] w-[284px]" data-node-id="1805:242">
                 <p className="leading-[normal]" dir="auto">
                   حریم خصوصی
