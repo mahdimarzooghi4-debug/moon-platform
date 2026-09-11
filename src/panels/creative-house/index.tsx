@@ -1,4 +1,5 @@
 import "./index.css";
+import { Link } from "react-router-dom";
 
 const imgChatGptImage1 = "/assets/creative-house/dashboard/logo.png";
 const imgFrame = "/assets/creative-house/dashboard/kpi-startups.svg";
@@ -435,63 +436,63 @@ export default function AyenehMainDashboard() {
             <img alt="" className="absolute block inset-0 max-w-none w-full h-full" src={imgDashboardIcon} />
           </div>
         </div>
-        <a className="content-stretch cursor-pointer flex gap-[10px] h-[38px] items-center justify-end overflow-clip px-[12px] relative rounded-[9px] shrink-0 w-[192px]" data-node-id="1726:13" data-name="startup-evaluations-nav">
+        <Link to="/panel/creative-house/startup-evaluations" className="content-stretch cursor-pointer flex gap-[10px] h-[38px] items-center justify-end overflow-clip px-[12px] relative rounded-[9px] shrink-0 w-[192px]" data-node-id="1726:13" data-name="startup-evaluations-nav">
           <p className="[word-break:break-word] font-sans font-normal leading-[normal] relative shrink-0 text-[12px] text-right text-white w-[142px]" dir="auto" data-node-id="1726:14">
             ارزیابی استارتاپ‌ها
           </p>
           <div className="relative shrink-0 w-[18px] h-[18px]" data-node-id="1726:15" data-name="users-icon">
             <img alt="" className="absolute block inset-0 max-w-none w-full h-full" src={imgUsersIcon} />
           </div>
-        </a>
-        <a className="content-stretch cursor-pointer flex gap-[10px] h-[38px] items-center justify-end overflow-clip px-[12px] relative rounded-[9px] shrink-0 w-[192px]" data-node-id="1726:20" data-name="project-evaluations-nav">
+        </Link>
+        <Link to="/panel/creative-house/project-evaluations" className="content-stretch cursor-pointer flex gap-[10px] h-[38px] items-center justify-end overflow-clip px-[12px] relative rounded-[9px] shrink-0 w-[192px]" data-node-id="1726:20" data-name="project-evaluations-nav">
           <p className="[word-break:break-word] font-sans font-normal leading-[normal] relative shrink-0 text-[12px] text-right text-white w-[142px]" dir="auto" data-node-id="1726:21">
             ارزیابی پروژه‌ها
           </p>
           <div className="relative shrink-0 w-[18px] h-[18px]" data-node-id="1726:22" data-name="project-icon">
             <img alt="" className="absolute block inset-0 max-w-none w-full h-full" src={imgProjectIcon} />
           </div>
-        </a>
-        <a className="content-stretch cursor-pointer flex gap-[10px] h-[38px] items-center justify-end overflow-clip px-[12px] relative rounded-[9px] shrink-0 w-[192px]" data-node-id="1726:25" data-name="milestone-evaluations-nav">
+        </Link>
+        <Link to="/panel/creative-house/milestone-evaluations" className="content-stretch cursor-pointer flex gap-[10px] h-[38px] items-center justify-end overflow-clip px-[12px] relative rounded-[9px] shrink-0 w-[192px]" data-node-id="1726:25" data-name="milestone-evaluations-nav">
           <p className="[word-break:break-word] font-sans font-normal leading-[normal] relative shrink-0 text-[12px] text-right text-white w-[142px]" dir="auto" data-node-id="1726:26">
             ارزیابی مراحل پروژه
           </p>
           <div className="relative shrink-0 w-[18px] h-[18px]" data-node-id="1726:27" data-name="milestone-icon">
             <img alt="" className="absolute block inset-0 max-w-none w-full h-full" src={imgMilestoneIcon} />
           </div>
-        </a>
-        <a className="content-stretch cursor-pointer flex gap-[10px] h-[38px] items-center justify-end overflow-clip px-[12px] relative rounded-[9px] shrink-0 w-[192px]" data-node-id="1726:30" data-name="reports-nav">
+        </Link>
+        <Link to="/panel/creative-house/reports" className="content-stretch cursor-pointer flex gap-[10px] h-[38px] items-center justify-end overflow-clip px-[12px] relative rounded-[9px] shrink-0 w-[192px]" data-node-id="1726:30" data-name="reports-nav">
           <p className="[word-break:break-word] font-sans font-normal leading-[normal] relative shrink-0 text-[12px] text-right text-white w-[142px]" dir="auto" data-node-id="1726:31">
             گزارش‌ها
           </p>
           <div className="relative shrink-0 w-[18px] h-[18px]" data-node-id="1726:32" data-name="reports-icon">
             <img alt="" className="absolute block inset-0 max-w-none w-full h-full" src={imgReportsIcon} />
           </div>
-        </a>
-        <a className="content-stretch cursor-pointer flex gap-[10px] h-[38px] items-center justify-end overflow-clip px-[12px] relative rounded-[9px] shrink-0 w-[192px]" data-node-id="1726:37" data-name="evaluation-history-nav">
+        </Link>
+        <Link to="/panel/creative-house/evaluation-history" className="content-stretch cursor-pointer flex gap-[10px] h-[38px] items-center justify-end overflow-clip px-[12px] relative rounded-[9px] shrink-0 w-[192px]" data-node-id="1726:37" data-name="evaluation-history-nav">
           <p className="[word-break:break-word] font-sans font-normal leading-[normal] relative shrink-0 text-[12px] text-right text-white w-[142px]" dir="auto" data-node-id="1726:38">
             سوابق ارزیابی
           </p>
           <div className="relative shrink-0 w-[18px] h-[18px]" data-node-id="1726:39" data-name="history-icon">
             <img alt="" className="absolute block inset-0 max-w-none w-full h-full" src={imgHistoryIcon} />
           </div>
-        </a>
-        <a className="content-stretch cursor-pointer flex gap-[10px] h-[38px] items-center justify-end overflow-clip px-[12px] relative rounded-[9px] shrink-0 w-[192px]" data-node-id="1726:43" data-name="settings-nav">
+        </Link>
+        <Link to="/panel/creative-house/settings" className="content-stretch cursor-pointer flex gap-[10px] h-[38px] items-center justify-end overflow-clip px-[12px] relative rounded-[9px] shrink-0 w-[192px]" data-node-id="1726:43" data-name="settings-nav">
           <p className="[word-break:break-word] font-sans font-normal leading-[normal] relative shrink-0 text-[12px] text-right text-white w-[142px]" dir="auto" data-node-id="1726:44">
             تنظیمات
           </p>
           <div className="relative shrink-0 w-[18px] h-[18px]" data-node-id="1726:45" data-name="settings-icon">
             <img alt="" className="absolute block inset-0 max-w-none w-full h-full" src={imgSettingsIcon} />
           </div>
-        </a>
+        </Link>
         <div className="flex-[1_0_0] min-h-px relative w-[192px]" data-node-id="1726:48" data-name="sidebar-spacer" />
-        <button className="bg-white content-stretch cursor-pointer flex gap-[10px] h-[38px] items-center justify-end opacity-96 overflow-clip px-[12px] relative rounded-[9px] shrink-0 w-[192px]" data-node-id="1726:49" data-name="logout-nav">
+        <Link to="/panel/creative-house/overlays/logout" className="bg-white content-stretch cursor-pointer flex gap-[10px] h-[38px] items-center justify-end opacity-96 overflow-clip px-[12px] relative rounded-[9px] shrink-0 w-[192px]" data-node-id="1726:49" data-name="logout-nav">
           <p className="[word-break:break-word] font-sans font-medium leading-[normal] relative shrink-0 text-[#17324d] text-[12px] text-right w-[142px]" dir="auto" data-node-id="1726:50">
             خروج از سیستم
           </p>
           <div className="relative shrink-0 w-[18px] h-[18px]" data-node-id="1726:55" data-name="logout-icon">
             <img alt="" className="absolute block inset-0 max-w-none w-full h-full" src={imgLogoutIcon} />
           </div>
-        </button>
+        </Link>
       </div>
     </div>
   );
