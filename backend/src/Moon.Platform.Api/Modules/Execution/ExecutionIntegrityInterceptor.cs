@@ -22,6 +22,9 @@ public sealed class ExecutionIntegrityInterceptor : SaveChangesInterceptor
     {
         if (dbContext is null) return;
 
+        GuardClosedExecution(dbContext);
+        GuardImpactChildren(dbContext);
+
         foreach (var entry in dbContext.ChangeTracker.Entries<ExecutionStage>()) GuardStage(entry);
         foreach (var entry in dbContext.ChangeTracker.Entries<ProgressReport>()) GuardReport(entry);
         foreach (var entry in dbContext.ChangeTracker.Entries<ExecutionExpense>()) GuardExpense(entry);
@@ -33,6 +36,60 @@ public sealed class ExecutionIntegrityInterceptor : SaveChangesInterceptor
         GuardAppendOnly(dbContext.ChangeTracker.Entries<ExecutionImpactMetric>(), "Impact metrics are immutable once submitted.");
         GuardAppendOnly(dbContext.ChangeTracker.Entries<ExecutionImpactFinancialSnapshot>(), "Published impact financial snapshots are append-only.");
         GuardAppendOnly(dbContext.ChangeTracker.Entries<ExecutionCloseout>(), "Execution closeout is append-only.");
+    }
+
+    private static void GuardClosedExecution(DbContext dbContext)
+    {
+        var projectIds = new HashSet<Guid>();
+        CollectMutationProjectIds(dbContext.ChangeTracker.Entries<ExecutionStage>(), x => x.ProjectId, projectIds);
+        CollectMutationProjectIds(dbContext.ChangeTracker.Entries<ProgressReport>(), x => x.ProjectId, projectIds);
+        CollectMutationProjectIds(dbContext.ChangeTracker.Entries<ExecutionExpense>(), x => x.ProjectId, projectIds);
+        CollectMutationProjectIds(dbContext.ChangeTracker.Entries<ExecutionRisk>(), x => x.ProjectId, projectIds);
+        CollectMutationProjectIds(dbContext.ChangeTracker.Entries<ExecutionFreezeEvent>(), x => x.ProjectId, projectIds);
+        CollectMutationProjectIds(dbContext.ChangeTracker.Entries<ExecutionDisbursement>(), x => x.ProjectId, projectIds);
+        CollectMutationProjectIds(dbContext.ChangeTracker.Entries<ExecutionImpactReport>(), x => x.ProjectId, projectIds);
+
+        if (projectIds.Count == 0) return;
+
+        var closedProjectId = dbContext.Set<ExecutionCloseout>()
+            .AsNoTracking()
+            .Where(x => projectIds.Contains(x.ProjectId))
+            .Select(x => (Guid?)x.ProjectId)
+            .FirstOrDefault();
+        if (closedProjectId is not null)
+            throw new InvalidOperationException($"Execution is closed for project {closedProjectId}; no further execution mutation is allowed.");
+    }
+
+    private static void GuardImpactChildren(DbContext dbContext)
+    {
+        var reportEntries = dbContext.ChangeTracker.Entries<ExecutionImpactReport>()
+            .ToDictionary(x => x.Entity.Id);
+
+        foreach (var metric in dbContext.ChangeTracker.Entries<ExecutionImpactMetric>().Where(x => x.State == EntityState.Added))
+        {
+            if (!reportEntries.TryGetValue(metric.Entity.ImpactReportId, out var report)
+                || report.State != EntityState.Added
+                || report.Entity.Status != ExecutionImpactReportStatuses.Submitted)
+                throw new InvalidOperationException("Impact metrics may be added only with the initial submitted impact report.");
+        }
+
+        foreach (var snapshot in dbContext.ChangeTracker.Entries<ExecutionImpactFinancialSnapshot>().Where(x => x.State == EntityState.Added))
+        {
+            if (!reportEntries.TryGetValue(snapshot.Entity.ImpactReportId, out var report)
+                || report.State != EntityState.Modified
+                || report.OriginalValues.GetValue<string>(nameof(ExecutionImpactReport.Status)) != ExecutionImpactReportStatuses.Approved
+                || report.Entity.Status != ExecutionImpactReportStatuses.Published)
+                throw new InvalidOperationException("Impact financial snapshots may be added only while an approved impact report is being published.");
+        }
+    }
+
+    private static void CollectMutationProjectIds<TEntity>(IEnumerable<EntityEntry<TEntity>> entries, Func<TEntity, Guid> projectId, ISet<Guid> target) where TEntity : class
+    {
+        foreach (var entry in entries)
+        {
+            if (entry.State is EntityState.Added or EntityState.Modified or EntityState.Deleted)
+                target.Add(projectId(entry.Entity));
+        }
     }
 
     private static void GuardStage(EntityEntry<ExecutionStage> entry)
