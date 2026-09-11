@@ -1,4 +1,4 @@
-name: Apply startup register step2 migration
+name: Apply startup register step2 migration retry
 
 on:
   push:
@@ -16,16 +16,18 @@ jobs:
       - name: Checkout target branch
         uses: actions/checkout@v4
         with:
-          fetch-depth: 3
+          fetch-depth: 4
 
-      - name: Verify pinned apply commit and source
+      - name: Verify pinned retry commit and source
         shell: bash
         run: |
           set -euo pipefail
+          FAILED_APPLY_COMMIT="72da9199dfd6d08a78ef108504815b464f569e1e"
           PREFLIGHT_COMMIT="c38de9fc838260cf7eeb7ea6b52f58743fdefdbb"
           TARGET_BASE="1bee530bd9e524f692b8782a9e583f6861e750ce"
           SOURCE="ba7749a84717afbe2f253b45a7630b2dff8562a7"
-          test "$(git rev-parse HEAD^)" = "$PREFLIGHT_COMMIT"
+          test "$(git rev-parse HEAD^)" = "$FAILED_APPLY_COMMIT"
+          test "$(git rev-parse "$FAILED_APPLY_COMMIT^")" = "$PREFLIGHT_COMMIT"
           test "$(git rev-parse "$PREFLIGHT_COMMIT^")" = "$TARGET_BASE"
           git fetch --no-tags --depth=1 origin "$SOURCE"
           test "$(git rev-parse "$SOURCE^{tree}")" = "e352108fbcd47d63afc175f2ba5985eda6125e6f"
@@ -127,8 +129,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add src/features/startup-registration/states/step2/index.tsx \
                   src/features/startup-registration/states/step2/index.css \
-                  src/app/router.tsx \
-                  .github/workflows/gate-startup-register-step2.yml
+                  src/app/router.tsx
           git diff --cached --name-only
           test "$(git diff --cached --name-only | sort | tr '\n' '|')" = ".github/workflows/gate-startup-register-step2.yml|src/app/router.tsx|src/features/startup-registration/states/step2/index.css|src/features/startup-registration/states/step2/index.tsx|"
           git commit -m "feat(registration): integrate startup step2"
