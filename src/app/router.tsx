@@ -87,6 +87,8 @@ const StartupProfileEditImpactDocumentsPage = lazy(() => import("../features/sta
 const StartupFinancingFeePage = lazy(() => import("../features/startup-panel/financing-fee"));
 const StartupSettingsPage = lazy(() => import("../features/startup-panel/settings"));
 
+const EmdadDashboardPage = lazy(() => import("../panels/emdad"));
+
 function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
   return (
     <Suspense fallback={null}>
@@ -94,6 +96,8 @@ function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
     </Suspense>
   );
 }
+
+const emdadDashboardElement = lazyElement(EmdadDashboardPage);
 
 const landingElement = lazyElement(LandingPage);
 const aboutElement = lazyElement(AboutPage);
@@ -252,6 +256,7 @@ export function AppRouter() {
         <Route path="/404" element={notFoundElement} />
         <Route path="/registration/track/states/needs-edit" element={registrationTrackNeedsEditElement} />
         <Route path="/registration/track/states/rejected" element={registrationTrackRejectedElement} />
+        <Route path="/panel/emdad" element={emdadDashboardElement} />
         <Route path="/auth" element={<AuthEntryPage />} />
         <Route path="/register/company/states/step2" element={companyRegistrationStep2Element} />
         <Route path="/register/company/status" element={companyRegistrationStatusElement} />
