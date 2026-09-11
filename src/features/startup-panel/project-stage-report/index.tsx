@@ -1,4 +1,5 @@
-import { FormEvent, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import type { FormEvent } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { StartupSidebar } from "../components/StartupSidebar";
 import "../index.css";
