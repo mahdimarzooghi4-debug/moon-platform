@@ -44,6 +44,8 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<MoonDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres")));
 
+builder.Services.Configure<PaymentOptions>(builder.Configuration.GetSection(PaymentOptions.SectionName));
+
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -77,6 +79,7 @@ builder.Services.AddScoped<IOrganizationAccessService, OrganizationAccessService
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IEvaluationService, EvaluationService>();
 builder.Services.AddScoped<IFundingService, FundingService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IAuthorizationHandler, OrganizationMemberHandler>();
 
 builder.Services.AddAuthorization(options =>
@@ -109,6 +112,12 @@ builder.Services.AddAuthorization(options =>
     {
         policy.RequireAuthenticatedUser();
         policy.RequireRole(SystemRoles.ProductOwner);
+    });
+
+    options.AddPolicy(PaymentPolicies.Finance, policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole(SystemRoles.Finance);
     });
 });
 
@@ -165,7 +174,7 @@ app.MapGet("/health/ready", async Task<IResult> (MoonDbContext db, CancellationT
 app.MapGet("/api/v1/system", (HttpContext context) => Results.Ok(new
 {
     service = "moon-platform-api",
-    version = "0.8.0-phase2-commitment",
+    version = "0.9.0-phase2-payment-reconciliation",
     correlationId = context.TraceIdentifier
 }));
 
@@ -226,6 +235,7 @@ app.MapAdminAccessEndpoints();
 app.MapProjectEndpoints();
 app.MapEvaluationEndpoints();
 app.MapFundingEndpoints();
+app.MapPaymentEndpoints();
 
 app.Run();
 
