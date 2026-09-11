@@ -1,0 +1,37 @@
+.admin-list-table-compact {
+  height: 386px;
+}
+
+.admin-list-static-control {
+  cursor: default;
+  user-select: none;
+}
+
+.admin-detail-value {
+  width: 552px;
+  height: 42px;
+  box-sizing: border-box;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  border: 1px solid #e4ebf1;
+  border-radius: 9px;
+  background: #f6f9fc;
+  color: #60758a;
+  font-size: 11px;
+  line-height: 24px;
+  text-align: right;
+}
+
+.admin-detail-note {
+  min-height: 106px;
+  padding: 24px;
+}
+
+.admin-detail-actions {
+  margin-top: 0;
+}
+
+.admin-detail-actions .admin-users-button-primary {
+  min-width: 160px;
+}
