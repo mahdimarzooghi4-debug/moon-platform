@@ -90,6 +90,7 @@ const StartupSettingsPage = lazy(() => import("../features/startup-panel/setting
 const EmdadDashboardPage = lazy(() => import("../panels/emdad"));
 const EmdadReleaseRequestsPage = lazy(() => import("../panels/emdad/release-requests"));
 const EmdadReleaseRequestDetailPage = lazy(() => import("../panels/emdad/release-requests/detail"));
+const EmdadReleaseSuccessPage = lazy(() => import("../panels/emdad/release-requests/success"));
 
 function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
   return (
@@ -102,6 +103,7 @@ function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
 const emdadDashboardElement = lazyElement(EmdadDashboardPage);
 const emdadReleaseRequestsElement = lazyElement(EmdadReleaseRequestsPage);
 const emdadReleaseRequestDetailElement = lazyElement(EmdadReleaseRequestDetailPage);
+const emdadReleaseSuccessElement = lazyElement(EmdadReleaseSuccessPage);
 
 const landingElement = lazyElement(LandingPage);
 const aboutElement = lazyElement(AboutPage);
@@ -263,6 +265,7 @@ export function AppRouter() {
         <Route path="/panel/emdad" element={emdadDashboardElement} />
         <Route path="/panel/emdad/release-requests" element={emdadReleaseRequestsElement} />
         <Route path="/panel/emdad/release-requests/detail" element={emdadReleaseRequestDetailElement} />
+        <Route path="/panel/emdad/release-requests/success" element={emdadReleaseSuccessElement} />
         <Route path="/auth" element={<AuthEntryPage />} />
         <Route path="/register/company/states/step2" element={companyRegistrationStep2Element} />
         <Route path="/register/company/status" element={companyRegistrationStatusElement} />
