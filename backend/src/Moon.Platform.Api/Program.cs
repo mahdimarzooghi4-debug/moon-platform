@@ -19,6 +19,25 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddProblemDetails();
 builder.Services.AddHealthChecks();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("frontend", policy =>
+    {
+        var allowedOrigins = builder.Configuration
+            .GetSection("Cors:AllowedOrigins")
+            .Get<string[]>()
+            ?? [];
+
+        if (allowedOrigins.Length > 0)
+        {
+            policy
+                .WithOrigins(allowedOrigins)
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        }
+    });
+});
+
 builder.Services.AddDbContext<MoonDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres")));
 
@@ -98,6 +117,7 @@ var app = builder.Build();
 
 app.UseExceptionHandler();
 app.UseMiddleware<CorrelationIdMiddleware>();
+app.UseCors("frontend");
 app.UseAuthentication();
 app.UseAuthorization();
 
