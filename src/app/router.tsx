@@ -79,6 +79,10 @@ const StartupProjectStageEvaluationPage = lazy(() => import("../features/startup
 const StartupProjectStageFundReleasedPage = lazy(() => import("../features/startup-panel/project-stage-fund-released"));
 const StartupReportsPage = lazy(() => import("../features/startup-panel/reports"));
 const StartupReportDetailPage = lazy(() => import("../features/startup-panel/report-detail"));
+const StartupProfilePage = lazy(() => import("../features/startup-panel/profile"));
+const StartupProfileEditBasicPage = lazy(() => import("../features/startup-panel/profile-edit-basic"));
+const StartupProfileEditProductTeamPage = lazy(() => import("../features/startup-panel/profile-edit-product-team"));
+const StartupProfileEditImpactDocumentsPage = lazy(() => import("../features/startup-panel/profile-edit-impact-documents"));
 
 function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
   return (
@@ -163,6 +167,10 @@ const startupProjectStageEvaluationElement = lazyElement(StartupProjectStageEval
 const startupProjectStageFundReleasedElement = lazyElement(StartupProjectStageFundReleasedPage);
 const startupReportsElement = lazyElement(StartupReportsPage);
 const startupReportDetailElement = lazyElement(StartupReportDetailPage);
+const startupProfileElement = lazyElement(StartupProfilePage);
+const startupProfileEditBasicElement = lazyElement(StartupProfileEditBasicPage);
+const startupProfileEditProductTeamElement = lazyElement(StartupProfileEditProductTeamPage);
+const startupProfileEditImpactDocumentsElement = lazyElement(StartupProfileEditImpactDocumentsPage);
 
 /**
  * Routes are introduced around the existing Figma-derived screens so their
@@ -255,6 +263,10 @@ export function AppRouter() {
         <Route path="/panel/startup/stages" element={startupProjectStagesElement} />
         <Route path="/panel/startup/reports/:reportId" element={startupReportDetailElement} />
         <Route path="/panel/startup/reports" element={startupReportsElement} />
+        <Route path="/panel/startup/profile/edit/impact-documents" element={startupProfileEditImpactDocumentsElement} />
+        <Route path="/panel/startup/profile/edit/product-team" element={startupProfileEditProductTeamElement} />
+        <Route path="/panel/startup/profile/edit" element={startupProfileEditBasicElement} />
+        <Route path="/panel/startup/profile" element={startupProfileElement} />
         <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/fund-released" element={startupProjectStageFundReleasedElement} />
         <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/evaluation/approved" element={startupProjectStageEvaluationElement} />
         <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/submitted" element={startupProjectStageReportSubmittedElement} />
