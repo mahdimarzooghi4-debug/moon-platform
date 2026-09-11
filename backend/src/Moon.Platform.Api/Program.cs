@@ -69,6 +69,7 @@ builder.Services
 
 builder.Services.AddScoped<IAuditWriter, AuditWriter>();
 builder.Services.AddScoped<IIdentitySyncService, IdentitySyncService>();
+builder.Services.AddScoped<IAdminAccessService, AdminAccessService>();
 builder.Services.AddScoped<IOrganizationAccessService, OrganizationAccessService>();
 builder.Services.AddScoped<IAuthorizationHandler, OrganizationMemberHandler>();
 
@@ -78,6 +79,12 @@ builder.Services.AddAuthorization(options =>
     {
         policy.RequireAuthenticatedUser();
         policy.AddRequirements(new OrganizationMemberRequirement());
+    });
+
+    options.AddPolicy(AdminAccessPolicies.SystemAdmin, policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole(SystemRoles.SystemAdmin);
     });
 });
 
@@ -134,7 +141,7 @@ app.MapGet("/health/ready", async Task<IResult> (MoonDbContext db, CancellationT
 app.MapGet("/api/v1/system", (HttpContext context) => Results.Ok(new
 {
     service = "moon-platform-api",
-    version = "0.3.0-phase0",
+    version = "0.4.0-phase0",
     correlationId = context.TraceIdentifier
 }));
 
@@ -190,6 +197,8 @@ app.MapGet("/api/v1/organizations/{organizationId:guid}/access", (Guid organizat
     organizationId,
     access = "member"
 })).RequireAuthorization(OrganizationPolicies.Member);
+
+app.MapAdminAccessEndpoints();
 
 app.Run();
 
