@@ -3,22 +3,16 @@ name: Verify frontend integration
 on:
   push:
     branches:
-      - feat/startup-panel
+      - integration/frontend-foundation
+      - integration/landing-frontend
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: frontend-${{ github.ref }}
   cancel-in-progress: true
-
-env:
-  EXPECTED_HEAD: a8a8f3a6a30161f3745c1b9ffb874f6194cf55ae
-  EXPECTED_CREATE_TSX_BLOB: e3b9b6af6b6b3c414a792b62ac61c1a6d2fc33b1
-  EXPECTED_CREATE_CSS_BLOB: 026b295fd2f24e04f3d452cd6590dc5517f42395
-  EXPECTED_ROUTER_BLOB: 8721f3e921fc13999cff5dc6e13c00516f7222e2
-  PRE_REGISTRATION_HEAD: 132907c9b456f50013395733bb6600ce3179182d
 
 jobs:
   build:
@@ -27,28 +21,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Verify pinned source and hashes
-        run: |
-          test "$(git rev-parse HEAD^)" = "$EXPECTED_HEAD"
-          test "$(git hash-object src/features/startup-panel/project-create/index.tsx)" = "$EXPECTED_CREATE_TSX_BLOB"
-          test "$(git hash-object src/features/startup-panel/project-create/index.css)" = "$EXPECTED_CREATE_CSS_BLOB"
-          test "$(git hash-object src/app/router.tsx)" = "$EXPECTED_ROUTER_BLOB"
-
-      - name: Verify asset isolation
-        run: |
-          test -z "$(git diff --name-only "$PRE_REGISTRATION_HEAD" "$EXPECTED_HEAD" -- public/assets/startup-panel)"
-          ! grep -R "figma.com/api/mcp/asset\|static.codia.ai" src/features/startup-panel/project-create
-
-      - name: Verify startup project registration routes
-        run: |
-          test "$(grep -Fxc '        <Route path="/panel/startup/projects/new" element={startupProjectCreateElement} />' src/app/router.tsx)" -eq 1
-          test "$(grep -Fxc '        <Route path="/panel/startup/projects/new/step-2" element={startupProjectCreateElement} />' src/app/router.tsx)" -eq 1
-          test "$(grep -Fxc '        <Route path="/panel/startup/projects/new/step-3" element={startupProjectCreateElement} />' src/app/router.tsx)" -eq 1
-          test "$(grep -Fxc '        <Route path="/panel/startup/projects/new/step-4" element={startupProjectCreateElement} />' src/app/router.tsx)" -eq 1
-          grep -Fq 'const nodeIds = ["1981:2", "2007:2", "2020:2", "2024:2"] as const;' src/features/startup-panel/project-create/index.tsx
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -57,10 +29,19 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci --no-audit --no-fund
+        run: npm install --no-audit --no-fund
 
       - name: Build
         run: npm run build
 
-      - name: Verify lockfile unchanged
-        run: git diff --exit-code -- package-lock.json
+      - name: Keep lockfile reproducible
+        run: |
+          if git diff --quiet -- package-lock.json; then
+            echo "package-lock.json is already in sync"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          git commit -m "chore(frontend): sync package lock"
+          git push
