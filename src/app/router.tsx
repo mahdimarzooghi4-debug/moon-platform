@@ -95,6 +95,7 @@ const EmdadArticle172ApprovalsPage = lazy(() => import("../panels/emdad/article1
 const EmdadArticle172RequestDetailPage = lazy(() => import("../panels/emdad/article172-approvals/detail"));
 const EmdadArticle172SuccessPage = lazy(() => import("../panels/emdad/article172-approvals/success"));
 const EmdadPaymentHistoryPage = lazy(() => import("../panels/emdad/payment-history"));
+const EmdadFinancialReportsPage = lazy(() => import("../panels/emdad/financial-reports"));
 
 function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
   return (
@@ -112,6 +113,7 @@ const emdadArticle172ApprovalsElement = lazyElement(EmdadArticle172ApprovalsPage
 const emdadArticle172RequestDetailElement = lazyElement(EmdadArticle172RequestDetailPage);
 const emdadArticle172SuccessElement = lazyElement(EmdadArticle172SuccessPage);
 const emdadPaymentHistoryElement = lazyElement(EmdadPaymentHistoryPage);
+const emdadFinancialReportsElement = lazyElement(EmdadFinancialReportsPage);
 
 const landingElement = lazyElement(LandingPage);
 const aboutElement = lazyElement(AboutPage);
@@ -278,6 +280,7 @@ export function AppRouter() {
         <Route path="/panel/emdad/article172-approvals/detail" element={emdadArticle172RequestDetailElement} />
         <Route path="/panel/emdad/article172-approvals/success" element={emdadArticle172SuccessElement} />
         <Route path="/panel/emdad/payment-history" element={emdadPaymentHistoryElement} />
+        <Route path="/panel/emdad/financial-reports" element={emdadFinancialReportsElement} />
         <Route path="/auth" element={<AuthEntryPage />} />
         <Route path="/register/company/states/step2" element={companyRegistrationStep2Element} />
         <Route path="/register/company/status" element={companyRegistrationStatusElement} />
