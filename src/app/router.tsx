@@ -88,6 +88,7 @@ const StartupFinancingFeePage = lazy(() => import("../features/startup-panel/fin
 const StartupSettingsPage = lazy(() => import("../features/startup-panel/settings"));
 
 const FundManagerDashboardPage = lazy(() => import("../panels/fund-manager"));
+const FundManagerResourcesPage = lazy(() => import("../panels/fund-manager/resources"));
 
 function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
   return (
@@ -98,6 +99,7 @@ function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
 }
 
 const fundManagerDashboardElement = lazyElement(FundManagerDashboardPage);
+const fundManagerResourcesElement = lazyElement(FundManagerResourcesPage);
 
 const landingElement = lazyElement(LandingPage);
 const aboutElement = lazyElement(AboutPage);
@@ -257,6 +259,7 @@ export function AppRouter() {
         <Route path="/registration/track/states/needs-edit" element={registrationTrackNeedsEditElement} />
         <Route path="/registration/track/states/rejected" element={registrationTrackRejectedElement} />
         <Route path="/panel/fund-manager" element={fundManagerDashboardElement} />
+        <Route path="/panel/fund-manager/resources" element={fundManagerResourcesElement} />
         <Route path="/auth" element={<AuthEntryPage />} />
         <Route path="/register/company/states/step2" element={companyRegistrationStep2Element} />
         <Route path="/register/company/status" element={companyRegistrationStatusElement} />
