@@ -35,6 +35,8 @@ public sealed class ProjectVersion
     public int VersionNumber { get; init; }
     public string Title { get; init; } = string.Empty;
     public string Description { get; init; } = string.Empty;
+    public long? FundingTargetMinor { get; init; }
+    public string? FundingTargetCurrency { get; init; }
     public bool IsLocked { get; set; }
     public string CreatedBySubject { get; init; } = string.Empty;
     public DateTimeOffset CreatedAtUtc { get; init; } = DateTimeOffset.UtcNow;
@@ -46,6 +48,8 @@ public sealed record ProjectVersionView(
     int VersionNumber,
     string Title,
     string Description,
+    long? FundingTargetMinor,
+    string? FundingTargetCurrency,
     bool IsLocked,
     string CreatedBySubject,
     DateTimeOffset CreatedAtUtc,
