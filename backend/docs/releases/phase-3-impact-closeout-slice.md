@@ -1,0 +1,135 @@
+# Phase 3 Impact Reporting and Closeout Slice Closure
+
+Status: **CLOSED / GREEN** for this slice only.
+
+Overall Phase 3 status: **OPEN** pending final Phase 3/platform acceptance. This closure does not authorize a merge to `main`.
+
+## Scope delivered
+
+This slice extends the green execution/reporting and execution-controls flows with:
+
+- stage impact-report submission after completed execution work;
+- supervisor review with self-review prevention;
+- product-owner publication of approved impact reports;
+- append-only impact-report revisions using `SupersedesImpactReportId`;
+- structured impact metrics with `sum`, `average`, `latest`, and `none` aggregation semantics;
+- server-side financial snapshots captured only at publication;
+- public current-report and aggregate impact APIs;
+- execution closeout after all stages and controls reach final state;
+- audit coverage for impact submit/review/publish and execution closeout;
+- transactional outbox events for impact publication and execution completion;
+- persistence guards for published impact reports, metrics, financial snapshots, and closeout records.
+
+## Authorization and blocking rules
+
+- Impact-report submitter is resolved from active DB-backed organization membership for the project.
+- Impact review requires the `supervisor` role.
+- Impact publication requires the `product_owner` role.
+- Execution closeout requires the `supervisor` role.
+- The impact-report submitter cannot review the same report.
+- Impact reporting is allowed only for a completed stage backed by an approved progress report.
+- Impact approval/publication is blocked while the stage has an open or mitigated-but-not-closed risk.
+- Freeze is enforced in the backend and blocks impact submit/review/publish and closeout.
+- Rejected impact reports allow a new attempt.
+- Published reports are immutable. Corrections are new attempts and may reference the currently published report through `SupersedesImpactReportId`.
+- A previously published report remains public until its approved replacement is actually published.
+
+## Financial and public-report integrity
+
+No client-supplied financial totals are trusted for public reporting.
+
+At publication, the backend captures an immutable financial snapshot per currency from server-side persisted state:
+
+- approved execution expenses;
+- staged disbursements that still have an active ledger journal;
+- reversed staged-disbursement journals are excluded.
+
+The snapshot therefore respects the existing immutable double-entry ledger and reversal-only correction rules.
+
+Public endpoints expose only the latest published report for each stage. Submitted, approved-but-unpublished, and rejected impact reports are not exposed by the public API.
+
+## Closeout rules
+
+Execution closeout is permitted only when:
+
+- execution was initialized;
+- every execution stage is completed;
+- execution is not frozen;
+- every execution risk is closed;
+- no submitted expense remains awaiting final finance review;
+- no impact report remains submitted or approved-but-unpublished;
+- every completed stage has a published impact report.
+
+Closeout is append-only and emits `ExecutionCompleted` through the transactional outbox.
+
+## API surface
+
+Internal endpoints added:
+
+- `GET /api/v1/projects/{projectId}/execution/impact-reports`
+- `POST /api/v1/projects/{projectId}/execution/stages/{stageId}/impact-reports`
+- `POST /api/v1/projects/{projectId}/execution/stages/{stageId}/impact-reports/{impactReportId}/review`
+- `POST /api/v1/projects/{projectId}/execution/stages/{stageId}/impact-reports/{impactReportId}/publish`
+- `POST /api/v1/projects/{projectId}/execution/closeout`
+
+Public endpoints added:
+
+- `GET /api/v1/public/impact-reports`
+- `GET /api/v1/public/impact-reports/{impactReportId}`
+- `GET /api/v1/public/impact-overview`
+
+The public surface aligns with the existing frontend impact-report and impact-overview pages while keeping unpublished data private.
+
+## Persistence model
+
+EF Core generated migration:
+
+`20260911203019_Phase3ImpactCloseout`
+
+The migration adds the persistence required for:
+
+- execution impact reports and revision links;
+- structured impact metrics;
+- immutable impact financial snapshots;
+- unique execution closeout per project;
+- required indexes and restrictive foreign-key relationships.
+
+The migration was generated and committed only after the implementation passed build, model-change verification, PostgreSQL integration tests, and smoke checks.
+
+## Verification gate
+
+Final temporary GitHub Actions verification run:
+
+- run: `34644656712`
+- tested head: `b68e94c516aff8550fcf38e526b7072f06caff9c`
+- PostgreSQL: 18
+- `dotnet build -warnaserror`: GREEN, 0 warnings, 0 errors
+- EF Core `migrations has-pending-model-changes`: GREEN
+- full backend test suite on PostgreSQL 18: **25/25 passed**
+- impact/closeout smoke checks: GREEN
+
+The EF migration was generated by EF Core in commit:
+
+`9778ae194a4401e19b5003c255e6a48becc3fc5c`
+
+Primary implementation commit:
+
+`7353ac2c3029bbc4b70bcb65c66999d8c1dbb144`
+
+Follow-up persistence-state fix:
+
+`5bbd1548caa7d4a936e66c407c872989da40a42e`
+
+The temporary verification workflow was removed after the final GREEN gate in commit:
+
+`dda57d87d83ebeb6f3e924dc0b8f4413c1de459c`
+
+GitHub Actions is used here only as a verification gate. Production CI/CD remains GitLab CI with Container Registry as required by the platform production architecture.
+
+## Payment-provider boundary
+
+This slice adds no new external provider and does **not** activate real payment or payout processing.
+
+`DisabledPaymentGateway` remains the safe default. OD-004 remains **OPEN** because no real payment provider or production API credential has been selected/provided. Production payment activation must not be declared closed.
+
+No real secret or provider credential was added to Git.
