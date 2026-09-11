@@ -1,0 +1,43 @@
+name: Frontend Backend Identity Gate
+
+on:
+  push:
+    branches:
+      - feat/frontend-auth-integration
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install clean dependencies
+        run: npm ci
+
+      - name: Verify dependency manifests unchanged
+        run: git diff --exit-code -- package.json package-lock.json
+
+      - name: Build production bundle
+        run: npm run build
+
+      - name: Backend identity integration smoke checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f src/auth/api.ts
+          grep -Fq '/api/v1/session/sync' src/auth/api.ts
+          grep -Fq '/api/v1/me' src/auth/api.ts
+          grep -Fq 'panelRolesFromIdentity' src/auth/api.ts
+          grep -Fq 'syncIdentity(session)' src/auth/AuthGate.tsx
+          grep -Fq 'getCurrentIdentity(session)' src/auth/AuthGate.tsx
+          grep -Fq 'setSessionPanelRoles' src/auth/AuthGate.tsx
+          grep -Fq "target: 'http://localhost:5080'" vite.config.js
+          grep -Fq 'VITE_API_BASE_URL=' .env.example
