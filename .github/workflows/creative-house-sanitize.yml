@@ -1,0 +1,73 @@
+name: Creative House Production Link Sanitizer
+
+on:
+  push:
+    branches:
+      - integration/frontend-final
+    paths:
+      - .github/workflows/creative-house-sanitize.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sanitize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: integration/frontend-final
+          fetch-depth: 0
+
+      - name: Remove explanatory overlay navigation from production pages
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          root = Path('src/panels/creative-house')
+          pattern = re.compile(
+              r'<Link to="/panel/creative-house/overlays/logout"(?P<attrs>[^>]*)>(?P<body>.*?)</Link>',
+              re.S,
+          )
+          changed = 0
+          replacements = 0
+          for path in root.rglob('*.tsx'):
+              if 'overlays' in path.parts:
+                  continue
+              text = path.read_text(encoding='utf-8')
+              def repl(match):
+                  return f'<button{match.group("attrs")}>{match.group("body")}</button>'
+              updated, count = pattern.subn(repl, text)
+              if count:
+                  path.write_text(updated, encoding='utf-8')
+                  changed += 1
+                  replacements += count
+
+          leftovers = []
+          for path in root.rglob('*.tsx'):
+              if 'overlays' in path.parts:
+                  continue
+              text = path.read_text(encoding='utf-8')
+              if '/panel/creative-house/overlays/' in text:
+                  leftovers.append(str(path))
+
+          if replacements == 0:
+              raise SystemExit('Expected Creative House overlay navigation references, found none.')
+          if leftovers:
+              raise SystemExit('Overlay navigation still exists in production files: ' + ', '.join(leftovers))
+          print(f'Sanitized {replacements} overlay navigation reference(s) across {changed} production file(s).')
+          PY
+
+      - name: Commit production-only navigation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/panels/creative-house
+          git commit -m "fix(creative-house): remove explanatory overlay navigation"
+          git push origin HEAD:integration/frontend-final
