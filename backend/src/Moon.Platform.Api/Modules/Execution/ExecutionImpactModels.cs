@@ -110,7 +110,7 @@ public sealed class ExecutionImpactMetric
 [Index(nameof(ImpactReportId), nameof(Currency), IsUnique = true)]
 public sealed class ExecutionImpactFinancialSnapshot
 {
-    public Guid Id { get; init; } = Guid.NewGuid();
+    public Guid Id { get; init; }
     public Guid ImpactReportId { get; init; }
 
     [MaxLength(3)]
