@@ -1,11 +1,14 @@
 using System.Security.Claims;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Moon.Platform.Api.Common;
 using Moon.Platform.Api.Common.Auditing;
 using Moon.Platform.Api.Common.Authorization;
+using Moon.Platform.Api.Common.Messaging;
 using Moon.Platform.Api.Infrastructure.Persistence;
 using Moon.Platform.Api.Integrations.Payments;
 using Moon.Platform.Api.Integrations.Sms;
@@ -49,6 +52,29 @@ builder.Services.AddDbContext<MoonDbContext>((serviceProvider, options) =>
 });
 
 builder.Services.Configure<PaymentOptions>(builder.Configuration.GetSection(PaymentOptions.SectionName));
+builder.Services.Configure<MessagingOptions>(builder.Configuration.GetSection(MessagingOptions.SectionName));
+
+var configuredMessagingTransport = builder.Configuration[$"{MessagingOptions.SectionName}:Transport"] ?? "InMemory";
+builder.Services.AddMassTransit(registration =>
+{
+    if (string.Equals(configuredMessagingTransport, "RabbitMQ", StringComparison.OrdinalIgnoreCase))
+    {
+        registration.UsingRabbitMq((context, cfg) =>
+        {
+            var options = context.GetRequiredService<IOptions<MessagingOptions>>().Value;
+            cfg.Host(options.RabbitMqHost, options.RabbitMqVirtualHost, host =>
+            {
+                host.Username(options.RabbitMqUsername);
+                host.Password(options.RabbitMqPassword);
+            });
+            cfg.ConfigureEndpoints(context);
+        });
+    }
+    else
+    {
+        registration.UsingInMemory((context, cfg) => cfg.ConfigureEndpoints(context));
+    }
+});
 
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -77,6 +103,8 @@ builder.Services
     });
 
 builder.Services.AddScoped<IAuditWriter, AuditWriter>();
+builder.Services.AddScoped<IOutboxWriter, OutboxWriter>();
+builder.Services.AddHostedService<OutboxDispatcher>();
 builder.Services.AddScoped<IIdentitySyncService, IdentitySyncService>();
 builder.Services.AddScoped<IAdminAccessService, AdminAccessService>();
 builder.Services.AddScoped<IOrganizationAccessService, OrganizationAccessService>();
@@ -179,7 +207,7 @@ app.MapGet("/health/ready", async Task<IResult> (MoonDbContext db, CancellationT
 app.MapGet("/api/v1/system", (HttpContext context) => Results.Ok(new
 {
     service = "moon-platform-api",
-    version = "0.10.0-phase2-ledger",
+    version = "0.11.0-phase2-outbox-threshold",
     correlationId = context.TraceIdentifier
 }));
 
