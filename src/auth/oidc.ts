@@ -5,6 +5,7 @@ export type AuthSession = {
   idToken?: string;
   expiresAt: number;
   roles: string[];
+  panelRoles?: string[];
   subject?: string;
 };
 
@@ -189,6 +190,18 @@ export function getSession(): AuthSession | null {
     clearSession();
     return null;
   }
+}
+
+export function setSessionPanelRoles(panelRoles: string[]) {
+  const session = getSession();
+  if (!session) return null;
+
+  const next: AuthSession = {
+    ...session,
+    panelRoles: [...new Set(panelRoles)],
+  };
+  sessionStorage.setItem(SESSION_KEY, JSON.stringify(next));
+  return next;
 }
 
 export function clearSession() {
