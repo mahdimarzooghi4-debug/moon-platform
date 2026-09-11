@@ -1,0 +1,131 @@
+name: Verify Ayeneh Panel dashboard
+
+on:
+  push:
+    branches:
+      - feat/ayeneh-panel
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ayeneh-dashboard-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Verify pinned source
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_SHA="80c40555e4f703c18b78e4655f8dd176de098795"
+          SOURCE_TREE="2b6816e5c498288a2b85433e7baf82e25fa3272e"
+          test "$(git rev-parse HEAD^)" = "$SOURCE_SHA"
+          test "$(git rev-parse ${SOURCE_SHA}^{tree})" = "$SOURCE_TREE"
+          test "$(git hash-object src/features/ayeneh-panel/index.tsx)" = "708266f72999a999d1246d334db24f9bd4afdf5c"
+          test "$(git hash-object src/features/ayeneh-panel/index.css)" = "d4bb20bac79b7c466f93aaec2835aae71edd379d"
+          test "$(git hash-object src/features/ayeneh-panel/components/AyenehSidebar.tsx)" = "1dfaf22d7d5751bf8deee9a04d7e84b30bd3d6fe"
+          test "$(git hash-object src/app/router.tsx)" = "9d72f98ff7c8861cc4eb676799b9f997259388b4"
+          test "$(git hash-object package-lock.json)" = "44cbe24f2addd9f712ad76f88b7ff8432b877818"
+          test "$(git hash-object public/assets/ayeneh-panel/logo.png)" = "62794b0942c10ee4f4014e4c4b415da11d4e8284"
+          test "$(git hash-object public/assets/ayeneh-panel/kpi-startups.svg)" = "080a2c73d17a1d1e1f0c063c1c5160787281bf5d"
+          test "$(git hash-object public/assets/ayeneh-panel/kpi-projects.svg)" = "7672df87d8e5182df4bcd6e799fa7435b802fa19"
+          test "$(git hash-object public/assets/ayeneh-panel/kpi-funds.svg)" = "5b45cc7ffe8297bd0b6ee38b5c579bdefdbb8b47"
+          test "$(git hash-object public/assets/ayeneh-panel/kpi-beneficiaries.svg)" = "7ce01dca34334737854416326eb811333699128a"
+          test "$(git hash-object public/assets/ayeneh-panel/nav-dashboard.svg)" = "bd0d09892b76a6208c2675370eb6b7725038e2b8"
+          test "$(git hash-object public/assets/ayeneh-panel/nav-startups.svg)" = "561e676b4a3294c3b61284905b4d9f29c70cb3f9"
+          test "$(git hash-object public/assets/ayeneh-panel/nav-projects.svg)" = "6afd6aa4534c3d5dcd2bc0a3c3e4ee8550b7ec24"
+          test "$(git hash-object public/assets/ayeneh-panel/nav-milestones.svg)" = "d3df1ed88836d09d71936981f2cb55206dc8e12e"
+          test "$(git hash-object public/assets/ayeneh-panel/nav-reports.svg)" = "86a8193789aa9e7780613ddc7ca4d8ef9cf38c0f"
+          test "$(git hash-object public/assets/ayeneh-panel/nav-history.svg)" = "4a7ddacb517a2feee12116ce3d1e99108ec0d3ea"
+          test "$(git hash-object public/assets/ayeneh-panel/nav-settings.svg)" = "02fb12090c95fc3af49d8f8908f3ad3c7e9abc9e"
+          test "$(git hash-object public/assets/ayeneh-panel/nav-logout.svg)" = "6158836d250de37879d509c346e6b7762e8d5c4e"
+
+      - name: Verify Figma asset isolation
+        shell: bash
+        run: |
+          set -euo pipefail
+          ! grep -R -E 'static\.codia\.ai|figma\.com/api/mcp/asset' src/features/ayeneh-panel
+          ! grep -R -E '2407:|2409:|2517:' src/features/ayeneh-panel
+
+      - name: Patch dashboard route idempotently
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('src/app/router.tsx')
+          text = path.read_text()
+          imp = 'const AyenehDashboardPage = lazy(() => import("../features/ayeneh-panel"));\n'
+          anchor = 'const AdminAccessPolicyPage = lazy(() => import("../features/admin-panel/access-policy"));\n'
+          if imp not in text:
+              text = text.replace(anchor, anchor + imp)
+          elem = 'const ayenehDashboardElement = lazyElement(AyenehDashboardPage);\n'
+          anchor2 = 'const adminAccessPolicyElement = lazyElement(AdminAccessPolicyPage);\n'
+          if elem not in text:
+              text = text.replace(anchor2, anchor2 + elem)
+          route = '        <Route path="/panel/ayeneh" element={ayenehDashboardElement} />\n'
+          anchor3 = '        <Route path="/panel/admin/settings" element={adminSettingsElement} />\n'
+          if route not in text:
+              text = text.replace(anchor3, anchor3 + route)
+          path.write_text(text)
+          PY
+
+      - name: Verify dashboard route and transitions
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(grep -Fc 'const AyenehDashboardPage = lazy(() => import("../features/ayeneh-panel"));' src/app/router.tsx)" = 1
+          test "$(grep -Fc 'const ayenehDashboardElement = lazyElement(AyenehDashboardPage);' src/app/router.tsx)" = 1
+          test "$(grep -Fc '<Route path="/panel/ayeneh" element={ayenehDashboardElement} />' src/app/router.tsx)" = 1
+          test "$(grep -Fc 'to="/panel/ayeneh/reports"' src/features/ayeneh-panel/index.tsx)" = 1
+          test "$(grep -Fc 'to="/panel/ayeneh/evaluation-history"' src/features/ayeneh-panel/index.tsx)" = 1
+          grep -Fq 'active="dashboard"' src/features/ayeneh-panel/index.tsx
+          test "$(grep -Fc 'to="/panel/ayeneh/startup-evaluations"' src/features/ayeneh-panel/components/AyenehSidebar.tsx)" = 1
+          test "$(grep -Fc 'to="/panel/ayeneh/project-evaluations"' src/features/ayeneh-panel/components/AyenehSidebar.tsx)" = 1
+          test "$(grep -Fc 'to="/panel/ayeneh/milestone-evaluations"' src/features/ayeneh-panel/components/AyenehSidebar.tsx)" = 1
+          test "$(grep -Fc 'to="/panel/ayeneh/reports"' src/features/ayeneh-panel/components/AyenehSidebar.tsx)" = 1
+          test "$(grep -Fc 'to="/panel/ayeneh/evaluation-history"' src/features/ayeneh-panel/components/AyenehSidebar.tsx)" = 1
+          test "$(grep -Fc 'to="/panel/ayeneh/settings"' src/features/ayeneh-panel/components/AyenehSidebar.tsx)" = 1
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Build
+        run: npm run build
+
+      - name: Verify lockfile unchanged
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object package-lock.json)" = "44cbe24f2addd9f712ad76f88b7ff8432b877818"
+          git diff --exit-code -- package-lock.json
+
+      - name: Commit clean dashboard route
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/app/router.tsx
+          if ! git diff --cached --quiet; then
+            git commit -m "feat(ayeneh-panel): wire dashboard route"
+          fi
+          git rm .github/workflows/gate-ayeneh-dashboard.yml
+          git commit -m "chore(ayeneh-panel): remove dashboard gate"
+          git push
