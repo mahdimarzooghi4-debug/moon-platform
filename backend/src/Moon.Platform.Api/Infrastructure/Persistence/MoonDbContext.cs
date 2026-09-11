@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Moon.Platform.Api.Common.Auditing;
 using Moon.Platform.Api.Common.Messaging;
 using Moon.Platform.Api.Modules.Evaluations;
+using Moon.Platform.Api.Modules.Execution;
 using Moon.Platform.Api.Modules.Funding;
 using Moon.Platform.Api.Modules.Identity;
 using Moon.Platform.Api.Modules.Projects;
@@ -25,6 +27,11 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
     public DbSet<LedgerJournal> LedgerJournals => Set<LedgerJournal>();
     public DbSet<LedgerEntry> LedgerEntries => Set<LedgerEntry>();
     public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.ReplaceService<IModelCustomizer, MoonExecutionModelCustomizer>();
+    }
 
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {
