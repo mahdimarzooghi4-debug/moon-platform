@@ -1,0 +1,315 @@
+.startup-report-detail-page,
+.startup-report-detail-page .startup-sidebar {
+  min-height: 1100px;
+}
+
+.startup-report-detail-content {
+  width: calc(100% - 224px);
+  min-width: 956px;
+  min-height: 1100px;
+  flex: 1 1 auto;
+  padding: 22px 28px 40px;
+  background: #f6f9fc;
+  direction: rtl;
+  overflow-x: auto;
+}
+
+.startup-report-detail-content h1,
+.startup-report-detail-content h2,
+.startup-report-detail-content p,
+.startup-report-detail-content dl,
+.startup-report-detail-content dt,
+.startup-report-detail-content dd {
+  margin: 0;
+}
+
+.startup-report-detail-header {
+  width: 100%;
+  min-width: 900px;
+  height: 70px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  text-align: right;
+}
+
+.startup-report-detail-header > div {
+  width: 702px;
+}
+
+.startup-report-detail-header h1 {
+  height: 34px;
+  color: var(--startup-navy);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 34px;
+}
+
+.startup-report-detail-header p {
+  height: 24px;
+  margin-top: 2px;
+  color: var(--startup-muted);
+  font-size: 11px;
+  line-height: 24px;
+}
+
+.startup-report-detail-header > a {
+  width: 160px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  border: 1px solid #dbe5f0;
+  border-radius: 12px;
+  background: #fff;
+  color: var(--startup-navy) !important;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.startup-report-detail-summary,
+.startup-report-detail-performance,
+.startup-report-detail-resources,
+.startup-report-detail-impact,
+.startup-report-detail-documents {
+  border: 1px solid #dbe5f0;
+  border-radius: 12px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.startup-report-detail-summary {
+  width: 100%;
+  min-width: 900px;
+  height: 120px;
+  display: grid;
+  grid-template-columns: minmax(330px, 1fr) 420px;
+  align-items: center;
+  margin-top: 18px;
+  padding: 18px 28px;
+  text-align: right;
+}
+
+.startup-report-detail-summary-project h2 {
+  height: 28px;
+  color: var(--startup-navy);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 28px;
+}
+
+.startup-report-detail-summary-project p {
+  height: 24px;
+  margin-top: 6px;
+  color: var(--startup-blue);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.startup-report-detail-summary dl {
+  display: grid;
+  grid-template-columns: 190px 180px;
+  gap: 40px;
+  align-items: center;
+}
+
+.startup-report-detail-summary dt {
+  height: 22px;
+  color: var(--startup-muted);
+  font-size: 10px;
+  line-height: 22px;
+}
+
+.startup-report-detail-summary dd {
+  height: 24px;
+  color: var(--startup-navy);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.startup-report-detail-summary dd.is-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 180px;
+  color: var(--startup-navy);
+  text-align: center;
+}
+
+.startup-report-detail-two-column {
+  width: 100%;
+  min-width: 900px;
+  height: 300px;
+  display: grid;
+  grid-template-columns: minmax(0, 580fr) minmax(0, 560fr);
+  gap: 20px;
+  margin-top: 30px;
+  direction: rtl;
+}
+
+.startup-report-detail-two-column.is-lower {
+  height: 280px;
+  margin-top: 20px;
+}
+
+.startup-report-detail-performance,
+.startup-report-detail-resources {
+  height: 300px;
+  padding: 17px 24px 20px;
+  text-align: right;
+}
+
+.startup-report-detail-impact,
+.startup-report-detail-documents {
+  height: 280px;
+  padding: 17px 24px 20px;
+  text-align: right;
+}
+
+.startup-report-detail-performance h2,
+.startup-report-detail-resources h2,
+.startup-report-detail-impact h2,
+.startup-report-detail-documents h2 {
+  height: 34px;
+  color: var(--startup-navy);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 34px;
+}
+
+.startup-report-detail-performance > strong {
+  display: block;
+  min-height: 30px;
+  margin-top: 4px;
+  color: var(--startup-navy);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 30px;
+}
+
+.startup-report-detail-performance > strong.is-blue {
+  margin-top: 10px;
+  color: var(--startup-blue);
+}
+
+.startup-report-detail-performance > p {
+  min-height: 96px;
+  margin-top: 25px;
+  color: var(--startup-muted);
+  font-size: 11px;
+  line-height: 24px;
+}
+
+.startup-report-detail-resources dl {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 17px;
+}
+
+.startup-report-detail-resources dl > div {
+  height: 48px;
+  display: grid;
+  grid-template-columns: 220px 240px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  border: 1px solid #dbe5f0;
+  border-radius: 12px;
+  background: #f9fbfe;
+}
+
+.startup-report-detail-resources dt {
+  color: var(--startup-muted);
+  font-size: 11px;
+  line-height: 48px;
+}
+
+.startup-report-detail-resources dd {
+  color: var(--startup-navy);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 48px;
+}
+
+.startup-report-detail-impact > strong {
+  display: block;
+  min-height: 40px;
+  margin-top: 17px;
+  color: var(--startup-blue);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 40px;
+}
+
+.startup-report-detail-impact > p {
+  min-height: 110px;
+  margin-top: 14px;
+  color: var(--startup-muted);
+  font-size: 11px;
+  line-height: 24px;
+}
+
+.startup-report-detail-document-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.startup-report-detail-document-rows > div {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  border: 1px solid #dbe5f0;
+  border-radius: 12px;
+  background: #f9fbfe;
+}
+
+.startup-report-detail-document-rows strong {
+  color: var(--startup-navy);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.startup-report-detail-document-rows span {
+  width: 110px;
+  color: var(--startup-blue);
+  font-size: 10px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.startup-report-detail-note {
+  width: 100%;
+  min-width: 900px;
+  min-height: 110px;
+  display: flex;
+  align-items: center;
+  margin-top: 24px;
+  padding: 20px 24px;
+  border: 1px solid #bfdef5;
+  border-radius: 12px;
+  background: #e8f4fc;
+  color: var(--startup-muted);
+  font-size: 11px;
+  line-height: 24px;
+  text-align: right;
+}
+
+.startup-report-detail-content .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
