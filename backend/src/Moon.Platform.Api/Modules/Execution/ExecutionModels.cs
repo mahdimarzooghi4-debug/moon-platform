@@ -23,6 +23,9 @@ public static class ExecutionPolicies
     public const string RiskManager = "phase3-risk-manager";
     public const string FreezeManager = "phase3-freeze-manager";
     public const string Disburser = "phase3-disburser";
+    public const string ImpactReviewer = "phase3-impact-reviewer";
+    public const string ImpactPublisher = "phase3-impact-publisher";
+    public const string CloseoutManager = "phase3-closeout-manager";
 }
 
 public sealed class ExecutionStage

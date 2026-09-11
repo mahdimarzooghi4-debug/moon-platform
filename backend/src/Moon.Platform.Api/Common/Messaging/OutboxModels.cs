@@ -11,6 +11,8 @@ public static class IntegrationEventTypes
     public const string PaymentReconciled = "PaymentReconciled";
     public const string FundingThresholdReached = "FundingThresholdReached";
     public const string ExecutionDisbursementReleased = "ExecutionDisbursementReleased";
+    public const string ExecutionImpactPublished = "ExecutionImpactPublished";
+    public const string ExecutionCompleted = "ExecutionCompleted";
 }
 
 [Table("outbox_messages", Schema = "moon")]
@@ -96,6 +98,20 @@ public sealed record ExecutionDisbursementReleasedEvent(
     string Currency,
     Guid LedgerJournalId,
     DateTimeOffset ReleasedAtUtc);
+
+public sealed record ExecutionImpactPublishedEvent(
+    Guid ImpactReportId,
+    Guid ProjectId,
+    Guid StageId,
+    int AttemptNumber,
+    Guid? SupersedesImpactReportId,
+    DateTimeOffset PublishedAtUtc);
+
+public sealed record ExecutionCompletedEvent(
+    Guid ProjectId,
+    Guid CloseoutId,
+    string ClosedBySubject,
+    DateTimeOffset ClosedAtUtc);
 
 public sealed class MessagingOptions
 {

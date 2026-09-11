@@ -103,6 +103,7 @@ builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<ILedgerService, LedgerService>();
 builder.Services.AddScoped<IExecutionService, ExecutionService>();
 builder.Services.AddScoped<IExecutionControlService, ExecutionControlService>();
+builder.Services.AddScoped<IExecutionImpactService, ExecutionImpactService>();
 builder.Services.AddScoped<IAuthorizationHandler, OrganizationMemberHandler>();
 
 builder.Services.AddAuthorization(options =>
@@ -167,6 +168,21 @@ builder.Services.AddAuthorization(options =>
         policy.RequireAuthenticatedUser();
         policy.RequireRole(SystemRoles.Finance);
     });
+    options.AddPolicy(ExecutionPolicies.ImpactReviewer, policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole(SystemRoles.Supervisor);
+    });
+    options.AddPolicy(ExecutionPolicies.ImpactPublisher, policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole(SystemRoles.ProductOwner);
+    });
+    options.AddPolicy(ExecutionPolicies.CloseoutManager, policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole(SystemRoles.Supervisor);
+    });
 });
 
 builder.Services.AddScoped<ISmsProvider, DisabledSmsProvider>();
@@ -203,7 +219,7 @@ app.MapGet("/health/ready", async Task<IResult> (MoonDbContext db, CancellationT
 app.MapGet("/api/v1/system", (HttpContext context) => Results.Ok(new
 {
     service = "moon-platform-api",
-    version = "0.13.0-phase3-execution-controls",
+    version = "0.14.0-phase3-impact-closeout",
     correlationId = context.TraceIdentifier
 }));
 
@@ -239,6 +255,7 @@ app.MapPaymentEndpoints();
 app.MapLedgerEndpoints();
 app.MapExecutionEndpoints();
 app.MapExecutionControlEndpoints();
+app.MapExecutionImpactEndpoints();
 
 app.Run();
 
