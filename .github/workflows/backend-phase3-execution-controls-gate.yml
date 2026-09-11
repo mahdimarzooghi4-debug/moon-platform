@@ -1,5 +1,6 @@
 name: Backend Phase 3 Execution Controls Gate
 
+# Temporary verification workflow; remove after the full controls gate is GREEN.
 on:
   push:
     branches:
