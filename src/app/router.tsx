@@ -115,6 +115,8 @@ const AdminProjectsPage = lazy(() => import("../features/admin-panel/projects"))
 const AdminProjectDetailPage = lazy(() => import("../features/admin-panel/project-detail"));
 const AdminFundingPage = lazy(() => import("../features/admin-panel/funding"));
 const AdminFundingDetailPage = lazy(() => import("../features/admin-panel/funding-detail"));
+const AdminRevenuesPage = lazy(() => import("../features/admin-panel/revenues"));
+const AdminRevenueDetailPage = lazy(() => import("../features/admin-panel/revenue-detail"));
 
 function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
   return (
@@ -235,6 +237,8 @@ const adminProjectsElement = lazyElement(AdminProjectsPage);
 const adminProjectDetailElement = lazyElement(AdminProjectDetailPage);
 const adminFundingElement = lazyElement(AdminFundingPage);
 const adminFundingDetailElement = lazyElement(AdminFundingDetailPage);
+const adminRevenuesElement = lazyElement(AdminRevenuesPage);
+const adminRevenueDetailElement = lazyElement(AdminRevenueDetailPage);
 
 /**
  * Routes are introduced around the existing Figma-derived screens so their
@@ -361,6 +365,8 @@ export function AppRouter() {
         <Route path="/panel/admin/projects" element={adminProjectsElement} />
         <Route path="/panel/admin/funding/:fundingId" element={adminFundingDetailElement} />
         <Route path="/panel/admin/funding" element={adminFundingElement} />
+        <Route path="/panel/admin/revenues/:revenueId" element={adminRevenueDetailElement} />
+        <Route path="/panel/admin/revenues" element={adminRevenuesElement} />
         <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/fund-released" element={startupProjectStageFundReleasedElement} />
         <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/evaluation/approved" element={startupProjectStageEvaluationElement} />
         <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/submitted" element={startupProjectStageReportSubmittedElement} />
