@@ -1,0 +1,89 @@
+name: Frontend Final Gate
+
+on:
+  push:
+    branches:
+      - integration/frontend-final
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  frontend-final-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install clean dependencies
+        run: npm ci
+
+      - name: Verify lockfile unchanged
+        run: git diff --exit-code -- package-lock.json
+
+      - name: Verify panel namespaces and router contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -d src/panels/creative-house
+          test -d src/panels/fund-manager
+          test -d src/panels/emdad
+          test -d public/assets/creative-house
+          test -d public/assets/fund-manager
+          test -d public/assets/emdad
+          test ! -e src/router/AppRouter.tsx
+          node <<'NODE'
+          const fs = require('fs');
+          const router = fs.readFileSync('src/app/router.tsx', 'utf8');
+          const required = [
+            '/panel/startup',
+            '/panel/company',
+            '/panel/admin',
+            '/panel/creative-house',
+            '/panel/creative-house/startup-evaluations',
+            '/panel/creative-house/project-evaluations',
+            '/panel/creative-house/milestone-evaluations',
+            '/panel/creative-house/reports',
+            '/panel/fund-manager',
+            '/panel/fund-manager/resources',
+            '/panel/fund-manager/investments',
+            '/panel/fund-manager/profit-returns',
+            '/panel/fund-manager/cycle-returns',
+            '/panel/fund-manager/profit-split',
+            '/panel/fund-manager/reports',
+            '/panel/emdad',
+            '/panel/emdad/release-requests',
+            '/panel/emdad/article172-approvals',
+            '/panel/emdad/payment-history',
+            '/panel/emdad/financial-reports',
+            '/panel/emdad/fund-synergy',
+            '/panel/emdad/fund-returns'
+          ];
+          for (const path of required) {
+            if (!router.includes(`path="${path}"`)) {
+              console.error(`Missing required route: ${path}`);
+              process.exit(1);
+            }
+          }
+          if (/\/panel\/(creative-house|fund-manager|emdad)\/overlays\//.test(router)) {
+            console.error('Production router exposes explanatory overlay route(s).');
+            process.exit(1);
+          }
+          const paths = [...router.matchAll(/<Route\s+path="([^"]+)"/g)].map((m) => m[1]);
+          const duplicates = [...new Set(paths.filter((p, i) => paths.indexOf(p) !== i))];
+          if (duplicates.length) {
+            console.error(`Duplicate exact route path(s): ${duplicates.join(', ')}`);
+            process.exit(1);
+          }
+          console.log(`Route smoke OK: ${paths.length} exact route declarations; no duplicate exact paths.`);
+          NODE
+
+      - name: Build frontend
+        run: npm run build
