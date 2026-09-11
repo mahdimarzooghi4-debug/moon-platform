@@ -2,6 +2,7 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Moon.Platform.Api.Common.Auditing;
 using Moon.Platform.Api.Infrastructure.Persistence;
+using Moon.Platform.Api.Modules.Evaluations;
 
 namespace Moon.Platform.Api.Modules.Projects;
 
@@ -26,6 +27,13 @@ public interface IProjectService
         CancellationToken cancellationToken = default);
 
     Task<ProjectOperationResult> SubmitAsync(
+        Guid projectId,
+        string actorSubject,
+        string correlationId,
+        string? ipAddress,
+        CancellationToken cancellationToken = default);
+
+    Task<ProjectOperationResult> PublishAsync(
         Guid projectId,
         string actorSubject,
         string correlationId,
@@ -239,6 +247,97 @@ public sealed class ProjectService(MoonDbContext dbContext, IAuditWriter auditWr
         return ProjectOperationResult.Success(await BuildViewAsync(project, cancellationToken));
     }
 
+    public async Task<ProjectOperationResult> PublishAsync(
+        Guid projectId,
+        string actorSubject,
+        string correlationId,
+        string? ipAddress,
+        CancellationToken cancellationToken = default)
+    {
+        var project = await dbContext.Projects.SingleOrDefaultAsync(x => x.Id == projectId, cancellationToken);
+        if (project is null)
+        {
+            return ProjectOperationResult.Failure("project_not_found", "Project was not found.");
+        }
+
+        if (string.Equals(project.Status, ProjectStatuses.Published, StringComparison.Ordinal))
+        {
+            return ProjectOperationResult.Failure("project_already_published", "Project is already published.");
+        }
+
+        if (!string.Equals(project.Status, ProjectStatuses.Approved, StringComparison.Ordinal) || project.ApprovedAtUtc is null)
+        {
+            return ProjectOperationResult.Failure("project_publish_invalid_state", "Only approved projects can be published.");
+        }
+
+        var actorIsActive = await dbContext.Users.AsNoTracking()
+            .AnyAsync(x => x.ExternalSubject == actorSubject && x.IsActive, cancellationToken);
+        if (!actorIsActive)
+        {
+            return ProjectOperationResult.Failure("project_publish_actor_inactive", "Publisher must be an active synchronized user.");
+        }
+
+        var currentVersion = await dbContext.ProjectVersions.AsNoTracking().SingleAsync(
+            x => x.ProjectId == project.Id && x.VersionNumber == project.CurrentVersionNumber,
+            cancellationToken);
+        if (!currentVersion.IsLocked || currentVersion.LockedAtUtc is null)
+        {
+            return ProjectOperationResult.Failure("project_publish_version_unlocked", "Current project version must be locked before publication.");
+        }
+
+        var decision = await dbContext.ProjectDecisions.AsNoTracking()
+            .SingleOrDefaultAsync(x => x.ProjectId == project.Id, cancellationToken);
+        if (decision is null || !string.Equals(decision.Outcome, ProjectDecisionOutcomes.Approve, StringComparison.Ordinal))
+        {
+            return ProjectOperationResult.Failure("project_publish_approval_missing", "Publication requires a recorded approval decision.");
+        }
+
+        var evaluation = await dbContext.ProjectEvaluations.AsNoTracking()
+            .SingleOrDefaultAsync(x => x.Id == decision.EvaluationId, cancellationToken);
+        if (evaluation is null
+            || evaluation.Status != EvaluationStatuses.Completed
+            || evaluation.HasConflict != false
+            || evaluation.CompletedAtUtc is null
+            || evaluation.ProjectId != project.Id
+            || evaluation.ProjectVersionId != currentVersion.Id)
+        {
+            return ProjectOperationResult.Failure(
+                "project_publish_evaluation_invalid",
+                "Publication requires a completed conflict-free evaluation of the current locked version.");
+        }
+
+        await using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
+
+        project.Status = ProjectStatuses.Published;
+        project.PublishedBySubject = actorSubject;
+        project.PublishedAtUtc = DateTimeOffset.UtcNow;
+        await dbContext.SaveChangesAsync(cancellationToken);
+
+        await auditWriter.AppendAsync(new AuditWriteRequest(
+            actorSubject,
+            "project.published",
+            "project",
+            project.Id.ToString(),
+            correlationId,
+            project.OrganizationId.ToString(),
+            project.Id.ToString(),
+            BeforeJson: JsonSerializer.Serialize(new { status = ProjectStatuses.Approved }),
+            AfterJson: JsonSerializer.Serialize(new
+            {
+                project.Status,
+                project.PublishedBySubject,
+                project.PublishedAtUtc,
+                CurrentVersionId = currentVersion.Id,
+                currentVersion.VersionNumber,
+                EvaluationId = evaluation.Id,
+                DecisionId = decision.Id
+            }),
+            IpAddress: ipAddress), cancellationToken);
+
+        await transaction.CommitAsync(cancellationToken);
+        return ProjectOperationResult.Success(await BuildViewAsync(project, cancellationToken));
+    }
+
     public async Task<ProjectOperationResult> GetAsync(
         Guid projectId,
         string actorSubject,
@@ -301,6 +400,7 @@ public sealed class ProjectService(MoonDbContext dbContext, IAuditWriter auditWr
             project.CreatedAtUtc,
             project.SubmittedAtUtc,
             project.ApprovedAtUtc,
+            project.PublishedBySubject,
             project.PublishedAtUtc,
             versions);
     }
