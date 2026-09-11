@@ -9,6 +9,7 @@ using Moon.Platform.Api.Common.Authorization;
 using Moon.Platform.Api.Infrastructure.Persistence;
 using Moon.Platform.Api.Integrations.Payments;
 using Moon.Platform.Api.Integrations.Sms;
+using Moon.Platform.Api.Modules.Evaluations;
 using Moon.Platform.Api.Modules.Identity;
 using Moon.Platform.Api.Modules.Projects;
 using OpenTelemetry.Metrics;
@@ -73,6 +74,7 @@ builder.Services.AddScoped<IIdentitySyncService, IdentitySyncService>();
 builder.Services.AddScoped<IAdminAccessService, AdminAccessService>();
 builder.Services.AddScoped<IOrganizationAccessService, OrganizationAccessService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IEvaluationService, EvaluationService>();
 builder.Services.AddScoped<IAuthorizationHandler, OrganizationMemberHandler>();
 
 builder.Services.AddAuthorization(options =>
@@ -87,6 +89,18 @@ builder.Services.AddAuthorization(options =>
     {
         policy.RequireAuthenticatedUser();
         policy.RequireRole(SystemRoles.SystemAdmin);
+    });
+
+    options.AddPolicy(EvaluationPolicies.Evaluator, policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole(SystemRoles.Evaluator);
+    });
+
+    options.AddPolicy(EvaluationPolicies.DecisionMaker, policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole(SystemRoles.ProductOwner);
     });
 });
 
@@ -143,7 +157,7 @@ app.MapGet("/health/ready", async Task<IResult> (MoonDbContext db, CancellationT
 app.MapGet("/api/v1/system", (HttpContext context) => Results.Ok(new
 {
     service = "moon-platform-api",
-    version = "0.5.0-phase1-project",
+    version = "0.6.0-phase1-evaluation",
     correlationId = context.TraceIdentifier
 }));
 
@@ -202,6 +216,7 @@ app.MapGet("/api/v1/organizations/{organizationId:guid}/access", (Guid organizat
 
 app.MapAdminAccessEndpoints();
 app.MapProjectEndpoints();
+app.MapEvaluationEndpoints();
 
 app.Run();
 
