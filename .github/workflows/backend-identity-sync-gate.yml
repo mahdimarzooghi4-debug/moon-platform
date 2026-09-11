@@ -1,0 +1,70 @@
+name: Backend Identity Sync Gate
+
+on:
+  push:
+    branches:
+      - feat/backend-phase-0-foundation
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_DB: moon
+          POSTGRES_USER: moon
+          POSTGRES_PASSWORD: moon-local-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U moon -d moon"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore Moon.Platform.slnx
+
+      - name: Build with warnings as errors
+        run: dotnet build Moon.Platform.slnx --no-restore --configuration Release -warnaserror
+
+      - name: Install EF tool
+        run: dotnet tool install --global dotnet-ef --version 10.0.0
+
+      - name: Verify committed migrations match model
+        run: dotnet ef migrations has-pending-model-changes --project src/Moon.Platform.Api/Moon.Platform.Api.csproj --startup-project src/Moon.Platform.Api/Moon.Platform.Api.csproj
+
+      - name: Test identity sync against PostgreSQL 18
+        env:
+          TEST_POSTGRES: Host=localhost;Port=5432;Database=moon;Username=moon;Password=moon-local-only
+        run: dotnet test Moon.Platform.slnx --no-build --configuration Release
+
+      - name: Identity sync smoke checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f src/Moon.Platform.Api/Modules/Identity/IdentitySyncService.cs
+          grep -Fq 'identity.user.created' src/Moon.Platform.Api/Modules/Identity/IdentitySyncService.cs
+          grep -Fq 'identity.user.synced' src/Moon.Platform.Api/Modules/Identity/IdentitySyncService.cs
+          grep -Fq '/api/v1/session/sync' src/Moon.Platform.Api/Program.cs
+          grep -Fq '/api/v1/me' src/Moon.Platform.Api/Program.cs
+          grep -Fq 'organization.Status == "active"' src/Moon.Platform.Api/Modules/Identity/IdentitySyncService.cs
+          grep -Fq 'Assert.False(disabled.IsActive)' tests/Moon.Platform.Tests/Phase0PostgresTests.cs
