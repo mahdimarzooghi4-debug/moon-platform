@@ -13,6 +13,7 @@ public static class LedgerEntrySides
 public static class LedgerJournalKinds
 {
     public const string PaymentReconciliation = "payment_reconciliation";
+    public const string StageDisbursement = "stage_disbursement";
     public const string Reversal = "reversal";
 }
 
@@ -20,6 +21,7 @@ public static class LedgerAccountCodes
 {
     public const string CashSettlement = "asset:cash_settlement";
     public const string ProjectFunds = "liability:project_funds";
+    public const string DisbursementPayable = "liability:disbursement_payable";
 }
 
 [Table("ledger_journals", Schema = "moon")]
@@ -27,10 +29,11 @@ public static class LedgerAccountCodes
 [Index(nameof(PaymentId), nameof(Kind), IsUnique = true)]
 [Index(nameof(ProjectId), nameof(Currency))]
 [Index(nameof(ReversesJournalId), IsUnique = true)]
+[Index(nameof(ExecutionDisbursementId), IsUnique = true)]
 public sealed class LedgerJournal
 {
     public Guid Id { get; init; } = Guid.NewGuid();
-    public Guid PaymentId { get; init; }
+    public Guid? PaymentId { get; init; }
     public Guid ProjectId { get; init; }
 
     [MaxLength(3)]
@@ -47,12 +50,13 @@ public sealed class LedgerJournal
 
     public DateTimeOffset CreatedAtUtc { get; init; } = DateTimeOffset.UtcNow;
     public Guid? ReversesJournalId { get; init; }
+    public Guid? ExecutionDisbursementId { get; init; }
 
     [MaxLength(4000)]
     public string? Reason { get; init; }
 
     [ForeignKey(nameof(PaymentId))]
-    public FundingPayment Payment { get; set; } = null!;
+    public FundingPayment? Payment { get; set; }
 
     [ForeignKey(nameof(ReversesJournalId))]
     public LedgerJournal? ReversesJournal { get; set; }
@@ -95,7 +99,7 @@ public sealed record LedgerEntryView(
 
 public sealed record LedgerJournalView(
     Guid JournalId,
-    Guid PaymentId,
+    Guid? PaymentId,
     Guid ProjectId,
     string Currency,
     string Kind,

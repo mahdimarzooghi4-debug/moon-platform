@@ -17,6 +17,10 @@ public sealed class MoonExecutionModelCustomizer(ModelCustomizerDependencies dep
     {
         ConfigureStage(modelBuilder.Entity<ExecutionStage>());
         ConfigureReport(modelBuilder.Entity<ProgressReport>());
+        modelBuilder.Entity<ExecutionExpense>();
+        modelBuilder.Entity<ExecutionRisk>();
+        modelBuilder.Entity<ExecutionFreezeEvent>();
+        modelBuilder.Entity<ExecutionDisbursement>();
     }
 
     private static void ConfigureStage(EntityTypeBuilder<ExecutionStage> entity)
@@ -25,6 +29,7 @@ public sealed class MoonExecutionModelCustomizer(ModelCustomizerDependencies dep
         entity.HasKey(x => x.Id);
         entity.Property(x => x.Title).HasMaxLength(200).IsRequired();
         entity.Property(x => x.Description).HasMaxLength(4000).IsRequired();
+        entity.Property(x => x.DisbursementCurrency).HasMaxLength(3);
         entity.Property(x => x.Status).HasMaxLength(32).IsRequired();
         entity.Property(x => x.CreatedBySubject).HasMaxLength(200).IsRequired();
         entity.HasIndex(x => new { x.ProjectId, x.SequenceNumber }).IsUnique();

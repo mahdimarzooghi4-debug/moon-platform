@@ -19,6 +19,10 @@ public static class ExecutionPolicies
 {
     public const string Planner = "phase3-execution-planner";
     public const string Reviewer = "phase3-execution-reviewer";
+    public const string ExpenseReviewer = "phase3-expense-reviewer";
+    public const string RiskManager = "phase3-risk-manager";
+    public const string FreezeManager = "phase3-freeze-manager";
+    public const string Disburser = "phase3-disburser";
 }
 
 public sealed class ExecutionStage
@@ -28,6 +32,8 @@ public sealed class ExecutionStage
     public int SequenceNumber { get; init; }
     public string Title { get; init; } = string.Empty;
     public string Description { get; init; } = string.Empty;
+    public long? DisbursementLimitMinor { get; init; }
+    public string? DisbursementCurrency { get; init; }
     public string Status { get; set; } = ExecutionStageStatuses.Blocked;
     public string CreatedBySubject { get; init; } = string.Empty;
     public DateTimeOffset CreatedAtUtc { get; init; } = DateTimeOffset.UtcNow;
@@ -50,7 +56,11 @@ public sealed class ProgressReport
     public string? ReviewNote { get; set; }
 }
 
-public sealed record ExecutionStageDefinition(string Title, string Description);
+public sealed record ExecutionStageDefinition(
+    string Title,
+    string Description,
+    long? DisbursementLimitMinor = null,
+    string? DisbursementCurrency = null);
 
 public sealed record ProgressReportView(
     Guid ReportId,
@@ -68,6 +78,8 @@ public sealed record ExecutionStageView(
     int SequenceNumber,
     string Title,
     string Description,
+    long? DisbursementLimitMinor,
+    string? DisbursementCurrency,
     string Status,
     DateTimeOffset? ActivatedAtUtc,
     DateTimeOffset? CompletedAtUtc,

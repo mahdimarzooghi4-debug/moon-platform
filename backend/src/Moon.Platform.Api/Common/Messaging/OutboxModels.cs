@@ -10,6 +10,7 @@ public static class IntegrationEventTypes
     public const string FundingCommitted = "FundingCommitted";
     public const string PaymentReconciled = "PaymentReconciled";
     public const string FundingThresholdReached = "FundingThresholdReached";
+    public const string ExecutionDisbursementReleased = "ExecutionDisbursementReleased";
 }
 
 [Table("outbox_messages", Schema = "moon")]
@@ -86,6 +87,15 @@ public sealed record FundingThresholdReachedEvent(
     long AllocableAmountMinor,
     string Currency,
     DateTimeOffset ReachedAtUtc);
+
+public sealed record ExecutionDisbursementReleasedEvent(
+    Guid DisbursementId,
+    Guid ProjectId,
+    Guid StageId,
+    long AmountMinor,
+    string Currency,
+    Guid LedgerJournalId,
+    DateTimeOffset ReleasedAtUtc);
 
 public sealed class MessagingOptions
 {

@@ -3,7 +3,11 @@ using System.Security.Claims;
 namespace Moon.Platform.Api.Modules.Execution;
 
 public sealed record InitializeExecutionRequest(IReadOnlyList<ExecutionStageRequest> Stages);
-public sealed record ExecutionStageRequest(string Title, string Description);
+public sealed record ExecutionStageRequest(
+    string Title,
+    string Description,
+    long? DisbursementLimitMinor = null,
+    string? DisbursementCurrency = null);
 public sealed record SubmitProgressReportRequest(string Summary);
 public sealed record ReviewProgressReportRequest(string Decision, string? Note);
 
@@ -20,7 +24,11 @@ public static class ExecutionEndpoints
             CancellationToken cancellationToken) =>
         {
             var stages = request.Stages?
-                .Select(x => new ExecutionStageDefinition(x.Title, x.Description))
+                .Select(x => new ExecutionStageDefinition(
+                    x.Title,
+                    x.Description,
+                    x.DisbursementLimitMinor,
+                    x.DisbursementCurrency))
                 .ToArray()
                 ?? [];
 
@@ -112,6 +120,8 @@ public static class ExecutionEndpoints
                 or "execution_report_pending_review"
                 or "execution_stage_completed"
                 or "execution_report_already_reviewed"
+                or "execution_frozen"
+                or "execution_pending_expenses"
                 => Results.Conflict(body),
             _ => Results.BadRequest(body)
         };

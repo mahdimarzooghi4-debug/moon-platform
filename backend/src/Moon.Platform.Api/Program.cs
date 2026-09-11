@@ -31,17 +31,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("frontend", policy =>
     {
-        var allowedOrigins = builder.Configuration
-            .GetSection("Cors:AllowedOrigins")
-            .Get<string[]>()
-            ?? [];
-
+        var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
         if (allowedOrigins.Length > 0)
         {
-            policy
-                .WithOrigins(allowedOrigins)
-                .AllowAnyHeader()
-                .AllowAnyMethod();
+            policy.WithOrigins(allowedOrigins).AllowAnyHeader().AllowAnyMethod();
         }
     });
 });
@@ -82,31 +75,20 @@ builder.Services.AddMassTransit(registration =>
     }
 });
 
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    var authority = builder.Configuration["Authentication:Authority"];
+    var audience = builder.Configuration["Authentication:Audience"];
+    if (!string.IsNullOrWhiteSpace(authority)) options.Authority = authority;
+    if (!string.IsNullOrWhiteSpace(audience)) options.Audience = audience;
+    options.MapInboundClaims = false;
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        var authority = builder.Configuration["Authentication:Authority"];
-        var audience = builder.Configuration["Authentication:Audience"];
-
-        if (!string.IsNullOrWhiteSpace(authority))
-        {
-            options.Authority = authority;
-        }
-
-        if (!string.IsNullOrWhiteSpace(audience))
-        {
-            options.Audience = audience;
-        }
-
-        options.MapInboundClaims = false;
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            NameClaimType = "preferred_username",
-            RoleClaimType = "roles"
-        };
-        options.RequireHttpsMetadata = builder.Configuration.GetValue("Authentication:RequireHttpsMetadata", true);
-    });
+        NameClaimType = "preferred_username",
+        RoleClaimType = "roles"
+    };
+    options.RequireHttpsMetadata = builder.Configuration.GetValue("Authentication:RequireHttpsMetadata", true);
+});
 
 builder.Services.AddScoped<IAuditWriter, AuditWriter>();
 builder.Services.AddScoped<IOutboxWriter, OutboxWriter>();
@@ -120,6 +102,7 @@ builder.Services.AddScoped<IFundingService, FundingService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<ILedgerService, LedgerService>();
 builder.Services.AddScoped<IExecutionService, ExecutionService>();
+builder.Services.AddScoped<IExecutionControlService, ExecutionControlService>();
 builder.Services.AddScoped<IAuthorizationHandler, OrganizationMemberHandler>();
 
 builder.Services.AddAuthorization(options =>
@@ -129,47 +112,60 @@ builder.Services.AddAuthorization(options =>
         policy.RequireAuthenticatedUser();
         policy.AddRequirements(new OrganizationMemberRequirement());
     });
-
     options.AddPolicy(AdminAccessPolicies.SystemAdmin, policy =>
     {
         policy.RequireAuthenticatedUser();
         policy.RequireRole(SystemRoles.SystemAdmin);
     });
-
     options.AddPolicy(EvaluationPolicies.Evaluator, policy =>
     {
         policy.RequireAuthenticatedUser();
         policy.RequireRole(SystemRoles.Evaluator);
     });
-
     options.AddPolicy(EvaluationPolicies.DecisionMaker, policy =>
     {
         policy.RequireAuthenticatedUser();
         policy.RequireRole(SystemRoles.ProductOwner);
     });
-
     options.AddPolicy(ProjectPolicies.Publisher, policy =>
     {
         policy.RequireAuthenticatedUser();
         policy.RequireRole(SystemRoles.ProductOwner);
     });
-
     options.AddPolicy(PaymentPolicies.Finance, policy =>
     {
         policy.RequireAuthenticatedUser();
         policy.RequireRole(SystemRoles.Finance);
     });
-
     options.AddPolicy(ExecutionPolicies.Planner, policy =>
     {
         policy.RequireAuthenticatedUser();
         policy.RequireRole(SystemRoles.ProductOwner);
     });
-
     options.AddPolicy(ExecutionPolicies.Reviewer, policy =>
     {
         policy.RequireAuthenticatedUser();
         policy.RequireRole(SystemRoles.Supervisor);
+    });
+    options.AddPolicy(ExecutionPolicies.ExpenseReviewer, policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole(SystemRoles.Finance);
+    });
+    options.AddPolicy(ExecutionPolicies.RiskManager, policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole(SystemRoles.Supervisor);
+    });
+    options.AddPolicy(ExecutionPolicies.FreezeManager, policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole(SystemRoles.Supervisor);
+    });
+    options.AddPolicy(ExecutionPolicies.Disburser, policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole(SystemRoles.Finance);
     });
 });
 
@@ -177,104 +173,56 @@ builder.Services.AddScoped<ISmsProvider, DisabledSmsProvider>();
 builder.Services.AddScoped<IPaymentGateway, DisabledPaymentGateway>();
 
 var otlpEndpoint = builder.Configuration["OpenTelemetry:OtlpEndpoint"];
-
-builder.Services
-    .AddOpenTelemetry()
+builder.Services.AddOpenTelemetry()
     .ConfigureResource(resource => resource.AddService("moon-platform-api"))
     .WithTracing(tracing =>
     {
-        tracing
-            .AddAspNetCoreInstrumentation()
-            .AddHttpClientInstrumentation();
-
-        if (Uri.TryCreate(otlpEndpoint, UriKind.Absolute, out var endpoint))
-        {
-            tracing.AddOtlpExporter(options => options.Endpoint = endpoint);
-        }
+        tracing.AddAspNetCoreInstrumentation().AddHttpClientInstrumentation();
+        if (Uri.TryCreate(otlpEndpoint, UriKind.Absolute, out var endpoint)) tracing.AddOtlpExporter(options => options.Endpoint = endpoint);
     })
     .WithMetrics(metrics =>
     {
-        metrics
-            .AddAspNetCoreInstrumentation()
-            .AddHttpClientInstrumentation()
-            .AddRuntimeInstrumentation();
-
-        if (Uri.TryCreate(otlpEndpoint, UriKind.Absolute, out var endpoint))
-        {
-            metrics.AddOtlpExporter(options => options.Endpoint = endpoint);
-        }
+        metrics.AddAspNetCoreInstrumentation().AddHttpClientInstrumentation().AddRuntimeInstrumentation();
+        if (Uri.TryCreate(otlpEndpoint, UriKind.Absolute, out var endpoint)) metrics.AddOtlpExporter(options => options.Endpoint = endpoint);
     });
 
 var app = builder.Build();
-
 app.UseExceptionHandler();
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseCors("frontend");
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapHealthChecks("/health/live");
 
 app.MapGet("/health/ready", async Task<IResult> (MoonDbContext db, CancellationToken cancellationToken) =>
 {
     var canConnect = await db.Database.CanConnectAsync(cancellationToken);
-    return canConnect
-        ? Results.Ok(new { status = "ready" })
-        : Results.StatusCode(StatusCodes.Status503ServiceUnavailable);
+    return canConnect ? Results.Ok(new { status = "ready" }) : Results.StatusCode(StatusCodes.Status503ServiceUnavailable);
 });
 
 app.MapGet("/api/v1/system", (HttpContext context) => Results.Ok(new
 {
     service = "moon-platform-api",
-    version = "0.12.0-phase3-execution-reporting",
+    version = "0.13.0-phase3-execution-controls",
     correlationId = context.TraceIdentifier
 }));
 
-app.MapPost("/api/v1/session/sync", async Task<IResult> (
-    ClaimsPrincipal principal,
-    HttpContext context,
-    IIdentitySyncService identitySync,
-    CancellationToken cancellationToken) =>
+app.MapPost("/api/v1/session/sync", async Task<IResult> (ClaimsPrincipal principal, HttpContext context, IIdentitySyncService identitySync, CancellationToken cancellationToken) =>
 {
-    if (string.IsNullOrWhiteSpace(principal.FindFirstValue("sub")))
-    {
-        return Results.Unauthorized();
-    }
-
-    var current = await identitySync.SyncAsync(
-        principal,
-        context.TraceIdentifier,
-        context.Connection.RemoteIpAddress?.ToString(),
-        cancellationToken);
-
-    return current.IsActive
-        ? Results.Ok(current)
-        : Results.Forbid();
+    if (string.IsNullOrWhiteSpace(principal.FindFirstValue("sub"))) return Results.Unauthorized();
+    var current = await identitySync.SyncAsync(principal, context.TraceIdentifier, context.Connection.RemoteIpAddress?.ToString(), cancellationToken);
+    return current.IsActive ? Results.Ok(current) : Results.Forbid();
 }).RequireAuthorization();
 
-app.MapGet("/api/v1/me", async Task<IResult> (
-    ClaimsPrincipal principal,
-    IIdentitySyncService identitySync,
-    CancellationToken cancellationToken) =>
+app.MapGet("/api/v1/me", async Task<IResult> (ClaimsPrincipal principal, IIdentitySyncService identitySync, CancellationToken cancellationToken) =>
 {
-    if (string.IsNullOrWhiteSpace(principal.FindFirstValue("sub")))
-    {
-        return Results.Unauthorized();
-    }
-
+    if (string.IsNullOrWhiteSpace(principal.FindFirstValue("sub"))) return Results.Unauthorized();
     var current = await identitySync.GetCurrentAsync(principal, cancellationToken);
     if (current is null)
     {
-        return Results.NotFound(new
-        {
-            code = "identity_not_synced",
-            message = "Call POST /api/v1/session/sync after authentication."
-        });
+        return Results.NotFound(new { code = "identity_not_synced", message = "Call POST /api/v1/session/sync after authentication." });
     }
-
-    return current.IsActive
-        ? Results.Ok(current)
-        : Results.Forbid();
+    return current.IsActive ? Results.Ok(current) : Results.Forbid();
 }).RequireAuthorization();
 
 app.MapGet("/api/v1/organizations/{organizationId:guid}/access", (Guid organizationId) => Results.Ok(new
@@ -290,6 +238,7 @@ app.MapFundingEndpoints();
 app.MapPaymentEndpoints();
 app.MapLedgerEndpoints();
 app.MapExecutionEndpoints();
+app.MapExecutionControlEndpoints();
 
 app.Run();
 
