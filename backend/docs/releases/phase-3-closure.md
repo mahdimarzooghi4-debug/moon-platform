@@ -2,7 +2,7 @@
 
 Status: **CLOSED / GREEN** for Phase 3.
 
-Platform-wide final acceptance: **PENDING**. This closure does not authorize or perform a merge to `main`.
+Platform-wide final acceptance subsequently closed **CLOSED / GREEN** on 2026-09-12; see `backend/docs/releases/platform-final-acceptance-closure.md`. This Phase 3 closure does not authorize or perform a merge to `main`.
 
 ## Scope completed
 
@@ -140,7 +140,7 @@ The final gate asserted that `origin/main` remained exactly:
 - commit: `240efa7b2934e189c9647473360c091746cfc647`
 - tree: `4b825dc642cb6eb9a060e54bf8d69288fbee4904` (empty tree)
 
-A platform-wide final acceptance decision is still required before any merge to `main`.
+Platform-wide final acceptance subsequently closed **CLOSED / GREEN** on 2026-09-12. Any merge to `main` still requires explicit authorization.
 
 ## Payment-provider boundary
 
