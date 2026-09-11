@@ -157,7 +157,7 @@ public sealed class Phase0PostgresTests : IAsyncLifetime
         Assert.Equal(SystemRoles.Startup, membership.RoleCode);
 
         var users = await admin.ListUsersAsync();
-        var listedTarget = Assert.Single(users.Where(x => x.UserId == target.Id));
+        var listedTarget = Assert.Single(users, x => x.UserId == target.Id);
         Assert.Single(listedTarget.Memberships);
 
         var roles = await admin.ListRolesAsync();
