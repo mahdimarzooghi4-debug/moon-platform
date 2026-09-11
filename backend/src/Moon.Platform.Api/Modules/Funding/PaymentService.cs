@@ -4,6 +4,7 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Moon.Platform.Api.Common.Auditing;
+using Moon.Platform.Api.Common.Messaging;
 using Moon.Platform.Api.Infrastructure.Persistence;
 using Moon.Platform.Api.Integrations.Payments;
 using Moon.Platform.Api.Modules.Projects;
@@ -51,9 +52,11 @@ public sealed class PaymentService(
     MoonDbContext dbContext,
     IAuditWriter auditWriter,
     IPaymentGateway paymentGateway,
-    IOptions<PaymentOptions> options) : IPaymentService
+    IOptions<PaymentOptions> options,
+    IOutboxWriter? outboxWriter = null) : IPaymentService
 {
     private readonly PaymentOptions _options = options.Value;
+    private readonly IOutboxWriter _outboxWriter = outboxWriter ?? new OutboxWriter(dbContext);
 
     public async Task<PaymentOperationResult> CreateIntentAsync(
         Guid commitmentId,
@@ -484,6 +487,25 @@ public sealed class PaymentService(
             ipAddress,
             cancellationToken,
             new { commitment.Status, commitment.ReconciledAtUtc });
+
+        var integrationEvent = new PaymentReconciledEvent(
+            payment.Id,
+            commitment.Id,
+            commitment.ProjectId,
+            payment.AmountMinor,
+            payment.Currency,
+            payment.Provider,
+            payment.ProviderReference,
+            reconciledAt);
+
+        await _outboxWriter.EnqueueAsync(new OutboxWriteRequest(
+            IntegrationEventTypes.PaymentReconciled,
+            "funding_payment",
+            payment.Id.ToString(),
+            $"payment-reconciled:{payment.Id:N}",
+            IntegrationEventSerialization.ToJson(integrationEvent),
+            correlationId,
+            reconciledAt), cancellationToken);
 
         await transaction.CommitAsync(cancellationToken);
         return PaymentOperationResult.Success(ToView(payment));
