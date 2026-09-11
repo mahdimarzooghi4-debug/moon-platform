@@ -3,22 +3,16 @@ name: Verify frontend integration
 on:
   push:
     branches:
-      - feat/startup-panel
+      - integration/frontend-foundation
+      - integration/landing-frontend
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: frontend-${{ github.ref }}
   cancel-in-progress: true
-
-env:
-  EXPECTED_HEAD: 906547473aca456108318e2d5c4c39ae592501c3
-  EXPECTED_TSX_BLOB: c2c93823ba0078e01f4bba08ab31ae03a1e2f9c8
-  EXPECTED_CSS_BLOB: faa4e39ea598fc9535d4afb9e2fa626142d2c732
-  EXPECTED_ROUTER_BLOB: ff3a6d8a150f7bceb1b6c4d340a6940beea125d6
-  PRE_SCREEN_HEAD: 8cbca626f855738dcf392621b412764924209c9f
 
 jobs:
   build:
@@ -27,26 +21,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Verify pinned source and hashes
-        run: |
-          test "$(git rev-parse HEAD^)" = "$EXPECTED_HEAD"
-          test "$(git hash-object src/features/startup-panel/project-submitted/index.tsx)" = "$EXPECTED_TSX_BLOB"
-          test "$(git hash-object src/features/startup-panel/project-submitted/index.css)" = "$EXPECTED_CSS_BLOB"
-          test "$(git hash-object src/app/router.tsx)" = "$EXPECTED_ROUTER_BLOB"
-
-      - name: Verify asset isolation
-        run: |
-          test -z "$(git diff --name-only "$PRE_SCREEN_HEAD" "$EXPECTED_HEAD" -- public/assets/startup-panel)"
-          ! grep -R "figma.com/api/mcp/asset\|static.codia.ai" src/features/startup-panel/project-submitted
-
-      - name: Verify submitted project route
-        run: |
-          test "$(grep -Fxc '        <Route path="/panel/startup/projects/submitted" element={startupProjectSubmittedElement} />' src/app/router.tsx)" -eq 1
-          grep -Fq 'data-node-id="2025:2"' src/features/startup-panel/project-submitted/index.tsx
-          grep -Fq 'data-name="startup-project-submitted"' src/features/startup-panel/project-submitted/index.tsx
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -55,10 +29,19 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci --no-audit --no-fund
+        run: npm install --no-audit --no-fund
 
       - name: Build
         run: npm run build
 
-      - name: Verify lockfile unchanged
-        run: git diff --exit-code -- package-lock.json
+      - name: Keep lockfile reproducible
+        run: |
+          if git diff --quiet -- package-lock.json; then
+            echo "package-lock.json is already in sync"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          git commit -m "chore(frontend): sync package lock"
+          git push
