@@ -43,7 +43,7 @@ public sealed class ProjectDecision
     public Guid ProjectId { get; init; }
     public Guid EvaluationId { get; init; }
     public string Outcome { get; init; } = string.Empty;
-    public string Reason { get; init; } = string.Empty;
+    public string Reason { get; set; } = string.Empty;
     public string DecidedBySubject { get; init; } = string.Empty;
     public DateTimeOffset DecidedAtUtc { get; init; } = DateTimeOffset.UtcNow;
 }
