@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Moon.Platform.Api.Common.Auditing;
+using Moon.Platform.Api.Modules.Evaluations;
 using Moon.Platform.Api.Modules.Identity;
 using Moon.Platform.Api.Modules.Projects;
 
@@ -14,11 +15,15 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
     public DbSet<AuditEvent> AuditEvents => Set<AuditEvent>();
     public DbSet<Project> Projects => Set<Project>();
     public DbSet<ProjectVersion> ProjectVersions => Set<ProjectVersion>();
+    public DbSet<ProjectEvaluation> ProjectEvaluations => Set<ProjectEvaluation>();
+    public DbSet<ProjectDecision> ProjectDecisions => Set<ProjectDecision>();
 
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {
         GuardAuditAppendOnly();
         GuardLockedProjectVersions();
+        GuardFinalEvaluations();
+        GuardDecisionsAppendOnly();
         return base.SaveChanges(acceptAllChangesOnSuccess);
     }
 
@@ -26,6 +31,8 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
     {
         GuardAuditAppendOnly();
         GuardLockedProjectVersions();
+        GuardFinalEvaluations();
+        GuardDecisionsAppendOnly();
         return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
 
@@ -94,6 +101,35 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
             entity.HasOne<Project>().WithMany().HasForeignKey(x => x.ProjectId).OnDelete(DeleteBehavior.Restrict);
         });
 
+        modelBuilder.Entity<ProjectEvaluation>(entity =>
+        {
+            entity.ToTable("project_evaluations");
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.EvaluatorSubject).HasMaxLength(200).IsRequired();
+            entity.Property(x => x.AssignedBySubject).HasMaxLength(200).IsRequired();
+            entity.Property(x => x.Status).HasMaxLength(32).IsRequired();
+            entity.Property(x => x.ConflictReason).HasMaxLength(2000);
+            entity.Property(x => x.Recommendation).HasMaxLength(32);
+            entity.Property(x => x.Rationale).HasMaxLength(4000);
+            entity.HasIndex(x => new { x.ProjectId, x.ProjectVersionId, x.Status });
+            entity.HasIndex(x => new { x.EvaluatorSubject, x.Status });
+            entity.HasOne<Project>().WithMany().HasForeignKey(x => x.ProjectId).OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne<ProjectVersion>().WithMany().HasForeignKey(x => x.ProjectVersionId).OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<ProjectDecision>(entity =>
+        {
+            entity.ToTable("project_decisions");
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.Outcome).HasMaxLength(32).IsRequired();
+            entity.Property(x => x.Reason).HasMaxLength(4000).IsRequired();
+            entity.Property(x => x.DecidedBySubject).HasMaxLength(200).IsRequired();
+            entity.HasIndex(x => x.ProjectId).IsUnique();
+            entity.HasIndex(x => x.EvaluationId).IsUnique();
+            entity.HasOne<Project>().WithMany().HasForeignKey(x => x.ProjectId).OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne<ProjectEvaluation>().WithMany().HasForeignKey(x => x.EvaluationId).OnDelete(DeleteBehavior.Restrict);
+        });
+
         modelBuilder.Entity<AuditEvent>(entity =>
         {
             entity.ToTable("audit_events");
@@ -127,12 +163,37 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
     {
         var illegalMutation = ChangeTracker.Entries<ProjectVersion>()
             .Any(entry =>
-                entry.State is EntityState.Modified or EntityState.Deleted
+                (entry.State is EntityState.Modified or EntityState.Deleted)
                 && entry.OriginalValues.GetValue<bool>(nameof(ProjectVersion.IsLocked)));
 
         if (illegalMutation)
         {
             throw new InvalidOperationException("Locked project versions are immutable and cannot be modified or deleted.");
+        }
+    }
+
+    private void GuardFinalEvaluations()
+    {
+        var illegalMutation = ChangeTracker.Entries<ProjectEvaluation>()
+            .Any(entry =>
+                (entry.State is EntityState.Modified or EntityState.Deleted)
+                && entry.OriginalValues.GetValue<string>(nameof(ProjectEvaluation.Status))
+                    is EvaluationStatuses.Completed or EvaluationStatuses.ConflictDeclared);
+
+        if (illegalMutation)
+        {
+            throw new InvalidOperationException("Completed or conflict-disqualified evaluations are immutable.");
+        }
+    }
+
+    private void GuardDecisionsAppendOnly()
+    {
+        var illegalMutation = ChangeTracker.Entries<ProjectDecision>()
+            .Any(entry => entry.State is EntityState.Modified or EntityState.Deleted);
+
+        if (illegalMutation)
+        {
+            throw new InvalidOperationException("Project decisions are append-only and cannot be modified or deleted.");
         }
     }
 }
