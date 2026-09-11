@@ -572,7 +572,7 @@ public sealed class PaymentService(
         if (existing.ProviderReference == providerReference
             && existing.PayloadVersion == payloadVersion
             && existing.PayloadSha256 == payloadHash
-            && existing.ProviderTimestampUtc == timestampUtc)
+            && existing.ProviderTimestampUtc.ToUnixTimeSeconds() == timestampUtc.ToUnixTimeSeconds())
         {
             return PaymentWebhookOperationResult.Success(existing.PaymentId, replayed: true);
         }
