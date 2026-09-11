@@ -1,5 +1,5 @@
 import "../index.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const imgChatGptImage1 = "/assets/creative-house/project-evaluation-detail/logo.png";
 const imgRadio = "/assets/creative-house/project-evaluation-detail/asset-1.svg";
@@ -15,8 +15,6 @@ const imgSettingsIcon = "/assets/creative-house/project-evaluation-detail/asset-
 const imgLogoutIcon = "/assets/creative-house/project-evaluation-detail/asset-11.svg";
 
 export default function AyenehProjectEvaluationDetail() {
-  const navigate = useNavigate();
-
   return (
     <div className="creative-house-dashboard bg-[#f5f8fb] relative w-full h-full" data-node-id="1767:2" data-name="ayeneh-project-evaluation-detail">
       <div className="absolute bg-[#f5f9fc] h-[1780px] left-0 overflow-clip top-0 w-[1216px]" data-node-id="1767:3" data-name="Main Content">
@@ -31,11 +29,11 @@ export default function AyenehProjectEvaluationDetail() {
             داده‌های لندینگ
           </p>
         </div>
-        <Link to="/panel/creative-house/project-evaluations" className="absolute bg-white block border border-[#e4ebf1] border-solid cursor-pointer h-[34px] left-[28px] overflow-clip rounded-[9px] top-[64px] w-[142px]" data-node-id="1767:8" data-name="back-to-list">
+        <a className="absolute bg-white block border border-[#e4ebf1] border-solid cursor-pointer h-[34px] left-[28px] overflow-clip rounded-[9px] top-[64px] w-[142px]" data-node-id="1767:8" data-name="back-to-list">
           <p className="-translate-x-1/2 [word-break:break-word] absolute font-sans font-bold h-[24px] leading-[normal] left-[70px] text-[#17324d] text-[13px] text-center top-[4px] w-[126px]" dir="auto" data-node-id="1767:9">
             بازگشت به پروژه‌ها
           </p>
-        </Link>
+        </a>
         <div className="absolute bg-white border border-[#e4ebf1] border-solid h-[90px] left-[28px] overflow-clip rounded-[12px] top-[96px] w-[1160px]" data-node-id="1767:10" data-name="project-summary">
           <div className="absolute bg-[#fff6e2] h-[30px] left-[17px] overflow-clip rounded-[8px] top-[17px] w-[130px]" data-node-id="1767:11" data-name="status-chip">
             <p className="-translate-x-1/2 [word-break:break-word] absolute font-sans font-medium h-[24px] leading-[normal] left-[65px] text-[#c27a10] text-[12px] text-center top-[4px] w-[114px]" dir="auto" data-node-id="1767:12">
@@ -531,7 +529,7 @@ export default function AyenehProjectEvaluationDetail() {
           <p className="-translate-x-full [word-break:break-word] absolute font-sans font-bold h-[24px] leading-[normal] left-[327px] text-[#17324d] text-[14px] text-right top-[417px] w-[108px]" dir="auto" data-node-id="1767:193">
             تصمیم نهایی
           </p>
-          <button onClick={() => navigate("/panel/creative-house/overlays/decision")} className="absolute bg-[#e8f9f0] block cursor-pointer h-[42px] left-[17px] overflow-clip rounded-[9px] top-[449px] w-[320px]" data-node-id="1767:194" data-name="decision-option-1">
+          <button className="absolute bg-[#e8f9f0] block cursor-pointer h-[42px] left-[17px] overflow-clip rounded-[9px] top-[449px] w-[320px]" data-node-id="1767:194" data-name="decision-option-1">
             <div className="absolute left-[18px] w-[16px] h-[16px] top-[13px]" data-node-id="1767:195" data-name="radio">
               <img alt="" className="absolute block inset-0 max-w-none w-full h-full" src={imgRadio} />
             </div>
@@ -539,7 +537,7 @@ export default function AyenehProjectEvaluationDetail() {
               تأیید پروژه
             </p>
           </button>
-          <button onClick={() => navigate("/panel/creative-house/overlays/decision")} className="absolute bg-[#fff6e2] block cursor-pointer h-[42px] left-[17px] overflow-clip rounded-[9px] top-[501px] w-[320px]" data-node-id="1767:197" data-name="decision-option-2">
+          <button className="absolute bg-[#fff6e2] block cursor-pointer h-[42px] left-[17px] overflow-clip rounded-[9px] top-[501px] w-[320px]" data-node-id="1767:197" data-name="decision-option-2">
             <div className="absolute left-[18px] w-[16px] h-[16px] top-[13px]" data-node-id="1767:198" data-name="radio">
               <img alt="" className="absolute block inset-0 max-w-none w-full h-full" src={imgRadio1} />
             </div>
@@ -547,7 +545,7 @@ export default function AyenehProjectEvaluationDetail() {
               درخواست اصلاح
             </p>
           </button>
-          <button onClick={() => navigate("/panel/creative-house/overlays/decision")} className="absolute bg-[#fcebeb] block cursor-pointer h-[42px] left-[17px] overflow-clip rounded-[9px] top-[553px] w-[320px]" data-node-id="1767:200" data-name="decision-option-3">
+          <button className="absolute bg-[#fcebeb] block cursor-pointer h-[42px] left-[17px] overflow-clip rounded-[9px] top-[553px] w-[320px]" data-node-id="1767:200" data-name="decision-option-3">
             <div className="absolute left-[18px] w-[16px] h-[16px] top-[13px]" data-node-id="1767:201" data-name="radio">
               <img alt="" className="absolute block inset-0 max-w-none w-full h-full" src={imgRadio2} />
             </div>
@@ -563,11 +561,11 @@ export default function AyenehProjectEvaluationDetail() {
               جمع‌بندی ارزیابی، دلیل تصمیم یا اصلاحات موردنیاز...
             </p>
           </div>
-          <Link to="/panel/creative-house/overlays/decision" className="absolute bg-[#2094e3] block cursor-pointer h-[38px] left-[17px] overflow-clip rounded-[9px] top-[713px] w-[320px]" data-node-id="1767:206" data-name="save-decision">
+          <a className="absolute bg-[#2094e3] block cursor-pointer h-[38px] left-[17px] overflow-clip rounded-[9px] top-[713px] w-[320px]" data-node-id="1767:206" data-name="save-decision">
             <p className="-translate-x-1/2 [word-break:break-word] absolute font-sans font-bold h-[24px] leading-[normal] left-[160px] text-[13px] text-center text-white top-[7px] w-[304px]" dir="auto" data-node-id="1767:207">
               ثبت تصمیم
             </p>
-          </Link>
+          </a>
           <div className="absolute h-0 left-[17px] top-[705px] w-[320px]" data-node-id="1767:208" data-name="decision-impact-note" />
           <div className="-translate-x-full -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-medium h-[24px] justify-center leading-[0] left-[327px] text-[#17324d] text-[12px] text-right top-[325px] w-[182px]" data-node-id="2378:2">
             <p className="leading-[normal]" dir="auto">

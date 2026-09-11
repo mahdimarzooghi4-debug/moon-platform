@@ -1,5 +1,5 @@
 import "../index.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const imgChatGptImage1 = "/assets/creative-house/project-evaluations/logo.png";
 const imgStatIcon = "/assets/creative-house/project-evaluations/stat-1.svg";
@@ -16,8 +16,6 @@ const imgSettingsIcon = "/assets/creative-house/project-evaluations/nav-settings
 const imgLogoutIcon = "/assets/creative-house/project-evaluations/nav-logout.svg";
 
 export default function AyenehProjectEvaluations() {
-  const navigate = useNavigate();
-
   return (
     <div className="creative-house-dashboard bg-[#f5f8fb] relative w-full h-full" data-node-id="1759:2" data-name="ayeneh-project-evaluations">
       <div className="absolute bg-[#f5f8fb] h-[900px] left-0 overflow-clip top-0 w-[1216px]" data-node-id="1759:3" data-name="Main Content">
@@ -111,7 +109,7 @@ export default function AyenehProjectEvaluations() {
               بررسی مسئله، جامعه هدف، KPIها، بودجه و مراحل اجرا پیش از تأیید پروژه
             </p>
           </div>
-          <button onClick={() => navigate("/panel/creative-house/overlays/search")} className="absolute bg-[#f5f8fb] block border border-[#e4ebf1] border-solid cursor-pointer h-[38px] left-[17px] overflow-clip rounded-[10px] top-[19px] w-[290px]" data-node-id="1759:28" data-name="search-box">
+          <button className="absolute bg-[#f5f8fb] block border border-[#e4ebf1] border-solid cursor-pointer h-[38px] left-[17px] overflow-clip rounded-[10px] top-[19px] w-[290px]" data-node-id="1759:28" data-name="search-box">
             <div className="-translate-x-full -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-normal h-[38px] justify-center leading-[0] left-[273px] text-[#60758a] text-[12px] text-right top-[18px] w-[260px]" data-node-id="1759:29">
               <p className="leading-[normal]" dir="auto">
                 جست‌وجوی نام پروژه یا استارتاپ
@@ -186,13 +184,13 @@ export default function AyenehProjectEvaluations() {
             </div>
           </div>
           <div className="absolute bg-white border border-[#e4ebf1] border-solid h-[70px] left-[17px] overflow-clip rounded-[10px] top-[175px] w-[1124px]" data-node-id="1759:47" data-name="project-row-1">
-            <Link to="/panel/creative-house/project-evaluations/detail" className="absolute bg-[#2094e3] block cursor-pointer h-[36px] left-[17px] overflow-clip rounded-[9px] top-[16px] w-[104px]" data-node-id="1759:48" data-name="action-button">
+            <a className="absolute bg-[#2094e3] block cursor-pointer h-[36px] left-[17px] overflow-clip rounded-[9px] top-[16px] w-[104px]" data-node-id="1759:48" data-name="action-button">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-medium h-[36px] justify-center leading-[0] left-[52px] text-[12px] text-center text-white top-[18px] w-[104px]" data-node-id="1759:49">
                 <p className="leading-[normal]" dir="auto">
                   شروع ارزیابی
                 </p>
               </div>
-            </Link>
+            </a>
             <div className="absolute bg-[#fff7e6] h-[30px] left-[145px] overflow-clip rounded-[8px] top-[19px] w-[126px]" data-node-id="1759:50" data-name="status-chip">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-medium h-[30px] justify-center leading-[0] left-[63px] text-[#c27a10] text-[12px] text-center top-[15px] w-[126px]" data-node-id="1759:51">
                 <p className="leading-[normal]" dir="auto">
@@ -227,13 +225,13 @@ export default function AyenehProjectEvaluations() {
             </div>
           </div>
           <div className="absolute bg-white border border-[#e4ebf1] border-solid h-[70px] left-[17px] overflow-clip rounded-[10px] top-[257px] w-[1124px]" data-node-id="1759:57" data-name="project-row-2">
-            <Link to="/panel/creative-house/project-evaluations/detail" className="absolute bg-[#2094e3] block cursor-pointer h-[36px] left-[17px] overflow-clip rounded-[9px] top-[16px] w-[104px]" data-node-id="1759:58" data-name="action-button">
+            <a className="absolute bg-[#2094e3] block cursor-pointer h-[36px] left-[17px] overflow-clip rounded-[9px] top-[16px] w-[104px]" data-node-id="1759:58" data-name="action-button">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-medium h-[36px] justify-center leading-[0] left-[52px] text-[12px] text-center text-white top-[18px] w-[104px]" data-node-id="1759:59">
                 <p className="leading-[normal]" dir="auto">
                   شروع ارزیابی
                 </p>
               </div>
-            </Link>
+            </a>
             <div className="absolute bg-[#fff7e6] h-[30px] left-[145px] overflow-clip rounded-[8px] top-[19px] w-[126px]" data-node-id="1759:60" data-name="status-chip">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-medium h-[30px] justify-center leading-[0] left-[63px] text-[#c27a10] text-[12px] text-center top-[15px] w-[126px]" data-node-id="1759:61">
                 <p className="leading-[normal]" dir="auto">
@@ -268,13 +266,13 @@ export default function AyenehProjectEvaluations() {
             </div>
           </div>
           <div className="absolute bg-white border border-[#e4ebf1] border-solid h-[70px] left-[17px] overflow-clip rounded-[10px] top-[339px] w-[1124px]" data-node-id="1759:67" data-name="project-row-3">
-            <Link to="/panel/creative-house/project-evaluations/detail" className="absolute bg-[#2094e3] block cursor-pointer h-[36px] left-[17px] overflow-clip rounded-[9px] top-[16px] w-[104px]" data-node-id="1759:68" data-name="action-button">
+            <a className="absolute bg-[#2094e3] block cursor-pointer h-[36px] left-[17px] overflow-clip rounded-[9px] top-[16px] w-[104px]" data-node-id="1759:68" data-name="action-button">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-medium h-[36px] justify-center leading-[0] left-[52px] text-[12px] text-center text-white top-[18px] w-[104px]" data-node-id="1759:69">
                 <p className="leading-[normal]" dir="auto">
                   شروع ارزیابی
                 </p>
               </div>
-            </Link>
+            </a>
             <div className="absolute bg-[#fff7e6] h-[30px] left-[145px] overflow-clip rounded-[8px] top-[19px] w-[126px]" data-node-id="1759:70" data-name="status-chip">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-medium h-[30px] justify-center leading-[0] left-[63px] text-[#c27a10] text-[12px] text-center top-[15px] w-[126px]" data-node-id="1759:71">
                 <p className="leading-[normal]" dir="auto">
@@ -309,13 +307,13 @@ export default function AyenehProjectEvaluations() {
             </div>
           </div>
           <div className="absolute bg-white border border-[#e4ebf1] border-solid h-[70px] left-[17px] overflow-clip rounded-[10px] top-[421px] w-[1124px]" data-node-id="1759:77" data-name="project-row-4">
-            <Link to="/panel/creative-house/project-evaluations/detail" className="absolute bg-[#2094e3] block cursor-pointer h-[36px] left-[17px] overflow-clip rounded-[9px] top-[16px] w-[104px]" data-node-id="1759:78" data-name="action-button">
+            <a className="absolute bg-[#2094e3] block cursor-pointer h-[36px] left-[17px] overflow-clip rounded-[9px] top-[16px] w-[104px]" data-node-id="1759:78" data-name="action-button">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-medium h-[36px] justify-center leading-[0] left-[52px] text-[12px] text-center text-white top-[18px] w-[104px]" data-node-id="1759:79">
                 <p className="leading-[normal]" dir="auto">
                   شروع ارزیابی
                 </p>
               </div>
-            </Link>
+            </a>
             <div className="absolute bg-[#fff7e6] h-[30px] left-[145px] overflow-clip rounded-[8px] top-[19px] w-[126px]" data-node-id="1759:80" data-name="status-chip">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-medium h-[30px] justify-center leading-[0] left-[63px] text-[#c27a10] text-[12px] text-center top-[15px] w-[126px]" data-node-id="1759:81">
                 <p className="leading-[normal]" dir="auto">
@@ -350,13 +348,13 @@ export default function AyenehProjectEvaluations() {
             </div>
           </div>
           <div className="absolute bg-white border border-[#e4ebf1] border-solid h-[70px] left-[17px] overflow-clip rounded-[10px] top-[503px] w-[1124px]" data-node-id="1759:87" data-name="project-row-5">
-            <Link to="/panel/creative-house/project-evaluations/detail" className="absolute bg-[#2094e3] block cursor-pointer h-[36px] left-[17px] overflow-clip rounded-[9px] top-[16px] w-[104px]" data-node-id="1759:88" data-name="action-button">
+            <a className="absolute bg-[#2094e3] block cursor-pointer h-[36px] left-[17px] overflow-clip rounded-[9px] top-[16px] w-[104px]" data-node-id="1759:88" data-name="action-button">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-medium h-[36px] justify-center leading-[0] left-[52px] text-[12px] text-center text-white top-[18px] w-[104px]" data-node-id="1759:89">
                 <p className="leading-[normal]" dir="auto">
                   شروع ارزیابی
                 </p>
               </div>
-            </Link>
+            </a>
             <div className="absolute bg-[#fff7e6] h-[30px] left-[145px] overflow-clip rounded-[8px] top-[19px] w-[126px]" data-node-id="1759:90" data-name="status-chip">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-medium h-[30px] justify-center leading-[0] left-[63px] text-[#c27a10] text-[12px] text-center top-[15px] w-[126px]" data-node-id="1759:91">
                 <p className="leading-[normal]" dir="auto">
@@ -396,7 +394,7 @@ export default function AyenehProjectEvaluations() {
                 صفحه ۱ از ۳
               </p>
             </div>
-            <button onClick={() => navigate("/panel/creative-house/overlays/pagination")} className="absolute bg-white block border border-[#dde7f0] border-solid cursor-pointer left-[432px] overflow-clip rounded-[8px] w-[34px] h-[34px] top-[2px]" data-node-id="1816:2780" data-name="page-button">
+            <button className="absolute bg-white block border border-[#dde7f0] border-solid cursor-pointer left-[432px] overflow-clip rounded-[8px] w-[34px] h-[34px] top-[2px]" data-node-id="1816:2780" data-name="page-button">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-normal justify-center leading-[0] left-[16px] w-[34px] h-[34px] text-[#60758a] text-[13px] text-center top-[16px]" data-node-id="1816:2781">
                 <p className="leading-[normal]" dir="auto">
                   ‹
@@ -410,21 +408,21 @@ export default function AyenehProjectEvaluations() {
                 </p>
               </div>
             </div>
-            <button onClick={() => navigate("/panel/creative-house/overlays/pagination")} className="absolute bg-white block border border-[#dde7f0] border-solid cursor-pointer left-[516px] overflow-clip rounded-[8px] w-[34px] h-[34px] top-[2px]" data-node-id="1816:2771" data-name="page-button">
+            <button className="absolute bg-white block border border-[#dde7f0] border-solid cursor-pointer left-[516px] overflow-clip rounded-[8px] w-[34px] h-[34px] top-[2px]" data-node-id="1816:2771" data-name="page-button">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-normal justify-center leading-[0] left-[16px] w-[34px] h-[34px] text-[#60758a] text-[13px] text-center top-[16px]" data-node-id="1816:2772">
                 <p className="leading-[normal]" dir="auto">
                   ۲
                 </p>
               </div>
             </button>
-            <button onClick={() => navigate("/panel/creative-house/overlays/pagination")} className="absolute bg-white block border border-[#dde7f0] border-solid cursor-pointer left-[558px] overflow-clip rounded-[8px] w-[34px] h-[34px] top-[2px]" data-node-id="1816:2774" data-name="page-button">
+            <button className="absolute bg-white block border border-[#dde7f0] border-solid cursor-pointer left-[558px] overflow-clip rounded-[8px] w-[34px] h-[34px] top-[2px]" data-node-id="1816:2774" data-name="page-button">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-normal justify-center leading-[0] left-[16px] w-[34px] h-[34px] text-[#60758a] text-[13px] text-center top-[16px]" data-node-id="1816:2775">
                 <p className="leading-[normal]" dir="auto">
                   ۳
                 </p>
               </div>
             </button>
-            <button onClick={() => navigate("/panel/creative-house/overlays/pagination")} className="absolute bg-white block border border-[#dde7f0] border-solid cursor-pointer left-[600px] overflow-clip rounded-[8px] w-[34px] h-[34px] top-[2px]" data-node-id="1816:2777" data-name="page-button">
+            <button className="absolute bg-white block border border-[#dde7f0] border-solid cursor-pointer left-[600px] overflow-clip rounded-[8px] w-[34px] h-[34px] top-[2px]" data-node-id="1816:2777" data-name="page-button">
               <div className="-translate-x-1/2 -translate-y-1/2 [word-break:break-word] absolute flex flex-col font-sans font-normal justify-center leading-[0] left-[16px] w-[34px] h-[34px] text-[#60758a] text-[13px] text-center top-[16px]" data-node-id="1816:2778">
                 <p className="leading-[normal]" dir="auto">
                   ›

@@ -1,5 +1,5 @@
 import "../index.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const imgChatGptImage1 = "/assets/creative-house/startup-evaluation-detail/logo.png";
 const imgRadio = "/assets/creative-house/startup-evaluation-detail/radio-1.svg";
@@ -15,8 +15,6 @@ const imgSettingsIcon = "/assets/creative-house/startup-evaluation-detail/nav-se
 const imgLogoutIcon = "/assets/creative-house/startup-evaluation-detail/nav-logout.svg";
 
 export default function AyenehStartupEvaluationDetail() {
-  const navigate = useNavigate();
-
   return (
     <div className="creative-house-dashboard bg-[#f5f8fb] relative w-full h-full" data-node-id="1742:2" data-name="ayeneh-startup-evaluation-detail">
       <div className="absolute bg-[#f5f9fc] h-[1630px] left-0 overflow-clip top-0 w-[1216px]" data-node-id="1742:3" data-name="Main Content">
@@ -26,11 +24,11 @@ export default function AyenehStartupEvaluationDetail() {
         <p className="-translate-x-full [word-break:break-word] absolute font-sans font-normal h-[24px] leading-[normal] left-[1188px] text-[#60758a] text-[12px] text-right top-[54px] w-[568px]" dir="auto" data-node-id="1743:3">
           بررسی صلاحیت استارتاپ پیش از فعال شدن پنل و امکان تعریف پروژه
         </p>
-        <Link to="/panel/creative-house/startup-evaluations" className="absolute bg-white block border border-[#e4ebf1] border-solid cursor-pointer h-[34px] left-[28px] overflow-clip rounded-[9px] top-[64px] w-[142px]" data-node-id="1743:6" data-name="back-to-list">
+        <a className="absolute bg-white block border border-[#e4ebf1] border-solid cursor-pointer h-[34px] left-[28px] overflow-clip rounded-[9px] top-[64px] w-[142px]" data-node-id="1743:6" data-name="back-to-list">
           <p className="-translate-x-1/2 [word-break:break-word] absolute font-sans font-bold h-[24px] leading-[normal] left-[70px] text-[#17324d] text-[13px] text-center top-[4px] w-[126px]" dir="auto" data-node-id="1743:7">
             بازگشت به لیست
           </p>
-        </Link>
+        </a>
         <div className="absolute bg-white border border-[#e4ebf1] border-solid h-[90px] left-[28px] overflow-clip rounded-[12px] top-[96px] w-[1160px]" data-node-id="1743:8" data-name="startup-summary">
           <div className="absolute bg-[#fff6e2] h-[30px] left-[17px] overflow-clip rounded-[8px] top-[17px] w-[130px]" data-node-id="1743:9" data-name="status-chip">
             <p className="-translate-x-1/2 [word-break:break-word] absolute font-sans font-medium h-[24px] leading-[normal] left-[65px] text-[#c27a10] text-[12px] text-center top-[4px] w-[114px]" dir="auto" data-node-id="1743:10">
@@ -386,7 +384,7 @@ export default function AyenehStartupEvaluationDetail() {
           <p className="-translate-x-full [word-break:break-word] absolute font-sans font-bold h-[21px] leading-[20px] left-[745px] text-[#17324d] text-[13px] text-right top-[1116px] w-[246px]" dir="auto" data-node-id="1749:125">
             فایل‌ها و مدارک استارتاپ
           </p>
-          <button onClick={() => navigate("/panel/creative-house/overlays/file-preview")} className="absolute bg-white block border border-[#e2e8f0] border-solid cursor-pointer h-[34px] left-[13px] overflow-clip rounded-[8px] top-[1142px] w-[732px]" data-node-id="1749:126" data-name="document-row">
+          <button className="absolute bg-white block border border-[#e2e8f0] border-solid cursor-pointer h-[34px] left-[13px] overflow-clip rounded-[8px] top-[1142px] w-[732px]" data-node-id="1749:126" data-name="document-row">
             <p className="-translate-x-full [word-break:break-word] absolute font-sans font-medium h-[20px] leading-[18px] left-[715px] text-[#17324d] text-[11.5px] text-right top-[6px] w-[296px]" dir="auto" data-node-id="1749:127">
               Pitch Deck معرفی استارتاپ
             </p>
@@ -399,7 +397,7 @@ export default function AyenehStartupEvaluationDetail() {
               </p>
             </div>
           </button>
-          <button onClick={() => navigate("/panel/creative-house/overlays/file-preview")} className="absolute bg-white block border border-[#e2e8f0] border-solid cursor-pointer h-[34px] left-[13px] overflow-clip rounded-[8px] top-[1182px] w-[732px]" data-node-id="1749:131" data-name="document-row">
+          <button className="absolute bg-white block border border-[#e2e8f0] border-solid cursor-pointer h-[34px] left-[13px] overflow-clip rounded-[8px] top-[1182px] w-[732px]" data-node-id="1749:131" data-name="document-row">
             <p className="-translate-x-full [word-break:break-word] absolute font-sans font-medium h-[20px] leading-[18px] left-[715px] text-[#17324d] text-[11.5px] text-right top-[6px] w-[296px]" dir="auto" data-node-id="1749:132">
               مدرک حقوقی
             </p>
@@ -412,7 +410,7 @@ export default function AyenehStartupEvaluationDetail() {
               </p>
             </div>
           </button>
-          <button onClick={() => navigate("/panel/creative-house/overlays/file-preview")} className="absolute bg-white block border border-[#e2e8f0] border-solid cursor-pointer h-[34px] left-[13px] overflow-clip rounded-[8px] top-[1222px] w-[732px]" data-node-id="1749:136" data-name="document-row">
+          <button className="absolute bg-white block border border-[#e2e8f0] border-solid cursor-pointer h-[34px] left-[13px] overflow-clip rounded-[8px] top-[1222px] w-[732px]" data-node-id="1749:136" data-name="document-row">
             <p className="-translate-x-full [word-break:break-word] absolute font-sans font-medium h-[20px] leading-[18px] left-[715px] text-[#17324d] text-[11.5px] text-right top-[6px] w-[296px]" dir="auto" data-node-id="1749:137">
               مدرک هویتی نماینده
             </p>
@@ -507,7 +505,7 @@ export default function AyenehStartupEvaluationDetail() {
           <p className="-translate-x-full [word-break:break-word] absolute font-sans font-bold h-[24px] leading-[normal] left-[327px] text-[#17324d] text-[14px] text-right top-[325px] w-[108px]" dir="auto" data-node-id="1743:78">
             تصمیم نهایی
           </p>
-          <button onClick={() => navigate("/panel/creative-house/overlays/decision")} className="absolute bg-[#e8f9f0] block cursor-pointer h-[42px] left-[17px] overflow-clip rounded-[9px] top-[357px] w-[320px]" data-node-id="1743:79" data-name="decision-option-1">
+          <button className="absolute bg-[#e8f9f0] block cursor-pointer h-[42px] left-[17px] overflow-clip rounded-[9px] top-[357px] w-[320px]" data-node-id="1743:79" data-name="decision-option-1">
             <div className="absolute left-[18px] w-[16px] h-[16px] top-[13px]" data-node-id="1743:80" data-name="radio">
               <img alt="" className="absolute block inset-0 max-w-none w-full h-full" src={imgRadio} />
             </div>
@@ -515,7 +513,7 @@ export default function AyenehStartupEvaluationDetail() {
               تأیید و فعال‌سازی پنل
             </p>
           </button>
-          <button onClick={() => navigate("/panel/creative-house/overlays/decision")} className="absolute bg-[#fff6e2] block cursor-pointer h-[42px] left-[17px] overflow-clip rounded-[9px] top-[409px] w-[320px]" data-node-id="1743:82" data-name="decision-option-2">
+          <button className="absolute bg-[#fff6e2] block cursor-pointer h-[42px] left-[17px] overflow-clip rounded-[9px] top-[409px] w-[320px]" data-node-id="1743:82" data-name="decision-option-2">
             <div className="absolute left-[18px] w-[16px] h-[16px] top-[13px]" data-node-id="1743:83" data-name="radio">
               <img alt="" className="absolute block inset-0 max-w-none w-full h-full" src={imgRadio1} />
             </div>
@@ -523,7 +521,7 @@ export default function AyenehStartupEvaluationDetail() {
               درخواست تکمیل اطلاعات
             </p>
           </button>
-          <button onClick={() => navigate("/panel/creative-house/overlays/decision")} className="absolute bg-[#fcebeb] block cursor-pointer h-[42px] left-[17px] overflow-clip rounded-[9px] top-[461px] w-[320px]" data-node-id="1743:85" data-name="decision-option-3">
+          <button className="absolute bg-[#fcebeb] block cursor-pointer h-[42px] left-[17px] overflow-clip rounded-[9px] top-[461px] w-[320px]" data-node-id="1743:85" data-name="decision-option-3">
             <div className="absolute left-[18px] w-[16px] h-[16px] top-[13px]" data-node-id="1743:86" data-name="radio">
               <img alt="" className="absolute block inset-0 max-w-none w-full h-full" src={imgRadio2} />
             </div>
@@ -539,11 +537,11 @@ export default function AyenehStartupEvaluationDetail() {
               جمع‌بندی، دلیل تصمیم یا موارد موردنیاز برای تکمیل...
             </p>
           </div>
-          <Link to="/panel/creative-house/overlays/decision" className="absolute bg-[#2094e3] block cursor-pointer h-[38px] left-[17px] overflow-clip rounded-[9px] top-[621px] w-[320px]" data-node-id="1743:91" data-name="save-decision">
+          <a className="absolute bg-[#2094e3] block cursor-pointer h-[38px] left-[17px] overflow-clip rounded-[9px] top-[621px] w-[320px]" data-node-id="1743:91" data-name="save-decision">
             <p className="-translate-x-1/2 [word-break:break-word] absolute font-sans font-bold h-[24px] leading-[normal] left-[160px] text-[13px] text-center text-white top-[7px] w-[304px]" dir="auto" data-node-id="1743:92">
               ثبت تصمیم
             </p>
-          </Link>
+          </a>
           <div className="absolute h-0 left-[17px] top-[613px] w-[320px]" data-node-id="1743:93" data-name="decision-impact-note" />
         </div>
       </div>
