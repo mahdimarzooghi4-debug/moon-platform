@@ -75,8 +75,22 @@ public sealed class AdminAccessService(MoonDbContext dbContext, IAuditWriter aud
         }
 
         var userIds = users.Select(x => x.Id).ToArray();
-        var memberships = await QueryMemberships()
-            .Where(x => userIds.Contains(x.UserId))
+        var memberships = await (
+            from membership in dbContext.Memberships.AsNoTracking()
+            where userIds.Contains(membership.UserId)
+            join organization in dbContext.Organizations.AsNoTracking() on membership.OrganizationId equals organization.Id
+            join role in dbContext.Roles.AsNoTracking() on membership.RoleId equals role.Id
+            orderby organization.Name, role.Code
+            select new MembershipProjection(
+                membership.UserId,
+                membership.Id,
+                organization.Id,
+                organization.Name,
+                organization.Type,
+                role.Id,
+                role.Code,
+                role.Name,
+                membership.IsActive))
             .ToListAsync(cancellationToken);
 
         var grouped = memberships
@@ -102,8 +116,22 @@ public sealed class AdminAccessService(MoonDbContext dbContext, IAuditWriter aud
             return null;
         }
 
-        var memberships = await QueryMemberships()
-            .Where(x => x.UserId == userId)
+        var memberships = await (
+            from membership in dbContext.Memberships.AsNoTracking()
+            where membership.UserId == userId
+            join organization in dbContext.Organizations.AsNoTracking() on membership.OrganizationId equals organization.Id
+            join role in dbContext.Roles.AsNoTracking() on membership.RoleId equals role.Id
+            orderby organization.Name, role.Code
+            select new MembershipProjection(
+                membership.UserId,
+                membership.Id,
+                organization.Id,
+                organization.Name,
+                organization.Type,
+                role.Id,
+                role.Code,
+                role.Name,
+                membership.IsActive))
             .ToListAsync(cancellationToken);
 
         return new AdminUser(
@@ -379,24 +407,6 @@ public sealed class AdminAccessService(MoonDbContext dbContext, IAuditWriter aud
             IpAddress: ipAddress), cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return true;
-    }
-
-    private IQueryable<MembershipProjection> QueryMemberships()
-    {
-        return from membership in dbContext.Memberships.AsNoTracking()
-               join organization in dbContext.Organizations.AsNoTracking() on membership.OrganizationId equals organization.Id
-               join role in dbContext.Roles.AsNoTracking() on membership.RoleId equals role.Id
-               orderby organization.Name, role.Code
-               select new MembershipProjection(
-                   membership.UserId,
-                   membership.Id,
-                   organization.Id,
-                   organization.Name,
-                   organization.Type,
-                   role.Id,
-                   role.Code,
-                   role.Name,
-                   membership.IsActive);
     }
 
     private static AdminMembership ToAdminMembership(MembershipProjection projection) => new(
