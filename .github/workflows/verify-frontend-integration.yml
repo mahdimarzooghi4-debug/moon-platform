@@ -3,12 +3,11 @@ name: Verify frontend integration
 on:
   push:
     branches:
-      - integration/frontend-foundation
-      - integration/landing-frontend
+      - feat/startup-panel
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: frontend-${{ github.ref }}
@@ -21,6 +20,53 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Verify pinned source and hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_SHA="05d5862609c6d56b953cdfedd176deab24871aa3"
+          test "$(git rev-parse HEAD^)" = "$SOURCE_SHA"
+          test "$(git rev-parse "$SOURCE_SHA^{tree}")" = "6cb9c4d65988952c5e754442a9dec1e7a3a8c16d"
+          test "$(git rev-parse "$SOURCE_SHA:src/features/startup-panel/components/StageLifecycleFlow.tsx")" = "cc8a0f327a8f8985948db444e4d73d40847b9d0f"
+          test "$(git rev-parse "$SOURCE_SHA:src/features/startup-panel/components/StageLifecycleFlow.css")" = "3d0d4f034682a8dd023ae3b449e1fd0a192e3701"
+          test "$(git rev-parse "$SOURCE_SHA:src/features/startup-panel/project-stage-evaluation/index.tsx")" = "6eff49608d3e9cf02dce8fcc3bfe6d302d692d9e"
+          test "$(git rev-parse "$SOURCE_SHA:src/features/startup-panel/project-stage-evaluation/index.css")" = "aabf2899a959ed215669c02fc6f690c06066b5f6"
+          test "$(git rev-parse "$SOURCE_SHA:src/features/startup-panel/project-stage-fund-released/index.tsx")" = "4384780db2bdfa43236fee6406e849e709a55481"
+          test "$(git rev-parse "$SOURCE_SHA:src/features/startup-panel/project-stage-fund-released/index.css")" = "ac83e21a6aaa617edfba2d298b12d66514faf58e"
+          test "$(git rev-parse "$SOURCE_SHA:src/features/startup-panel/project-stage-report-submitted/index.tsx")" = "eed8960999ae2a13585a7e5e0c7738226e4bfd13"
+          test "$(git rev-parse "$SOURCE_SHA:src/app/router.tsx")" = "79186457a310af236504071d303e8e64661ec378"
+          test "$(git rev-parse "$SOURCE_SHA:package-lock.json")" = "44cbe24f2addd9f712ad76f88b7ff8432b877818"
+
+      - name: Verify asset isolation
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -R -n -E 'static\.codia\.ai|figma\.com/api/mcp/asset' \
+            src/features/startup-panel/components/StageLifecycleFlow.tsx \
+            src/features/startup-panel/components/StageLifecycleFlow.css \
+            src/features/startup-panel/project-stage-evaluation \
+            src/features/startup-panel/project-stage-fund-released \
+            src/features/startup-panel/project-stage-report-submitted/index.tsx; then
+            echo "Remote generated asset reference found"
+            exit 1
+          fi
+
+      - name: Verify evaluation routes and transitions
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROUTER=src/app/router.tsx
+          test "$(grep -Fxc 'const StartupProjectStageEvaluationPage = lazy(() => import("../features/startup-panel/project-stage-evaluation"));' "$ROUTER")" -eq 1
+          test "$(grep -Fxc 'const StartupProjectStageFundReleasedPage = lazy(() => import("../features/startup-panel/project-stage-fund-released"));' "$ROUTER")" -eq 1
+          test "$(grep -Fxc 'const startupProjectStageEvaluationElement = lazyElement(StartupProjectStageEvaluationPage);' "$ROUTER")" -eq 1
+          test "$(grep -Fxc 'const startupProjectStageFundReleasedElement = lazyElement(StartupProjectStageFundReleasedPage);' "$ROUTER")" -eq 1
+          test "$(grep -Fxc '        <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/evaluation/approved" element={startupProjectStageEvaluationElement} />' "$ROUTER")" -eq 1
+          test "$(grep -Fxc '        <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/fund-released" element={startupProjectStageFundReleasedElement} />' "$ROUTER")" -eq 1
+          test "$(grep -Fc 'const evaluationPath = `${stagePath}/report/evaluation/approved`;' src/features/startup-panel/project-stage-report-submitted/index.tsx)" -eq 1
+          test "$(grep -Fc 'const fundReleasePath = `${stagePath}/report/fund-released`;' src/features/startup-panel/project-stage-evaluation/index.tsx)" -eq 1
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -29,19 +75,10 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
 
       - name: Build
         run: npm run build
 
-      - name: Keep lockfile reproducible
-        run: |
-          if git diff --quiet -- package-lock.json; then
-            echo "package-lock.json is already in sync"
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add package-lock.json
-          git commit -m "chore(frontend): sync package lock"
-          git push
+      - name: Verify lockfile unchanged
+        run: git diff --exit-code -- package-lock.json
