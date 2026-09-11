@@ -54,6 +54,7 @@ const RegistrationTrackRejectedPage = lazy(() => import("../registration-track/s
 const StartupRegistrationStep3Page = lazy(() => import("../features/startup-registration/states/step3"));
 const StartupRegistrationStep4Page = lazy(() => import("../features/startup-registration/states/step4"));
 const CompanyRegistrationStep2Page = lazy(() => import("../features/company-registration/states/step2"));
+const CompanyRegistrationStatusPage = lazy(() => import("../features/company-registration/status"));
 const NotFoundPage = lazy(() => import("../not-found"));
 const StartupsDirectoryPage = lazy(() => import("../startups-directory"));
 const StartupPublicProfilePage = lazy(() => import("../startup-public-profile"));
@@ -123,6 +124,7 @@ const registrationTrackRejectedElement = lazyElement(RegistrationTrackRejectedPa
 const startupRegistrationStep3Element = lazyElement(StartupRegistrationStep3Page);
 const startupRegistrationStep4Element = lazyElement(StartupRegistrationStep4Page);
 const companyRegistrationStep2Element = lazyElement(CompanyRegistrationStep2Page);
+const companyRegistrationStatusElement = lazyElement(CompanyRegistrationStatusPage);
 const notFoundElement = lazyElement(NotFoundPage);
 const startupsDirectoryElement = lazyElement(StartupsDirectoryPage);
 const startupPublicProfileElement = lazyElement(StartupPublicProfilePage);
@@ -209,6 +211,7 @@ export function AppRouter() {
         <Route path="/registration/track/states/rejected" element={registrationTrackRejectedElement} />
         <Route path="/auth" element={<AuthEntryPage />} />
         <Route path="/register/company/states/step2" element={companyRegistrationStep2Element} />
+        <Route path="/register/company/status" element={companyRegistrationStatusElement} />
         <Route path="/register/company" element={<CompanyRegistrationPage />} />
         <Route path="/register/startup/states/step3" element={startupRegistrationStep3Element} />
         <Route path="/register/startup/states/step4" element={startupRegistrationStep4Element} />
