@@ -33,6 +33,7 @@ public sealed class FundingPayment
     public DateTimeOffset? ReconciledAtUtc { get; set; }
     public string? ReconciliationIdempotencyKey { get; set; }
     public string? ReconciledBySubject { get; set; }
+    public ICollection<LedgerJournal> LedgerJournals { get; } = new List<LedgerJournal>();
 }
 
 public sealed class PaymentWebhookReceipt
