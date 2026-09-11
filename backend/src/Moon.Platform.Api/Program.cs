@@ -3,6 +3,7 @@ using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Moon.Platform.Api.Common;
@@ -13,6 +14,7 @@ using Moon.Platform.Api.Infrastructure.Persistence;
 using Moon.Platform.Api.Integrations.Payments;
 using Moon.Platform.Api.Integrations.Sms;
 using Moon.Platform.Api.Modules.Evaluations;
+using Moon.Platform.Api.Modules.Execution;
 using Moon.Platform.Api.Modules.Funding;
 using Moon.Platform.Api.Modules.Identity;
 using Moon.Platform.Api.Modules.Projects;
@@ -45,10 +47,14 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddSingleton<LedgerIntegrityInterceptor>();
+builder.Services.AddSingleton<ExecutionIntegrityInterceptor>();
 builder.Services.AddDbContext<MoonDbContext>((serviceProvider, options) =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres"));
-    options.AddInterceptors(serviceProvider.GetRequiredService<LedgerIntegrityInterceptor>());
+    options.ReplaceService<IModelCustomizer, MoonExecutionModelCustomizer>();
+    options.AddInterceptors(
+        serviceProvider.GetRequiredService<LedgerIntegrityInterceptor>(),
+        serviceProvider.GetRequiredService<ExecutionIntegrityInterceptor>());
 });
 
 builder.Services.Configure<PaymentOptions>(builder.Configuration.GetSection(PaymentOptions.SectionName));
@@ -113,6 +119,7 @@ builder.Services.AddScoped<IEvaluationService, EvaluationService>();
 builder.Services.AddScoped<IFundingService, FundingService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<ILedgerService, LedgerService>();
+builder.Services.AddScoped<IExecutionService, ExecutionService>();
 builder.Services.AddScoped<IAuthorizationHandler, OrganizationMemberHandler>();
 
 builder.Services.AddAuthorization(options =>
@@ -151,6 +158,18 @@ builder.Services.AddAuthorization(options =>
     {
         policy.RequireAuthenticatedUser();
         policy.RequireRole(SystemRoles.Finance);
+    });
+
+    options.AddPolicy(ExecutionPolicies.Planner, policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole(SystemRoles.ProductOwner);
+    });
+
+    options.AddPolicy(ExecutionPolicies.Reviewer, policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole(SystemRoles.Supervisor);
     });
 });
 
@@ -207,7 +226,7 @@ app.MapGet("/health/ready", async Task<IResult> (MoonDbContext db, CancellationT
 app.MapGet("/api/v1/system", (HttpContext context) => Results.Ok(new
 {
     service = "moon-platform-api",
-    version = "0.11.0-phase2-outbox-threshold",
+    version = "0.12.0-phase3-execution-reporting",
     correlationId = context.TraceIdentifier
 }));
 
@@ -270,6 +289,7 @@ app.MapEvaluationEndpoints();
 app.MapFundingEndpoints();
 app.MapPaymentEndpoints();
 app.MapLedgerEndpoints();
+app.MapExecutionEndpoints();
 
 app.Run();
 
