@@ -60,12 +60,17 @@ const RegistrationTrackRejectedPage = lazy(() => import("../registration-track/s
 const StartupRegistrationStep2Page = lazy(() => import("../features/startup-registration/states/step2"));
 const StartupRegistrationStep3Page = lazy(() => import("../features/startup-registration/states/step3"));
 const StartupRegistrationStep4Page = lazy(() => import("../features/startup-registration/states/step4"));
+const StartupRegistrationSuccessPage = lazy(() => import("../features/startup-registration/states/success"));
 const CompanyRegistrationStep2Page = lazy(() => import("../features/company-registration/states/step2"));
+const CompanyRegistrationStep3Page = lazy(() => import("../features/company-registration/states/step3"));
+const CompanyRegistrationStep4Page = lazy(() => import("../features/company-registration/states/step4"));
+const CompanyRegistrationSuccessPage = lazy(() => import("../features/company-registration/states/success"));
 const CompanyRegistrationStatusPage = lazy(() => import("../features/company-registration/status"));
 const NotFoundPage = lazy(() => import("../not-found"));
 const StartupsDirectoryPage = lazy(() => import("../startups-directory"));
 const StartupPublicProfilePage = lazy(() => import("../startup-public-profile"));
 const StartupPublicProfileNoProjectsPage = lazy(() => import("../startup-public-profile/states/no-projects"));
+const StartupPublicProfileUnavailablePage = lazy(() => import("../startup-public-profile/states/unavailable"));
 const StartupShareSheetPage = lazy(() => import("../startup-share-sheet"));
 const ProjectsPage = lazy(() => import("../features/projects/MahProjects"));
 const ProjectsLoadingPage = lazy(() => import("../features/projects/states/loading"));
@@ -192,6 +197,7 @@ export function AppRouter() {
         <Route path="/startups-directory" element={lazyElement(StartupsDirectoryPage)} />
         <Route path="/startups/directory" element={lazyElement(StartupsDirectoryPage)} />
         <Route path="/startups/profile/states/no-projects" element={lazyElement(StartupPublicProfileNoProjectsPage)} />
+        <Route path="/startups/profile/states/unavailable" element={lazyElement(StartupPublicProfileUnavailablePage)} />
         <Route path="/startups/profile/share" element={lazyElement(StartupShareSheetPage)} />
         <Route path="/startups/:startupId" element={lazyElement(StartupPublicProfilePage)} />
         <Route path="/how-it-works" element={lazyElement(HowItWorksPage)} />
@@ -257,11 +263,15 @@ export function AppRouter() {
 
         <Route path="/auth" element={<AuthEntryPage />} />
         <Route path="/register/company/states/step2" element={lazyElement(CompanyRegistrationStep2Page)} />
+        <Route path="/register/company/states/step3" element={lazyElement(CompanyRegistrationStep3Page)} />
+        <Route path="/register/company/states/step4" element={lazyElement(CompanyRegistrationStep4Page)} />
+        <Route path="/register/company/states/success" element={lazyElement(CompanyRegistrationSuccessPage)} />
         <Route path="/register/company/status" element={lazyElement(CompanyRegistrationStatusPage)} />
         <Route path="/register/company" element={<CompanyRegistrationPage />} />
         <Route path="/register/startup/states/step2" element={lazyElement(StartupRegistrationStep2Page)} />
         <Route path="/register/startup/states/step3" element={lazyElement(StartupRegistrationStep3Page)} />
         <Route path="/register/startup/states/step4" element={lazyElement(StartupRegistrationStep4Page)} />
+        <Route path="/register/startup/states/success" element={lazyElement(StartupRegistrationSuccessPage)} />
         <Route path="/register/startup" element={<StartupRegistrationPage />} />
 
         <Route path="/panel/startup" element={lazyElement(StartupPanelDashboardPage)} />
