@@ -1,0 +1,43 @@
+.startup-profile-impact-edit-page { min-height: 900px; background: #f5f8fb; }
+.startup-profile-impact-edit-content { width: calc(100% - 224px); min-height: 900px; padding: 22px 28px 40px; box-sizing: border-box; background: #f5f8fb; direction: rtl; color: #17324d; }
+.startup-profile-impact-edit-topbar { height: 64px; background: #fff; display: flex; align-items: center; justify-content: space-between; }
+.startup-profile-impact-edit-topbar h1, .startup-profile-impact-edit-topbar p, .startup-profile-impact-edit-card h2, .startup-profile-impact-edit-card p, .startup-profile-impact-edit-actions p { margin: 0; }
+.startup-profile-impact-edit-topbar h1 { font-size: 22px; line-height: 32px; font-weight: 500; }
+.startup-profile-impact-edit-topbar p { color: #60758a; font-size: 11px; line-height: 20px; }
+.startup-profile-impact-edit-topbar > a { width: 170px; height: 44px; border: 1px solid #e4ebf1; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #2094e3; text-decoration: none; font-size: 12px; font-weight: 500; }
+.startup-profile-impact-edit-tabs { height: 58px; margin-top: 16px; padding: 9px 27px; display: grid; grid-template-columns: 372px 350px 334px; gap: 24px; box-sizing: border-box; background: #fff; border: 1px solid #e4ebf1; border-radius: 12px; }
+.startup-profile-impact-edit-tabs a, .startup-profile-impact-edit-tabs span { height: 38px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; border-radius: 9px; font-size: 11px; font-weight: 500; text-decoration: none; }
+.startup-profile-impact-edit-tabs a { border: 1px solid #e4ebf1; color: #60758a; }
+.startup-profile-impact-edit-tabs span { background: #2094e3; color: #fff; }
+.startup-profile-impact-edit-card { margin-top: 16px; padding: 18px 27px; box-sizing: border-box; background: #fff; border: 1px solid #e4ebf1; border-radius: 14px; }
+.startup-profile-impact-edit-card h2 { font-size: 18px; line-height: 28px; font-weight: 500; }
+.startup-profile-impact-edit-card > p { color: #60758a; font-size: 10px; line-height: 20px; }
+.startup-profile-impact-edit-fields { height: 248px; }
+.startup-profile-impact-edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 24px; margin-top: 12px; }
+.startup-profile-impact-edit-grid label > span, .startup-profile-impact-edit-notes > span { display: block; margin-bottom: 4px; color: #60758a; font-size: 10px; line-height: 18px; }
+.startup-profile-impact-edit-grid input { width: 100%; height: 44px; padding: 0 12px; box-sizing: border-box; border: 1px solid #e4ebf1; border-radius: 10px; background: #fff; color: #17324d; font: inherit; font-size: 12px; text-align: right; outline: none; }
+.startup-profile-impact-edit-grid input:focus, .startup-profile-impact-edit-notes textarea:focus { border-color: #2094e3; }
+.startup-profile-impact-edit-documents { height: 284px; }
+.startup-profile-impact-edit-document-columns { display: grid; grid-template-columns: 540px 540px; gap: 24px; margin-top: 4px; }
+.startup-profile-impact-edit-upload, .startup-profile-impact-edit-legal { background: #fafcfe; border: 1px solid #e4ebf1; border-radius: 10px; box-sizing: border-box; }
+.startup-profile-impact-edit-upload { height: 86px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; }
+.startup-profile-impact-edit-upload strong, .startup-profile-impact-edit-legal > strong { display: block; font-size: 12px; line-height: 22px; font-weight: 500; }
+.startup-profile-impact-edit-upload span { display: block; color: #60758a; font-size: 10px; line-height: 18px; }
+.startup-profile-impact-edit-upload button, .startup-profile-impact-edit-legal button { border: 1px solid #e4ebf1; border-radius: 10px; background: #fff; color: #2094e3; font: inherit; font-size: 12px; font-weight: 500; }
+.startup-profile-impact-edit-upload button { width: 126px; height: 42px; }
+.startup-profile-impact-edit-legal { height: 146px; padding: 8px 16px; }
+.startup-profile-impact-edit-legal > div { display: grid; grid-template-columns: 1fr 150px; gap: 18px; align-items: center; margin-top: 4px; }
+.startup-profile-impact-edit-legal > div span { font-size: 11px; line-height: 22px; }
+.startup-profile-impact-edit-legal > div small { color: #60758a; font-size: 10px; line-height: 22px; }
+.startup-profile-impact-edit-legal button { width: 126px; height: 36px; margin-top: 5px; }
+.startup-profile-impact-edit-notes { display: block; width: 540px; margin-top: -39px; margin-right: auto; }
+.startup-profile-impact-edit-notes textarea { width: 100%; height: 52px; padding: 8px 12px; resize: none; box-sizing: border-box; border: 1px solid #e4ebf1; border-radius: 10px; color: #17324d; background: #fff; font: inherit; font-size: 11px; line-height: 18px; text-align: right; outline: none; }
+.startup-profile-impact-edit-notes textarea::placeholder { color: #17324d; opacity: 1; }
+.startup-profile-impact-edit-verification { height: 56px; margin-top: 16px; padding: 0 28px; display: flex; align-items: center; box-sizing: border-box; border-radius: 10px; background: #eaf7f0; color: #159455; font-size: 11px; font-weight: 500; }
+.startup-profile-impact-edit-actions { height: 62px; margin-top: 16px; padding: 8px 17px; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box; background: #fff; border: 1px solid #e4ebf1; border-radius: 12px; }
+.startup-profile-impact-edit-actions p { color: #60758a; font-size: 10px; line-height: 44px; }
+.startup-profile-impact-edit-action-buttons { display: flex; gap: 16px; direction: ltr; }
+.startup-profile-impact-edit-action-buttons a, .startup-profile-impact-edit-action-buttons button { height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; font: inherit; font-size: 12px; font-weight: 500; text-decoration: none; }
+.startup-profile-impact-edit-action-buttons a { width: 160px; border: 1px solid #e4ebf1; background: #fff; color: #2094e3; }
+.startup-profile-impact-edit-action-buttons button { width: 190px; border: 0; background: #2094e3; color: #fff; cursor: pointer; }
+@media (max-width: 1100px) { .startup-profile-impact-edit-content { width: 100%; } .startup-profile-impact-edit-tabs, .startup-profile-impact-edit-document-columns { grid-template-columns: 1fr; height: auto; } .startup-profile-impact-edit-fields, .startup-profile-impact-edit-documents { height: auto; } .startup-profile-impact-edit-grid { grid-template-columns: 1fr; } .startup-profile-impact-edit-notes { width: 100%; margin-top: 12px; } .startup-profile-impact-edit-actions { height: auto; flex-direction: column; align-items: stretch; gap: 8px; } }
