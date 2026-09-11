@@ -1,0 +1,118 @@
+name: Gate startup register step2 migration
+
+on:
+  push:
+    branches:
+      - feat/integrate-startup-register-step2
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout target branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Verify pinned target and source
+        shell: bash
+        run: |
+          set -euo pipefail
+          TARGET_BASE="1bee530bd9e524f692b8782a9e583f6861e750ce"
+          SOURCE="ba7749a84717afbe2f253b45a7630b2dff8562a7"
+          test "$(git rev-parse HEAD^)" = "$TARGET_BASE"
+          test "$(git rev-parse "$TARGET_BASE^{tree}")" = "0394d2fefd47f628d6bb597a4fe281550a82fb4b"
+          git fetch --no-tags --depth=1 origin "$SOURCE"
+          test "$(git rev-parse "$SOURCE^{tree}")" = "e352108fbcd47d63afc175f2ba5985eda6125e6f"
+          test "$(git rev-parse "$SOURCE:src/page/index.tsx")" = "51aa8256fa2ca920806abd2f423dbf3533c3cb81"
+          test "$(git rev-parse "$SOURCE:src/page/index.css")" = "6387ae13c07fce250e046002090f2d1fc1b8a307"
+          test "$(git rev-parse "$TARGET_BASE:package-lock.json")" = "44cbe24f2addd9f712ad76f88b7ff8432b877818"
+          test "$(git rev-parse "$TARGET_BASE:.github/workflows/verify-frontend-integration.yml")" = "39906066a9546d895c4334a96607648b31593474"
+          if git cat-file -e "$TARGET_BASE:src/features/startup-registration/states/step2/index.tsx" 2>/dev/null; then
+            echo "target already exists"
+            exit 1
+          fi
+
+      - name: Verify exact asset mappings
+        shell: bash
+        run: |
+          set -euo pipefail
+          check() {
+            url="$1"; local_path="$2"; expected="$3"
+            test "$(git hash-object "$local_path")" = "$expected"
+            test "$(curl -fsSL --retry 3 "$url" | git hash-object --stdin)" = "$expected"
+          }
+          check 'https://static.codia.ai/image/2026-08-24/jhc5UhSRik.png' 'public/assets/codia/PHNkOFHS4y.png' 'b41d325f6fedd470de49aa75b4768cced118781e'
+          check 'https://static.codia.ai/image/2026-08-24/3zT0fShPBj.png' 'public/assets/codia/1vnQP4yM8Y.svg' '6899d238d5ef40ed15ca6bb2815207e0c2b32032'
+          check 'https://static.codia.ai/image/2026-08-24/Dt8i7rBwxp.png' 'public/assets/codia/1vnQP4yM8Y.svg' '6899d238d5ef40ed15ca6bb2815207e0c2b32032'
+          check 'https://static.codia.ai/image/2026-08-24/kGHxhhykfN.png' 'public/assets/codia/FeXdCWbzFg.svg' '33ca1fea4c9355d887b97f8378b6ea98cbd0c0d6'
+          check 'https://static.codia.ai/image/2026-08-24/hLqcQGTOkT.png' 'public/assets/codia/Gw5JMREobZ.svg' '2fb55ff3d33b2c06eb6f4094fb7920c800f93735'
+          check 'https://static.codia.ai/image/2026-08-24/ZhTZbNOezF.png' 'public/assets/codia/yKSsOMwNWd.svg' '639cffe809545737aac83c347080b6be20038ab6'
+          check 'https://static.codia.ai/image/2026-08-24/QH5KXhTOZa.png' 'public/assets/codia/yKSsOMwNWd.svg' '639cffe809545737aac83c347080b6be20038ab6'
+          check 'https://static.codia.ai/image/2026-08-24/QyZU84nbLF.png' 'public/assets/codia/yKSsOMwNWd.svg' '639cffe809545737aac83c347080b6be20038ab6'
+
+      - name: Simulate exact migration
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE="ba7749a84717afbe2f253b45a7630b2dff8562a7"
+          mkdir -p src/features/startup-registration/states/step2
+          git show "$SOURCE:src/page/index.tsx" > src/features/startup-registration/states/step2/index.tsx
+          git show "$SOURCE:src/page/index.css" > src/features/startup-registration/states/step2/index.css
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('src/features/startup-registration/states/step2/index.tsx')
+          s=p.read_text()
+          replacements={
+            'https://static.codia.ai/image/2026-08-24/jhc5UhSRik.png':'/assets/codia/PHNkOFHS4y.png',
+            'https://static.codia.ai/image/2026-08-24/3zT0fShPBj.png':'/assets/codia/1vnQP4yM8Y.svg',
+            'https://static.codia.ai/image/2026-08-24/Dt8i7rBwxp.png':'/assets/codia/1vnQP4yM8Y.svg',
+            'https://static.codia.ai/image/2026-08-24/kGHxhhykfN.png':'/assets/codia/FeXdCWbzFg.svg',
+            'https://static.codia.ai/image/2026-08-24/hLqcQGTOkT.png':'/assets/codia/Gw5JMREobZ.svg',
+            'https://static.codia.ai/image/2026-08-24/ZhTZbNOezF.png':'/assets/codia/yKSsOMwNWd.svg',
+            'https://static.codia.ai/image/2026-08-24/QH5KXhTOZa.png':'/assets/codia/yKSsOMwNWd.svg',
+            'https://static.codia.ai/image/2026-08-24/QyZU84nbLF.png':'/assets/codia/yKSsOMwNWd.svg',
+          }
+          for old,new in replacements.items():
+            assert s.count(old)==1, old
+            s=s.replace(old,new)
+          assert 'static.codia.ai' not in s
+          p.write_text(s)
+
+          r=Path('src/app/router.tsx')
+          t=r.read_text()
+          imp='const StartupRegistrationStep2Page = lazy(() => import("../features/startup-registration/states/step2"));\n'
+          el='const startupRegistrationStep2Element = lazyElement(StartupRegistrationStep2Page);\n'
+          route='        <Route path="/register/startup/states/step2" element={startupRegistrationStep2Element} />\n'
+          assert imp not in t and el not in t and route not in t
+          a='const StartupRegistrationStep3Page = lazy(() => import("../features/startup-registration/states/step3"));\n'
+          b='const startupRegistrationStep3Element = lazyElement(StartupRegistrationStep3Page);\n'
+          c='        <Route path="/register/startup/states/step3" element={startupRegistrationStep3Element} />\n'
+          assert t.count(a)==1 and t.count(b)==1 and t.count(c)==1
+          t=t.replace(a,imp+a).replace(b,el+b).replace(c,route+c)
+          r.write_text(t)
+          PY
+          test "$(grep -R -l 'static.codia.ai' src/features/startup-registration/states/step2 || true)" = ""
+          test "$(grep -Fxc '        <Route path="/register/startup/states/step2" element={startupRegistrationStep2Element} />' src/app/router.tsx)" -eq 1
+          echo "TSX_BLOB=$(git hash-object src/features/startup-registration/states/step2/index.tsx)"
+          echo "CSS_BLOB=$(git hash-object src/features/startup-registration/states/step2/index.css)"
+          echo "ROUTER_BLOB=$(git hash-object src/app/router.tsx)"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Build simulated migration
+        run: npm run build
+
+      - name: Verify lockfile unchanged
+        run: git diff --exit-code -- package-lock.json
