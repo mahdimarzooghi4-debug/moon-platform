@@ -22,6 +22,7 @@ export default function StartupStageReportSubmitted() {
   const projectPath = `/panel/startup/projects/${projectId}`;
   const stagesPath = `${projectPath}/stages`;
   const stagePath = `${stagesPath}/${stageId}`;
+  const evaluationPath = `${stagePath}/report/evaluation/approved`;
 
   return (
     <div className="startup-panel-page startup-stage-report-submitted-page" data-node-id="2053:2" data-name="startup-stage-report-submitted">
@@ -57,15 +58,35 @@ export default function StartupStageReportSubmitted() {
           <h2>مسیر بررسی گزارش مرحله</h2>
           <p>تا پایان ارزیابی، وضعیت مرحله تغییر نمی‌کند و آزادسازی وجه انجام نمی‌شود.</p>
           <div className="startup-stage-report-submitted-flow-grid">
-            {evaluationSteps.map((step) => (
-              <div className={`startup-stage-report-submitted-flow-step is-${step.state}`} key={step.number}>
-                <span>{step.number}</span>
-                <div>
-                  <strong>{step.title}</strong>
-                  <small>{step.status}</small>
+            {evaluationSteps.map((step) => {
+              const content = (
+                <>
+                  <span>{step.number}</span>
+                  <div>
+                    <strong>{step.title}</strong>
+                    <small>{step.status}</small>
+                  </div>
+                </>
+              );
+
+              if (step.number === "۳") {
+                return (
+                  <Link
+                    className={`startup-stage-report-submitted-flow-step is-${step.state}`}
+                    key={step.number}
+                    to={evaluationPath}
+                  >
+                    {content}
+                  </Link>
+                );
+              }
+
+              return (
+                <div className={`startup-stage-report-submitted-flow-step is-${step.state}`} key={step.number}>
+                  {content}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
 
