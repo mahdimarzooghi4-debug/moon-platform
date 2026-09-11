@@ -109,6 +109,12 @@ const AdminUsersRolesPage = lazy(() => import("../features/admin-panel/users"));
 const AdminAddUserPage = lazy(() => import("../features/admin-panel/users-new"));
 const AdminRoleManagementPage = lazy(() => import("../features/admin-panel/roles"));
 const AdminUserDetailPage = lazy(() => import("../features/admin-panel/user-detail"));
+const AdminOrganizationsPage = lazy(() => import("../features/admin-panel/organizations"));
+const AdminOrganizationDetailPage = lazy(() => import("../features/admin-panel/organization-detail"));
+const AdminProjectsPage = lazy(() => import("../features/admin-panel/projects"));
+const AdminProjectDetailPage = lazy(() => import("../features/admin-panel/project-detail"));
+const AdminFundingPage = lazy(() => import("../features/admin-panel/funding"));
+const AdminFundingDetailPage = lazy(() => import("../features/admin-panel/funding-detail"));
 
 function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
   return (
@@ -223,6 +229,12 @@ const adminUsersRolesElement = lazyElement(AdminUsersRolesPage);
 const adminAddUserElement = lazyElement(AdminAddUserPage);
 const adminRoleManagementElement = lazyElement(AdminRoleManagementPage);
 const adminUserDetailElement = lazyElement(AdminUserDetailPage);
+const adminOrganizationsElement = lazyElement(AdminOrganizationsPage);
+const adminOrganizationDetailElement = lazyElement(AdminOrganizationDetailPage);
+const adminProjectsElement = lazyElement(AdminProjectsPage);
+const adminProjectDetailElement = lazyElement(AdminProjectDetailPage);
+const adminFundingElement = lazyElement(AdminFundingPage);
+const adminFundingDetailElement = lazyElement(AdminFundingDetailPage);
 
 /**
  * Routes are introduced around the existing Figma-derived screens so their
@@ -343,6 +355,12 @@ export function AppRouter() {
         <Route path="/panel/admin/roles" element={adminRoleManagementElement} />
         <Route path="/panel/admin/users/:userId" element={adminUserDetailElement} />
         <Route path="/panel/admin/users" element={adminUsersRolesElement} />
+        <Route path="/panel/admin/organizations/:organizationId" element={adminOrganizationDetailElement} />
+        <Route path="/panel/admin/organizations" element={adminOrganizationsElement} />
+        <Route path="/panel/admin/projects/:projectId" element={adminProjectDetailElement} />
+        <Route path="/panel/admin/projects" element={adminProjectsElement} />
+        <Route path="/panel/admin/funding/:fundingId" element={adminFundingDetailElement} />
+        <Route path="/panel/admin/funding" element={adminFundingElement} />
         <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/fund-released" element={startupProjectStageFundReleasedElement} />
         <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/evaluation/approved" element={startupProjectStageEvaluationElement} />
         <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/submitted" element={startupProjectStageReportSubmittedElement} />
