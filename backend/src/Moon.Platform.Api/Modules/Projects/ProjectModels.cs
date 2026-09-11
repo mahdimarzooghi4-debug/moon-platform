@@ -5,6 +5,7 @@ public static class ProjectStatuses
     public const string Draft = "draft";
     public const string Submitted = "submitted";
     public const string Approved = "approved";
+    public const string Rejected = "rejected";
     public const string Published = "published";
 }
 
