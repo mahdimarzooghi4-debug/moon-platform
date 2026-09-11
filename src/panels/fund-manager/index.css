@@ -1,0 +1,12 @@
+.fund-manager-panel {
+  min-width: 1200px;
+  min-height: 900px;
+  font-family: "Vazirmatn", sans-serif;
+}
+
+.fund-manager-panel,
+.fund-manager-panel *,
+.fund-manager-panel *::before,
+.fund-manager-panel *::after {
+  box-sizing: border-box;
+}

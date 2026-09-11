@@ -5,6 +5,7 @@ on:
     branches:
       - integration/frontend-foundation
       - integration/landing-frontend
+      - integration/fund-manager-frontend
   workflow_dispatch:
 
 permissions:
