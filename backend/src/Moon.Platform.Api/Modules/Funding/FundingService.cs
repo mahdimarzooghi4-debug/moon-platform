@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Moon.Platform.Api.Common.Auditing;
+using Moon.Platform.Api.Common.Messaging;
 using Moon.Platform.Api.Infrastructure.Persistence;
 using Moon.Platform.Api.Modules.Projects;
 using Npgsql;
@@ -20,8 +21,13 @@ public interface IFundingService
         CancellationToken cancellationToken = default);
 }
 
-public sealed class FundingService(MoonDbContext dbContext, IAuditWriter auditWriter) : IFundingService
+public sealed class FundingService(
+    MoonDbContext dbContext,
+    IAuditWriter auditWriter,
+    IOutboxWriter? outboxWriter = null) : IFundingService
 {
+    private readonly IOutboxWriter _outboxWriter = outboxWriter ?? new OutboxWriter(dbContext);
+
     public async Task<CommitmentOperationResult> CreateCommitmentAsync(
         Guid projectId,
         long amountMinor,
@@ -133,6 +139,23 @@ public sealed class FundingService(MoonDbContext dbContext, IAuditWriter auditWr
                 commitment.CreatedAtUtc
             }),
             IpAddress: ipAddress), cancellationToken);
+
+        var integrationEvent = new FundingCommittedEvent(
+            commitment.Id,
+            commitment.ProjectId,
+            commitment.AmountMinor,
+            commitment.Currency,
+            commitment.CommittedBySubject,
+            commitment.CreatedAtUtc);
+
+        await _outboxWriter.EnqueueAsync(new OutboxWriteRequest(
+            IntegrationEventTypes.FundingCommitted,
+            "funding_commitment",
+            commitment.Id.ToString(),
+            $"funding-committed:{commitment.Id:N}",
+            IntegrationEventSerialization.ToJson(integrationEvent),
+            correlationId,
+            commitment.CreatedAtUtc), cancellationToken);
 
         await transaction.CommitAsync(cancellationToken);
         return CommitmentOperationResult.Success(ToView(commitment));
