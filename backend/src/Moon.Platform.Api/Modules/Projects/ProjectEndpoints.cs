@@ -82,6 +82,23 @@ public static class ProjectEndpoints
             return ToHttpResult(result, context);
         });
 
+        group.MapPost("/{projectId:guid}/publish", async Task<IResult> (
+            Guid projectId,
+            ClaimsPrincipal principal,
+            HttpContext context,
+            IProjectService projectService,
+            CancellationToken cancellationToken) =>
+        {
+            var result = await projectService.PublishAsync(
+                projectId,
+                RequireActor(principal),
+                context.TraceIdentifier,
+                context.Connection.RemoteIpAddress?.ToString(),
+                cancellationToken);
+
+            return ToHttpResult(result, context);
+        }).RequireAuthorization(ProjectPolicies.Publisher);
+
         return endpoints;
     }
 
@@ -104,8 +121,15 @@ public static class ProjectEndpoints
         return result.ErrorCode switch
         {
             "project_not_found" => Results.NotFound(body),
-            "project_access_denied" => Results.Json(body, statusCode: StatusCodes.Status403Forbidden),
-            "project_version_locked" or "project_invalid_state" => Results.Conflict(body),
+            "project_access_denied" or "project_publish_actor_inactive" =>
+                Results.Json(body, statusCode: StatusCodes.Status403Forbidden),
+            "project_version_locked" or
+            "project_invalid_state" or
+            "project_already_published" or
+            "project_publish_invalid_state" or
+            "project_publish_version_unlocked" or
+            "project_publish_approval_missing" or
+            "project_publish_evaluation_invalid" => Results.Conflict(body),
             _ => Results.BadRequest(body)
         };
     }
