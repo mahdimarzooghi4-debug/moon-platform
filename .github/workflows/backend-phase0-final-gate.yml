@@ -1,0 +1,180 @@
+name: Backend Phase 0 Final Gate
+
+on:
+  push:
+    branches:
+      - feat/backend-phase-0-foundation
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Start PostgreSQL 18 and Keycloak
+        env:
+          POSTGRES_DB: moon
+          POSTGRES_USER: moon
+          POSTGRES_PASSWORD: moon-e2e-only
+          KEYCLOAK_ADMIN_USERNAME: admin
+          KEYCLOAK_ADMIN_PASSWORD: admin-e2e-only
+        run: docker compose up -d postgres keycloak
+
+      - name: Wait for infrastructure
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent http://localhost:8081/realms/moon/.well-known/openid-configuration >/dev/null \
+              && docker compose exec -T postgres pg_isready -U moon -d moon >/dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          docker compose logs keycloak postgres
+          exit 1
+
+      - name: Restore
+        run: dotnet restore Moon.Platform.slnx
+
+      - name: Build with warnings as errors
+        run: dotnet build Moon.Platform.slnx --no-restore --configuration Release -warnaserror
+
+      - name: Install EF tool
+        run: dotnet tool install --global dotnet-ef --version 10.0.12
+
+      - name: Verify committed migrations match model
+        run: dotnet ef migrations has-pending-model-changes --project src/Moon.Platform.Api/Moon.Platform.Api.csproj --startup-project src/Moon.Platform.Api/Moon.Platform.Api.csproj
+
+      - name: Apply database migration
+        env:
+          ConnectionStrings__Postgres: Host=localhost;Port=5432;Database=moon;Username=moon;Password=moon-e2e-only
+        run: dotnet ef database update --project src/Moon.Platform.Api/Moon.Platform.Api.csproj --startup-project src/Moon.Platform.Api/Moon.Platform.Api.csproj
+
+      - name: Test against PostgreSQL 18
+        env:
+          TEST_POSTGRES: Host=localhost;Port=5432;Database=moon_tests;Username=moon;Password=moon-e2e-only
+        run: dotnet test Moon.Platform.slnx --no-build --configuration Release
+
+      - name: Start Moon API
+        shell: bash
+        env:
+          ASPNETCORE_ENVIRONMENT: Development
+          ASPNETCORE_URLS: http://127.0.0.1:5080
+          ConnectionStrings__Postgres: Host=localhost;Port=5432;Database=moon;Username=moon;Password=moon-e2e-only
+        run: |
+          set -euo pipefail
+          nohup dotnet run --project src/Moon.Platform.Api/Moon.Platform.Api.csproj --no-build --configuration Release >/tmp/moon-api.log 2>&1 &
+          echo $! >/tmp/moon-api.pid
+          for attempt in $(seq 1 45); do
+            if curl --fail --silent http://127.0.0.1:5080/health/ready >/dev/null; then
+              exit 0
+            fi
+            if ! kill -0 "$(cat /tmp/moon-api.pid)" 2>/dev/null; then
+              cat /tmp/moon-api.log
+              exit 1
+            fi
+            sleep 2
+          done
+          cat /tmp/moon-api.log
+          exit 1
+
+      - name: Verify one-time system-admin bootstrap
+        shell: bash
+        env:
+          KEYCLOAK_BASE_URL: http://localhost:8081
+          KEYCLOAK_ADMIN_USERNAME: admin
+          KEYCLOAK_ADMIN_PASSWORD: admin-e2e-only
+          KEYCLOAK_ADMIN_REALM: master
+          MOON_REALM: moon
+          SYSTEM_ADMIN_USERNAME: phase0-bootstrap-admin
+          ALLOW_INSECURE_KEYCLOAK: "true"
+        run: |
+          set -euo pipefail
+          token="$(curl --fail --silent --show-error \
+            --request POST \
+            --header 'Content-Type: application/x-www-form-urlencoded' \
+            --data-urlencode 'client_id=admin-cli' \
+            --data-urlencode 'username=admin' \
+            --data-urlencode 'password=admin-e2e-only' \
+            --data-urlencode 'grant_type=password' \
+            'http://localhost:8081/realms/master/protocol/openid-connect/token' | jq -r '.access_token')"
+          curl --fail --silent --show-error \
+            --request POST \
+            --header "Authorization: Bearer ${token}" \
+            --header 'Content-Type: application/json' \
+            --data '{"username":"phase0-bootstrap-admin","enabled":true}' \
+            'http://localhost:8081/admin/realms/moon/users' >/dev/null
+          bash scripts/bootstrap-system-admin.sh
+          user="$(curl --fail --silent --show-error \
+            --header "Authorization: Bearer ${token}" \
+            --get --data-urlencode 'username=phase0-bootstrap-admin' --data-urlencode 'exact=true' \
+            'http://localhost:8081/admin/realms/moon/users' | jq -r '.[0].id')"
+          curl --fail --silent --show-error \
+            --header "Authorization: Bearer ${token}" \
+            "http://localhost:8081/admin/realms/moon/users/${user}" \
+            | jq -e '.requiredActions | index("CONFIGURE_TOTP") != null' >/dev/null
+          curl --fail --silent --show-error \
+            --header "Authorization: Bearer ${token}" \
+            "http://localhost:8081/admin/realms/moon/users/${user}/role-mappings/realm" \
+            | jq -e 'any(.[]; .name == "system_admin")' >/dev/null
+
+      - name: Run identity/admin/database/audit E2E
+        shell: bash
+        env:
+          KEYCLOAK_BASE_URL: http://localhost:8081
+          KEYCLOAK_ADMIN_USERNAME: admin
+          KEYCLOAK_ADMIN_PASSWORD: admin-e2e-only
+          KEYCLOAK_ADMIN_REALM: master
+          MOON_REALM: moon
+          API_BASE_URL: http://127.0.0.1:5080
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: "5432"
+          POSTGRES_DB: moon
+          POSTGRES_USER: moon
+          POSTGRES_PASSWORD: moon-e2e-only
+        run: bash scripts/phase0-e2e.sh
+
+      - name: Phase 0 source and config checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n scripts/bootstrap-system-admin.sh
+          bash -n scripts/phase0-e2e.sh
+          docker compose config >/dev/null
+          grep -Fq 'CONFIGURE_TOTP' scripts/bootstrap-system-admin.sh
+          grep -Fq 'client_credentials' scripts/phase0-e2e.sh
+          grep -Fq 'directAccessGrantsEnabled: false' keycloak/moon-realm.json || grep -Fq '"directAccessGrantsEnabled": false' keycloak/moon-realm.json
+          ! grep -R -E -i --exclude-dir=bin --exclude-dir=obj --exclude='*.md' '(KYC|Shahkar|Sheba)' src keycloak scripts
+          ! grep -R -E --exclude-dir=bin --exclude-dir=obj '(admin-e2e-only|moon-e2e-only)' src keycloak scripts .env.example
+
+      - name: Dump diagnostics on failure
+        if: failure()
+        shell: bash
+        run: |
+          cat /tmp/moon-api.log 2>/dev/null || true
+          docker compose logs keycloak postgres || true
+
+      - name: Stop infrastructure
+        if: always()
+        env:
+          POSTGRES_DB: moon
+          POSTGRES_USER: moon
+          POSTGRES_PASSWORD: moon-e2e-only
+          KEYCLOAK_ADMIN_USERNAME: admin
+          KEYCLOAK_ADMIN_PASSWORD: admin-e2e-only
+        run: docker compose down -v --remove-orphans
