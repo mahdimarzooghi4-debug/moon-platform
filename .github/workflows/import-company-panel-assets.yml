@@ -1,4 +1,4 @@
-name: Import Company Panel dashboard assets
+name: Import Company Panel dashboard assets retry
 
 on:
   push:
@@ -16,14 +16,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 3
 
-      - name: Verify pinned base
+      - name: Verify pinned retry chain
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD^)" = "da7b028fcdb9ae273470280aa780e60e8010a48d"
-          test "$(git rev-parse HEAD^:.github/workflows/verify-frontend-integration.yml)" = "39906066a9546d895c4334a96607648b31593474"
+          PREVIOUS="e832d3cc944078db6cbe43ba4b268f6f71a5ab85"
+          BASE="da7b028fcdb9ae273470280aa780e60e8010a48d"
+          test "$(git rev-parse HEAD^)" = "$PREVIOUS"
+          test "$(git rev-parse "$PREVIOUS^")" = "$BASE"
+          test "$(git rev-parse "$BASE:.github/workflows/verify-frontend-integration.yml")" = "39906066a9546d895c4334a96607648b31593474"
 
       - name: Download exact Figma exports
         shell: bash
@@ -52,6 +55,6 @@ jobs:
           git rm .github/workflows/import-company-panel-assets.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/assets/company-panel .github/workflows/import-company-panel-assets.yml
+          git add public/assets/company-panel
           git commit -m "feat(company-panel): import dashboard Figma assets"
           git push origin HEAD:feat/company-panel-assets
