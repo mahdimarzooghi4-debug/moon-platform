@@ -41,10 +41,8 @@ backend_verify:
   before_script:
     - export PATH="$PATH:/root/.dotnet/tools"
     - dotnet tool install --global dotnet-ef --version 10.0.12
-    - for i in $(seq 1 60); do (echo > /dev/tcp/postgres/5432) >/dev/null 2>&1 && break; sleep 1; done
-    - for i in $(seq 1 60); do (echo > /dev/tcp/rabbitmq/5672) >/dev/null 2>&1 && break; sleep 1; done
-    - (echo > /dev/tcp/postgres/5432) >/dev/null 2>&1
-    - (echo > /dev/tcp/rabbitmq/5672) >/dev/null 2>&1
+    - bash -lc 'for i in $(seq 1 60); do (echo > /dev/tcp/postgres/5432) >/dev/null 2>&1 && exit 0; sleep 1; done; exit 1'
+    - bash -lc 'for i in $(seq 1 60); do (echo > /dev/tcp/rabbitmq/5672) >/dev/null 2>&1 && exit 0; sleep 1; done; exit 1'
   script:
     - cd backend
     - dotnet restore Moon.Platform.slnx
