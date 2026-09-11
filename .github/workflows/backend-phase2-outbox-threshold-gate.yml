@@ -26,6 +26,19 @@ jobs:
           --health-interval 5s
           --health-timeout 5s
           --health-retries 20
+      rabbitmq:
+        image: rabbitmq:4-management
+        env:
+          RABBITMQ_DEFAULT_USER: moon
+          RABBITMQ_DEFAULT_PASS: moon-phase2-final-only
+          RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: "-rabbit default_queue_type quorum"
+        ports:
+          - 5672:5672
+        options: >-
+          --health-cmd "rabbitmq-diagnostics -q ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 30
 
     defaults:
       run:
@@ -84,10 +97,13 @@ jobs:
         if: steps.migration.outputs.generated != 'true'
         run: dotnet ef migrations has-pending-model-changes --project src/Moon.Platform.Api/Moon.Platform.Api.csproj --startup-project src/Moon.Platform.Api/Moon.Platform.Api.csproj
 
-      - name: Test full backend against PostgreSQL 18
+      - name: Test full backend against PostgreSQL 18 and RabbitMQ 4
         if: steps.migration.outputs.generated != 'true'
         env:
           TEST_POSTGRES: Host=localhost;Port=5432;Database=moon;Username=moon;Password=moon-phase2-outbox-only
+          TEST_RABBITMQ_HOST: localhost
+          TEST_RABBITMQ_USER: moon
+          TEST_RABBITMQ_PASSWORD: moon-phase2-final-only
         run: dotnet test Moon.Platform.slnx --no-build --configuration Release
 
       - name: Validate local infrastructure compose
@@ -102,11 +118,12 @@ jobs:
           test -f src/Moon.Platform.Api/Common/Messaging/OutboxWriter.cs
           test -f src/Moon.Platform.Api/Common/Messaging/OutboxDispatcher.cs
           test -f tests/Moon.Platform.Tests/Phase2OutboxThresholdTests.cs
+          test -f tests/Moon.Platform.Tests/Phase2OutboxDispatcherTests.cs
           grep -Fq 'FundingThresholdReached' src/Moon.Platform.Api/Common/Messaging/OutboxModels.cs
           grep -Fq 'FundingTargetMinor' src/Moon.Platform.Api/Modules/Projects/ProjectModels.cs
           grep -Fq 'funding-threshold-reached:' src/Moon.Platform.Api/Modules/Funding/LedgerService.cs
           grep -Fq 'FOR UPDATE SKIP LOCKED' src/Moon.Platform.Api/Common/Messaging/OutboxDispatcher.cs
-          grep -Fq 'MassTransit.RabbitMQ' Moon.Platform.slnx Directory.Packages.props src/Moon.Platform.Api/Moon.Platform.Api.csproj || true
           grep -Fq 'default_queue_type quorum' docker-compose.yml
           grep -Fq 'OutboxDispatchEnabled' src/Moon.Platform.Api/appsettings.json
           grep -Fq 'Funding_threshold_is_emitted_once_only_after_ledger_balance_crosses_locked_project_target' tests/Moon.Platform.Tests/Phase2OutboxThresholdTests.cs
+          grep -Fq 'Durable_outbox_dispatches_through_real_RabbitMQ_when_enabled' tests/Moon.Platform.Tests/Phase2OutboxDispatcherTests.cs
