@@ -70,7 +70,8 @@ jobs:
           grep -Fq 'decision_separation_of_duties' src/Moon.Platform.Api/Modules/Evaluations/EvaluationService.cs
           grep -Fq 'decision_evaluation_incomplete' src/Moon.Platform.Api/Modules/Evaluations/EvaluationService.cs
           grep -Fq 'project.published' src/Moon.Platform.Api/Modules/Projects/ProjectService.cs
-          grep -Fq 'project_publish_decision_invalid' src/Moon.Platform.Api/Modules/Projects/ProjectService.cs
+          grep -Fq 'project_publish_approval_missing' src/Moon.Platform.Api/Modules/Projects/ProjectService.cs
+          grep -Fq 'project_publish_evaluation_invalid' src/Moon.Platform.Api/Modules/Projects/ProjectService.cs
           grep -Fq 'GuardLockedProjectVersions' src/Moon.Platform.Api/Infrastructure/Persistence/MoonDbContext.cs
           grep -Fq 'GuardFinalEvaluations' src/Moon.Platform.Api/Infrastructure/Persistence/MoonDbContext.cs
           grep -Fq 'GuardDecisionsAppendOnly' src/Moon.Platform.Api/Infrastructure/Persistence/MoonDbContext.cs
