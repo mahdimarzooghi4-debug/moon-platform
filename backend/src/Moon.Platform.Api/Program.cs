@@ -10,6 +10,7 @@ using Moon.Platform.Api.Infrastructure.Persistence;
 using Moon.Platform.Api.Integrations.Payments;
 using Moon.Platform.Api.Integrations.Sms;
 using Moon.Platform.Api.Modules.Evaluations;
+using Moon.Platform.Api.Modules.Funding;
 using Moon.Platform.Api.Modules.Identity;
 using Moon.Platform.Api.Modules.Projects;
 using OpenTelemetry.Metrics;
@@ -75,6 +76,7 @@ builder.Services.AddScoped<IAdminAccessService, AdminAccessService>();
 builder.Services.AddScoped<IOrganizationAccessService, OrganizationAccessService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IEvaluationService, EvaluationService>();
+builder.Services.AddScoped<IFundingService, FundingService>();
 builder.Services.AddScoped<IAuthorizationHandler, OrganizationMemberHandler>();
 
 builder.Services.AddAuthorization(options =>
@@ -163,7 +165,7 @@ app.MapGet("/health/ready", async Task<IResult> (MoonDbContext db, CancellationT
 app.MapGet("/api/v1/system", (HttpContext context) => Results.Ok(new
 {
     service = "moon-platform-api",
-    version = "0.7.0-phase1-publish",
+    version = "0.8.0-phase2-commitment",
     correlationId = context.TraceIdentifier
 }));
 
@@ -223,6 +225,7 @@ app.MapGet("/api/v1/organizations/{organizationId:guid}/access", (Guid organizat
 app.MapAdminAccessEndpoints();
 app.MapProjectEndpoints();
 app.MapEvaluationEndpoints();
+app.MapFundingEndpoints();
 
 app.Run();
 
