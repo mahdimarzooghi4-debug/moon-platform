@@ -88,6 +88,11 @@ const StartupFinancingFeePage = lazy(() => import("../features/startup-panel/fin
 const StartupSettingsPage = lazy(() => import("../features/startup-panel/settings"));
 const CompanyPanelDashboardPage = lazy(() => import("../features/company-panel"));
 const CompanyProjectsPage = lazy(() => import("../features/company-panel/projects"));
+const CompanyProjectDetailPage = lazy(() => import("../features/company-panel/project-detail"));
+const CompanyProjectParticipationPage = lazy(() => import("../features/company-panel/project-participation"));
+const CompanyPaymentSuccessPage = lazy(() => import("../features/company-panel/payment-success"));
+const CompanyParticipationsPage = lazy(() => import("../features/company-panel/participations"));
+const CompanyParticipationDetailPage = lazy(() => import("../features/company-panel/participation-detail"));
 
 function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
   return (
@@ -181,6 +186,11 @@ const startupFinancingFeeElement = lazyElement(StartupFinancingFeePage);
 const startupSettingsElement = lazyElement(StartupSettingsPage);
 const companyPanelDashboardElement = lazyElement(CompanyPanelDashboardPage);
 const companyProjectsElement = lazyElement(CompanyProjectsPage);
+const companyProjectDetailElement = lazyElement(CompanyProjectDetailPage);
+const companyProjectParticipationElement = lazyElement(CompanyProjectParticipationPage);
+const companyPaymentSuccessElement = lazyElement(CompanyPaymentSuccessPage);
+const companyParticipationsElement = lazyElement(CompanyParticipationsPage);
+const companyParticipationDetailElement = lazyElement(CompanyParticipationDetailPage);
 
 /**
  * Routes are introduced around the existing Figma-derived screens so their
@@ -282,6 +292,11 @@ export function AppRouter() {
         <Route path="/panel/startup/settings" element={startupSettingsElement} />
         <Route path="/panel/company" element={companyPanelDashboardElement} />
         <Route path="/panel/company/projects" element={companyProjectsElement} />
+        <Route path="/panel/company/projects/:projectId" element={companyProjectDetailElement} />
+        <Route path="/panel/company/projects/:projectId/participate" element={companyProjectParticipationElement} />
+        <Route path="/panel/company/projects/:projectId/participate/success" element={companyPaymentSuccessElement} />
+        <Route path="/panel/company/participations" element={companyParticipationsElement} />
+        <Route path="/panel/company/participations/:participationId" element={companyParticipationDetailElement} />
         <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/fund-released" element={startupProjectStageFundReleasedElement} />
         <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/evaluation/approved" element={startupProjectStageEvaluationElement} />
         <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/submitted" element={startupProjectStageReportSubmittedElement} />
