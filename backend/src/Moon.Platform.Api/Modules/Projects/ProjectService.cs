@@ -90,11 +90,11 @@ public sealed class ProjectService(MoonDbContext dbContext, IAuditWriter auditWr
             project.Id.ToString(),
             AfterJson: JsonSerializer.Serialize(new
             {
-                project.Id,
+                ProjectId = project.Id,
                 project.OrganizationId,
                 project.Status,
                 project.CurrentVersionNumber,
-                version.Id,
+                VersionId = version.Id,
                 version.VersionNumber
             }),
             IpAddress: ipAddress), cancellationToken);
