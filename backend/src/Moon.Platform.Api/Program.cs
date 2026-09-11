@@ -41,8 +41,12 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddDbContext<MoonDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres")));
+builder.Services.AddSingleton<LedgerIntegrityInterceptor>();
+builder.Services.AddDbContext<MoonDbContext>((serviceProvider, options) =>
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres"));
+    options.AddInterceptors(serviceProvider.GetRequiredService<LedgerIntegrityInterceptor>());
+});
 
 builder.Services.Configure<PaymentOptions>(builder.Configuration.GetSection(PaymentOptions.SectionName));
 
@@ -80,6 +84,7 @@ builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IEvaluationService, EvaluationService>();
 builder.Services.AddScoped<IFundingService, FundingService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<ILedgerService, LedgerService>();
 builder.Services.AddScoped<IAuthorizationHandler, OrganizationMemberHandler>();
 
 builder.Services.AddAuthorization(options =>
@@ -174,7 +179,7 @@ app.MapGet("/health/ready", async Task<IResult> (MoonDbContext db, CancellationT
 app.MapGet("/api/v1/system", (HttpContext context) => Results.Ok(new
 {
     service = "moon-platform-api",
-    version = "0.9.0-phase2-payment-reconciliation",
+    version = "0.10.0-phase2-ledger",
     correlationId = context.TraceIdentifier
 }));
 
@@ -236,6 +241,7 @@ app.MapProjectEndpoints();
 app.MapEvaluationEndpoints();
 app.MapFundingEndpoints();
 app.MapPaymentEndpoints();
+app.MapLedgerEndpoints();
 
 app.Run();
 
