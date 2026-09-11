@@ -39,6 +39,7 @@ const PaymentResultFailedPage = lazy(() => import("../payment-result/failed"));
 const PaymentResultPendingPage = lazy(() => import("../payment-result/pending"));
 const PaymentResultCanceledPage = lazy(() => import("../payment-result/canceled"));
 const PaymentResultErrorsPage = lazy(() => import("../payment-result/errors"));
+const PaymentResultReceiptPage = lazy(() => import("../payment-result/receipt"));
 const FaqPage = lazy(() => import("../faq"));
 const ContactSupportPage = lazy(() => import("../contact-support"));
 const NewsListPage = lazy(() => import("../news-list"));
@@ -240,6 +241,7 @@ export function AppRouter() {
         <Route path="/payment/result/pending" element={lazyElement(PaymentResultPendingPage)} />
         <Route path="/payment/result/canceled" element={lazyElement(PaymentResultCanceledPage)} />
         <Route path="/payment/result/errors" element={lazyElement(PaymentResultErrorsPage)} />
+        <Route path="/payment/result/receipt" element={lazyElement(PaymentResultReceiptPage)} />
         <Route path="/faq" element={lazyElement(FaqPage)} />
         <Route path="/contact" element={lazyElement(ContactSupportPage)} />
         <Route path="/contact-support" element={lazyElement(ContactSupportPage)} />
