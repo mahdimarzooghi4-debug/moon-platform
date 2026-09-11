@@ -104,6 +104,7 @@ const EmdadFundSynergyHistoryPage = lazy(() => import("../panels/emdad/fund-syne
 const EmdadFundReturnsPage = lazy(() => import("../panels/emdad/fund-returns"));
 const EmdadActionOverlayPage = lazy(() => import("../panels/emdad/overlays/action"));
 const EmdadPaginationOverlayPage = lazy(() => import("../panels/emdad/overlays/pagination"));
+const EmdadLogoutOverlayPage = lazy(() => import("../panels/emdad/overlays/logout"));
 
 function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
   return (
@@ -130,6 +131,7 @@ const emdadFundSynergyHistoryElement = lazyElement(EmdadFundSynergyHistoryPage);
 const emdadFundReturnsElement = lazyElement(EmdadFundReturnsPage);
 const emdadActionOverlayElement = lazyElement(EmdadActionOverlayPage);
 const emdadPaginationOverlayElement = lazyElement(EmdadPaginationOverlayPage);
+const emdadLogoutOverlayElement = lazyElement(EmdadLogoutOverlayPage);
 
 const landingElement = lazyElement(LandingPage);
 const aboutElement = lazyElement(AboutPage);
@@ -305,6 +307,7 @@ export function AppRouter() {
         <Route path="/panel/emdad/fund-returns" element={emdadFundReturnsElement} />
         <Route path="/panel/emdad/overlays/action" element={emdadActionOverlayElement} />
         <Route path="/panel/emdad/overlays/pagination" element={emdadPaginationOverlayElement} />
+        <Route path="/panel/emdad/overlays/logout" element={emdadLogoutOverlayElement} />
         <Route path="/auth" element={<AuthEntryPage />} />
         <Route path="/register/company/states/step2" element={companyRegistrationStep2Element} />
         <Route path="/register/company/status" element={companyRegistrationStatusElement} />
