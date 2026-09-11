@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Moon.Platform.Api.Common.Auditing;
 using Moon.Platform.Api.Modules.Identity;
+using Moon.Platform.Api.Modules.Projects;
 
 namespace Moon.Platform.Api.Infrastructure.Persistence;
 
@@ -11,16 +12,20 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<Membership> Memberships => Set<Membership>();
     public DbSet<AuditEvent> AuditEvents => Set<AuditEvent>();
+    public DbSet<Project> Projects => Set<Project>();
+    public DbSet<ProjectVersion> ProjectVersions => Set<ProjectVersion>();
 
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {
         GuardAuditAppendOnly();
+        GuardLockedProjectVersions();
         return base.SaveChanges(acceptAllChangesOnSuccess);
     }
 
     public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
     {
         GuardAuditAppendOnly();
+        GuardLockedProjectVersions();
         return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
 
@@ -68,6 +73,27 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
             entity.HasOne<Role>().WithMany().HasForeignKey(x => x.RoleId).OnDelete(DeleteBehavior.Restrict);
         });
 
+        modelBuilder.Entity<Project>(entity =>
+        {
+            entity.ToTable("projects");
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.Status).HasMaxLength(32).IsRequired();
+            entity.Property(x => x.CreatedBySubject).HasMaxLength(200).IsRequired();
+            entity.HasIndex(x => new { x.OrganizationId, x.Status });
+            entity.HasOne<Organization>().WithMany().HasForeignKey(x => x.OrganizationId).OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<ProjectVersion>(entity =>
+        {
+            entity.ToTable("project_versions");
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.Title).HasMaxLength(200).IsRequired();
+            entity.Property(x => x.Description).HasMaxLength(8000).IsRequired();
+            entity.Property(x => x.CreatedBySubject).HasMaxLength(200).IsRequired();
+            entity.HasIndex(x => new { x.ProjectId, x.VersionNumber }).IsUnique();
+            entity.HasOne<Project>().WithMany().HasForeignKey(x => x.ProjectId).OnDelete(DeleteBehavior.Restrict);
+        });
+
         modelBuilder.Entity<AuditEvent>(entity =>
         {
             entity.ToTable("audit_events");
@@ -94,6 +120,19 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
         if (illegalMutation)
         {
             throw new InvalidOperationException("Audit events are append-only and cannot be modified or deleted.");
+        }
+    }
+
+    private void GuardLockedProjectVersions()
+    {
+        var illegalMutation = ChangeTracker.Entries<ProjectVersion>()
+            .Any(entry =>
+                entry.State is EntityState.Modified or EntityState.Deleted
+                && entry.OriginalValues.GetValue<bool>(nameof(ProjectVersion.IsLocked)));
+
+        if (illegalMutation)
+        {
+            throw new InvalidOperationException("Locked project versions are immutable and cannot be modified or deleted.");
         }
     }
 }
