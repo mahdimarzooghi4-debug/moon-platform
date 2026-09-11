@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Moon.Platform.Api.Common.Auditing;
 using Moon.Platform.Api.Modules.Evaluations;
+using Moon.Platform.Api.Modules.Funding;
 using Moon.Platform.Api.Modules.Identity;
 using Moon.Platform.Api.Modules.Projects;
 
@@ -17,6 +18,7 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
     public DbSet<ProjectVersion> ProjectVersions => Set<ProjectVersion>();
     public DbSet<ProjectEvaluation> ProjectEvaluations => Set<ProjectEvaluation>();
     public DbSet<ProjectDecision> ProjectDecisions => Set<ProjectDecision>();
+    public DbSet<FundingCommitment> FundingCommitments => Set<FundingCommitment>();
 
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {
@@ -25,6 +27,7 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
         GuardFinalEvaluations();
         GuardDecisionsAppendOnly();
         GuardPublishedProjects();
+        GuardCommitmentTerms();
         return base.SaveChanges(acceptAllChangesOnSuccess);
     }
 
@@ -35,6 +38,7 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
         GuardFinalEvaluations();
         GuardDecisionsAppendOnly();
         GuardPublishedProjects();
+        GuardCommitmentTerms();
         return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
 
@@ -133,6 +137,19 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
             entity.HasOne<ProjectEvaluation>().WithMany().HasForeignKey(x => x.EvaluationId).OnDelete(DeleteBehavior.Restrict);
         });
 
+        modelBuilder.Entity<FundingCommitment>(entity =>
+        {
+            entity.ToTable("funding_commitments");
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.CommittedBySubject).HasMaxLength(200).IsRequired();
+            entity.Property(x => x.Currency).HasMaxLength(3).IsRequired();
+            entity.Property(x => x.Status).HasMaxLength(32).IsRequired();
+            entity.Property(x => x.IdempotencyKey).HasMaxLength(128).IsRequired();
+            entity.HasIndex(x => new { x.CommittedBySubject, x.IdempotencyKey }).IsUnique();
+            entity.HasIndex(x => new { x.ProjectId, x.Status });
+            entity.HasOne<Project>().WithMany().HasForeignKey(x => x.ProjectId).OnDelete(DeleteBehavior.Restrict);
+        });
+
         modelBuilder.Entity<AuditEvent>(entity =>
         {
             entity.ToTable("audit_events");
@@ -210,6 +227,31 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
         if (illegalMutation)
         {
             throw new InvalidOperationException("Published projects are immutable and cannot be modified or deleted.");
+        }
+    }
+
+    private void GuardCommitmentTerms()
+    {
+        var illegalMutation = ChangeTracker.Entries<FundingCommitment>()
+            .Any(entry =>
+                entry.State == EntityState.Deleted
+                || entry.State == EntityState.Modified
+                && (entry.OriginalValues.GetValue<Guid>(nameof(FundingCommitment.ProjectId))
+                        != entry.CurrentValues.GetValue<Guid>(nameof(FundingCommitment.ProjectId))
+                    || entry.OriginalValues.GetValue<string>(nameof(FundingCommitment.CommittedBySubject))
+                        != entry.CurrentValues.GetValue<string>(nameof(FundingCommitment.CommittedBySubject))
+                    || entry.OriginalValues.GetValue<long>(nameof(FundingCommitment.AmountMinor))
+                        != entry.CurrentValues.GetValue<long>(nameof(FundingCommitment.AmountMinor))
+                    || entry.OriginalValues.GetValue<string>(nameof(FundingCommitment.Currency))
+                        != entry.CurrentValues.GetValue<string>(nameof(FundingCommitment.Currency))
+                    || entry.OriginalValues.GetValue<string>(nameof(FundingCommitment.IdempotencyKey))
+                        != entry.CurrentValues.GetValue<string>(nameof(FundingCommitment.IdempotencyKey))
+                    || entry.OriginalValues.GetValue<DateTimeOffset>(nameof(FundingCommitment.CreatedAtUtc))
+                        != entry.CurrentValues.GetValue<DateTimeOffset>(nameof(FundingCommitment.CreatedAtUtc))));
+
+        if (illegalMutation)
+        {
+            throw new InvalidOperationException("Funding commitment terms are immutable and commitments cannot be deleted.");
         }
     }
 }
