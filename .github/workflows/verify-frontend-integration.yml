@@ -3,12 +3,11 @@ name: Verify frontend integration
 on:
   push:
     branches:
-      - integration/frontend-foundation
-      - integration/landing-frontend
+      - feat/startup-panel
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: frontend-${{ github.ref }}
@@ -21,6 +20,58 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Verify pinned source and hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_SHA="f6ecd8a88a6a3781463c401d69f3959f125609b2"
+          test "$(git rev-parse HEAD^)" = "$SOURCE_SHA"
+          test "$(git rev-parse "$SOURCE_SHA^{tree}")" = "0394d2fefd47f628d6bb597a4fe281550a82fb4b"
+          test "$(git rev-parse "$SOURCE_SHA:src/features/startup-panel/financing-fee/index.tsx")" = "66987000bcecb1f0ba790055f1ee576ec5568884"
+          test "$(git rev-parse "$SOURCE_SHA:src/features/startup-panel/financing-fee/index.css")" = "8f2d6a6f2e2747decce786764b387c4e2ba8e0a4"
+          test "$(git rev-parse "$SOURCE_SHA:src/features/startup-panel/settings/index.tsx")" = "151df0979a038f02b02b732f7085ef529b6196dc"
+          test "$(git rev-parse "$SOURCE_SHA:src/features/startup-panel/settings/index.css")" = "5c0d16b55f77e42d4f7ebd2224f09a83667a98b7"
+          test "$(git rev-parse "$SOURCE_SHA:src/features/startup-panel/components/StartupSidebar.tsx")" = "5e76df93d449ec3f75f044a3d11b63e9655a746d"
+          test "$(git rev-parse "$SOURCE_SHA:src/app/router.tsx")" = "b260808582169ed4c3138b3315907f1348b379b9"
+          test "$(git rev-parse "$SOURCE_SHA:package-lock.json")" = "44cbe24f2addd9f712ad76f88b7ff8432b877818"
+
+      - name: Verify asset isolation
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -R -n -E 'static\.codia\.ai|figma\.com/api/mcp/asset' \
+            src/features/startup-panel/financing-fee \
+            src/features/startup-panel/settings; then
+            echo "Remote generated asset reference found"
+            exit 1
+          fi
+          if grep -R -n -E '2409:441|2409:444' \
+            src/features/startup-panel/financing-fee \
+            src/features/startup-panel/settings; then
+            echo "Informational overlay was wired into production code"
+            exit 1
+          fi
+
+      - name: Verify financing and settings routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROUTER=src/app/router.tsx
+          SIDEBAR=src/features/startup-panel/components/StartupSidebar.tsx
+          FINANCING=src/features/startup-panel/financing-fee/index.tsx
+          test "$(grep -Fxc 'const StartupFinancingFeePage = lazy(() => import("../features/startup-panel/financing-fee"));' "$ROUTER")" -eq 1
+          test "$(grep -Fxc 'const StartupSettingsPage = lazy(() => import("../features/startup-panel/settings"));' "$ROUTER")" -eq 1
+          test "$(grep -Fxc 'const startupFinancingFeeElement = lazyElement(StartupFinancingFeePage);' "$ROUTER")" -eq 1
+          test "$(grep -Fxc 'const startupSettingsElement = lazyElement(StartupSettingsPage);' "$ROUTER")" -eq 1
+          test "$(grep -Fxc '        <Route path="/panel/startup/financing-fee" element={startupFinancingFeeElement} />' "$ROUTER")" -eq 1
+          test "$(grep -Fxc '        <Route path="/panel/startup/settings" element={startupSettingsElement} />' "$ROUTER")" -eq 1
+          test "$(grep -Fc 'to: "/panel/startup/financing-fee"' "$SIDEBAR")" -eq 1
+          test "$(grep -Fc 'to: "/panel/startup/settings"' "$SIDEBAR")" -eq 1
+          test "$(grep -Fc 'to="/panel/startup/projects/new"' "$FINANCING")" -eq 1
+          test "$(grep -Fc 'to="/panel/startup/profile"' "$FINANCING")" -eq 1
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -29,19 +80,10 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
 
       - name: Build
         run: npm run build
 
-      - name: Keep lockfile reproducible
-        run: |
-          if git diff --quiet -- package-lock.json; then
-            echo "package-lock.json is already in sync"
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add package-lock.json
-          git commit -m "chore(frontend): sync package lock"
-          git push
+      - name: Verify lockfile unchanged
+        run: git diff --exit-code -- package-lock.json
