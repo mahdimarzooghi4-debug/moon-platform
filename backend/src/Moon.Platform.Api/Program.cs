@@ -102,6 +102,12 @@ builder.Services.AddAuthorization(options =>
         policy.RequireAuthenticatedUser();
         policy.RequireRole(SystemRoles.ProductOwner);
     });
+
+    options.AddPolicy(ProjectPolicies.Publisher, policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole(SystemRoles.ProductOwner);
+    });
 });
 
 builder.Services.AddScoped<ISmsProvider, DisabledSmsProvider>();
@@ -157,7 +163,7 @@ app.MapGet("/health/ready", async Task<IResult> (MoonDbContext db, CancellationT
 app.MapGet("/api/v1/system", (HttpContext context) => Results.Ok(new
 {
     service = "moon-platform-api",
-    version = "0.6.0-phase1-evaluation",
+    version = "0.7.0-phase1-publish",
     correlationId = context.TraceIdentifier
 }));
 
