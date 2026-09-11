@@ -1,0 +1,114 @@
+name: Verify Company Panel participation flow
+
+on:
+  push:
+    branches: [feat/company-panel]
+    paths: [.github/workflows/gate-company-participation-flow.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  verify-participation-flow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout pinned feature branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Verify pinned source tree and hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE=5e987c1b1138e9db730a22d8e3381cb27089eb5f
+          test "$(git rev-parse HEAD^)" = "$SOURCE"
+          test "$(git rev-parse "$SOURCE^{tree}")" = "6b20808c29304d4d236c51bfccba14f91ac14e67"
+          test "$(git rev-parse "$SOURCE:src/features/company-panel/project-detail/index.tsx")" = "224abc5d1ff56aa5f8567e7d5562f06ed120b2d7"
+          test "$(git rev-parse "$SOURCE:src/features/company-panel/project-participation/index.tsx")" = "e3f7c3e53ede1ec8804c4256e64010b0f2153439"
+          test "$(git rev-parse "$SOURCE:src/features/company-panel/payment-success/index.tsx")" = "d83b865c1c2c9f6a0ddc108e6400d974c4bc84a7"
+          test "$(git rev-parse "$SOURCE:src/features/company-panel/participations/index.tsx")" = "b98f2d6c519325f5beefb8c6ceb46269167c821d"
+          test "$(git rev-parse "$SOURCE:src/features/company-panel/participation-detail/index.tsx")" = "d4297a9c7c167579badcb2d12b461990335aebf9"
+          test "$(git rev-parse "$SOURCE:src/app/router.tsx")" = "013967a4dc585f96151bdeafd7063afddd89a7d0"
+          test "$(git rev-parse "$SOURCE:package-lock.json")" = "44cbe24f2addd9f712ad76f88b7ff8432b877818"
+          test "$(git rev-parse "$SOURCE:.github/workflows/verify-frontend-integration.yml")" = "39906066a9546d895c4334a96607648b31593474"
+      - name: Verify exact local project image and source locality
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object public/assets/company-panel/project-family-health.png)" = "483a211cac4dc944c4ba878eedcc631a73430186"
+          test "$(curl -fsSL --retry 3 'https://www.figma.com/api/mcp/asset/ae2e617c-c221-4ce3-9f92-31e7ffacaf12.png' | git hash-object --stdin)" = "483a211cac4dc944c4ba878eedcc631a73430186"
+          ! grep -R -E 'figma.com/api/mcp/asset|static.codia.ai' src/features/company-panel/project-detail src/features/company-panel/project-participation src/features/company-panel/payment-success src/features/company-panel/participations src/features/company-panel/participation-detail
+      - name: Apply idempotent Company participation routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('src/app/router.tsx')
+          s = p.read_text()
+          import_anchor = 'const CompanyProjectsPage = lazy(() => import("../features/company-panel/projects"));'
+          imports = '\n'.join([
+            import_anchor,
+            'const CompanyProjectDetailPage = lazy(() => import("../features/company-panel/project-detail"));',
+            'const CompanyProjectParticipationPage = lazy(() => import("../features/company-panel/project-participation"));',
+            'const CompanyPaymentSuccessPage = lazy(() => import("../features/company-panel/payment-success"));',
+            'const CompanyParticipationsPage = lazy(() => import("../features/company-panel/participations"));',
+            'const CompanyParticipationDetailPage = lazy(() => import("../features/company-panel/participation-detail"));',
+          ])
+          if 'const CompanyProjectDetailPage' not in s:
+              assert import_anchor in s
+              s = s.replace(import_anchor, imports, 1)
+          element_anchor = 'const companyProjectsElement = lazyElement(CompanyProjectsPage);'
+          elements = '\n'.join([
+            element_anchor,
+            'const companyProjectDetailElement = lazyElement(CompanyProjectDetailPage);',
+            'const companyProjectParticipationElement = lazyElement(CompanyProjectParticipationPage);',
+            'const companyPaymentSuccessElement = lazyElement(CompanyPaymentSuccessPage);',
+            'const companyParticipationsElement = lazyElement(CompanyParticipationsPage);',
+            'const companyParticipationDetailElement = lazyElement(CompanyParticipationDetailPage);',
+          ])
+          if 'const companyProjectDetailElement' not in s:
+              assert element_anchor in s
+              s = s.replace(element_anchor, elements, 1)
+          route_anchor = '        <Route path="/panel/company/projects" element={companyProjectsElement} />'
+          routes = '\n'.join([
+            route_anchor,
+            '        <Route path="/panel/company/projects/:projectId" element={companyProjectDetailElement} />',
+            '        <Route path="/panel/company/projects/:projectId/participate" element={companyProjectParticipationElement} />',
+            '        <Route path="/panel/company/projects/:projectId/participate/success" element={companyPaymentSuccessElement} />',
+            '        <Route path="/panel/company/participations" element={companyParticipationsElement} />',
+            '        <Route path="/panel/company/participations/:participationId" element={companyParticipationDetailElement} />',
+          ])
+          if '/panel/company/participations/:participationId' not in s:
+              assert route_anchor in s
+              s = s.replace(route_anchor, routes, 1)
+          p.write_text(s)
+          PY
+          for needle in CompanyProjectDetailPage CompanyProjectParticipationPage CompanyPaymentSuccessPage CompanyParticipationsPage CompanyParticipationDetailPage; do test "$(grep -c "$needle" src/app/router.tsx)" -eq 2; done
+          for path in '/panel/company/projects/:projectId"' '/panel/company/projects/:projectId/participate"' '/panel/company/projects/:projectId/participate/success"' '/panel/company/participations"' '/panel/company/participations/:participationId"'; do test "$(grep -c "$path" src/app/router.tsx)" -eq 1; done
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Verify lockfile and baseline workflow unchanged
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object package-lock.json)" = "44cbe24f2addd9f712ad76f88b7ff8432b877818"
+          test "$(git hash-object .github/workflows/verify-frontend-integration.yml)" = "39906066a9546d895c4334a96607648b31593474"
+      - name: Commit clean Router integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/gate-company-participation-flow.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/app/router.tsx
+          test "$(git diff --cached --name-only | sort | tr '\n' '|')" = ".github/workflows/gate-company-participation-flow.yml|src/app/router.tsx|"
+          git commit -m "feat(company-panel): route participation flow"
+          git push origin HEAD:feat/company-panel
