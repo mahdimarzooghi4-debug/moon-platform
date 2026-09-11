@@ -10,6 +10,7 @@ using Moon.Platform.Api.Infrastructure.Persistence;
 using Moon.Platform.Api.Integrations.Payments;
 using Moon.Platform.Api.Integrations.Sms;
 using Moon.Platform.Api.Modules.Identity;
+using Moon.Platform.Api.Modules.Projects;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -71,6 +72,7 @@ builder.Services.AddScoped<IAuditWriter, AuditWriter>();
 builder.Services.AddScoped<IIdentitySyncService, IdentitySyncService>();
 builder.Services.AddScoped<IAdminAccessService, AdminAccessService>();
 builder.Services.AddScoped<IOrganizationAccessService, OrganizationAccessService>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IAuthorizationHandler, OrganizationMemberHandler>();
 
 builder.Services.AddAuthorization(options =>
@@ -141,7 +143,7 @@ app.MapGet("/health/ready", async Task<IResult> (MoonDbContext db, CancellationT
 app.MapGet("/api/v1/system", (HttpContext context) => Results.Ok(new
 {
     service = "moon-platform-api",
-    version = "0.4.0-phase0",
+    version = "0.5.0-phase1-project",
     correlationId = context.TraceIdentifier
 }));
 
@@ -199,6 +201,7 @@ app.MapGet("/api/v1/organizations/{organizationId:guid}/access", (Guid organizat
 })).RequireAuthorization(OrganizationPolicies.Member);
 
 app.MapAdminAccessEndpoints();
+app.MapProjectEndpoints();
 
 app.Run();
 
