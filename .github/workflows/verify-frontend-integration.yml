@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: frontend-${{ github.ref }}
@@ -21,6 +21,35 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Pin startup share sheet source
+        run: |
+          git fetch --no-tags origin a30f45990b60455934216ebdacb8272ed1b1b783
+          test "$(git rev-parse FETCH_HEAD)" = "a30f45990b60455934216ebdacb8272ed1b1b783"
+          test "$(git rev-parse FETCH_HEAD:src/page/index.tsx)" = "d60cb317cf05d668bfe0f6d3fc67352c3acb1b51"
+          test "$(git rev-parse FETCH_HEAD:src/page/index.css)" = "30a9d807b23800ef9c9e29d8f7279ec57667ff5b"
+          test -z "$(git ls-tree -r --name-only FETCH_HEAD -- public/assets)"
+
+      - name: Guard target and Router idempotence
+        run: |
+          target=src/startup-share-sheet/index.tsx
+          import='const StartupShareSheetPage = lazy(() => import("../startup-share-sheet"));'
+          element='const startupShareSheetElement = lazyElement(StartupShareSheetPage);'
+          route='<Route path="/startups/profile/share" element={startupShareSheetElement} />'
+          if test -f "$target"; then
+            test "$(git hash-object "$target")" = "d60cb317cf05d668bfe0f6d3fc67352c3acb1b51"
+            test "$(git hash-object src/startup-share-sheet/index.css)" = "30a9d807b23800ef9c9e29d8f7279ec57667ff5b"
+            test "$(grep -Fxc "$import" src/app/router.tsx)" -eq 1
+            test "$(grep -Fxc "$element" src/app/router.tsx)" -eq 1
+            test "$(grep -Fc "$route" src/app/router.tsx)" -eq 1
+          else
+            test ! -e src/startup-share-sheet
+            test "$(grep -Fc "$import" src/app/router.tsx || true)" -eq 0
+            test "$(grep -Fc "$element" src/app/router.tsx || true)" -eq 0
+            test "$(grep -Fc "$route" src/app/router.tsx || true)" -eq 0
+          fi
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -29,19 +58,12 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
 
       - name: Build
         run: npm run build
 
       - name: Keep lockfile reproducible
         run: |
-          if git diff --quiet -- package-lock.json; then
-            echo "package-lock.json is already in sync"
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add package-lock.json
-          git commit -m "chore(frontend): sync package lock"
-          git push
+          npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+          git diff --exit-code -- package-lock.json
