@@ -95,6 +95,7 @@ const EmdadArticle172ApprovalsPage = lazy(() => import("../panels/emdad/article1
 const EmdadArticle172RequestDetailPage = lazy(() => import("../panels/emdad/article172-approvals/detail"));
 const EmdadArticle172SuccessPage = lazy(() => import("../panels/emdad/article172-approvals/success"));
 const EmdadPaymentHistoryPage = lazy(() => import("../panels/emdad/payment-history"));
+const EmdadPaymentDetailPage = lazy(() => import("../panels/emdad/payment-history/detail"));
 const EmdadFinancialReportsPage = lazy(() => import("../panels/emdad/financial-reports"));
 const EmdadFundSynergyPage = lazy(() => import("../panels/emdad/fund-synergy"));
 const EmdadFundSynergyAllocationPage = lazy(() => import("../panels/emdad/fund-synergy/allocation"));
@@ -118,6 +119,7 @@ const emdadArticle172ApprovalsElement = lazyElement(EmdadArticle172ApprovalsPage
 const emdadArticle172RequestDetailElement = lazyElement(EmdadArticle172RequestDetailPage);
 const emdadArticle172SuccessElement = lazyElement(EmdadArticle172SuccessPage);
 const emdadPaymentHistoryElement = lazyElement(EmdadPaymentHistoryPage);
+const emdadPaymentDetailElement = lazyElement(EmdadPaymentDetailPage);
 const emdadFinancialReportsElement = lazyElement(EmdadFinancialReportsPage);
 const emdadFundSynergyElement = lazyElement(EmdadFundSynergyPage);
 const emdadFundSynergyAllocationElement = lazyElement(EmdadFundSynergyAllocationPage);
@@ -290,6 +292,7 @@ export function AppRouter() {
         <Route path="/panel/emdad/article172-approvals/detail" element={emdadArticle172RequestDetailElement} />
         <Route path="/panel/emdad/article172-approvals/success" element={emdadArticle172SuccessElement} />
         <Route path="/panel/emdad/payment-history" element={emdadPaymentHistoryElement} />
+        <Route path="/panel/emdad/payment-history/detail" element={emdadPaymentDetailElement} />
         <Route path="/panel/emdad/financial-reports" element={emdadFinancialReportsElement} />
         <Route path="/panel/emdad/fund-synergy" element={emdadFundSynergyElement} />
         <Route path="/panel/emdad/fund-synergy/allocation" element={emdadFundSynergyAllocationElement} />
