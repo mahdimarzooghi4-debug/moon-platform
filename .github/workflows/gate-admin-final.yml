@@ -1,0 +1,121 @@
+name: Verify Admin Panel final batch
+
+on:
+  push:
+    branches:
+      - feat/admin-panel-final-batch
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: admin-final-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Verify pinned source
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_SHA="52f75578f2ec7ef656b428ac94cb765fb2b42b36"
+          SOURCE_TREE="fa28df04deeb6066df9c04254d4437b677858001"
+          test "$(git rev-parse HEAD^)" = "$SOURCE_SHA"
+          test "$(git rev-parse ${SOURCE_SHA}^{tree})" = "$SOURCE_TREE"
+          test "$(git hash-object src/features/admin-panel/content/index.tsx)" = "6109a6672e7636ec539f3bd21241b7d3d566fecb"
+          test "$(git hash-object src/features/admin-panel/settings/index.tsx)" = "704da9061333881a8306707cb1d7a6da273e2075"
+          test "$(git hash-object src/features/admin-panel/access-policy/index.tsx)" = "a30d5588584b58c8bd5a15d6c18e6616f627eb85"
+          test "$(git hash-object src/features/admin-panel/final-flow.css)" = "62bb60908ace2ac744aabac27bffda2d6393afd3"
+          test "$(git hash-object public/assets/admin-panel/settings-toggle-on.svg)" = "e5ab335a982299e1bef526cf889176ae8df93842"
+          test "$(git hash-object src/app/router.tsx)" = "edc7c4bca0e0dba6a169082cc86cc9ee97dd8eb0"
+          test "$(git hash-object package-lock.json)" = "44cbe24f2addd9f712ad76f88b7ff8432b877818"
+
+      - name: Verify asset isolation
+        shell: bash
+        run: |
+          set -euo pipefail
+          ! grep -R -E 'static\.codia\.ai|figma\.com/api/mcp/asset' src/features/admin-panel/content src/features/admin-panel/settings src/features/admin-panel/access-policy src/features/admin-panel/final-flow.css
+          ! grep -R -E '2411:(61|64|67|70|73)' src/features/admin-panel/content src/features/admin-panel/settings src/features/admin-panel/access-policy
+          grep -Fq 'settings-toggle-on.svg' src/features/admin-panel/settings/index.tsx
+
+      - name: Patch final routes idempotently
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('src/app/router.tsx')
+          text = path.read_text()
+          imports = '''const AdminContentManagementPage = lazy(() => import("../features/admin-panel/content"));\nconst AdminSettingsPage = lazy(() => import("../features/admin-panel/settings"));\nconst AdminAccessPolicyPage = lazy(() => import("../features/admin-panel/access-policy"));\n'''
+          anchor = 'const AdminReportDetailPage = lazy(() => import("../features/admin-panel/report-detail"));\n'
+          if imports not in text:
+              text = text.replace(anchor, anchor + imports)
+          elements = '''const adminContentManagementElement = lazyElement(AdminContentManagementPage);\nconst adminSettingsElement = lazyElement(AdminSettingsPage);\nconst adminAccessPolicyElement = lazyElement(AdminAccessPolicyPage);\n'''
+          anchor2 = 'const adminReportDetailElement = lazyElement(AdminReportDetailPage);\n'
+          if elements not in text:
+              text = text.replace(anchor2, anchor2 + elements)
+          routes = '''        <Route path="/panel/admin/content" element={adminContentManagementElement} />\n        <Route path="/panel/admin/settings/access-policy" element={adminAccessPolicyElement} />\n        <Route path="/panel/admin/settings" element={adminSettingsElement} />\n'''
+          anchor3 = '        <Route path="/panel/admin/reports" element={adminReportsElement} />\n'
+          if routes not in text:
+              text = text.replace(anchor3, anchor3 + routes)
+          path.write_text(text)
+          PY
+
+      - name: Verify final routes and transitions
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(grep -Fc 'const AdminContentManagementPage = lazy(() => import("../features/admin-panel/content"));' src/app/router.tsx)" = 1
+          test "$(grep -Fc 'const AdminSettingsPage = lazy(() => import("../features/admin-panel/settings"));' src/app/router.tsx)" = 1
+          test "$(grep -Fc 'const AdminAccessPolicyPage = lazy(() => import("../features/admin-panel/access-policy"));' src/app/router.tsx)" = 1
+          test "$(grep -Fc '<Route path="/panel/admin/content" element={adminContentManagementElement} />' src/app/router.tsx)" = 1
+          test "$(grep -Fc '<Route path="/panel/admin/settings/access-policy" element={adminAccessPolicyElement} />' src/app/router.tsx)" = 1
+          test "$(grep -Fc '<Route path="/panel/admin/settings" element={adminSettingsElement} />' src/app/router.tsx)" = 1
+          test "$(grep -Fc 'to="/panel/admin/settings/access-policy"' src/features/admin-panel/settings/index.tsx)" = 1
+          test "$(grep -Fc 'to="/panel/admin/settings"' src/features/admin-panel/access-policy/index.tsx)" = 2
+          test "$(grep -Fc 'onClick={() => toggle(index)}' src/features/admin-panel/settings/index.tsx)" = 2
+          grep -Fq 'active="content"' src/features/admin-panel/content/index.tsx
+          grep -Fq 'active="settings"' src/features/admin-panel/settings/index.tsx
+          grep -Fq 'active="settings"' src/features/admin-panel/access-policy/index.tsx
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Build
+        run: npm run build
+
+      - name: Verify lockfile unchanged
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object package-lock.json)" = "44cbe24f2addd9f712ad76f88b7ff8432b877818"
+          git diff --exit-code -- package-lock.json
+
+      - name: Commit clean product batch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/app/router.tsx
+          if ! git diff --cached --quiet; then
+            git commit -m "feat(admin-panel): wire final routes"
+          fi
+          git rm .github/workflows/gate-admin-final.yml
+          git commit -m "chore(admin-panel): remove final gate"
+          git push
