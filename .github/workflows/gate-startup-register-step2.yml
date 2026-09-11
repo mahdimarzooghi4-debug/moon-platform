@@ -1,4 +1,4 @@
-name: Gate startup register step2 migration
+name: Apply startup register step2 migration
 
 on:
   push:
@@ -6,38 +6,40 @@ on:
       - feat/integrate-startup-register-step2
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  preflight:
+  apply:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - name: Checkout target branch
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 3
 
-      - name: Verify pinned target and source
+      - name: Verify pinned apply commit and source
         shell: bash
         run: |
           set -euo pipefail
+          PREFLIGHT_COMMIT="c38de9fc838260cf7eeb7ea6b52f58743fdefdbb"
           TARGET_BASE="1bee530bd9e524f692b8782a9e583f6861e750ce"
           SOURCE="ba7749a84717afbe2f253b45a7630b2dff8562a7"
-          test "$(git rev-parse HEAD^)" = "$TARGET_BASE"
-          test "$(git rev-parse "$TARGET_BASE^{tree}")" = "0394d2fefd47f628d6bb597a4fe281550a82fb4b"
+          test "$(git rev-parse HEAD^)" = "$PREFLIGHT_COMMIT"
+          test "$(git rev-parse "$PREFLIGHT_COMMIT^")" = "$TARGET_BASE"
           git fetch --no-tags --depth=1 origin "$SOURCE"
           test "$(git rev-parse "$SOURCE^{tree}")" = "e352108fbcd47d63afc175f2ba5985eda6125e6f"
           test "$(git rev-parse "$SOURCE:src/page/index.tsx")" = "51aa8256fa2ca920806abd2f423dbf3533c3cb81"
           test "$(git rev-parse "$SOURCE:src/page/index.css")" = "6387ae13c07fce250e046002090f2d1fc1b8a307"
+          test "$(git rev-parse "$TARGET_BASE:src/app/router.tsx")" = "b260808582169ed4c3138b3315907f1348b379b9"
           test "$(git rev-parse "$TARGET_BASE:package-lock.json")" = "44cbe24f2addd9f712ad76f88b7ff8432b877818"
           test "$(git rev-parse "$TARGET_BASE:.github/workflows/verify-frontend-integration.yml")" = "39906066a9546d895c4334a96607648b31593474"
           if git cat-file -e "$TARGET_BASE:src/features/startup-registration/states/step2/index.tsx" 2>/dev/null; then
-            echo "target already exists"
+            echo "target already exists in integration base"
             exit 1
           fi
 
-      - name: Verify exact asset mappings
+      - name: Reverify exact asset mappings
         shell: bash
         run: |
           set -euo pipefail
@@ -55,7 +57,7 @@ jobs:
           check 'https://static.codia.ai/image/2026-08-24/QH5KXhTOZa.png' 'public/assets/codia/yKSsOMwNWd.svg' '639cffe809545737aac83c347080b6be20038ab6'
           check 'https://static.codia.ai/image/2026-08-24/QyZU84nbLF.png' 'public/assets/codia/yKSsOMwNWd.svg' '639cffe809545737aac83c347080b6be20038ab6'
 
-      - name: Simulate exact migration
+      - name: Apply exact migration
         shell: bash
         run: |
           set -euo pipefail
@@ -88,19 +90,18 @@ jobs:
           imp='const StartupRegistrationStep2Page = lazy(() => import("../features/startup-registration/states/step2"));\n'
           el='const startupRegistrationStep2Element = lazyElement(StartupRegistrationStep2Page);\n'
           route='        <Route path="/register/startup/states/step2" element={startupRegistrationStep2Element} />\n'
-          assert imp not in t and el not in t and route not in t
           a='const StartupRegistrationStep3Page = lazy(() => import("../features/startup-registration/states/step3"));\n'
           b='const startupRegistrationStep3Element = lazyElement(StartupRegistrationStep3Page);\n'
           c='        <Route path="/register/startup/states/step3" element={startupRegistrationStep3Element} />\n'
+          assert imp not in t and el not in t and route not in t
           assert t.count(a)==1 and t.count(b)==1 and t.count(c)==1
           t=t.replace(a,imp+a).replace(b,el+b).replace(c,route+c)
           r.write_text(t)
           PY
+          test "$(git hash-object src/features/startup-registration/states/step2/index.tsx)" = "bd16cee0bb2944a6605c0ec024d8fa4dc6b3ecb6"
+          test "$(git hash-object src/features/startup-registration/states/step2/index.css)" = "6387ae13c07fce250e046002090f2d1fc1b8a307"
+          test "$(git hash-object src/app/router.tsx)" = "7bd4f1eca85b91c26a5deb7fe8fc7e543aad0c1a"
           test "$(grep -R -l 'static.codia.ai' src/features/startup-registration/states/step2 || true)" = ""
-          test "$(grep -Fxc '        <Route path="/register/startup/states/step2" element={startupRegistrationStep2Element} />' src/app/router.tsx)" -eq 1
-          echo "TSX_BLOB=$(git hash-object src/features/startup-registration/states/step2/index.tsx)"
-          echo "CSS_BLOB=$(git hash-object src/features/startup-registration/states/step2/index.css)"
-          echo "ROUTER_BLOB=$(git hash-object src/app/router.tsx)"
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -111,8 +112,24 @@ jobs:
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
 
-      - name: Build simulated migration
+      - name: Build
         run: npm run build
 
       - name: Verify lockfile unchanged
         run: git diff --exit-code -- package-lock.json
+
+      - name: Commit clean product migration
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/gate-startup-register-step2.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/features/startup-registration/states/step2/index.tsx \
+                  src/features/startup-registration/states/step2/index.css \
+                  src/app/router.tsx \
+                  .github/workflows/gate-startup-register-step2.yml
+          git diff --cached --name-only
+          test "$(git diff --cached --name-only | sort | tr '\n' '|')" = ".github/workflows/gate-startup-register-step2.yml|src/app/router.tsx|src/features/startup-registration/states/step2/index.css|src/features/startup-registration/states/step2/index.tsx|"
+          git commit -m "feat(registration): integrate startup step2"
+          git push origin HEAD:feat/integrate-startup-register-step2
