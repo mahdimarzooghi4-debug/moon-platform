@@ -74,6 +74,9 @@ jobs:
           --project src/Moon.Platform.Api/Moon.Platform.Api.csproj
           --startup-project src/Moon.Platform.Api/Moon.Platform.Api.csproj
 
+      - name: Rebuild after migration generation
+        run: dotnet build Moon.Platform.slnx -c Release --no-restore -warnaserror
+
       - name: Run full PostgreSQL 18 test suite
         run: dotnet test Moon.Platform.slnx -c Release --no-build --no-restore --logger "console;verbosity=normal"
 
