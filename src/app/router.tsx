@@ -52,6 +52,7 @@ const SearchResultsErrorPage = lazy(() => import("../search-results/states/error
 const RegistrationTrackNeedsEditPage = lazy(() => import("../registration-track/states/needs-edit"));
 const RegistrationTrackRejectedPage = lazy(() => import("../registration-track/states/rejected"));
 const StartupRegistrationStep3Page = lazy(() => import("../features/startup-registration/states/step3"));
+const StartupRegistrationStep4Page = lazy(() => import("../features/startup-registration/states/step4"));
 const NotFoundPage = lazy(() => import("../not-found"));
 const StartupsDirectoryPage = lazy(() => import("../startups-directory"));
 const StartupPublicProfilePage = lazy(() => import("../startup-public-profile"));
@@ -119,6 +120,7 @@ const searchResultsErrorElement = lazyElement(SearchResultsErrorPage);
 const registrationTrackNeedsEditElement = lazyElement(RegistrationTrackNeedsEditPage);
 const registrationTrackRejectedElement = lazyElement(RegistrationTrackRejectedPage);
 const startupRegistrationStep3Element = lazyElement(StartupRegistrationStep3Page);
+const startupRegistrationStep4Element = lazyElement(StartupRegistrationStep4Page);
 const notFoundElement = lazyElement(NotFoundPage);
 const startupsDirectoryElement = lazyElement(StartupsDirectoryPage);
 const startupPublicProfileElement = lazyElement(StartupPublicProfilePage);
@@ -206,6 +208,7 @@ export function AppRouter() {
         <Route path="/auth" element={<AuthEntryPage />} />
         <Route path="/register/company" element={<CompanyRegistrationPage />} />
         <Route path="/register/startup/states/step3" element={startupRegistrationStep3Element} />
+        <Route path="/register/startup/states/step4" element={startupRegistrationStep4Element} />
         <Route path="/register/startup" element={<StartupRegistrationPage />} />
         <Route path="/projects" element={projectsElement} />
         <Route path="/projects/states/loading" element={projectsLoadingElement} />
