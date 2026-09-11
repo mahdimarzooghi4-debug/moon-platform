@@ -133,9 +133,24 @@ jobs:
           test -n "$frontend_user" && test "$frontend_user" != "0" && test "$frontend_user" != "root"
           test -n "$backend_user" && test "$backend_user" != "0" && test "$backend_user" != "root"
 
+          cleanup() {
+            status=$?
+            if [ "$status" -ne 0 ]; then
+              echo "--- container state ---"
+              docker ps -a || true
+              echo "--- backend logs ---"
+              docker logs moon-backend-acceptance 2>&1 || true
+              echo "--- backend inspect state ---"
+              docker inspect -f '{{json .State}}' moon-backend-acceptance 2>/dev/null || true
+            fi
+            docker rm -f moon-frontend-acceptance moon-backend-acceptance >/dev/null 2>&1 || true
+            trap - EXIT
+            exit "$status"
+          }
+          trap cleanup EXIT
+
           docker run -d --name moon-frontend-acceptance -p 18080:8080 moon-frontend:acceptance
           docker run -d --name moon-backend-acceptance -p 18081:8080 moon-backend:acceptance
-          trap 'docker rm -f moon-frontend-acceptance moon-backend-acceptance >/dev/null 2>&1 || true' EXIT
 
           for i in $(seq 1 30); do curl -fsS http://127.0.0.1:18080/healthz && break || sleep 1; done
           curl -fsS http://127.0.0.1:18080/healthz
