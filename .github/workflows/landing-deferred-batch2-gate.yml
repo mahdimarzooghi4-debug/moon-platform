@@ -1,0 +1,76 @@
+name: Landing Deferred Batch 2 Gate
+
+on:
+  push:
+    branches:
+      - integration/frontend-final
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  landing-deferred-batch2-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install clean dependencies
+        run: npm ci
+
+      - name: Verify lockfile unchanged
+        run: git diff --exit-code -- package-lock.json
+
+      - name: Verify deferred sources, Codia assets, and routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=(
+            src/startup-public-profile/states/unavailable/index.tsx
+            src/features/startup-registration/states/success/index.tsx
+            src/features/company-registration/states/step3/index.tsx
+            src/features/company-registration/states/step4/index.tsx
+            src/features/company-registration/states/success/index.tsx
+          )
+          for file in "${files[@]}"; do
+            test -f "$file"
+            grep -q 'https://static.codia.ai/' "$file"
+          done
+          node <<'NODE'
+          const fs = require('fs');
+          const router = fs.readFileSync('src/app/router.tsx', 'utf8');
+          const required = [
+            '/startups/profile/states/unavailable',
+            '/register/startup/states/success',
+            '/register/company/states/step3',
+            '/register/company/states/step4',
+            '/register/company/states/success'
+          ];
+          for (const path of required) {
+            if (!router.includes(`path="${path}"`)) {
+              console.error(`Missing route: ${path}`);
+              process.exit(1);
+            }
+          }
+          if (!router.includes('path="/register/company/status"')) {
+            console.error('Existing company status route was lost.');
+            process.exit(1);
+          }
+          const paths = [...router.matchAll(/<Route\s+path="([^"]+)"/g)].map((m) => m[1]);
+          const duplicates = [...new Set(paths.filter((p, i) => paths.indexOf(p) !== i))];
+          if (duplicates.length) {
+            console.error(`Duplicate exact route path(s): ${duplicates.join(', ')}`);
+            process.exit(1);
+          }
+          console.log(`Deferred batch2 route smoke OK; ${paths.length} exact routes, no duplicates.`);
+          NODE
+
+      - name: Build frontend
+        run: npm run build
