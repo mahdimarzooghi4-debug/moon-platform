@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { StartupSidebar } from "./components/StartupSidebar";
 import "./index.css";
 
 const ASSET_ROOT = "/assets/startup-panel";
@@ -11,16 +12,6 @@ type MetricCardProps = {
   iconClass: string;
   accentClass: string;
 };
-
-const sidebarItems = [
-  { label: "داشبورد", to: "/panel/startup", icon: "nav-dashboard.svg", active: true },
-  { label: "پروژه‌های من", to: "/panel/startup/projects", icon: "nav-projects.svg" },
-  { label: "مراحل پروژه", to: "/panel/startup/stages", icon: "nav-stages.svg" },
-  { label: "گزارش‌ها و مستندات", to: "/panel/startup/reports", icon: "nav-reports.svg" },
-  { label: "پروفایل استارتاپ", to: "/panel/startup/profile", icon: "nav-profile.svg" },
-  { label: "کارمزد تأمین مالی", to: "/panel/startup/financing-fee", icon: "nav-profile.svg" },
-  { label: "تنظیمات", to: "/panel/startup/settings", icon: "nav-settings.svg" },
-];
 
 const metrics: MetricCardProps[] = [
   {
@@ -81,45 +72,10 @@ function MetricCard({ label, value, meta, icon, iconClass, accentClass }: Metric
   );
 }
 
-function StartupSidebar() {
-  return (
-    <aside className="startup-sidebar" aria-label="ناوبری پنل استارتاپ">
-      <div className="startup-brand">
-        <img src={`${ASSET_ROOT}/logo.png`} alt="سامانه ماه" />
-      </div>
-
-      <div className="startup-identity">
-        <strong>سامانه ماه</strong>
-        <span>حساب استارتاپی</span>
-      </div>
-
-      <nav className="startup-nav">
-        {sidebarItems.map((item) => (
-          <Link
-            key={item.to}
-            to={item.to}
-            className={`startup-nav-item${item.active ? " is-active" : ""}`}
-          >
-            <span>{item.label}</span>
-            <img src={`${ASSET_ROOT}/${item.icon}`} alt="" />
-          </Link>
-        ))}
-      </nav>
-
-      <div className="startup-sidebar-spacer" />
-
-      <button className="startup-logout" type="button">
-        <span>خروج از سیستم</span>
-        <span className="startup-logout-icon" aria-hidden="true" />
-      </button>
-    </aside>
-  );
-}
-
 export default function StartupPanelDashboard() {
   return (
     <div className="startup-panel-page" data-node-id="1951:206" data-name="startup-main-dashboard">
-      <StartupSidebar />
+      <StartupSidebar active="dashboard" />
 
       <main className="startup-dashboard-content">
         <header className="startup-topbar">
