@@ -5,10 +5,11 @@ on:
     branches:
       - integration/frontend-foundation
       - integration/landing-frontend
+      - feat/startup-panel
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: frontend-${{ github.ref }}
@@ -21,6 +22,38 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Verify pinned source and hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "83bc9e2a176b6e4314c59b09045072e2a1b2f331"
+          test "$(git hash-object src/features/startup-panel/project-stages/index.tsx)" = "46a0e1482fc51500f72c031a5d8359bf1a69b3c9"
+          test "$(git hash-object src/features/startup-panel/project-stages/index.css)" = "ead7e784ef0519d35380ede5ddea62a180c45a6b"
+          test "$(git hash-object src/app/router.tsx)" = "3b8e47e4a3d52be2e8e120d31266b6a479a57272"
+          test "$(git hash-object package-lock.json)" = "44cbe24f2addd9f712ad76f88b7ff8432b877818"
+
+      - name: Verify asset isolation
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -R -n -E 'figma\.com/api/mcp/asset|static\.codia\.ai' src/features/startup-panel/project-stages; then
+            echo "Temporary remote asset URL found in project stages implementation"
+            exit 1
+          fi
+
+      - name: Verify startup project stages routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(grep -F -c 'const StartupProjectStagesPage = lazy(() => import("../features/startup-panel/project-stages"));' src/app/router.tsx)" -eq 1
+          test "$(grep -F -c 'const startupProjectStagesElement = lazyElement(StartupProjectStagesPage);' src/app/router.tsx)" -eq 1
+          test "$(grep -F -c '<Route path="/panel/startup/stages" element={startupProjectStagesElement} />' src/app/router.tsx)" -eq 1
+          test "$(grep -F -c '<Route path="/panel/startup/projects/:projectId/stages" element={startupProjectStagesElement} />' src/app/router.tsx)" -eq 1
+          test "$(grep -F -c '<Route path="/projects" element={projectsElement} />' src/app/router.tsx)" -eq 1
+          test "$(grep -F -c '<Route path="/projects/:projectId" element={projectDetailsElement} />' src/app/router.tsx)" -eq 1
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -29,19 +62,10 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
 
       - name: Build
         run: npm run build
 
-      - name: Keep lockfile reproducible
-        run: |
-          if git diff --quiet -- package-lock.json; then
-            echo "package-lock.json is already in sync"
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add package-lock.json
-          git commit -m "chore(frontend): sync package lock"
-          git push
+      - name: Verify lockfile unchanged
+        run: git diff --exit-code -- package-lock.json
