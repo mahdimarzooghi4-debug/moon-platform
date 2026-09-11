@@ -1,0 +1,44 @@
+name: Frontend Admin Access Gate
+
+on:
+  push:
+    branches:
+      - feat/frontend-auth-integration
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install clean dependencies
+        run: npm ci
+
+      - name: Verify dependency manifests unchanged
+        run: git diff --exit-code -- package.json package-lock.json
+
+      - name: Build production bundle
+        run: npm run build
+
+      - name: Admin access integration smoke checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f src/features/admin-panel/api.ts
+          grep -Fq '/api/v1/admin/users' src/features/admin-panel/api.ts
+          grep -Fq '/api/v1/admin/organizations' src/features/admin-panel/api.ts
+          grep -Fq '/api/v1/admin/roles' src/features/admin-panel/api.ts
+          grep -Fq '/api/v1/admin/memberships' src/features/admin-panel/api.ts
+          grep -Fq 'listAdminUsers' src/features/admin-panel/users/index.tsx
+          grep -Fq 'grantAdminMembership' src/features/admin-panel/users-new/index.tsx
+          grep -Fq 'setAdminUserActive' src/features/admin-panel/user-detail/index.tsx
+          grep -Fq 'setAdminOrganizationStatus' src/features/admin-panel/organization-detail/index.tsx
+          grep -Fq 'listAdminRoles' src/features/admin-panel/roles/index.tsx
