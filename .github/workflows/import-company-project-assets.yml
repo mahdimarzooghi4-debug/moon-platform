@@ -1,0 +1,77 @@
+name: Import Company Panel project thumbnails
+
+on:
+  push:
+    branches:
+      - feat/company-panel-project-assets
+
+permissions:
+  contents: write
+
+jobs:
+  import-project-assets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout pinned asset branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Verify pinned source
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE="c6da8bff78bfe1e025744edc707871daceafff2f"
+          test "$(git rev-parse HEAD^)" = "$SOURCE"
+          test "$(git rev-parse "$SOURCE^{tree}")" = "51ed775c4715811ad7e3ad8126ccc5a3e233c66a"
+          test "$(git rev-parse "$SOURCE:src/features/company-panel/projects/index.tsx")" = "36a89c6973c7830558808d0ae4b2bc1efac9523d"
+          test "$(git rev-parse "$SOURCE:src/features/company-panel/projects/index.css")" = "40426819f91d0b878fa96890f639b964ffa02dae"
+          test "$(git rev-parse "$SOURCE:src/app/router.tsx")" = "4cc5b03f62ece8f04e0ad7ac8869c8f3b408b16a"
+          test "$(git rev-parse "$SOURCE:package-lock.json")" = "44cbe24f2addd9f712ad76f88b7ff8432b877818"
+          test "$(git rev-parse "$SOURCE:.github/workflows/verify-frontend-integration.yml")" = "39906066a9546d895c4334a96607648b31593474"
+
+      - name: Download exact Figma thumbnails
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p public/assets/company-panel
+          curl -fsSL --retry 3 'https://www.figma.com/api/mcp/asset/9e307863-6e52-4a28-b52b-51e6e7d9ab3f.png' -o public/assets/company-panel/project-family-health.png
+          curl -fsSL --retry 3 'https://www.figma.com/api/mcp/asset/0c0d255d-ccb2-4666-9c1c-16c4c8a7b6ee.png' -o public/assets/company-panel/project-teen-skills.png
+          curl -fsSL --retry 3 'https://www.figma.com/api/mcp/asset/7ab27be9-0e13-4285-bde7-06a9161fe8ee.png' -o public/assets/company-panel/project-rural-women-employment.png
+          for f in public/assets/company-panel/project-*.png; do
+            test -s "$f"
+            printf '%s %s\n' "$(git hash-object "$f")" "$f"
+          done | sort
+
+      - name: Verify repeated Figma glyphs match dashboard assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          check() {
+            url="$1"; local_path="$2"
+            test "$(curl -fsSL --retry 3 "$url" | git hash-object --stdin)" = "$(git hash-object "$local_path")"
+          }
+          check 'https://www.figma.com/api/mcp/asset/5030c5bf-3772-436e-9c32-796346fedb82.png' 'public/assets/company-panel/logo.png'
+          check 'https://www.figma.com/api/mcp/asset/ffad625f-c9f5-4d5b-9901-44dde5189033.svg' 'public/assets/company-panel/nav-dashboard.svg'
+          check 'https://www.figma.com/api/mcp/asset/1e981155-94d3-4633-abfa-24ecde632291.svg' 'public/assets/company-panel/nav-social-projects.svg'
+          check 'https://www.figma.com/api/mcp/asset/7b13eb07-9d48-4de9-ad30-d6d419cc9476.svg' 'public/assets/company-panel/nav-participations.svg'
+          check 'https://www.figma.com/api/mcp/asset/050d7716-e11b-45d0-8582-021dd94fa6a2.svg' 'public/assets/company-panel/nav-reports.svg'
+          check 'https://www.figma.com/api/mcp/asset/4a09f346-4037-4478-a92f-688663db03e1.svg' 'public/assets/company-panel/nav-certificate.svg'
+          check 'https://www.figma.com/api/mcp/asset/7b11fce6-c5b2-4458-a1cd-8c8873f4ce7a.svg' 'public/assets/company-panel/nav-account.svg'
+          check 'https://www.figma.com/api/mcp/asset/4a0858e7-1128-4820-9276-baee42b76751.svg' 'public/assets/company-panel/nav-logout.svg'
+
+      - name: Commit clean thumbnail import
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/import-company-project-assets.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/assets/company-panel/project-family-health.png \
+                  public/assets/company-panel/project-teen-skills.png \
+                  public/assets/company-panel/project-rural-women-employment.png
+          git diff --cached --name-only
+          test "$(git diff --cached --name-only | sort | tr '\n' '|')" = ".github/workflows/import-company-project-assets.yml|public/assets/company-panel/project-family-health.png|public/assets/company-panel/project-rural-women-employment.png|public/assets/company-panel/project-teen-skills.png|"
+          git commit -m "feat(company-panel): import project thumbnails"
+          git push origin HEAD:feat/company-panel-project-assets
