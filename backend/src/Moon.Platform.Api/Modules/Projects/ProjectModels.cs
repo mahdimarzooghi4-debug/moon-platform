@@ -9,6 +9,11 @@ public static class ProjectStatuses
     public const string Published = "published";
 }
 
+public static class ProjectPolicies
+{
+    public const string Publisher = "phase1-project-publisher";
+}
+
 public sealed class Project
 {
     public Guid Id { get; init; } = Guid.NewGuid();
@@ -19,6 +24,7 @@ public sealed class Project
     public DateTimeOffset CreatedAtUtc { get; init; } = DateTimeOffset.UtcNow;
     public DateTimeOffset? SubmittedAtUtc { get; set; }
     public DateTimeOffset? ApprovedAtUtc { get; set; }
+    public string? PublishedBySubject { get; set; }
     public DateTimeOffset? PublishedAtUtc { get; set; }
 }
 
@@ -54,6 +60,7 @@ public sealed record ProjectView(
     DateTimeOffset CreatedAtUtc,
     DateTimeOffset? SubmittedAtUtc,
     DateTimeOffset? ApprovedAtUtc,
+    string? PublishedBySubject,
     DateTimeOffset? PublishedAtUtc,
     IReadOnlyList<ProjectVersionView> Versions);
 
