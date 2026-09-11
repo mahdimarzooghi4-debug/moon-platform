@@ -100,6 +100,7 @@ const EmdadFundSynergyPage = lazy(() => import("../panels/emdad/fund-synergy"));
 const EmdadFundSynergyAllocationPage = lazy(() => import("../panels/emdad/fund-synergy/allocation"));
 const EmdadFundSynergySuccessPage = lazy(() => import("../panels/emdad/fund-synergy/success"));
 const EmdadFundSynergyHistoryPage = lazy(() => import("../panels/emdad/fund-synergy-history"));
+const EmdadFundReturnsPage = lazy(() => import("../panels/emdad/fund-returns"));
 
 function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
   return (
@@ -122,6 +123,7 @@ const emdadFundSynergyElement = lazyElement(EmdadFundSynergyPage);
 const emdadFundSynergyAllocationElement = lazyElement(EmdadFundSynergyAllocationPage);
 const emdadFundSynergySuccessElement = lazyElement(EmdadFundSynergySuccessPage);
 const emdadFundSynergyHistoryElement = lazyElement(EmdadFundSynergyHistoryPage);
+const emdadFundReturnsElement = lazyElement(EmdadFundReturnsPage);
 
 const landingElement = lazyElement(LandingPage);
 const aboutElement = lazyElement(AboutPage);
@@ -293,6 +295,7 @@ export function AppRouter() {
         <Route path="/panel/emdad/fund-synergy/allocation" element={emdadFundSynergyAllocationElement} />
         <Route path="/panel/emdad/fund-synergy/success" element={emdadFundSynergySuccessElement} />
         <Route path="/panel/emdad/fund-synergy/history" element={emdadFundSynergyHistoryElement} />
+        <Route path="/panel/emdad/fund-returns" element={emdadFundReturnsElement} />
         <Route path="/auth" element={<AuthEntryPage />} />
         <Route path="/register/company/states/step2" element={companyRegistrationStep2Element} />
         <Route path="/register/company/status" element={companyRegistrationStatusElement} />
