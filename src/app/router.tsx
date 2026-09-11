@@ -117,6 +117,8 @@ const AdminFundingPage = lazy(() => import("../features/admin-panel/funding"));
 const AdminFundingDetailPage = lazy(() => import("../features/admin-panel/funding-detail"));
 const AdminRevenuesPage = lazy(() => import("../features/admin-panel/revenues"));
 const AdminRevenueDetailPage = lazy(() => import("../features/admin-panel/revenue-detail"));
+const AdminReportsPage = lazy(() => import("../features/admin-panel/reports"));
+const AdminReportDetailPage = lazy(() => import("../features/admin-panel/report-detail"));
 
 function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
   return (
@@ -239,6 +241,8 @@ const adminFundingElement = lazyElement(AdminFundingPage);
 const adminFundingDetailElement = lazyElement(AdminFundingDetailPage);
 const adminRevenuesElement = lazyElement(AdminRevenuesPage);
 const adminRevenueDetailElement = lazyElement(AdminRevenueDetailPage);
+const adminReportsElement = lazyElement(AdminReportsPage);
+const adminReportDetailElement = lazyElement(AdminReportDetailPage);
 
 /**
  * Routes are introduced around the existing Figma-derived screens so their
@@ -367,6 +371,8 @@ export function AppRouter() {
         <Route path="/panel/admin/funding" element={adminFundingElement} />
         <Route path="/panel/admin/revenues/:revenueId" element={adminRevenueDetailElement} />
         <Route path="/panel/admin/revenues" element={adminRevenuesElement} />
+        <Route path="/panel/admin/reports/:reportId" element={adminReportDetailElement} />
+        <Route path="/panel/admin/reports" element={adminReportsElement} />
         <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/fund-released" element={startupProjectStageFundReleasedElement} />
         <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/evaluation/approved" element={startupProjectStageEvaluationElement} />
         <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/submitted" element={startupProjectStageReportSubmittedElement} />
