@@ -1,0 +1,44 @@
+name: Backend Phase 0 Gate
+
+on:
+  push:
+    branches:
+      - feat/backend-phase-0-foundation
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore backend/Moon.Platform.slnx
+
+      - name: Build
+        run: dotnet build backend/Moon.Platform.slnx --configuration Release --no-restore
+
+      - name: Validate local infrastructure config
+        run: docker compose -f backend/docker-compose.yml config >/dev/null
+
+      - name: Foundation smoke checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f backend/src/Moon.Platform.Api/Program.cs
+          test -f backend/src/Moon.Platform.Api/Infrastructure/Persistence/MoonDbContext.cs
+          test -f backend/src/Moon.Platform.Api/Integrations/Sms/ISmsProvider.cs
+          test -f backend/src/Moon.Platform.Api/Integrations/Payments/IPaymentGateway.cs
+          grep -Fq 'TargetFramework>net10.0' backend/src/Moon.Platform.Api/Moon.Platform.Api.csproj
+          grep -Fq 'Npgsql.EntityFrameworkCore.PostgreSQL' backend/Directory.Packages.props
+          grep -Fq 'OpenTelemetry.Extensions.Hosting' backend/Directory.Packages.props
+          grep -Fq 'AddAuthentication' backend/src/Moon.Platform.Api/Program.cs
+          grep -Fq 'AddOpenTelemetry' backend/src/Moon.Platform.Api/Program.cs
+          grep -Fq 'AuditEvents' backend/src/Moon.Platform.Api/Infrastructure/Persistence/MoonDbContext.cs
+          ! grep -R -E -i '(kyc|sheba|shahkar)' backend/src backend/Directory.Packages.props
