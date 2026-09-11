@@ -86,6 +86,18 @@ const CreativeHouseSettingsPage = lazy(() => import("../panels/creative-house/se
 
 const CreativeHouseReportDetailPage = lazy(() => import("../panels/creative-house/report-detail"));
 
+const CreativeHouseFilePreviewOverlayPage = lazy(() => import("../panels/creative-house/overlays/file-preview"));
+
+const CreativeHouseLegalOverlayPage = lazy(() => import("../panels/creative-house/overlays/legal"));
+
+const CreativeHouseLogoutOverlayPage = lazy(() => import("../panels/creative-house/overlays/logout"));
+
+const CreativeHousePaginationOverlayPage = lazy(() => import("../panels/creative-house/overlays/pagination"));
+
+const CreativeHouseSearchOverlayPage = lazy(() => import("../panels/creative-house/overlays/search"));
+
+const CreativeHouseDecisionOverlayPage = lazy(() => import("../panels/creative-house/overlays/decision"));
+
 function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
   return (
     <Suspense fallback={null}>
@@ -112,6 +124,18 @@ const creativeHouseEvaluationHistoryElement = lazyElement(CreativeHouseEvaluatio
 const creativeHouseSettingsElement = lazyElement(CreativeHouseSettingsPage);
 
 const creativeHouseReportDetailElement = lazyElement(CreativeHouseReportDetailPage);
+
+const creativeHouseFilePreviewOverlayElement = lazyElement(CreativeHouseFilePreviewOverlayPage);
+
+const creativeHouseLegalOverlayElement = lazyElement(CreativeHouseLegalOverlayPage);
+
+const creativeHouseLogoutOverlayElement = lazyElement(CreativeHouseLogoutOverlayPage);
+
+const creativeHousePaginationOverlayElement = lazyElement(CreativeHousePaginationOverlayPage);
+
+const creativeHouseSearchOverlayElement = lazyElement(CreativeHouseSearchOverlayPage);
+
+const creativeHouseDecisionOverlayElement = lazyElement(CreativeHouseDecisionOverlayPage);
 
 const landingElement = lazyElement(LandingPage);
 const aboutElement = lazyElement(AboutPage);
@@ -261,6 +285,12 @@ export function AppRouter() {
         <Route path="/panel/creative-house/evaluation-history" element={creativeHouseEvaluationHistoryElement} />
         <Route path="/panel/creative-house/settings" element={creativeHouseSettingsElement} />
         <Route path="/panel/creative-house/reports/detail" element={creativeHouseReportDetailElement} />
+        <Route path="/panel/creative-house/overlays/file-preview" element={creativeHouseFilePreviewOverlayElement} />
+        <Route path="/panel/creative-house/overlays/legal" element={creativeHouseLegalOverlayElement} />
+        <Route path="/panel/creative-house/overlays/logout" element={creativeHouseLogoutOverlayElement} />
+        <Route path="/panel/creative-house/overlays/pagination" element={creativeHousePaginationOverlayElement} />
+        <Route path="/panel/creative-house/overlays/search" element={creativeHouseSearchOverlayElement} />
+        <Route path="/panel/creative-house/overlays/decision" element={creativeHouseDecisionOverlayElement} />
         <Route path="/auth" element={<AuthEntryPage />} />
         <Route path="/register/company/states/step2" element={companyRegistrationStep2Element} />
         <Route path="/register/company/status" element={companyRegistrationStatusElement} />
