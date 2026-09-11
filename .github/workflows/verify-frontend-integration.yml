@@ -3,16 +3,22 @@ name: Verify frontend integration
 on:
   push:
     branches:
-      - integration/frontend-foundation
-      - integration/landing-frontend
+      - feat/startup-panel
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: frontend-${{ github.ref }}
   cancel-in-progress: true
+
+env:
+  PINNED_IMPLEMENTATION_SHA: ae6a4381eefe731ffc585be5de71451f30bf6804
+  DETAIL_TSX_SHA: 87820842882b481b5f135e339581ff6ef0277e64
+  DETAIL_CSS_SHA: 196d76d7d123fe2b57dce3ebf1bb2e0b344da66f
+  ROUTER_SHA: 25853651f39c24295e5947d9459c26f5a2ad2404
+  LOCKFILE_SHA: 44cbe24f2addd9f712ad76f88b7ff8432b877818
 
 jobs:
   build:
@@ -21,6 +27,29 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Verify pinned source and hashes
+        run: |
+          test "$(git rev-parse HEAD^)" = "$PINNED_IMPLEMENTATION_SHA"
+          test "$(git hash-object src/features/startup-panel/project-detail/index.tsx)" = "$DETAIL_TSX_SHA"
+          test "$(git hash-object src/features/startup-panel/project-detail/index.css)" = "$DETAIL_CSS_SHA"
+          test "$(git hash-object src/app/router.tsx)" = "$ROUTER_SHA"
+          test "$(git hash-object package-lock.json)" = "$LOCKFILE_SHA"
+
+      - name: Verify asset isolation
+        run: |
+          ! grep -R -n -E 'static\.codia\.ai|figma\.com/api/mcp/asset' src/features/startup-panel/project-detail
+          test ! -e public/assets/startup-panel/project-detail
+
+      - name: Verify startup project detail route
+        run: |
+          test "$(grep -F -c 'const StartupProjectDetailPage = lazy(() => import("../features/startup-panel/project-detail"));' src/app/router.tsx)" -eq 1
+          test "$(grep -F -c 'const startupProjectDetailElement = lazyElement(StartupProjectDetailPage);' src/app/router.tsx)" -eq 1
+          test "$(grep -F -c '<Route path="/panel/startup/projects/:projectId" element={startupProjectDetailElement} />' src/app/router.tsx)" -eq 1
+          test "$(grep -F -c '<Route path="/panel/startup/projects/submitted" element={startupProjectSubmittedElement} />' src/app/router.tsx)" -eq 1
+          test "$(grep -F -c '<Route path="/panel/startup/projects/new" element={startupProjectCreateElement} />' src/app/router.tsx)" -eq 1
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -29,19 +58,10 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
 
       - name: Build
         run: npm run build
 
-      - name: Keep lockfile reproducible
-        run: |
-          if git diff --quiet -- package-lock.json; then
-            echo "package-lock.json is already in sync"
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add package-lock.json
-          git commit -m "chore(frontend): sync package lock"
-          git push
+      - name: Verify lockfile unchanged
+        run: git diff --exit-code -- package-lock.json
