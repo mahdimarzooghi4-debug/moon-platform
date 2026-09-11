@@ -254,8 +254,7 @@ public sealed class LedgerService(MoonDbContext dbContext, IAuditWriter auditWri
             IdempotencyKey = normalizedKey,
             CreatedBySubject = actorSubject,
             ReversesJournalId = original.Id,
-            Reason = reason,
-            PaymentId = original.PaymentId
+            Reason = reason
         };
 
         foreach (var entry in originalEntries)
