@@ -1,7 +1,11 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Moon.Platform.Api.Common;
+using Moon.Platform.Api.Common.Auditing;
+using Moon.Platform.Api.Common.Authorization;
 using Moon.Platform.Api.Infrastructure.Persistence;
 using Moon.Platform.Api.Integrations.Payments;
 using Moon.Platform.Api.Integrations.Sms;
@@ -34,10 +38,27 @@ builder.Services
             options.Audience = audience;
         }
 
+        options.MapInboundClaims = false;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            NameClaimType = "preferred_username",
+            RoleClaimType = "roles"
+        };
         options.RequireHttpsMetadata = builder.Configuration.GetValue("Authentication:RequireHttpsMetadata", true);
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddScoped<IAuditWriter, AuditWriter>();
+builder.Services.AddScoped<IOrganizationAccessService, OrganizationAccessService>();
+builder.Services.AddScoped<IAuthorizationHandler, OrganizationMemberHandler>();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(OrganizationPolicies.Member, policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.AddRequirements(new OrganizationMemberRequirement());
+    });
+});
 
 builder.Services.AddScoped<ISmsProvider, DisabledSmsProvider>();
 builder.Services.AddScoped<IPaymentGateway, DisabledPaymentGateway>();
@@ -91,7 +112,7 @@ app.MapGet("/health/ready", async Task<IResult> (MoonDbContext db, CancellationT
 app.MapGet("/api/v1/system", (HttpContext context) => Results.Ok(new
 {
     service = "moon-platform-api",
-    version = "0.1.0-phase0",
+    version = "0.2.0-phase0",
     correlationId = context.TraceIdentifier
 }));
 
@@ -99,8 +120,15 @@ app.MapGet("/api/v1/me", (ClaimsPrincipal user) => Results.Ok(new
 {
     subject = user.FindFirstValue("sub"),
     name = user.Identity?.Name,
+    roles = user.FindAll("roles").Select(claim => claim.Value).Distinct().ToArray(),
     authenticated = user.Identity?.IsAuthenticated ?? false
 })).RequireAuthorization();
+
+app.MapGet("/api/v1/organizations/{organizationId:guid}/access", (Guid organizationId) => Results.Ok(new
+{
+    organizationId,
+    access = "member"
+})).RequireAuthorization(OrganizationPolicies.Member);
 
 app.Run();
 
