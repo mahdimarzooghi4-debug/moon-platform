@@ -86,6 +86,7 @@ const StartupProfileEditProductTeamPage = lazy(() => import("../features/startup
 const StartupProfileEditImpactDocumentsPage = lazy(() => import("../features/startup-panel/profile-edit-impact-documents"));
 const StartupFinancingFeePage = lazy(() => import("../features/startup-panel/financing-fee"));
 const StartupSettingsPage = lazy(() => import("../features/startup-panel/settings"));
+const CompanyPanelDashboardPage = lazy(() => import("../features/company-panel"));
 
 function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
   return (
@@ -177,6 +178,7 @@ const startupProfileEditProductTeamElement = lazyElement(StartupProfileEditProdu
 const startupProfileEditImpactDocumentsElement = lazyElement(StartupProfileEditImpactDocumentsPage);
 const startupFinancingFeeElement = lazyElement(StartupFinancingFeePage);
 const startupSettingsElement = lazyElement(StartupSettingsPage);
+const companyPanelDashboardElement = lazyElement(CompanyPanelDashboardPage);
 
 /**
  * Routes are introduced around the existing Figma-derived screens so their
@@ -276,6 +278,7 @@ export function AppRouter() {
         <Route path="/panel/startup/profile" element={startupProfileElement} />
         <Route path="/panel/startup/financing-fee" element={startupFinancingFeeElement} />
         <Route path="/panel/startup/settings" element={startupSettingsElement} />
+        <Route path="/panel/company" element={companyPanelDashboardElement} />
         <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/fund-released" element={startupProjectStageFundReleasedElement} />
         <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/evaluation/approved" element={startupProjectStageEvaluationElement} />
         <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/submitted" element={startupProjectStageReportSubmittedElement} />
