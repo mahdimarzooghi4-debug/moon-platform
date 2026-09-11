@@ -41,4 +41,4 @@ jobs:
           grep -Fq 'AddAuthentication' backend/src/Moon.Platform.Api/Program.cs
           grep -Fq 'AddOpenTelemetry' backend/src/Moon.Platform.Api/Program.cs
           grep -Fq 'AuditEvents' backend/src/Moon.Platform.Api/Infrastructure/Persistence/MoonDbContext.cs
-          ! grep -R -E -i '(kyc|sheba|shahkar)' backend/src backend/Directory.Packages.props
+          ! grep -R -E -i --exclude-dir=bin --exclude-dir=obj '(kyc|sheba|shahkar)' backend/src backend/Directory.Packages.props
