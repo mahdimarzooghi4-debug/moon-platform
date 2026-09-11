@@ -1,0 +1,70 @@
+using Microsoft.EntityFrameworkCore;
+using Moon.Platform.Api.Common.Auditing;
+using Moon.Platform.Api.Modules.Identity;
+
+namespace Moon.Platform.Api.Infrastructure.Persistence;
+
+public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbContext(options)
+{
+    public DbSet<Organization> Organizations => Set<Organization>();
+    public DbSet<AppUser> Users => Set<AppUser>();
+    public DbSet<Role> Roles => Set<Role>();
+    public DbSet<Membership> Memberships => Set<Membership>();
+    public DbSet<AuditEvent> AuditEvents => Set<AuditEvent>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.HasDefaultSchema("moon");
+
+        modelBuilder.Entity<Organization>(entity =>
+        {
+            entity.ToTable("organizations");
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.Name).HasMaxLength(200).IsRequired();
+            entity.Property(x => x.Type).HasMaxLength(50).IsRequired();
+            entity.Property(x => x.Status).HasMaxLength(32).IsRequired();
+            entity.HasIndex(x => new { x.Type, x.Status });
+        });
+
+        modelBuilder.Entity<AppUser>(entity =>
+        {
+            entity.ToTable("users");
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.ExternalSubject).HasMaxLength(200).IsRequired();
+            entity.Property(x => x.DisplayName).HasMaxLength(200);
+            entity.HasIndex(x => x.ExternalSubject).IsUnique();
+        });
+
+        modelBuilder.Entity<Role>(entity =>
+        {
+            entity.ToTable("roles");
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.Code).HasMaxLength(80).IsRequired();
+            entity.Property(x => x.Name).HasMaxLength(160).IsRequired();
+            entity.HasIndex(x => x.Code).IsUnique();
+        });
+
+        modelBuilder.Entity<Membership>(entity =>
+        {
+            entity.ToTable("memberships");
+            entity.HasKey(x => x.Id);
+            entity.HasIndex(x => new { x.UserId, x.OrganizationId, x.RoleId }).IsUnique();
+            entity.HasOne<AppUser>().WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne<Organization>().WithMany().HasForeignKey(x => x.OrganizationId).OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne<Role>().WithMany().HasForeignKey(x => x.RoleId).OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<AuditEvent>(entity =>
+        {
+            entity.ToTable("audit_events");
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.ActorSubject).HasMaxLength(200).IsRequired();
+            entity.Property(x => x.Action).HasMaxLength(120).IsRequired();
+            entity.Property(x => x.SubjectType).HasMaxLength(120).IsRequired();
+            entity.Property(x => x.SubjectId).HasMaxLength(200).IsRequired();
+            entity.Property(x => x.CorrelationId).HasMaxLength(128).IsRequired();
+            entity.HasIndex(x => x.OccurredAtUtc);
+            entity.HasIndex(x => x.CorrelationId);
+        });
+    }
+}
