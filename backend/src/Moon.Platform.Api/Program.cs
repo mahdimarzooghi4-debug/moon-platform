@@ -9,6 +9,7 @@ using Moon.Platform.Api.Common.Authorization;
 using Moon.Platform.Api.Infrastructure.Persistence;
 using Moon.Platform.Api.Integrations.Payments;
 using Moon.Platform.Api.Integrations.Sms;
+using Moon.Platform.Api.Modules.Identity;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -48,6 +49,7 @@ builder.Services
     });
 
 builder.Services.AddScoped<IAuditWriter, AuditWriter>();
+builder.Services.AddScoped<IIdentitySyncService, IdentitySyncService>();
 builder.Services.AddScoped<IOrganizationAccessService, OrganizationAccessService>();
 builder.Services.AddScoped<IAuthorizationHandler, OrganizationMemberHandler>();
 
@@ -112,17 +114,56 @@ app.MapGet("/health/ready", async Task<IResult> (MoonDbContext db, CancellationT
 app.MapGet("/api/v1/system", (HttpContext context) => Results.Ok(new
 {
     service = "moon-platform-api",
-    version = "0.2.0-phase0",
+    version = "0.3.0-phase0",
     correlationId = context.TraceIdentifier
 }));
 
-app.MapGet("/api/v1/me", (ClaimsPrincipal user) => Results.Ok(new
+app.MapPost("/api/v1/session/sync", async Task<IResult> (
+    ClaimsPrincipal principal,
+    HttpContext context,
+    IIdentitySyncService identitySync,
+    CancellationToken cancellationToken) =>
 {
-    subject = user.FindFirstValue("sub"),
-    name = user.Identity?.Name,
-    roles = user.FindAll("roles").Select(claim => claim.Value).Distinct().ToArray(),
-    authenticated = user.Identity?.IsAuthenticated ?? false
-})).RequireAuthorization();
+    if (string.IsNullOrWhiteSpace(principal.FindFirstValue("sub")))
+    {
+        return Results.Unauthorized();
+    }
+
+    var current = await identitySync.SyncAsync(
+        principal,
+        context.TraceIdentifier,
+        context.Connection.RemoteIpAddress?.ToString(),
+        cancellationToken);
+
+    return current.IsActive
+        ? Results.Ok(current)
+        : Results.Forbid();
+}).RequireAuthorization();
+
+app.MapGet("/api/v1/me", async Task<IResult> (
+    ClaimsPrincipal principal,
+    IIdentitySyncService identitySync,
+    CancellationToken cancellationToken) =>
+{
+    if (string.IsNullOrWhiteSpace(principal.FindFirstValue("sub")))
+    {
+        return Results.Unauthorized();
+    }
+
+    var current = await identitySync.GetCurrentAsync(principal, cancellationToken);
+    if (current is null)
+    {
+        return Results.NotFound(new
+        {
+            code = "identity_not_synced",
+            message = "Call POST /api/v1/session/sync after authentication."
+        });
+    }
+
+    return current.IsActive
+        ? Results.Ok(current)
+        : Results.Forbid();
+}).RequireAuthorization();
 
 app.MapGet("/api/v1/organizations/{organizationId:guid}/access", (Guid organizationId) => Results.Ok(new
 {
