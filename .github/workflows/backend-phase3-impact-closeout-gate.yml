@@ -1,5 +1,6 @@
 name: Backend Phase 3 Impact Closeout Gate
 
+# Final verification with the EF migration committed on the branch.
 on:
   push:
     branches:
