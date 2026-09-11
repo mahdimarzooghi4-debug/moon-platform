@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/Moon.Platform.Api/Moon.Platform.Api.csproj" />
+  <Project Path="tests/Moon.Platform.Tests/Moon.Platform.Tests.csproj" />
+</Solution>

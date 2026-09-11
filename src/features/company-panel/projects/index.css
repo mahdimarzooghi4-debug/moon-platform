@@ -1,0 +1,336 @@
+.company-projects-page {
+  width: 1216px;
+  height: 900px;
+  box-sizing: border-box;
+  padding: 22px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #f5f8fb;
+  overflow: hidden;
+}
+
+.company-project-filters {
+  width: 1160px;
+  height: 70px;
+  box-sizing: border-box;
+  padding: 8px 24px;
+  border: 1px solid #e4ebf1;
+  border-radius: 12px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 3px;
+}
+
+.company-project-filters > strong {
+  height: 20px;
+  color: #17324d;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  text-align: right;
+}
+
+.company-project-filter-controls {
+  display: grid;
+  grid-template-columns: 386px 210px 208px 98px;
+  justify-content: end;
+  gap: 10px;
+  height: 28px;
+  direction: rtl;
+}
+
+.company-project-filter-controls input,
+.company-project-filter-controls select,
+.company-more-filters {
+  height: 28px;
+  box-sizing: border-box;
+  border: 1px solid #e4ebf1;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #60758a;
+  font: inherit;
+  font-size: 11px;
+  line-height: 22px;
+  padding: 2px 12px;
+  outline: none;
+}
+
+.company-project-filter-controls input {
+  text-align: right;
+}
+
+.company-project-filter-controls input::placeholder {
+  color: #60758a;
+  opacity: 1;
+}
+
+.company-project-filter-controls select {
+  appearance: auto;
+  cursor: pointer;
+}
+
+.company-more-filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.company-more-filters span {
+  font-size: 13px;
+}
+
+.company-project-list-card {
+  width: 1160px;
+  height: 550px;
+  box-sizing: border-box;
+  padding: 15px;
+  border: 1px solid #e4ebf1;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.company-project-list-heading {
+  height: 50px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.company-project-list-heading > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  text-align: right;
+}
+
+.company-project-list-heading h2,
+.company-project-list-heading p,
+.company-project-list-row h3,
+.company-project-list-row p {
+  margin: 0;
+}
+
+.company-project-list-heading h2 {
+  color: #17324d;
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: 500;
+}
+
+.company-project-list-heading p {
+  color: #60758a;
+  font-size: 11px;
+  line-height: 20px;
+}
+
+.company-project-list-heading > span {
+  width: 126px;
+  height: 30px;
+  border-radius: 8px;
+  background: #e8f7ef;
+  color: #159455;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  line-height: 22px;
+  font-weight: 500;
+}
+
+.company-project-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.company-project-list-row {
+  width: 1128px;
+  height: 126px;
+  box-sizing: border-box;
+  padding: 9px 16px;
+  border: 1px solid #e4ebf1;
+  border-radius: 10px;
+  background: #fff;
+  display: grid;
+  grid-template-columns: 72px 220px 118px 254px 140px 230px;
+  align-items: start;
+  column-gap: 14px;
+  direction: rtl;
+  position: relative;
+}
+
+.company-project-thumbnail {
+  width: 72px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+  display: block;
+}
+
+.company-project-summary {
+  padding-top: 2px;
+  text-align: right;
+}
+
+.company-project-summary h3 {
+  color: #17324d;
+  font-size: 16px;
+  line-height: 26px;
+  font-weight: 500;
+}
+
+.company-project-summary p {
+  color: #60758a;
+  font-size: 11px;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+.company-project-status {
+  width: 118px;
+  height: 30px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  background: #e8f7ef;
+  color: #159455;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  line-height: 22px;
+  font-weight: 500;
+}
+
+.company-project-impact,
+.company-project-funding {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.company-project-impact > span,
+.company-project-funding > span {
+  height: 18px;
+  color: #60758a;
+  font-size: 10px;
+  line-height: 18px;
+}
+
+.company-project-impact strong {
+  color: #17324d;
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.company-project-impact small {
+  color: #60758a;
+  font-size: 11px;
+  line-height: 20px;
+}
+
+.company-project-funding strong {
+  color: #2094e3;
+  font-size: 15px;
+  line-height: 24px;
+  font-weight: 500;
+}
+
+.company-project-progress {
+  width: 140px;
+  height: 6px;
+  margin: 0 0 6px;
+  background: #e8eef3;
+  border-radius: 4px;
+  overflow: hidden;
+  direction: rtl;
+}
+
+.company-project-progress i {
+  height: 6px;
+  display: block;
+  background: #2094e3;
+  border-radius: 4px;
+}
+
+.company-project-funding small {
+  color: #60758a;
+  font-size: 10px;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+.company-project-actions {
+  align-self: end;
+  height: 34px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2px;
+  direction: ltr;
+}
+
+.company-project-details-button,
+.company-project-participate-button {
+  height: 32px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 11px;
+  line-height: 22px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.company-project-details-button {
+  width: 92px;
+  border: 1px solid #e4ebf1;
+  background: #fff;
+  color: #2094e3;
+}
+
+.company-project-participate-button {
+  width: 136px;
+  height: 34px;
+  background: #2094e3;
+  color: #fff;
+}
+
+.company-project-pagination {
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #60758a;
+  font-size: 11px;
+  line-height: 22px;
+}
+
+.company-project-pagination > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  direction: ltr;
+}
+
+.company-project-pagination b {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #2094e3;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 500;
+}

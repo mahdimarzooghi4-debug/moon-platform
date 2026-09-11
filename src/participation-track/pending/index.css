@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: "Vazirmatn Variable", "Vazirmatn", sans-serif;
+  --mah-text-primary: #17324d;
+  --mah-text-secondary: #60758a;
+  --mah-text-brand: #2094e3;
+  --mah-surface-brand: #2094e3;
+  --mah-surface-brand-soft: #eaf5fd;
+  --mah-border-default: #e4ebf1;
+}
+
+html,
+body,
+#app {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: #f4f6f8;
+}
+
+.main-container {
+  direction: rtl;
+  overflow: hidden;
+}
+
+.main-container,
+.main-container * {
+  box-sizing: border-box;
+}
+
+input,
+select,
+textarea {
+  direction: rtl;
+  text-align: right;
+}
+
+input,
+select,
+textarea,
+button {
+  font: inherit;
+  outline: 0;
+}
+
+.clock-icon {
+  width: 28px;
+  height: 28px;
+  border: 2px solid #2094e3;
+  border-radius: 999px;
+  position: relative;
+}
+
+.clock-icon::before,
+.clock-icon::after {
+  content: "";
+  position: absolute;
+  right: 12px;
+  top: 6px;
+  width: 2px;
+  height: 8px;
+  border-radius: 2px;
+  background: #2094e3;
+  transform-origin: bottom center;
+}
+
+.clock-icon::after {
+  transform: rotate(-55deg);
+  height: 7px;
+}
+
+.warning-icon {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #a56a00;
+  border-radius: 999px;
+  color: #a56a00;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.warning-icon::before {
+  content: "!";
+}

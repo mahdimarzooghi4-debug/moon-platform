@@ -1,0 +1,329 @@
+.company-project-detail-page {
+  width: 1216px;
+  height: 900px;
+  box-sizing: border-box;
+  padding: 22px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #f5f8fb;
+  overflow: hidden;
+}
+
+.company-detail-back { width: 132px; }
+
+.company-detail-card {
+  width: 1160px;
+  box-sizing: border-box;
+  border: 1px solid #e4ebf1;
+  border-radius: 12px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.company-project-summary-card {
+  height: 210px;
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 26px;
+}
+
+.company-detail-project-image {
+  width: 310px;
+  height: 174px;
+  border-radius: 12px;
+  object-fit: cover;
+  display: block;
+}
+
+.company-detail-project-copy {
+  min-width: 330px;
+  padding-top: 1px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: right;
+}
+
+.company-detail-project-copy > span {
+  color: #60758a;
+  font-size: 11px;
+  line-height: 20px;
+}
+
+.company-detail-project-copy h2 {
+  margin: 4px 0 4px;
+  color: #17324d;
+  font-size: 22px;
+  line-height: 34px;
+  font-weight: 500;
+}
+
+.company-detail-project-copy p {
+  margin: 0;
+  color: #60758a;
+  font-size: 12px;
+  line-height: 26px;
+}
+
+.company-detail-project-copy b {
+  width: 118px;
+  height: 30px;
+  margin-top: 3px;
+  border-radius: 8px;
+  background: #e8f7ef;
+  color: #159455;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  line-height: 22px;
+  font-weight: 500;
+}
+
+.company-impact-metrics-card {
+  height: 148px;
+  padding: 12px 24px 18px;
+}
+
+.company-impact-metrics-card h2,
+.company-funding-main h2,
+.company-participation-guide-card h2 {
+  margin: 0;
+  color: #17324d;
+  font-size: 18px;
+  line-height: 30px;
+  font-weight: 500;
+  text-align: right;
+}
+
+.company-impact-metric-grid {
+  margin-top: 9px;
+  display: grid;
+  grid-template-columns: repeat(4, 260px);
+  gap: 16px;
+}
+
+.company-impact-metric-grid article {
+  height: 78px;
+  box-sizing: border-box;
+  padding: 10px 16px;
+  border: 1px solid #e4ebf1;
+  border-radius: 10px;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.company-impact-metric-grid span {
+  color: #60758a;
+  font-size: 11px;
+  line-height: 22px;
+}
+
+.company-impact-metric-grid strong {
+  color: #17324d;
+  font-size: 18px;
+  line-height: 30px;
+  font-weight: 500;
+}
+
+.company-funding-card {
+  height: 194px;
+  padding: 13px 24px;
+  display: grid;
+  grid-template-columns: 560px 520px;
+  gap: 18px;
+  direction: rtl;
+}
+
+.company-funding-main {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.company-funding-main > strong {
+  color: #2094e3;
+  font-size: 22px;
+  line-height: 32px;
+  font-weight: 500;
+}
+
+.company-detail-progress {
+  width: 560px;
+  height: 10px;
+  margin-top: 3px;
+  border-radius: 5px;
+  background: #e8eef3;
+  overflow: hidden;
+  direction: rtl;
+}
+
+.company-detail-progress i {
+  width: 51%;
+  height: 10px;
+  display: block;
+  border-radius: 5px;
+  background: #2094e3;
+}
+
+.company-funding-numbers {
+  width: 560px;
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.company-funding-numbers div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.company-funding-numbers span {
+  color: #60758a;
+  font-size: 10px;
+  line-height: 20px;
+}
+
+.company-funding-numbers b {
+  color: #17324d;
+  font-size: 16px;
+  line-height: 28px;
+  font-weight: 500;
+}
+
+.company-organization-participation-card {
+  height: 142px;
+  box-sizing: border-box;
+  padding: 10px 16px;
+  border: 1px solid #e4ebf1;
+  border-radius: 10px;
+  background: #f8fafc;
+  display: grid;
+  grid-template-columns: 1fr 156px;
+  grid-template-rows: auto auto 32px;
+  column-gap: 16px;
+  direction: rtl;
+}
+
+.company-organization-participation-card h3 {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #17324d;
+  font-size: 14px;
+  line-height: 24px;
+  font-weight: 500;
+  text-align: right;
+}
+
+.company-organization-participation-card p {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #60758a;
+  font-size: 11px;
+  line-height: 22px;
+  text-align: right;
+}
+
+.company-article-status {
+  align-self: center;
+  height: 28px;
+  box-sizing: border-box;
+  border: 1px solid #e4ebf1;
+  border-radius: 8px;
+  background: #fff;
+  color: #60758a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.company-organization-participation-card a {
+  align-self: center;
+  height: 40px;
+  border-radius: 9px;
+  background: #2094e3;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.company-participation-guide-card {
+  height: 154px;
+  padding: 10px 24px 18px;
+}
+
+.company-participation-guide-card > p {
+  margin: 0;
+  color: #60758a;
+  font-size: 11px;
+  line-height: 20px;
+  text-align: right;
+}
+
+.company-guide-grid {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, 352px);
+  gap: 26px;
+}
+
+.company-guide-grid article {
+  height: 62px;
+  box-sizing: border-box;
+  padding: 8px 16px;
+  border: 1px solid #e4ebf1;
+  border-radius: 10px;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.company-guide-grid article > b {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  border-radius: 17px;
+  background: #eaf4fb;
+  color: #2094e3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.company-guide-grid article > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: right;
+}
+
+.company-guide-grid strong {
+  color: #17324d;
+  font-size: 12px;
+  line-height: 22px;
+  font-weight: 500;
+}
+
+.company-guide-grid span {
+  color: #60758a;
+  font-size: 10px;
+  line-height: 18px;
+  white-space: nowrap;
+}

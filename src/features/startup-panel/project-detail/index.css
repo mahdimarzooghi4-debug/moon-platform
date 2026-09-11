@@ -1,0 +1,457 @@
+.startup-project-detail-content {
+  min-height: 900px;
+  gap: 16px;
+}
+
+.startup-project-detail-summary,
+.startup-project-detail-evaluation,
+.startup-project-detail-impact,
+.startup-project-detail-execution,
+.startup-project-detail-problem {
+  border: 1px solid var(--startup-border);
+  border-radius: 14px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.startup-project-detail-summary h2,
+.startup-project-detail-summary p,
+.startup-project-detail-evaluation h2,
+.startup-project-detail-evaluation p,
+.startup-project-detail-impact h2,
+.startup-project-detail-execution h2,
+.startup-project-detail-execution p,
+.startup-project-detail-problem h2,
+.startup-project-detail-problem p {
+  margin: 0;
+}
+
+.startup-project-detail-summary {
+  width: 100%;
+  min-width: 900px;
+  height: 190px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 330px;
+  gap: 28px;
+  padding: 17px 25px 16px 27px;
+  direction: rtl;
+}
+
+.startup-project-detail-main-copy {
+  min-width: 0;
+  text-align: right;
+}
+
+.startup-project-detail-main-copy h2 {
+  height: 32px;
+  color: var(--startup-navy);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 32px;
+}
+
+.startup-project-detail-main-copy > p {
+  width: 100%;
+  max-width: 656px;
+  min-height: 40px;
+  color: var(--startup-muted);
+  font-size: 11px;
+  line-height: 20px;
+}
+
+.startup-project-detail-chips {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 7px;
+}
+
+.startup-project-detail-chips span {
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+.startup-project-detail-chips .is-approved {
+  width: 332px;
+  background: #e7f6ee;
+  color: #159455;
+}
+
+.startup-project-detail-chips .is-funding {
+  width: 176px;
+  background: #fff4e2;
+  color: #c27a10;
+}
+
+.startup-project-detail-facts {
+  display: grid;
+  grid-template-columns: repeat(4, 120px);
+  gap: 12px;
+  margin: 7px 0 0;
+}
+
+.startup-project-detail-facts > div {
+  min-width: 0;
+}
+
+.startup-project-detail-facts dt,
+.startup-project-detail-facts dd {
+  margin: 0;
+  text-align: right;
+}
+
+.startup-project-detail-facts dt {
+  height: 18px;
+  color: var(--startup-muted);
+  font-size: 10px;
+  line-height: 18px;
+}
+
+.startup-project-detail-facts dd {
+  height: 22px;
+  color: var(--startup-navy);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 22px;
+  white-space: nowrap;
+}
+
+.startup-project-detail-funding {
+  min-width: 0;
+  direction: rtl;
+}
+
+.startup-project-detail-funding-heading {
+  height: 20px;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+  direction: ltr;
+}
+
+.startup-project-detail-funding-heading strong {
+  color: var(--startup-navy);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.startup-project-detail-funding-heading span {
+  color: var(--startup-blue);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.startup-project-detail-funding-track {
+  width: 330px;
+  height: 8px;
+  margin-top: 9px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #eaf0f5;
+  direction: rtl;
+}
+
+.startup-project-detail-funding-track span {
+  width: 58%;
+  height: 100%;
+  display: block;
+  border-radius: 4px;
+  background: var(--startup-blue);
+}
+
+.startup-project-detail-funding-numbers {
+  display: grid;
+  grid-template-columns: 170px 1fr;
+  grid-template-rows: 20px 20px;
+  align-items: center;
+  margin-top: 11px;
+  direction: ltr;
+}
+
+.startup-project-detail-funding-numbers strong,
+.startup-project-detail-funding-numbers span {
+  font-size: 10px;
+  line-height: 20px;
+}
+
+.startup-project-detail-funding-numbers strong {
+  grid-row: 1;
+  grid-column: 1;
+  color: var(--startup-navy);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.startup-project-detail-funding-numbers span:first-of-type {
+  grid-row: 1;
+  grid-column: 2;
+  color: var(--startup-muted);
+  text-align: right;
+}
+
+.startup-project-detail-funding-numbers span:last-child {
+  grid-row: 2;
+  grid-column: 1 / -1;
+  color: var(--startup-muted);
+  text-align: right;
+}
+
+.startup-project-detail-row {
+  width: 100%;
+  min-width: 900px;
+  height: 170px;
+  display: grid;
+  grid-template-columns: minmax(0, 578fr) minmax(0, 562fr);
+  gap: 20px;
+  margin-top: 2px;
+  direction: rtl;
+}
+
+.startup-project-detail-evaluation,
+.startup-project-detail-impact {
+  height: 170px;
+  padding: 17px 23px 20px;
+  text-align: right;
+}
+
+.startup-project-detail-evaluation h2,
+.startup-project-detail-impact h2,
+.startup-project-detail-section-heading h2,
+.startup-project-detail-problem > h2 {
+  color: var(--startup-navy);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.startup-project-detail-evaluation-grid {
+  display: grid;
+  grid-template-columns: 200px 190px;
+  gap: 34px;
+  margin-top: 11px;
+}
+
+.startup-project-detail-evaluation-grid > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.startup-project-detail-evaluation-grid span {
+  height: 18px;
+  color: var(--startup-muted);
+  font-size: 10px;
+  line-height: 18px;
+}
+
+.startup-project-detail-evaluation-grid strong {
+  height: 24px;
+  color: var(--startup-navy);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.startup-project-detail-evaluation-grid strong.is-approved {
+  color: #159455;
+  font-size: 13px;
+}
+
+.startup-project-detail-evaluation > p {
+  width: 100%;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  margin-top: 6px;
+  padding: 0 14px;
+  border: 1px solid var(--startup-border);
+  border-radius: 9px;
+  background: #f8fbfd;
+  color: var(--startup-muted);
+  font-size: 10px;
+  line-height: 18px;
+}
+
+.startup-project-detail-impact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 14px;
+  margin-top: 14px;
+}
+
+.startup-project-detail-impact-grid > div {
+  height: 40px;
+  display: grid;
+  grid-template-columns: 92px 112px;
+  align-items: center;
+  justify-content: space-around;
+  border: 1px solid var(--startup-border);
+  border-radius: 9px;
+  background: #f8fbfd;
+  text-align: center;
+}
+
+.startup-project-detail-impact-grid strong {
+  color: var(--startup-navy);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.startup-project-detail-impact-grid span {
+  color: var(--startup-muted);
+  font-size: 10px;
+  line-height: 20px;
+}
+
+.startup-project-detail-execution {
+  width: 100%;
+  min-width: 900px;
+  height: 154px;
+  margin-top: 2px;
+  padding-top: 13px;
+  text-align: right;
+}
+
+.startup-project-detail-section-heading {
+  margin: 0 23px;
+}
+
+.startup-project-detail-section-heading p {
+  height: 18px;
+  color: var(--startup-muted);
+  font-size: 10px;
+  line-height: 18px;
+}
+
+.startup-project-detail-steps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+  margin: 8px 49px 0 27px;
+  direction: rtl;
+}
+
+.startup-project-detail-step {
+  height: 66px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 5px 10px;
+  border: 1px solid var(--startup-border);
+  border-radius: 10px;
+  background: #fff;
+  text-align: right;
+}
+
+.startup-project-detail-step.is-active {
+  border-color: var(--startup-blue);
+  background: #eaf5fd;
+}
+
+.startup-project-detail-step-number {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #6e8aa2;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--startup-muted);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.startup-project-detail-step.is-active .startup-project-detail-step-number {
+  border-color: var(--startup-blue);
+  background: var(--startup-blue);
+  color: #fff;
+}
+
+.startup-project-detail-step > div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.startup-project-detail-step strong {
+  color: var(--startup-navy);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 22px;
+  white-space: nowrap;
+}
+
+.startup-project-detail-step small {
+  color: var(--startup-muted);
+  font-size: 10px;
+  line-height: 18px;
+  white-space: nowrap;
+}
+
+.startup-project-detail-problem {
+  position: relative;
+  width: 100%;
+  min-width: 900px;
+  height: 188px;
+  margin-top: 2px;
+  padding: 13px 23px 20px;
+  text-align: right;
+}
+
+.startup-project-detail-problem-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 52px;
+  margin-top: 10px;
+}
+
+.startup-project-detail-problem-grid > div {
+  min-width: 0;
+}
+
+.startup-project-detail-problem-grid strong {
+  display: block;
+  height: 20px;
+  color: var(--startup-navy);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.startup-project-detail-problem-grid p {
+  max-width: 530px;
+  min-height: 58px;
+  margin-top: 5px;
+  color: var(--startup-muted);
+  font-size: 10px;
+  line-height: 19px;
+}
+
+.startup-project-detail-stages-button {
+  position: absolute;
+  bottom: 22px;
+  left: 23px;
+  width: 170px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--startup-blue);
+  border-radius: 9px;
+  background: var(--startup-blue);
+  color: #fff !important;
+  font-size: 11px;
+  font-weight: 500;
+}

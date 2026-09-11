@@ -1,0 +1,11 @@
+.creative-house-dashboard {
+  min-width: 1200px;
+  min-height: 900px;
+  font-family: "Vazirmatn", sans-serif;
+}
+
+.creative-house-dashboard *,
+.creative-house-dashboard *::before,
+.creative-house-dashboard *::after {
+  box-sizing: border-box;
+}

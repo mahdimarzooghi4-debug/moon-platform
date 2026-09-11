@@ -1,0 +1,307 @@
+.company-participation-page {
+  width: 1216px;
+  height: 900px;
+  box-sizing: border-box;
+  padding: 22px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #f5f8fb;
+  overflow: hidden;
+}
+
+.company-participation-project {
+  height: 128px;
+  padding: 14px 24px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 18px;
+}
+
+.company-participation-project img {
+  width: 116px;
+  height: 90px;
+  border-radius: 10px;
+  object-fit: cover;
+  display: block;
+}
+
+.company-participation-project > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.company-participation-project span {
+  color: #60758a;
+  font-size: 10px;
+  line-height: 18px;
+}
+
+.company-participation-project h2 {
+  margin: 0;
+  color: #17324d;
+  font-size: 18px;
+  line-height: 30px;
+  font-weight: 500;
+}
+
+.company-participation-project p {
+  margin: 0;
+  color: #60758a;
+  font-size: 11px;
+  line-height: 22px;
+}
+
+.company-participation-project b {
+  width: 104px;
+  height: 26px;
+  margin-top: 3px;
+  border-radius: 7px;
+  background: #e8f7ef;
+  color: #159455;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.company-participation-grid {
+  width: 1160px;
+  height: 406px;
+  display: grid;
+  grid-template-columns: 744px 398px;
+  gap: 18px;
+  direction: ltr;
+}
+
+.company-participation-form-card,
+.company-participation-summary-card {
+  height: 406px;
+  padding: 18px 22px;
+  direction: rtl;
+}
+
+.company-participation-form-card h2,
+.company-participation-summary-card h2,
+.company-payment-followup-card h2 {
+  margin: 0;
+  color: #17324d;
+  font-size: 18px;
+  line-height: 30px;
+  font-weight: 500;
+  text-align: right;
+}
+
+.company-participation-form-card > p,
+.company-payment-followup-card > p {
+  margin: 0;
+  color: #60758a;
+  font-size: 11px;
+  line-height: 20px;
+  text-align: right;
+}
+
+.company-form-field {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: stretch;
+}
+
+.company-form-field > span {
+  color: #17324d;
+  font-size: 12px;
+  line-height: 22px;
+  font-weight: 500;
+}
+
+.company-form-field input {
+  height: 44px;
+  box-sizing: border-box;
+  border: 1px solid #d9e3eb;
+  border-radius: 9px;
+  background: #fff;
+  color: #17324d;
+  font: inherit;
+  font-size: 14px;
+  padding: 0 14px;
+  text-align: right;
+  outline: none;
+}
+
+.company-form-field small {
+  color: #60758a;
+  font-size: 9px;
+  line-height: 18px;
+}
+
+.company-representative-box {
+  height: 76px;
+  margin-top: 14px;
+  box-sizing: border-box;
+  padding: 10px 16px;
+  border: 1px solid #e4ebf1;
+  border-radius: 10px;
+  background: #f8fafc;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.company-representative-box > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.company-representative-box span,
+.company-payment-route-box span,
+.company-summary-line span {
+  color: #60758a;
+  font-size: 10px;
+  line-height: 20px;
+}
+
+.company-representative-box strong {
+  color: #17324d;
+  font-size: 12px;
+  line-height: 24px;
+  font-weight: 500;
+}
+
+.company-payment-route-box {
+  height: 86px;
+  margin-top: 14px;
+  box-sizing: border-box;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: #e8f7ef;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.company-payment-route-box > span { color: #159455; }
+
+.company-payment-route-box strong {
+  color: #17324d;
+  font-size: 12px;
+  line-height: 22px;
+  font-weight: 500;
+}
+
+.company-payment-route-box small {
+  color: #60758a;
+  font-size: 9px;
+  line-height: 18px;
+}
+
+.company-participation-summary-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.company-summary-line {
+  height: 46px;
+  border-bottom: 1px solid #e4ebf1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.company-summary-line strong {
+  color: #17324d;
+  font-size: 11px;
+  line-height: 22px;
+  font-weight: 500;
+}
+
+.company-certificate-note {
+  height: 86px;
+  box-sizing: border-box;
+  margin-top: 14px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #fff7e8;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-decoration: none;
+}
+
+.company-certificate-note span {
+  color: #c27a10;
+  font-size: 10px;
+  line-height: 20px;
+}
+
+.company-certificate-note strong {
+  color: #17324d;
+  font-size: 11px;
+  line-height: 22px;
+  font-weight: 500;
+}
+
+.company-confirm-payment {
+  height: 42px;
+  margin-top: auto;
+  border-radius: 9px;
+  background: #2094e3;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.company-payment-followup-card {
+  height: 172px;
+  padding: 12px 24px 16px;
+}
+
+.company-payment-followup-card > div {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, 352px);
+  gap: 26px;
+}
+
+.company-payment-followup-card article,
+.company-payment-followup-card a {
+  height: 76px;
+  box-sizing: border-box;
+  padding: 12px 16px;
+  border: 1px solid #e4ebf1;
+  border-radius: 10px;
+  background: #f8fafc;
+  color: #17324d;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.company-payment-followup-card b {
+  width: 34px;
+  height: 34px;
+  border-radius: 17px;
+  background: #e8f5ff;
+  color: #2094e3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.company-payment-followup-card span {
+  font-size: 12px;
+  line-height: 22px;
+  font-weight: 500;
+}

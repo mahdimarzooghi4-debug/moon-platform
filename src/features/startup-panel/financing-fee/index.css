@@ -1,0 +1,31 @@
+.startup-financing-fee-page { min-height: 900px; background: #f5f8fb; }
+.startup-financing-fee-content { width: calc(100% - 224px); min-height: 900px; padding: 22px 28px 40px; box-sizing: border-box; background: #f5f8fb; direction: rtl; color: #17334f; }
+.startup-financing-fee-topbar { width: 1160px; height: 54px; display: flex; align-items: center; justify-content: space-between; }
+.startup-financing-fee-title { width: 520px; height: 50px; background: #fff; text-align: right; }
+.startup-financing-fee-title h1, .startup-financing-fee-title p, .startup-financing-fee-card h2, .startup-financing-fee-card p { margin: 0; }
+.startup-financing-fee-title h1 { font-size: 22px; line-height: 30px; font-weight: 500; }
+.startup-financing-fee-title p { color: #60758a; font-size: 11px; line-height: 18px; }
+.startup-financing-fee-actions { display: flex; gap: 8px; direction: ltr; }
+.startup-financing-fee-actions a { height: 36px; min-width: 100px; padding: 0 14px; border: 1px solid #e4ebf1; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; background: #fff; color: #2094e3; text-decoration: none; font-size: 12px; font-weight: 500; }
+.startup-financing-fee-actions a.is-primary { width: 136px; border-color: #2094e3; background: #2094e3; color: #fff; }
+.startup-financing-fee-card { width: 100%; margin-top: 16px; padding: 15px 23px; box-sizing: border-box; background: #fff; border: 1px solid #e3ebf2; border-radius: 14px; overflow: hidden; }
+.startup-financing-fee-card h2 { font-size: 18px; line-height: 28px; font-weight: 500; }
+.startup-financing-fee-card > p { color: #61758a; font-size: 11px; line-height: 22px; }
+.startup-financing-fee-summary { height: 132px; }
+.startup-financing-fee-summary-grid { display: grid; grid-template-columns: repeat(3, 340px); gap: 24px; margin-top: 8px; direction: ltr; }
+.startup-financing-fee-summary-grid > div { height: 44px; padding: 5px 15px; display: grid; grid-template-columns: 145px 155px; gap: 10px; box-sizing: border-box; border-radius: 9px; background: #f6fafe; direction: rtl; }
+.startup-financing-fee-summary-grid span { color: #61758a; font-size: 10px; line-height: 20px; }
+.startup-financing-fee-summary-grid strong { font-size: 13px; line-height: 24px; font-weight: 500; }
+.startup-financing-fee-table-card { height: 326px; }
+.startup-financing-fee-table { margin-top: 8px; }
+.startup-financing-fee-table-row { height: 38px; margin-top: 2px; padding: 0 24px; display: grid; grid-template-columns: minmax(0, 1fr) 250px; align-items: center; box-sizing: border-box; border: 1px solid #e8edf2; border-radius: 7px; background: #fff; font-size: 11px; }
+.startup-financing-fee-table-row:nth-child(odd):not(.is-head) { background: #fcfeff; }
+.startup-financing-fee-table-row.is-head { margin-top: 0; border: 0; border-radius: 8px; background: #f6fafe; color: #61758a; font-weight: 500; }
+.startup-financing-fee-table-row span:first-child { text-align: right; }
+.startup-financing-fee-table-row span:last-child, .startup-financing-fee-table-row strong { text-align: center; }
+.startup-financing-fee-table-row strong { color: #149154; font-size: 12px; font-weight: 500; }
+.startup-financing-fee-notes { height: 180px; }
+.startup-financing-fee-notes ul { margin: 13px 0 0; padding: 0 25px 0 0; list-style: none; }
+.startup-financing-fee-notes li { position: relative; min-height: 34px; color: #40576e; font-size: 11px; line-height: 24px; }
+.startup-financing-fee-notes li::before { content: ""; position: absolute; right: -19px; top: 9px; width: 6px; height: 6px; border-radius: 50%; background: #2094e3; }
+@media (max-width: 1100px) { .startup-financing-fee-content { width: 100%; } .startup-financing-fee-topbar, .startup-financing-fee-title { width: 100%; } .startup-financing-fee-summary, .startup-financing-fee-table-card, .startup-financing-fee-notes { height: auto; } .startup-financing-fee-summary-grid { grid-template-columns: 1fr; } }
