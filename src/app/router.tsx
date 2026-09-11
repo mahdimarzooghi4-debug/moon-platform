@@ -14,6 +14,7 @@ const ImpactReportsListPage = lazy(() => import("../impact-reports-list"));
 const ImpactReportsListLoadingPage = lazy(() => import("../impact-reports-list/states/loading"));
 const ImpactReportsListEmptyPage = lazy(() => import("../impact-reports-list/states/empty"));
 const ImpactReportsListNoResultsPage = lazy(() => import("../impact-reports-list/states/no-results"));
+const ImpactReportsListErrorPage = lazy(() => import("../impact-reports-list/states/error"));
 const ProjectImpactReportPage = lazy(() => import("../project-impact-report"));
 const ProjectImpactReportFinalPage = lazy(() => import("../project-impact-report/states/final"));
 const ProjectImpactReportPendingPage = lazy(() => import("../project-impact-report/states/pending"));
@@ -49,6 +50,11 @@ const SearchResultsPage = lazy(() => import("../search-results"));
 const SearchResultsInitialPage = lazy(() => import("../search-results/states/initial"));
 const SearchResultsLoadingPage = lazy(() => import("../search-results/states/loading"));
 const SearchResultsErrorPage = lazy(() => import("../search-results/states/error"));
+const SearchResultsEmptyPage = lazy(() => import("../search-results/states/empty"));
+const RegistrationTrackPage = lazy(() => import("../registration-track"));
+const RegistrationTrackApprovedPage = lazy(() => import("../registration-track/states/approved"));
+const RegistrationTrackNotFoundPage = lazy(() => import("../registration-track/states/not-found"));
+const RegistrationTrackErrorPage = lazy(() => import("../registration-track/states/error"));
 const RegistrationTrackNeedsEditPage = lazy(() => import("../registration-track/states/needs-edit"));
 const RegistrationTrackRejectedPage = lazy(() => import("../registration-track/states/rejected"));
 const StartupRegistrationStep2Page = lazy(() => import("../features/startup-registration/states/step2"));
@@ -194,6 +200,7 @@ export function AppRouter() {
         <Route path="/impact-reports/states/loading" element={lazyElement(ImpactReportsListLoadingPage)} />
         <Route path="/impact-reports/states/empty" element={lazyElement(ImpactReportsListEmptyPage)} />
         <Route path="/impact-reports/states/no-results" element={lazyElement(ImpactReportsListNoResultsPage)} />
+        <Route path="/impact-reports/states/error" element={lazyElement(ImpactReportsListErrorPage)} />
         <Route path="/impact-reports" element={lazyElement(ImpactReportsListPage)} />
         <Route path="/projects/impact-report/states/final" element={lazyElement(ProjectImpactReportFinalPage)} />
         <Route path="/projects/impact-report/states/pending" element={lazyElement(ProjectImpactReportPendingPage)} />
@@ -238,8 +245,13 @@ export function AppRouter() {
         <Route path="/search/states/initial" element={lazyElement(SearchResultsInitialPage)} />
         <Route path="/search/states/loading" element={lazyElement(SearchResultsLoadingPage)} />
         <Route path="/search/states/error" element={lazyElement(SearchResultsErrorPage)} />
+        <Route path="/search/states/empty" element={lazyElement(SearchResultsEmptyPage)} />
         <Route path="/search" element={lazyElement(SearchResultsPage)} />
         <Route path="/404" element={lazyElement(NotFoundPage)} />
+        <Route path="/registration/track" element={lazyElement(RegistrationTrackPage)} />
+        <Route path="/registration/track/states/approved" element={lazyElement(RegistrationTrackApprovedPage)} />
+        <Route path="/registration/track/states/not-found" element={lazyElement(RegistrationTrackNotFoundPage)} />
+        <Route path="/registration/track/states/error" element={lazyElement(RegistrationTrackErrorPage)} />
         <Route path="/registration/track/states/needs-edit" element={lazyElement(RegistrationTrackNeedsEditPage)} />
         <Route path="/registration/track/states/rejected" element={lazyElement(RegistrationTrackRejectedPage)} />
 
