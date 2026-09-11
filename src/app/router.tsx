@@ -93,6 +93,8 @@ const CompanyProjectParticipationPage = lazy(() => import("../features/company-p
 const CompanyPaymentSuccessPage = lazy(() => import("../features/company-panel/payment-success"));
 const CompanyParticipationsPage = lazy(() => import("../features/company-panel/participations"));
 const CompanyParticipationDetailPage = lazy(() => import("../features/company-panel/participation-detail"));
+const CompanyReportsPage = lazy(() => import("../features/company-panel/reports"));
+const CompanyReportDetailPage = lazy(() => import("../features/company-panel/report-detail"));
 
 function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
   return (
@@ -191,6 +193,8 @@ const companyProjectParticipationElement = lazyElement(CompanyProjectParticipati
 const companyPaymentSuccessElement = lazyElement(CompanyPaymentSuccessPage);
 const companyParticipationsElement = lazyElement(CompanyParticipationsPage);
 const companyParticipationDetailElement = lazyElement(CompanyParticipationDetailPage);
+const companyReportsElement = lazyElement(CompanyReportsPage);
+const companyReportDetailElement = lazyElement(CompanyReportDetailPage);
 
 /**
  * Routes are introduced around the existing Figma-derived screens so their
@@ -297,6 +301,8 @@ export function AppRouter() {
         <Route path="/panel/company/projects/:projectId/participate/success" element={companyPaymentSuccessElement} />
         <Route path="/panel/company/participations" element={companyParticipationsElement} />
         <Route path="/panel/company/participations/:participationId" element={companyParticipationDetailElement} />
+        <Route path="/panel/company/reports" element={companyReportsElement} />
+        <Route path="/panel/company/reports/:reportId" element={companyReportDetailElement} />
         <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/fund-released" element={startupProjectStageFundReleasedElement} />
         <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/evaluation/approved" element={startupProjectStageEvaluationElement} />
         <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/submitted" element={startupProjectStageReportSubmittedElement} />
