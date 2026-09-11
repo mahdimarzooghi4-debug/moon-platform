@@ -2,8 +2,18 @@ using System.Security.Claims;
 
 namespace Moon.Platform.Api.Modules.Projects;
 
-public sealed record CreateProjectRequest(Guid OrganizationId, string Title, string Description);
-public sealed record CreateProjectVersionRequest(string Title, string Description);
+public sealed record CreateProjectRequest(
+    Guid OrganizationId,
+    string Title,
+    string Description,
+    long? FundingTargetMinor = null,
+    string? FundingTargetCurrency = null);
+
+public sealed record CreateProjectVersionRequest(
+    string Title,
+    string Description,
+    long? FundingTargetMinor = null,
+    string? FundingTargetCurrency = null);
 
 public static class ProjectEndpoints
 {
@@ -22,6 +32,8 @@ public static class ProjectEndpoints
                 request.OrganizationId,
                 request.Title,
                 request.Description,
+                request.FundingTargetMinor,
+                request.FundingTargetCurrency,
                 RequireActor(principal),
                 context.TraceIdentifier,
                 context.Connection.RemoteIpAddress?.ToString(),
@@ -57,6 +69,8 @@ public static class ProjectEndpoints
                 projectId,
                 request.Title,
                 request.Description,
+                request.FundingTargetMinor,
+                request.FundingTargetCurrency,
                 RequireActor(principal),
                 context.TraceIdentifier,
                 context.Connection.RemoteIpAddress?.ToString(),
