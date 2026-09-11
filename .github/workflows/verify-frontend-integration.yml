@@ -3,12 +3,11 @@ name: Verify frontend integration
 on:
   push:
     branches:
-      - integration/frontend-foundation
-      - integration/landing-frontend
+      - feat/startup-panel
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: frontend-${{ github.ref }}
@@ -21,6 +20,44 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Verify pinned source and hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_SHA="569d0bc75e8eecc74b04fbc14e1d1aa80cbaaa70"
+          test "$(git rev-parse HEAD^)" = "$SOURCE_SHA"
+          test "$(git rev-parse "$SOURCE_SHA:src/features/startup-panel/project-stage-report/index.tsx")" = "a054374418a0016f2e97e348cbc727e3c186c393"
+          test "$(git rev-parse "$SOURCE_SHA:src/features/startup-panel/project-stage-report/index.css")" = "0483fb4df9cf4f113b4b1efe05176f5195912217"
+          test "$(git rev-parse "$SOURCE_SHA:src/features/startup-panel/project-stage-report-submitted/index.tsx")" = "3f2b1dfdb37eb7a33bda078ff5685a76f57600a1"
+          test "$(git rev-parse "$SOURCE_SHA:src/features/startup-panel/project-stage-report-submitted/index.css")" = "28bb30cb07493c550cdc35cd439931c91c6ae8da"
+          test "$(git rev-parse "$SOURCE_SHA:src/app/router.tsx")" = "eb69ec6ec14fe3525ceb42e87e16435d06ef9f59"
+          test "$(git rev-parse "$SOURCE_SHA:package-lock.json")" = "44cbe24f2addd9f712ad76f88b7ff8432b877818"
+
+      - name: Verify asset isolation
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -R -n -E 'static\.codia\.ai|figma\.com/api/mcp/asset' \
+            src/features/startup-panel/project-stage-report \
+            src/features/startup-panel/project-stage-report-submitted; then
+            echo "Remote generated asset reference found"
+            exit 1
+          fi
+
+      - name: Verify stage report routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROUTER=src/app/router.tsx
+          test "$(grep -Fxc 'const StartupProjectStageReportPage = lazy(() => import("../features/startup-panel/project-stage-report"));' "$ROUTER")" -eq 1
+          test "$(grep -Fxc 'const StartupProjectStageReportSubmittedPage = lazy(() => import("../features/startup-panel/project-stage-report-submitted"));' "$ROUTER")" -eq 1
+          test "$(grep -Fxc 'const startupProjectStageReportElement = lazyElement(StartupProjectStageReportPage);' "$ROUTER")" -eq 1
+          test "$(grep -Fxc 'const startupProjectStageReportSubmittedElement = lazyElement(StartupProjectStageReportSubmittedPage);' "$ROUTER")" -eq 1
+          test "$(grep -Fxc '        <Route path="/panel/startup/projects/:projectId/stages/:stageId/report" element={startupProjectStageReportElement} />' "$ROUTER")" -eq 1
+          test "$(grep -Fxc '        <Route path="/panel/startup/projects/:projectId/stages/:stageId/report/submitted" element={startupProjectStageReportSubmittedElement} />' "$ROUTER")" -eq 1
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -29,19 +66,10 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
 
       - name: Build
         run: npm run build
 
-      - name: Keep lockfile reproducible
-        run: |
-          if git diff --quiet -- package-lock.json; then
-            echo "package-lock.json is already in sync"
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add package-lock.json
-          git commit -m "chore(frontend): sync package lock"
-          git push
+      - name: Verify lockfile unchanged
+        run: git diff --exit-code -- package-lock.json
