@@ -1,0 +1,6 @@
+.admin-users-create-form {
+  width: 1160px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
