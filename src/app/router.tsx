@@ -51,6 +51,7 @@ const SearchResultsLoadingPage = lazy(() => import("../search-results/states/loa
 const SearchResultsErrorPage = lazy(() => import("../search-results/states/error"));
 const RegistrationTrackNeedsEditPage = lazy(() => import("../registration-track/states/needs-edit"));
 const RegistrationTrackRejectedPage = lazy(() => import("../registration-track/states/rejected"));
+const StartupRegistrationStep2Page = lazy(() => import("../features/startup-registration/states/step2"));
 const StartupRegistrationStep3Page = lazy(() => import("../features/startup-registration/states/step3"));
 const StartupRegistrationStep4Page = lazy(() => import("../features/startup-registration/states/step4"));
 const CompanyRegistrationStep2Page = lazy(() => import("../features/company-registration/states/step2"));
@@ -141,6 +142,7 @@ const searchResultsLoadingElement = lazyElement(SearchResultsLoadingPage);
 const searchResultsErrorElement = lazyElement(SearchResultsErrorPage);
 const registrationTrackNeedsEditElement = lazyElement(RegistrationTrackNeedsEditPage);
 const registrationTrackRejectedElement = lazyElement(RegistrationTrackRejectedPage);
+const startupRegistrationStep2Element = lazyElement(StartupRegistrationStep2Page);
 const startupRegistrationStep3Element = lazyElement(StartupRegistrationStep3Page);
 const startupRegistrationStep4Element = lazyElement(StartupRegistrationStep4Page);
 const companyRegistrationStep2Element = lazyElement(CompanyRegistrationStep2Page);
@@ -254,6 +256,7 @@ export function AppRouter() {
         <Route path="/register/company/states/step2" element={companyRegistrationStep2Element} />
         <Route path="/register/company/status" element={companyRegistrationStatusElement} />
         <Route path="/register/company" element={<CompanyRegistrationPage />} />
+        <Route path="/register/startup/states/step2" element={startupRegistrationStep2Element} />
         <Route path="/register/startup/states/step3" element={startupRegistrationStep3Element} />
         <Route path="/register/startup/states/step4" element={startupRegistrationStep4Element} />
         <Route path="/register/startup" element={<StartupRegistrationPage />} />
