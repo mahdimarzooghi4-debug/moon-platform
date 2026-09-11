@@ -1,18 +1,23 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import {
+  beginLogin,
+  isValidIranMobile,
+  normalizeIranMobile,
+  type AccountType,
+} from "../auth/oidc";
 import "./index.css";
 
 const IMG = {
-  logoIcon:  "/assets/image_ae1865f7-c201-457c-b7c6-cb0573e56337.png",
-  logoText:  "/assets/image_ca277b70-8bb4-4096-9bc1-ea6881a35524.png",
-  backIcon:  "/assets/image_cd1430e5-409a-40f6-a742-c82761e81fa7.png",
+  logoIcon: "/assets/image_ae1865f7-c201-457c-b7c6-cb0573e56337.png",
+  logoText: "/assets/image_ca277b70-8bb4-4096-9bc1-ea6881a35524.png",
+  backIcon: "/assets/image_cd1430e5-409a-40f6-a742-c82761e81fa7.png",
   phoneFlag: "/assets/image_bcf4aaa2-a2ce-459b-85c8-e1b5f6395009.png",
-  otpIcon:   "/assets/image_fd57a38b-06b3-4cb8-ab22-2e4701d4b6ab.png",
-  companyIcon:  "/assets/image_f95f66f0-8705-40ba-ae7c-412f53c3f831.png",
-  startupIcon:  "/assets/image_4f6087ed-2d7c-4200-b9de-09d5fd3eca2b.png",
+  otpIcon: "/assets/image_fd57a38b-06b3-4cb8-ab22-2e4701d4b6ab.png",
+  companyIcon: "/assets/image_f95f66f0-8705-40ba-ae7c-412f53c3f831.png",
+  startupIcon: "/assets/image_4f6087ed-2d7c-4200-b9de-09d5fd3eca2b.png",
   internalIcon: "/assets/image_d6014067-da87-4c2d-bbc3-6c6943b4dabc.png",
 };
-
-type AccountType = "company" | "startup" | "internal";
 
 const CARDS: { id: AccountType; title: string; desc: string; icon: string }[] = [
   {
@@ -35,8 +40,45 @@ const CARDS: { id: AccountType; title: string; desc: string; icon: string }[] = 
   },
 ];
 
+function accountTypeForReturnTo(returnTo: string | null): AccountType | null {
+  if (!returnTo) return null;
+  if (returnTo.startsWith("/panel/startup")) return "startup";
+  if (returnTo.startsWith("/panel/company")) return "company";
+  if (returnTo.startsWith("/panel/")) return "internal";
+  return null;
+}
+
+const ERROR_MESSAGES: Record<string, string> = {
+  forbidden: "این حساب اجازه دسترسی به پنل درخواستی را ندارد.",
+  callback: "ورود کامل نشد. دوباره تلاش کنید.",
+  "no-panel-access": "برای این حساب هنوز دسترسی به پنلی تعریف نشده است.",
+};
+
 export default function Main() {
-  const [selected, setSelected] = useState<AccountType | null>(null);
+  const [searchParams] = useSearchParams();
+  const returnTo = searchParams.get("returnTo");
+  const error = searchParams.get("error");
+  const suggestedType = useMemo(() => accountTypeForReturnTo(returnTo), [returnTo]);
+  const [selected, setSelected] = useState<AccountType | null>(suggestedType);
+  const [phone, setPhone] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const normalizedPhone = normalizeIranMobile(phone);
+  const canSubmit = Boolean(selected && isValidIranMobile(normalizedPhone) && !busy);
+
+  async function handleLogin() {
+    if (!selected || !isValidIranMobile(normalizedPhone) || busy) return;
+    setBusy(true);
+    try {
+      await beginLogin({
+        accountType: selected,
+        mobile: normalizedPhone,
+        returnTo: returnTo ?? undefined,
+      });
+    } catch {
+      setBusy(false);
+    }
+  }
 
   return (
     <div
@@ -44,9 +86,7 @@ export default function Main() {
       dir="rtl"
       style={{ fontFamily: "'Vazirmatn', sans-serif" }}
     >
-      {/* ─── Header ─── */}
       <header className="flex items-center justify-between h-[80px] px-[120px] bg-white border-b border-[#E4EBF1] shrink-0">
-        {/* Logo */}
         <div className="flex items-center gap-3">
           <div className="flex flex-col items-end gap-0.5">
             <img src={IMG.logoText} alt="ماه" className="h-8 object-contain" />
@@ -55,9 +95,9 @@ export default function Main() {
           <img src={IMG.logoIcon} alt="" className="w-[42px] h-[41px] object-contain" />
         </div>
 
-        {/* Back button */}
         <button
           type="button"
+          onClick={() => window.location.assign("/")}
           className="flex items-center gap-2 text-[#4D5A6D] hover:opacity-80 transition-opacity cursor-pointer bg-transparent border-none"
         >
           <img src={IMG.backIcon} alt="" className="w-[13px] h-[12px]" />
@@ -65,11 +105,8 @@ export default function Main() {
         </button>
       </header>
 
-      {/* ─── Main content ─── */}
       <main className="relative flex-1 flex items-center justify-center py-12">
-        {/* Content card */}
         <div className="relative z-10 w-[780px] bg-white border border-[#E4EBF1] rounded-[20px] p-8 flex flex-col gap-6">
-          {/* Title row */}
           <div className="flex items-center justify-between gap-3">
             <div className="flex flex-col items-end gap-1.5">
               <h1 className="text-[24px] font-bold text-[#1A202C] leading-tight">
@@ -87,7 +124,6 @@ export default function Main() {
             </div>
           </div>
 
-          {/* Account type cards */}
           <div className="grid grid-cols-3 gap-4">
             {CARDS.map((card) => {
               const isActive = selected === card.id;
@@ -104,7 +140,6 @@ export default function Main() {
                   ].join(" ")}
                 >
                   <div className="flex items-center justify-between">
-                    {/* Radio indicator */}
                     <div
                       className={[
                         "w-[18px] h-[18px] rounded-full",
@@ -113,7 +148,6 @@ export default function Main() {
                           : "border border-[#CBD5E1] bg-white",
                       ].join(" ")}
                     />
-                    {/* Icon container */}
                     <div
                       className={[
                         "w-10 h-10 rounded-[8px] flex items-center justify-center",
@@ -137,13 +171,26 @@ export default function Main() {
             })}
           </div>
 
-          {/* Login form card */}
           <div className="flex flex-col gap-4">
-            {/* Phone input */}
             <div className="flex flex-col gap-2">
-              <label className="text-[14px] font-semibold text-[#454E5D]">شماره موبایل</label>
-              <div className="flex items-center gap-2 h-[48px] px-4 bg-white rounded-[12px] border border-[#CBD5E1]">
-                <span className="text-[14px] text-[#A0AEC0] grow">مثال: ۰۹۱۲۱۲۳۴۵۶۷</span>
+              <label htmlFor="moon-login-mobile" className="text-[14px] font-semibold text-[#454E5D]">
+                شماره موبایل
+              </label>
+              <div className="flex items-center gap-2 h-[48px] px-4 bg-white rounded-[12px] border border-[#CBD5E1] focus-within:border-[#2194E3]">
+                <input
+                  id="moon-login-mobile"
+                  type="tel"
+                  inputMode="numeric"
+                  autoComplete="tel"
+                  dir="ltr"
+                  value={phone}
+                  onChange={(event) => setPhone(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") void handleLogin();
+                  }}
+                  placeholder="09121234567"
+                  className="text-[14px] text-[#2E343F] placeholder:text-[#A0AEC0] grow outline-none bg-transparent border-none"
+                />
                 <img src={IMG.phoneFlag} alt="" className="w-[18px] h-[18px] object-contain" />
               </div>
               <span className="text-[12px] text-[#8794A7]">
@@ -151,23 +198,33 @@ export default function Main() {
               </span>
             </div>
 
-            {/* Submit button */}
             <button
               type="button"
-              disabled={!selected}
-              className="h-[50px] rounded-[12px] flex items-center justify-center bg-[#E2E8F0] text-[#A0AEC0] text-[16px] font-semibold border-none disabled:cursor-not-allowed"
+              disabled={!canSubmit}
+              onClick={() => void handleLogin()}
+              className={[
+                "h-[50px] rounded-[12px] flex items-center justify-center text-[16px] font-semibold border-none transition-colors",
+                canSubmit
+                  ? "bg-[#2094E3] text-white cursor-pointer hover:bg-[#1886CF]"
+                  : "bg-[#E2E8F0] text-[#A0AEC0] cursor-not-allowed",
+              ].join(" ")}
             >
-              ادامه و دریافت کد تأیید
+              {busy ? "در حال انتقال به ورود امن..." : "ادامه و دریافت کد تأیید"}
             </button>
 
-            <p className="text-center text-[13px] text-[#A0AEC0]">
-              جهت فعال‌سازی دکمه ورود، ابتدا نوع حساب خود را از بالا انتخاب کنید.
+            <p className={`text-center text-[13px] ${error ? "text-[#C53030]" : "text-[#A0AEC0]"}`}>
+              {error
+                ? ERROR_MESSAGES[error] ?? "ورود انجام نشد. دوباره تلاش کنید."
+                : !selected
+                  ? "جهت فعال‌سازی دکمه ورود، ابتدا نوع حساب خود را از بالا انتخاب کنید."
+                  : !isValidIranMobile(normalizedPhone)
+                    ? "شماره موبایل را به‌صورت ۱۱ رقمی وارد کنید."
+                    : "پس از ورود، بر اساس نقش حساب به پنل مجاز هدایت می‌شوید."}
             </p>
           </div>
         </div>
       </main>
 
-      {/* ─── Footer ─── */}
       <footer className="flex flex-col items-center gap-4 py-6 border-t border-[#E8E8E8] shrink-0 bg-[#F6F9FB]">
         <div className="flex flex-col items-center gap-1">
           <span className="text-[14px] text-[#8794A7]">
