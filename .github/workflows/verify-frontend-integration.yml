@@ -21,15 +21,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 3
 
       - name: Verify pinned source and hashes
         shell: bash
         run: |
           set -euo pipefail
-          SOURCE_SHA="569d0bc75e8eecc74b04fbc14e1d1aa80cbaaa70"
-          test "$(git rev-parse HEAD^)" = "$SOURCE_SHA"
-          test "$(git rev-parse "$SOURCE_SHA:src/features/startup-panel/project-stage-report/index.tsx")" = "a054374418a0016f2e97e348cbc727e3c186c393"
+          SOURCE_SHA="0792c2a8b12f8487a42851efdd6534333e88c923"
+          test "$(git rev-parse HEAD^^)" = "$SOURCE_SHA"
+          test "$(git rev-parse "$SOURCE_SHA^{tree}")" = "6492f6241bae5f3f8eab6e794aae2f111a3b5887"
+          test "$(git rev-parse "$SOURCE_SHA:src/features/startup-panel/project-stage-report/index.tsx")" = "9f46e601cfd4754652774531e98c265be8170513"
           test "$(git rev-parse "$SOURCE_SHA:src/features/startup-panel/project-stage-report/index.css")" = "0483fb4df9cf4f113b4b1efe05176f5195912217"
           test "$(git rev-parse "$SOURCE_SHA:src/features/startup-panel/project-stage-report-submitted/index.tsx")" = "3f2b1dfdb37eb7a33bda078ff5685a76f57600a1"
           test "$(git rev-parse "$SOURCE_SHA:src/features/startup-panel/project-stage-report-submitted/index.css")" = "28bb30cb07493c550cdc35cd439931c91c6ae8da"
