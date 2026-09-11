@@ -24,6 +24,7 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
         GuardLockedProjectVersions();
         GuardFinalEvaluations();
         GuardDecisionsAppendOnly();
+        GuardPublishedProjects();
         return base.SaveChanges(acceptAllChangesOnSuccess);
     }
 
@@ -33,6 +34,7 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
         GuardLockedProjectVersions();
         GuardFinalEvaluations();
         GuardDecisionsAppendOnly();
+        GuardPublishedProjects();
         return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
 
@@ -86,6 +88,7 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
             entity.HasKey(x => x.Id);
             entity.Property(x => x.Status).HasMaxLength(32).IsRequired();
             entity.Property(x => x.CreatedBySubject).HasMaxLength(200).IsRequired();
+            entity.Property(x => x.PublishedBySubject).HasMaxLength(200);
             entity.HasIndex(x => new { x.OrganizationId, x.Status });
             entity.HasOne<Organization>().WithMany().HasForeignKey(x => x.OrganizationId).OnDelete(DeleteBehavior.Restrict);
         });
@@ -194,6 +197,19 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
         if (illegalMutation)
         {
             throw new InvalidOperationException("Project decisions are append-only and cannot be modified or deleted.");
+        }
+    }
+
+    private void GuardPublishedProjects()
+    {
+        var illegalMutation = ChangeTracker.Entries<Project>()
+            .Any(entry =>
+                (entry.State is EntityState.Modified or EntityState.Deleted)
+                && entry.OriginalValues.GetValue<string>(nameof(Project.Status)) == ProjectStatuses.Published);
+
+        if (illegalMutation)
+        {
+            throw new InvalidOperationException("Published projects are immutable and cannot be modified or deleted.");
         }
     }
 }
