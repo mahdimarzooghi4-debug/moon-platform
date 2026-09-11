@@ -114,7 +114,7 @@ public sealed class LedgerService(
             .SingleAsync(cancellationToken);
 
         var currentVersion = await dbContext.ProjectVersions.AsNoTracking()
-            .SingleAsync(
+            .SingleOrDefaultAsync(
                 x => x.ProjectId == lockedProject.Id && x.VersionNumber == lockedProject.CurrentVersionNumber,
                 cancellationToken);
 
@@ -354,7 +354,7 @@ public sealed class LedgerService(
 
     private async Task EnqueueFundingThresholdIfReachedAsync(
         Project project,
-        ProjectVersion version,
+        ProjectVersion? version,
         LedgerJournal journal,
         Guid organizationId,
         string actorSubject,
@@ -362,7 +362,8 @@ public sealed class LedgerService(
         string? ipAddress,
         CancellationToken cancellationToken)
     {
-        if (version.FundingTargetMinor is not > 0
+        if (version is null
+            || version.FundingTargetMinor is not > 0
             || string.IsNullOrWhiteSpace(version.FundingTargetCurrency)
             || !string.Equals(version.FundingTargetCurrency, journal.Currency, StringComparison.Ordinal))
         {
