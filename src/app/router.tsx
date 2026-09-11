@@ -68,6 +68,7 @@ const ProjectDetailsPage = lazy(() => import("../features/project-details"));
 const ProjectRuralWomenPage = lazy(() => import("../features/project-details/variants/rural-women"));
 
 const CreativeHouseDashboardPage = lazy(() => import("../panels/creative-house"));
+const CreativeHouseStartupEvaluationsPage = lazy(() => import("../panels/creative-house/startup-evaluations"));
 
 function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
   return (
@@ -78,6 +79,7 @@ function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
 }
 
 const creativeHouseDashboardElement = lazyElement(CreativeHouseDashboardPage);
+const creativeHouseStartupEvaluationsElement = lazyElement(CreativeHouseStartupEvaluationsPage);
 
 const landingElement = lazyElement(LandingPage);
 const aboutElement = lazyElement(AboutPage);
@@ -217,6 +219,7 @@ export function AppRouter() {
         <Route path="/registration/track/states/needs-edit" element={registrationTrackNeedsEditElement} />
         <Route path="/registration/track/states/rejected" element={registrationTrackRejectedElement} />
         <Route path="/panel/creative-house" element={creativeHouseDashboardElement} />
+        <Route path="/panel/creative-house/startup-evaluations" element={creativeHouseStartupEvaluationsElement} />
         <Route path="/auth" element={<AuthEntryPage />} />
         <Route path="/register/company/states/step2" element={companyRegistrationStep2Element} />
         <Route path="/register/company/status" element={companyRegistrationStatusElement} />
