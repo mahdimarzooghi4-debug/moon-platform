@@ -59,6 +59,7 @@ const NotFoundPage = lazy(() => import("../not-found"));
 const StartupsDirectoryPage = lazy(() => import("../startups-directory"));
 const StartupPublicProfilePage = lazy(() => import("../startup-public-profile"));
 const StartupPublicProfileNoProjectsPage = lazy(() => import("../startup-public-profile/states/no-projects"));
+const StartupShareSheetPage = lazy(() => import("../startup-share-sheet"));
 const ProjectsPage = lazy(() => import("../features/projects/MahProjects"));
 const ProjectsLoadingPage = lazy(() => import("../features/projects/states/loading"));
 const ProjectsEmptyPage = lazy(() => import("../features/projects/states/empty"));
@@ -129,6 +130,7 @@ const notFoundElement = lazyElement(NotFoundPage);
 const startupsDirectoryElement = lazyElement(StartupsDirectoryPage);
 const startupPublicProfileElement = lazyElement(StartupPublicProfilePage);
 const startupPublicProfileNoProjectsElement = lazyElement(StartupPublicProfileNoProjectsPage);
+const startupShareSheetElement = lazyElement(StartupShareSheetPage);
 const projectsElement = lazyElement(ProjectsPage);
 const projectsLoadingElement = lazyElement(ProjectsLoadingPage);
 const projectsEmptyElement = lazyElement(ProjectsEmptyPage);
@@ -154,6 +156,7 @@ export function AppRouter() {
         <Route path="/startups-directory" element={startupsDirectoryElement} />
         <Route path="/startups/directory" element={startupsDirectoryElement} />
         <Route path="/startups/profile/states/no-projects" element={startupPublicProfileNoProjectsElement} />
+        <Route path="/startups/profile/share" element={startupShareSheetElement} />
         <Route path="/startups/:startupId" element={startupPublicProfileElement} />
         <Route path="/how-it-works" element={howItWorksElement} />
         <Route path="/impact" element={impactOverviewElement} />
