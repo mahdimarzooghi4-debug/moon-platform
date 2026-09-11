@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { AdminSidebar } from "../components/AdminSidebar";
 import "../index.css";
 import "../users-flow.css";
+import "./index.css";
 
 export default function AdminAddUser() {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ export default function AdminAddUser() {
           </div>
         </header>
 
-        <form onSubmit={submitUser}>
+        <form className="admin-users-create-form" onSubmit={submitUser}>
           <section className="admin-form-card">
             <h2>اطلاعات کاربر جدید</h2>
             <p>اطلاعات پایه کاربر را ثبت کنید؛ نقش انتخاب‌شده پنل و سطح دسترسی او را تعیین می‌کند.</p>
