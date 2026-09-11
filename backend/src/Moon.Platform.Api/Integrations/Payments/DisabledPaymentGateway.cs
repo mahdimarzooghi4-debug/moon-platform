@@ -7,4 +7,9 @@ public sealed class DisabledPaymentGateway : IPaymentGateway
 
     public Task<PaymentVerificationResult> VerifyAsync(string providerReference, CancellationToken cancellationToken = default)
         => Task.FromResult(PaymentVerificationResult.NotConfigured(providerReference));
+
+    public Task<PaymentWebhookValidationResult> ValidateWebhookAsync(
+        PaymentWebhookRequest request,
+        CancellationToken cancellationToken = default)
+        => Task.FromResult(PaymentWebhookValidationResult.NotConfigured());
 }
