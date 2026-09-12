@@ -290,10 +290,10 @@ function submitSupportForm() {
     requests.unshift(request);
     localStorage.setItem("mah-support-requests", JSON.stringify(requests.slice(0, 20)));
   } catch {
-    // The confirmation still works when local storage is unavailable.
+    // Continue to the confirmation page when local storage is unavailable.
   }
 
-  showFormStatus(form, "success", `درخواست شما ثبت شد. کد پیگیری: ${trackingCode}`);
+  window.location.assign(`/contact?submitted=${encodeURIComponent(trackingCode)}`);
 }
 
 function enhanceContactPage() {
