@@ -51,6 +51,68 @@
   background-image: url("/assets/codia/T4OS0ttuhK.svg") !important;
 }
 
+/* Article 172 definition cards: Figma uses a 4-column 285px row with 20px gaps
+ * and a lighter 0/4/8 card shadow. */
+.article-172-page [class*="z-[64]"] {
+  gap: 20px !important;
+}
+
+.article-172-page [class*="z-[65]"],
+.article-172-page [class*="z-[71]"],
+.article-172-page [class*="z-[77]"],
+.article-172-page [class*="z-[83]"],
+.article-172-page [class*="z-[94]"],
+.article-172-page [class*="z-[116]"] {
+  box-shadow: 0 4px 8px rgba(23, 46, 71, 0.08) !important;
+}
+
+.article-172-page [class*="UMuptCq6WH.png"] {
+  background-image: url("/assets/codia/UMuptCq6WH.svg") !important;
+}
+
+.article-172-page [class*="pNgajvBVnv.png"] {
+  background-image: url("/assets/codia/pNgajvBVnv.svg") !important;
+}
+
+.article-172-page [class*="kaDLui63Ze.png"] {
+  background-image: url("/assets/codia/kaDLui63Ze.svg") !important;
+}
+
+.article-172-page [class*="DG3wbJvgPp.png"] {
+  background-image: url("/assets/codia/DG3wbJvgPp.svg") !important;
+}
+
+/* "Who is this for" cards: preserve the exact Figma glyphs while sharing
+ * identical red/green dot assets across list rows. */
+.article-172-page [class*="s8eFOhJzzO.png"] {
+  background-image: url("/assets/codia/s8eFOhJzzO.svg") !important;
+}
+
+.article-172-page [class*="AhJzQOF0DF.png"] {
+  background-image: url("/assets/codia/AhJzQOF0DF.svg") !important;
+}
+
+.article-172-page [class*="WjhLnuGtRr.png"],
+.article-172-page [class*="vSnkHtThAg.png"] {
+  background-image: url("/assets/codia/WjhLnuGtRr.svg") !important;
+}
+
+.article-172-page [class*="fwcCj74kHJ.png"],
+.article-172-page [class*="iH5ds50YiH.png"],
+.article-172-page [class*="kocR5jOY5b.png"],
+.article-172-page [class*="8p5NLDkOOc.png"],
+.article-172-page [class*="PLBOu3Sgr8.png"] {
+  background-image: url("/assets/codia/fwcCj74kHJ.svg") !important;
+}
+
+.article-172-page [class*="QWLspgiKCR.png"],
+.article-172-page [class*="hmMH8msTD6.png"],
+.article-172-page [class*="xACRXNuyAZ.png"],
+.article-172-page [class*="h7K0WSRQPK.png"],
+.article-172-page [class*="6Gy1JzhMn6.png"] {
+  background-image: url("/assets/codia/QWLspgiKCR.svg") !important;
+}
+
 .main-container,
 .main-container * {
   box-sizing: border-box;
