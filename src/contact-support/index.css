@@ -57,10 +57,14 @@ body {
 }
 
 .mah-support-editable {
+  display: block !important;
   width: 100% !important;
   min-width: 0 !important;
   height: auto !important;
   min-height: 20px;
+  direction: rtl !important;
+  text-align: right !important;
+  unicode-bidi: plaintext !important;
   white-space: normal !important;
   cursor: text;
   border-radius: 4px;
@@ -73,7 +77,11 @@ body {
 
 .mah-support-editable:empty::before {
   content: attr(data-placeholder);
+  display: block;
+  width: 100%;
   color: #aebccb;
+  direction: rtl;
+  text-align: right;
   pointer-events: none;
 }
 
