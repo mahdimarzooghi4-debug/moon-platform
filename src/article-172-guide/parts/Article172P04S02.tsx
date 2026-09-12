@@ -1,100 +1,53 @@
 import React from "react";
 
+const steps = [
+  { label: "ثبت درخواست بررسی", icon: "/assets/codia/pv1SxNjL8Y.svg" },
+  { label: "دریافت رسید", icon: "/assets/codia/tFRLN6NHTq.svg" },
+  { label: "پرداخت به کمیته امداد", icon: "/assets/codia/sLCn6vrk76.svg" },
+  { label: "ثبت مشارکت", icon: "/assets/codia/DKH6OueQrc.svg" },
+  { label: "انتخاب پروژه", icon: "/assets/codia/MX1aQWNoFO.svg" },
+  { label: "حساب تأییدشده", icon: "/assets/codia/ya4k9TxCqx.svg" },
+];
+
 export function Article172P04S02() {
   return (
-      <div className="flex pt-[80px] pr-[120px] pb-[80px] pl-[120px] flex-col gap-[40px] items-start self-stretch shrink-0 flex-nowrap relative z-[362]">
-        <div className="flex flex-col gap-[12px] items-center self-stretch shrink-0 flex-nowrap relative z-[363]">
-          <span className="flex w-[424px] h-[44px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[28px] font-extrabold leading-[43.75px] text-[#17324d] relative text-center whitespace-nowrap z-[364]">
-            پرداخت باید از چه مسیری انجام شود؟
-          </span>
-          <span className="h-[23px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[15px] font-normal leading-[23px] text-[#60758a] relative text-center whitespace-nowrap z-[365]">
-            امنیت پرداخت و واریز امن مستقیماً به حساب رسمی همکار جهت اعتبار سنجی
-          </span>
-        </div>
-        <div className="flex gap-[16px] justify-center items-start self-stretch shrink-0 flex-nowrap relative z-[366]">
-          <div className="flex gap-[12px] items-center grow shrink-0 basis-0 flex-nowrap relative z-[367]">
-            <div className="flex pt-[16px] pr-[16px] pb-[16px] pl-[16px] flex-col gap-[10px] items-center grow shrink-0 basis-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[368]">
-              <div className="flex w-[24px] h-[24px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[369]">
-                <div className="w-[24px] h-[24px] shrink-0 bg-[url('/assets/codia/pv1SxNjL8Y.png')] bg-cover bg-no-repeat relative overflow-hidden z-[370]" />
-              </div>
-              <span className="flex w-[110px] h-[20px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-bold leading-[20px] text-[#17324d] relative text-center whitespace-nowrap z-[371]">
-                ثبت درخواست بررسی
-              </span>
-            </div>
-          </div>
-          <div className="flex gap-[12px] items-center grow shrink-0 basis-0 flex-nowrap relative z-[372]">
-            <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[373]">
-              <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/ukNyoSxCht.png')] bg-cover bg-no-repeat relative overflow-hidden z-[374]" />
-            </div>
-            <div className="flex pt-[16px] pr-[16px] pb-[16px] pl-[16px] flex-col gap-[10px] items-center grow shrink-0 basis-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[375]">
-              <div className="flex w-[24px] h-[24px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[376]">
-                <div className="w-[24px] h-[24px] shrink-0 bg-[url('/assets/codia/tFRLN6NHTq.png')] bg-cover bg-no-repeat relative overflow-hidden z-[377]" />
-              </div>
-              <span className="flex w-[67px] h-[20px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-bold leading-[20px] text-[#17324d] relative text-center whitespace-nowrap z-[378]">
-                دریافت رسید
-              </span>
-            </div>
-          </div>
-          <div className="flex gap-[12px] items-center grow shrink-0 basis-0 flex-nowrap relative z-[379]">
-            <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[380]">
-              <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/UfPxWTL3so.png')] bg-cover bg-no-repeat relative overflow-hidden z-[381]" />
-            </div>
-            <div className="flex pt-[16px] pr-[16px] pb-[16px] pl-[16px] flex-col gap-[10px] items-center grow shrink-0 basis-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[382]">
-              <div className="flex w-[24px] h-[24px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[383]">
-                <div className="w-[24px] h-[24px] shrink-0 bg-[url('/assets/codia/sLCn6vrk76.png')] bg-cover bg-no-repeat relative overflow-hidden z-[384]" />
-              </div>
-              <span className="flex w-[118px] h-[20px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-bold leading-[20px] text-[#17324d] relative text-center whitespace-nowrap z-[385]">
-                پرداخت به کمیته امداد
-              </span>
-            </div>
-          </div>
-          <div className="flex gap-[12px] items-center grow shrink-0 basis-0 flex-nowrap relative z-[386]">
-            <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[387]">
-              <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/yoXmO0RGjD.png')] bg-cover bg-no-repeat relative overflow-hidden z-[388]" />
-            </div>
-            <div className="flex pt-[16px] pr-[16px] pb-[16px] pl-[16px] flex-col gap-[10px] items-center grow shrink-0 basis-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[389]">
-              <div className="flex w-[24px] h-[24px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[390]">
-                <div className="w-[24px] h-[24px] shrink-0 bg-[url('/assets/codia/DKH6OueQrc.png')] bg-cover bg-no-repeat relative overflow-hidden z-[391]" />
-              </div>
-              <span className="flex w-[68px] h-[20px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-bold leading-[20px] text-[#17324d] relative text-center whitespace-nowrap z-[392]">
-                ثبت مشارکت
-              </span>
-            </div>
-          </div>
-          <div className="flex gap-[12px] items-center grow shrink-0 basis-0 flex-nowrap relative z-[393]">
-            <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[394]">
-              <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/9cpARRd4VP.png')] bg-cover bg-no-repeat relative overflow-hidden z-[395]" />
-            </div>
-            <div className="flex pt-[16px] pr-[16px] pb-[16px] pl-[16px] flex-col gap-[10px] items-center grow shrink-0 basis-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[396]">
-              <div className="flex w-[24px] h-[24px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[397]">
-                <div className="w-[24px] h-[24px] shrink-0 bg-[url('/assets/codia/MX1aQWNoFO.png')] bg-cover bg-no-repeat relative overflow-hidden z-[398]" />
-              </div>
-              <span className="flex w-[65px] h-[20px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-bold leading-[20px] text-[#17324d] relative text-center whitespace-nowrap z-[399]">
-                انتخاب پروژه
-              </span>
-            </div>
-          </div>
-          <div className="flex gap-[12px] items-center grow shrink-0 basis-0 flex-nowrap relative z-[400]">
-            <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[401]">
-              <div className="w-[16px] h-[16px] shrink-0 bg-[url('/assets/codia/EgkXe1WVk0.png')] bg-cover bg-no-repeat relative overflow-hidden z-[402]" />
-            </div>
-            <div className="flex pt-[16px] pr-[16px] pb-[16px] pl-[16px] flex-col gap-[10px] items-center grow shrink-0 basis-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[403]">
-              <div className="flex w-[24px] h-[24px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[404]">
-                <div className="w-[24px] h-[24px] shrink-0 bg-[url('/assets/codia/ya4k9TxCqx.png')] bg-cover bg-no-repeat relative overflow-hidden z-[405]" />
-              </div>
-              <span className="flex w-[87px] h-[20px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-bold leading-[20px] text-[#17324d] relative text-center whitespace-nowrap z-[406]">
-                حساب تأییدشده
-              </span>
-            </div>
-          </div>
-        </div>
-        <div className="flex pt-[16px] pr-[16px] pb-[16px] pl-[16px] items-start self-stretch shrink-0 flex-nowrap bg-[#eaf8f0] rounded-[12px] relative z-[407]">
-          <div className="h-[22px] grow shrink-0 basis-0 font-['Vazirmatn'] text-[14px] font-bold bg-[url('/assets/codia/Qs17vS9Jkr.png')] bg-cover bg-no-repeat leading-[21.875px] relative z-[408]" />
-        </div>
-        <span className="h-[22px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[22px] text-[#60758a] relative text-center whitespace-nowrap z-[409]">
-          کمیته امداد دریافت‌کننده رسمی مشارکت است. پرداخت مرحله‌ای منابع به
-          استارتاپ پس از اجرای پروژه و تأیید KPI توسط خانه خلاق انجام می‌شود.
-        </span>
+    <section className="flex flex-col items-start gap-[40px] px-[120px] py-[80px]" data-node-id="745:4432">
+      <div className="flex w-full flex-col items-center gap-[12px] text-center">
+        <h2 className="font-['Vazirmatn'] text-[28px] font-extrabold leading-[44px] text-[#17324d]" dir="auto">
+          پرداخت باید از چه مسیری انجام شود؟
+        </h2>
+        <p className="w-full font-['Vazirmatn'] text-[15px] font-normal leading-[23px] text-[#60758a]" dir="auto">
+          امنیت پرداخت و واریز امن مستقیماً به حساب رسمی همکار جهت اعتبار سنجی
+        </p>
       </div>
+
+      <div className="flex w-full items-start justify-center gap-[16px]">
+        {steps.map((step, index) => (
+          <React.Fragment key={step.label}>
+            {index > 0 && (
+              <div className="flex h-[86px] w-[16px] shrink-0 items-center justify-center">
+                <img src="/assets/codia/ukNyoSxCht.svg" alt="" className="h-[16px] w-[16px]" />
+              </div>
+            )}
+            <div className="flex min-w-0 flex-1 flex-col items-center gap-[10px] rounded-[12px] border border-[#e4ebf1] bg-white p-[16px] shadow-[0_4px_8px_rgba(23,46,71,0.08)]">
+              <img src={step.icon} alt="" className="h-[24px] w-[24px]" />
+              <p className="whitespace-nowrap text-center font-['Vazirmatn'] text-[13px] font-bold leading-[20px] text-[#17324d]" dir="auto">
+                {step.label}
+              </p>
+            </div>
+          </React.Fragment>
+        ))}
+      </div>
+
+      <div className="w-full rounded-[12px] bg-[#eaf8f0] p-[16px]">
+        <p className="w-full text-center font-['Vazirmatn'] text-[14px] font-bold leading-[22px] text-[#159455]" dir="auto">
+          🛡 پرداخت مستقیم به استارتاپ در این مسیر معتبر نیست و در سامانه ماه انجام نمی‌شود.
+        </p>
+      </div>
+
+      <p className="w-full text-center font-['Vazirmatn'] text-[14px] font-normal leading-[22px] text-[#60758a]" dir="auto">
+        کمیته امداد دریافت‌کننده رسمی مشارکت است. پرداخت مرحله‌ای منابع به استارتاپ پس از اجرای پروژه و تأیید KPI توسط خانه خلاق انجام می‌شود.
+      </p>
+    </section>
   );
 }
