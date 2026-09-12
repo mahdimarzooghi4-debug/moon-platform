@@ -172,3 +172,13 @@ button {
 .main-container [class*="z-[482]"] {
   flex-direction: row-reverse;
 }
+
+/* Keep Persian currency amounts in natural RTL reading order: ۳۵۰ میلیون تومان. */
+.main-container [class*="z-[420]"],
+.main-container [class*="z-[452]"],
+.main-container [class*="z-[484]"] {
+  direction: rtl !important;
+  unicode-bidi: isolate;
+  justify-content: flex-start !important;
+  text-align: left !important;
+}
