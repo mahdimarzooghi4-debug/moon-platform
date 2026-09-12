@@ -11,6 +11,7 @@ import "./landing/interactions";
 import "./startups/interactions";
 import "./companies/interactions";
 import "./features/startup-registration/states/step2/interactions";
+import "./features/company-registration/interactions";
 
 document.documentElement.lang = "fa";
 document.documentElement.dir = "rtl";
