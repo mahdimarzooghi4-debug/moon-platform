@@ -88,6 +88,19 @@ async function repairFigmaSvgAssets(root: HTMLElement) {
   );
 }
 
+function equalizeProjectCardHeights(root: HTMLElement) {
+  const elements = Array.from(root.querySelectorAll<HTMLElement>("div"));
+  const middleImage = elements.find((element) =>
+    codiaPngPath(element)?.endsWith("/bZ15zUixSc.png"),
+  );
+
+  const middleCard = middleImage?.parentElement;
+  const cardRow = middleCard?.parentElement;
+  if (!middleCard || !cardRow) return;
+
+  cardRow.style.alignItems = "stretch";
+}
+
 function markCompanyLinks(root: HTMLElement) {
   root.querySelectorAll<HTMLElement>("span, a, button, div").forEach((element) => {
     const label = normalize(element.textContent);
@@ -107,6 +120,7 @@ function enhanceCompanyPage() {
   if (!root) return;
 
   root.classList.add("mah-companies-page");
+  equalizeProjectCardHeights(root);
   markCompanyLinks(root);
   void repairFigmaSvgAssets(root);
 }
