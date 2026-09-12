@@ -62,33 +62,32 @@ button, input, select, textarea {
   cursor: pointer;
 }
 
-/* The project cards themselves are Persian UI blocks. Keep the page's physical
- * LTR composition, but make every card internally RTL and structurally identical. */
+/* Figma node 664:4030 — Project Grid.
+ * The grid is physically LTR. Persian copy is right-aligned inside each field;
+ * the whole card must NOT be direction:rtl because that reverses the stat rows. */
 .mah-company-projects-row {
-  align-items: stretch !important;
+  align-items: flex-start !important;
 }
 
 .mah-company-project-card {
-  direction: rtl !important;
+  direction: ltr !important;
+  height: 540px !important;
+  min-height: 540px !important;
+  max-height: 540px !important;
   text-align: right;
-  min-height: 100%;
 }
 
-.mah-company-project-card > div:not(:first-child) {
-  width: 100%;
-  align-self: stretch;
-}
-
-.mah-company-project-card > div:last-child {
-  margin-top: auto;
+.mah-company-project-card > div {
+  flex-shrink: 0;
 }
 
 .mah-company-project-card span:not([class*="text-center"]) {
   text-align: right !important;
 }
 
-.mah-company-project-card [class*="justify-between"],
-.mah-company-project-card [class*="gap-[16px]"],
-.mah-company-project-card [class*="gap-[8px]"] {
+/* Keep Persian glyph order RTL without reversing the flex geometry from Figma. */
+.mah-company-project-card span,
+.mah-company-project-card p {
   direction: rtl;
+  unicode-bidi: plaintext;
 }
