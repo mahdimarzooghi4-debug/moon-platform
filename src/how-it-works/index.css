@@ -15,10 +15,11 @@
   text-align: right;
 }
 
-/* This generated page still contains a few LTR text utilities. Keep deliberate
- * centered labels/buttons intact, but normalize all left-aligned Persian copy
- * to the page's RTL reading direction. */
-.main-container .text-left {
+/* Figma keeps section headings/buttons centered, while full-width Persian copy
+ * inside content cards is right-aligned. Only correct the generated LTR utility
+ * on those stretched text blocks so compact labels (for example step badges)
+ * retain their original Figma layout. */
+.main-container .self-stretch.text-left {
   text-align: right;
 }
 
