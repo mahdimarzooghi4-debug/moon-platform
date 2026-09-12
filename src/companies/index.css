@@ -61,7 +61,9 @@ button, input, select, textarea {
 }
 
 /* Figma node 664:3921 — explicit hero hooks are assigned in interactions.ts so
- * this layout does not depend on generated child positions. */
+ * this layout does not depend on generated child positions. Keep the flex
+ * container physical LTR so items-end/justify-end remain on the visual right;
+ * Persian text descendants keep their own RTL direction. */
 .mah-company-hero {
   direction: ltr !important;
 }
@@ -70,7 +72,7 @@ button, input, select, textarea {
   flex: 1 1 0% !important;
   min-width: 0 !important;
   max-width: 720px !important;
-  direction: rtl !important;
+  direction: ltr !important;
 }
 
 .mah-company-hero-title {
@@ -79,6 +81,7 @@ button, input, select, textarea {
   max-width: 100% !important;
   height: auto !important;
   align-self: flex-end !important;
+  direction: rtl !important;
   text-align: right !important;
 }
 
