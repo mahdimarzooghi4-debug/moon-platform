@@ -36,6 +36,16 @@ export default function Main() {
       })
       .catch(() => {
         if (!active) return;
+
+        // Local UI review should not be blocked just because the backend API is
+        // not running. Keep production behavior strict, but treat an unavailable
+        // API as an empty public-report list during Vite development.
+        if (import.meta.env.DEV) {
+          setReports([]);
+          setError(false);
+          return;
+        }
+
         setError(true);
       })
       .finally(() => {
