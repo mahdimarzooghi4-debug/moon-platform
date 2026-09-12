@@ -113,7 +113,7 @@ html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[
 }
 
 html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[319]"]::before {
-  content: "تلفن: ۰۲۱-۶۶۴۸۵۳۷۴" !important;
+  content: "تلفن: ۶۶۴۸۵۳۷۴-۰۲۱" !important;
   display: block;
   color: #e4ebf1;
   font-family: "Vazirmatn", sans-serif;
