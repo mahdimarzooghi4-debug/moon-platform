@@ -127,6 +127,11 @@ function enhanceParticipationDetails() {
     if (label === "دریافت رسید مشارکت") {
       const suffix = receiptParams.toString();
       markLink(element, `/payment/result/receipt${suffix ? `?${suffix}` : ""}`);
+      return;
+    }
+
+    if (label === "مشاهده گزارش") {
+      markLink(element, "/projects/impact-report/states/final");
     }
   });
 }
