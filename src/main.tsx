@@ -11,6 +11,7 @@ import "./landing/interactions";
 import "./startups/interactions";
 import "./companies/interactions";
 import "./companies/proposals-interaction";
+import "./about/interactions";
 import "./features/startup-registration/states/step2/interactions";
 import "./features/company-registration/interactions";
 
