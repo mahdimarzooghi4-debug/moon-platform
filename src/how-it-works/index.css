@@ -29,6 +29,25 @@
   unicode-bidi: plaintext;
 }
 
+/* These four generated assets contain SVG markup but were emitted with .png
+ * filenames. Point the cards at correctly named SVG copies so browsers render
+ * the exact Figma glyphs instead of only the colored icon containers. */
+.main-container [class*="OdMkKSDH2z.png"] {
+  background-image: url("/assets/codia/OdMkKSDH2z.svg") !important;
+}
+
+.main-container [class*="UBFxmacNDo.png"] {
+  background-image: url("/assets/codia/UBFxmacNDo.svg") !important;
+}
+
+.main-container [class*="MGPCEr1tnA.png"] {
+  background-image: url("/assets/codia/MGPCEr1tnA.svg") !important;
+}
+
+.main-container [class*="Z4PqZykJBG.png"] {
+  background-image: url("/assets/codia/Z4PqZykJBG.svg") !important;
+}
+
 .main-container,
 .main-container * {
   box-sizing: border-box;
