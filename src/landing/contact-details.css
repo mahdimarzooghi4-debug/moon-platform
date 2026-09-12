@@ -71,33 +71,45 @@ html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[
   unicode-bidi: isolate;
 }
 
-/* Footer order is genuinely RTL: contact at the visual right, brand at left. */
+/* Footer core follows the physical Figma canvas: contact on the left, brand on the right. */
 html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[316]"] {
-  direction: rtl;
+  direction: ltr;
   flex-direction: row !important;
 }
 
+/* Contact column mirrors Figma's 220px column. Its rows share one physical
+ * right edge; Persian content itself remains RTL. */
 html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[317]"] {
-  align-items: flex-start !important;
+  width: 220px !important;
+  height: 182px !important;
+  direction: ltr;
+  align-items: flex-end !important;
+  text-align: right;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[318]"] {
+  order: 1;
+  align-self: flex-end;
   direction: rtl;
   text-align: right;
 }
 
-/* Verified production contact details. Exact contact glyphs reuse assets from
- * the project's Figma/Codia contact screen rather than hand-drawn SVGs. */
+/* Replace only the two placeholder strings. No decorative phone/address glyphs:
+ * the Figma footer uses plain text rows here. */
 html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[319]"] {
-  width: 220px;
-  min-height: 22px;
-  padding-right: 28px;
+  order: 2;
+  width: auto !important;
+  min-width: 126px;
+  height: 20px !important;
+  min-height: 20px;
+  padding: 0 !important;
+  background: none !important;
   font-size: 0 !important;
   color: transparent !important;
-  white-space: normal;
   direction: rtl;
   text-align: right;
-  background-image: url("/assets/codia/5xxFrHwTbn.png") !important;
-  background-repeat: no-repeat !important;
-  background-position: right center !important;
-  background-size: 18px 18px !important;
+  white-space: nowrap !important;
+  align-self: flex-end;
 }
 
 html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[319]"]::before {
@@ -111,32 +123,60 @@ html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[
   direction: rtl;
   unicode-bidi: isolate;
   text-align: right;
+  white-space: nowrap;
 }
 
 html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[320]"] {
-  width: 220px;
-  height: auto;
-  min-height: 98px;
-  padding-right: 28px;
+  order: 3;
+  width: auto !important;
+  min-width: 151px;
+  height: 20px !important;
+  min-height: 20px !important;
+  padding: 0 !important;
+  background: none !important;
+  font-size: 0 !important;
+  color: transparent !important;
   direction: rtl;
   text-align: right;
-  background-image:
-    url("/assets/codia/icfFwFNDN0.png"),
-    url("/assets/codia/tbz8m7Giir.png") !important;
-  background-repeat: no-repeat, no-repeat !important;
-  background-position: right top 1px, right top 36px !important;
-  background-size: 18px 18px, 18px 18px !important;
+  white-space: nowrap !important;
+  align-self: flex-end;
 }
 
 html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[320]"]::before {
   content: "ایمیل: info@mahcsr.ir" !important;
+  display: block;
+  color: #e4ebf1;
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+  direction: rtl;
   unicode-bidi: plaintext;
+  text-align: right;
+  white-space: nowrap;
 }
 
-html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[320]"]::after {
-  content: "آدرس: تهران، خیابان انقلاب، خیابان رازی، کوچه شهبازیان، پلاک ۲۲" !important;
+/* Address is one dedicated row, rather than being injected into the email row.
+ * This removes the duplicated address and keeps the contact hierarchy intact. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[317]"]::after {
+  content: "آدرس: تهران، خیابان انقلاب، خیابان رازی، کوچه شهبازیان، پلاک ۲۲";
+  order: 4;
   display: block;
-  max-width: 192px;
-  white-space: normal;
+  width: 220px;
+  color: #e4ebf1;
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
   line-height: 20px;
+  direction: rtl;
+  unicode-bidi: plaintext;
+  text-align: right;
+  white-space: normal;
+  align-self: flex-end;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[321]"] {
+  order: 5;
+  align-self: flex-end;
+  direction: ltr;
 }
