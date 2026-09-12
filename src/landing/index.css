@@ -11,11 +11,23 @@
 
 .main-container {
   overflow: hidden;
+  direction: ltr;
 }
 
 .main-container,
 .main-container * {
   box-sizing: border-box;
+}
+
+/*
+ * Figma lays out horizontal flex rows in physical left-to-right order while
+ * Persian copy itself remains RTL. Keeping the landing canvas LTR prevents the
+ * document-level RTL direction from reversing cards, logo rows, metadata and
+ * `items-end` alignment. Text keeps its natural Persian bidi flow.
+ */
+.main-container span {
+  direction: rtl;
+  unicode-bidi: plaintext;
 }
 
 input,
