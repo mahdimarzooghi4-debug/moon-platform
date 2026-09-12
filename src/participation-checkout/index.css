@@ -17,10 +17,11 @@ body,
 #app {
   margin: 0;
   min-height: 100%;
+  background: #fcfbf8;
 }
 
 body {
-  background: #f4f6f8;
+  background: #fcfbf8;
 }
 
 .main-container {
@@ -33,10 +34,67 @@ body {
   box-sizing: border-box;
 }
 
+.main-container span,
+.main-container p {
+  unicode-bidi: plaintext;
+}
+
+input,
+select,
+textarea {
+  direction: rtl;
+  text-align: right;
+}
+
 input,
 select,
 textarea,
 button {
   font: inherit;
   outline: 0;
+}
+
+/* Primary checkout action — exact Figma gradient. */
+.main-container [class~="z-[184]"] {
+  background-image: linear-gradient(4.13deg, rgb(32, 148, 227) 25%, rgb(20, 184, 166) 75%);
+  cursor: pointer;
+}
+
+/* Interactive generated elements. */
+.main-container [data-mah-checkout-href],
+.main-container [data-mah-checkout-action] {
+  cursor: pointer;
+}
+
+.main-container input[data-mah-checkout-input="phone"],
+.main-container input[data-mah-checkout-input="name"] {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.main-container input[data-mah-checkout-input="name"]::placeholder {
+  color: #60758a;
+  opacity: 1;
+}
+
+.main-container input[data-mah-otp-index] {
+  caret-color: #2094e3;
+}
+
+/* Real contact details need more vertical room than the original placeholder footer. */
+.main-container [class~="z-[193]"] {
+  height: auto !important;
+  min-height: 182px;
+}
+
+.main-container [data-mah-checkout-address] {
+  display: block;
+}
+
+.main-container [class~="z-[199]"],
+.main-container [class~="z-[201]"] {
+  background-size: contain !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
 }
