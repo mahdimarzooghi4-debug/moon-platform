@@ -60,8 +60,8 @@ button, input, select, textarea {
   cursor: pointer;
 }
 
-/* Figma node 664:4030 — three equal 384×540 cards. The row keeps its physical
- * order, while every card is a Persian RTL content block. */
+/* Figma node 664:4030 — three equal 384×540 cards. The card row keeps its
+ * physical LTR composition, while the Persian content inside each card is RTL. */
 .mah-company-projects-row {
   align-items: stretch !important;
   direction: ltr !important;
@@ -86,14 +86,56 @@ button, input, select, textarea {
   margin-top: auto !important;
 }
 
-.mah-company-project-card span:not([class*="text-center"]),
-.mah-company-project-card p:not([class*="text-center"]) {
+/* Heading block: meta row and title both start from the physical right edge. */
+.mah-company-project-card > div:nth-child(2) {
   direction: rtl !important;
+  align-items: stretch !important;
+  text-align: right !important;
+}
+
+.mah-company-project-card > div:nth-child(2) > div:first-child {
+  direction: rtl !important;
+  justify-content: flex-start !important;
+  text-align: right !important;
+}
+
+.mah-company-project-card > div:nth-child(2) > div:first-child > span {
+  direction: rtl !important;
+  justify-content: flex-start !important;
   text-align: right !important;
   unicode-bidi: plaintext;
 }
 
-.mah-company-project-card [class*="gap-[16px]"],
-.mah-company-project-card [class*="gap-[8px]"] {
-  direction: rtl;
+.mah-company-project-card > div:nth-child(2) > span:last-child {
+  width: 100% !important;
+  align-self: stretch !important;
+  direction: rtl !important;
+  justify-content: flex-start !important;
+  text-align: right !important;
+  unicode-bidi: plaintext;
+}
+
+/* Stats: each row flows RTL and each label/value pair shares the same right edge. */
+.mah-company-project-card > div:nth-child(3) {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+.mah-company-project-card > div:nth-child(3) > div {
+  direction: rtl !important;
+}
+
+.mah-company-project-card > div:nth-child(3) > div > div {
+  direction: rtl !important;
+  align-items: flex-start !important;
+  text-align: right !important;
+}
+
+.mah-company-project-card > div:nth-child(3) > div > div > span {
+  width: 100% !important;
+  align-self: stretch !important;
+  direction: rtl !important;
+  justify-content: flex-start !important;
+  text-align: right !important;
+  unicode-bidi: plaintext;
 }
