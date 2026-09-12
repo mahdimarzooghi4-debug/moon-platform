@@ -137,6 +137,15 @@
   background-size: contain !important;
 }
 
+/* Remove the project-verification note while keeping the CTA aligned as in the card. */
+.main-container .z-\[400\] {
+  justify-content: flex-end !important;
+}
+
+.main-container .z-\[400\] > span:first-child {
+  display: none !important;
+}
+
 input,
 select,
 textarea,
