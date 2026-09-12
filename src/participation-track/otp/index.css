@@ -38,3 +38,10 @@ input,
 textarea {
   unicode-bidi: plaintext;
 }
+
+.main-container input[maxlength="1"][inputmode="numeric"] {
+  direction: ltr !important;
+  text-align: center !important;
+  padding: 0 !important;
+  text-indent: 0 !important;
+}
