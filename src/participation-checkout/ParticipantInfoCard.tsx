@@ -65,8 +65,9 @@ export default function ParticipantInfoCard() {
                 }}
                 inputMode="numeric"
                 maxLength={1}
+                dir="ltr"
                 aria-label={`رقم ${index + 1} کد تأیید`}
-                className={`h-12 w-11 rounded-[10px] bg-white text-center text-[18px] font-bold text-[#17324d] ${index === 0 ? "border-2 border-[#2094e3]" : "border border-[#e4ebf1]"}`}
+                className={`h-12 w-11 rounded-[10px] bg-white px-0 text-center text-[18px] font-bold leading-[48px] text-[#17324d] outline-none ${index === 0 ? "border-2 border-[#2094e3]" : "border border-[#e4ebf1]"}`}
               />
             ))}
           </div>
@@ -80,16 +81,16 @@ export default function ParticipantInfoCard() {
         <div className="flex w-[355px] shrink-0 flex-col items-end gap-4" dir="rtl">
           <div className="flex w-full flex-col items-end gap-2">
             <label htmlFor="individual-phone" className="text-[14px] font-bold">شماره موبایل</label>
-            <div className="flex w-full items-center justify-between rounded-xl border border-[#e4ebf1] bg-white p-3.5" dir="ltr">
-              <img src={checkoutAssets.phone} alt="" className="h-4 w-4" />
+            <div className="flex w-full items-center gap-3 rounded-xl border border-[#e4ebf1] bg-white p-3.5" dir="ltr">
+              <img src={checkoutAssets.phone} alt="" className="h-4 w-4 shrink-0" />
               <input
                 id="individual-phone"
                 ref={phoneRef}
                 value={phoneFa}
                 onChange={(event) => changePhone(event.target.value)}
                 inputMode="numeric"
-                className="w-[150px] border-0 bg-transparent p-0 text-right text-[14px] text-[#17324d]"
-                dir="rtl"
+                className="min-w-0 flex-1 border-0 bg-transparent p-0 text-right text-[14px] text-[#17324d] outline-none"
+                dir="ltr"
               />
             </div>
             <span className="w-full text-right text-[12px] text-[#60758a]">کد تأیید و اطلاعات پیگیری به این شماره ارسال خواهد شد.</span>
