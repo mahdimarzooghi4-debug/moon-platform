@@ -68,6 +68,9 @@ button, input, select, textarea {
 }
 
 .mah-company-project-card {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 20px !important;
   direction: rtl !important;
   height: 540px !important;
   min-height: 540px !important;
@@ -138,4 +141,21 @@ button, input, select, textarea {
   justify-content: flex-start !important;
   text-align: right !important;
   unicode-bidi: plaintext;
+}
+
+/* Preserve the Figma progress/footer geometry after removing inline DOM styles. */
+.mah-company-project-card > div:nth-child(4),
+.mah-company-project-card > div:nth-child(4) > div:first-child {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+.mah-company-project-card > div:nth-child(4) > div:nth-child(2) {
+  direction: rtl !important;
+  justify-content: flex-start !important;
+}
+
+.mah-company-project-card > div:last-child,
+.mah-company-project-card > div:last-child > span {
+  text-align: center !important;
 }
