@@ -42,7 +42,7 @@ button {
 
 /*
  * The Codia export was authored on a physical 1440px LTR canvas while its
- * copy is Persian.  Keep the Persian text RTL, but preserve Figma's physical
+ * copy is Persian. Keep the Persian text RTL, but preserve Figma's physical
  * left/right placement explicitly for rows whose order matters.
  */
 html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) {
@@ -209,6 +209,65 @@ html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[
 html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[128]"] > div {
   direction: rtl;
   text-align: right;
+}
+
+/* Trusted companies: preserve the physical Figma order while keeping each Persian
+ * logo block visually RTL (label on the left, icon on the right). */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[239]"] {
+  direction: ltr;
+  justify-content: space-between !important;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[240]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[244]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[248]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[252]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[256]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[260]"] {
+  direction: ltr;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[241]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[245]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[249]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[253]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[257]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[261]"] {
+  color: #616e7d !important;
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[243]"] {
+  background-image: url("/assets/codia/ziERz1A9aZ.svg") !important;
+}
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[247]"] {
+  background-image: url("/assets/codia/uVmpYvWQi7.svg") !important;
+}
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[251]"] {
+  background-image: url("/assets/codia/v3XUKgbb2i.svg") !important;
+}
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[255]"] {
+  background-image: url("/assets/codia/SEnyEKiAqo.svg") !important;
+}
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[259]"] {
+  background-image: url("/assets/codia/PeD9PMAuMz.svg") !important;
+}
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[263]"] {
+  background-image: url("/assets/codia/xFsiBGoAsW.svg") !important;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[243]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[247]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[251]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[255]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[259]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[263]"] {
+  width: 14px !important;
+  height: 14px !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
 }
 
 /* Latin identifiers stay readable without changing the row's Persian layout. */
