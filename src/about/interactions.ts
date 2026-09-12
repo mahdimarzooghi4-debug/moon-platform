@@ -79,23 +79,26 @@ async function repairFigmaSvgAssets(root: HTMLElement) {
   );
 }
 
-function findRoleCard(root: HTMLElement, label: string) {
-  const title = Array.from(root.querySelectorAll<HTMLElement>("span")).find(
-    (element) => normalize(element.textContent) === label,
-  );
-  if (!title) return null;
+function findStakeholderCard(root: HTMLElement, label: string, partial = false) {
+  const titles = Array.from(root.querySelectorAll<HTMLElement>("span"));
 
-  let current = title.parentElement;
-  while (current && current !== root) {
-    const className = typeof current.className === "string" ? current.className : "";
-    if (
-      className.includes("rounded-[16px]") &&
-      className.includes("border") &&
-      current.querySelectorAll("span").length >= 2
-    ) {
-      return current;
+  for (const title of titles) {
+    const text = normalize(title.textContent);
+    const matches = partial ? text.includes(label) : text === label;
+    if (!matches) continue;
+
+    let current = title.parentElement;
+    while (current && current !== root) {
+      const className = typeof current.className === "string" ? current.className : "";
+      if (
+        className.includes("w-[384px]") &&
+        className.includes("rounded-[20px]") &&
+        className.includes("border")
+      ) {
+        return current;
+      }
+      current = current.parentElement;
     }
-    current = current.parentElement;
   }
 
   return null;
@@ -104,17 +107,22 @@ function findRoleCard(root: HTMLElement, label: string) {
 function swapStakeholderCards(root: HTMLElement) {
   if (root.dataset.mahStakeholderCardsSwapped === "true") return;
 
-  const emdadCard = findRoleCard(root, "کمیته امداد امام خمینی(ره)");
-  const startupCard = findRoleCard(root, "استارتاپ‌ها");
+  const emdadCard = findStakeholderCard(root, "کمیته امداد امام خمینی", true);
+  const startupCard = findStakeholderCard(root, "استارتاپ‌ها");
   if (!emdadCard || !startupCard || emdadCard === startupCard) return;
+
+  const emdadParent = emdadCard.parentElement;
+  const startupParent = startupCard.parentElement;
+  if (!emdadParent || !startupParent || emdadParent !== startupParent) return;
 
   const emdadMarker = document.createComment("mah-emdad-card-slot");
   const startupMarker = document.createComment("mah-startup-card-slot");
 
-  emdadCard.replaceWith(emdadMarker);
-  startupCard.replaceWith(startupMarker);
-  emdadMarker.replaceWith(startupCard);
-  startupMarker.replaceWith(emdadCard);
+  emdadParent.insertBefore(emdadMarker, emdadCard);
+  startupParent.insertBefore(startupMarker, startupCard);
+  emdadParent.replaceChild(startupCard, emdadCard);
+  startupParent.replaceChild(emdadCard, startupMarker);
+  emdadMarker.remove();
 
   root.dataset.mahStakeholderCardsSwapped = "true";
 }
