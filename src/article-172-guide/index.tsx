@@ -10,7 +10,7 @@ import { Article172Part07 } from "./parts/Article172Part07";
 
 export default function MahArticle172Guide() {
   return (
-    <div className="main-container flex w-[1440px] flex-col items-center flex-nowrap bg-[#fcfbf8] relative overflow-hidden mx-auto my-0">
+    <div className="article-172-page main-container flex w-[1440px] flex-col items-center flex-nowrap bg-[#fcfbf8] relative overflow-hidden mx-auto my-0">
       <Article172Part01 />
       <Article172Part02 />
       <Article172Part03 />
