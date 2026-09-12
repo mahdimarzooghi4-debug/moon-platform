@@ -46,3 +46,12 @@ button {
   direction: rtl;
   text-align: right;
 }
+
+/* In an RTL flex column, flex-end can visually land on the left side.
+ * Give the title and mobile label a full-width text box so their copy is
+ * unambiguously aligned to the right edge of the auth card. */
+.main-container main h1,
+.main-container main label[for="moon-login-mobile"] {
+  width: 100%;
+  text-align: right;
+}
