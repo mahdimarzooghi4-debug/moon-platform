@@ -43,6 +43,34 @@ html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[
   background-image: none !important;
 }
 
+/* Figma: goal is physically on the left and raised amount is on the right. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[153]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[187]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[221]"] {
+  direction: ltr;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[154]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[155]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[188]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[189]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[222]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[223]"] {
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
+/* Figma places the arrow on the physical left of “مشاهده همه پروژه‌ها”. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[231]"] {
+  direction: ltr;
+  flex-direction: row !important;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[234]"] {
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
 /* Footer order is genuinely RTL: contact at the visual right, brand at left. */
 html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[316]"] {
   direction: rtl;
@@ -58,7 +86,7 @@ html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[
 /* Verified production contact details. Exact contact glyphs reuse assets from
  * the project's Figma/Codia contact screen rather than hand-drawn SVGs. */
 html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[319]"] {
-  width: 240px;
+  width: 220px;
   min-height: 22px;
   padding-right: 28px;
   font-size: 0 !important;
@@ -73,7 +101,7 @@ html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[
 }
 
 html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[319]"]::before {
-  content: "تلفن: 021-66485374" !important;
+  content: "تلفن: ۰۲۱-۶۶۴۸۵۳۷۴" !important;
   display: block;
   color: #e4ebf1;
   font-family: "Vazirmatn", sans-serif;
@@ -81,12 +109,12 @@ html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[
   font-weight: 400;
   line-height: 20px;
   direction: rtl;
-  unicode-bidi: plaintext;
+  unicode-bidi: isolate;
   text-align: right;
 }
 
 html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[320]"] {
-  width: 260px;
+  width: 220px;
   height: auto;
   min-height: 98px;
   padding-right: 28px;
@@ -106,9 +134,9 @@ html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[
 }
 
 html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[320]"]::after {
-  content: "آدرس: تهران، خیابان انقلاب، خیابان رازی، کوچه شهبازیان، پلاک 22" !important;
+  content: "آدرس: تهران، خیابان انقلاب، خیابان رازی، کوچه شهبازیان، پلاک ۲۲" !important;
   display: block;
-  max-width: 228px;
+  max-width: 192px;
   white-space: normal;
   line-height: 20px;
 }
