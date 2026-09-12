@@ -70,10 +70,9 @@ export default function CheckoutFormCards({
             type="button"
             disabled={!canPay}
             onClick={onPay}
-            className={`flex w-full items-center justify-center gap-2.5 rounded-xl px-8 py-3.5 text-[16px] font-bold text-white ${canPay ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}
+            className={`flex w-full items-center justify-center rounded-xl px-8 py-3.5 text-[16px] font-bold text-white ${canPay ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}
             style={{ backgroundImage: "linear-gradient(4.13deg, rgb(32, 148, 227) 25%, rgb(20, 184, 166) 75%)" }}
           >
-            <img src={checkoutAssets.arrowLeft} alt="" className="h-4 w-4" />
             <span>{`ادامه و پرداخت ${formatAmount(amount)}`}</span>
           </button>
           <p className="m-0 w-full text-center text-[12px] text-[#60758a]">با کلیک روی این دکمه به درگاه رسمی پرداخت متصل به حساب کمیته امداد منتقل می‌شوید.</p>
