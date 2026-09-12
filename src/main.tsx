@@ -4,6 +4,7 @@ import "@fontsource/vazirmatn/400.css";
 import "@fontsource/vazirmatn/500.css";
 import "@fontsource/vazirmatn/600.css";
 import "@fontsource/vazirmatn/700.css";
+import "./app/rtl.css";
 import App from "./App";
 
 document.documentElement.lang = "fa";
