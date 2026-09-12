@@ -1,5 +1,4 @@
 const COMPANY_PATHS = new Set(["/companies", "/for-companies"]);
-const companyRootSelector = '.main-container:has([class*="SbaYix9bCr.png"])';
 
 const companyRoutes: Record<string, string> = {
   "ورود کاربران": "/auth",
@@ -37,7 +36,7 @@ function normalize(value: string | null | undefined) {
 
 function getCompanyRoot() {
   if (!isCompanyPage()) return null;
-  return document.querySelector<HTMLElement>(companyRootSelector);
+  return document.querySelector<HTMLElement>(".main-container");
 }
 
 async function svgObjectUrlFor(path: string) {
@@ -60,24 +59,29 @@ async function svgObjectUrlFor(path: string) {
   return pending;
 }
 
+function codiaPngPath(element: HTMLElement) {
+  const className = typeof element.className === "string" ? element.className : "";
+  const match = className.match(/(\/assets\/codia\/[^)\]\s]+\.png)/);
+  return match?.[1] ?? null;
+}
+
 async function repairFigmaSvgAssets(root: HTMLElement) {
-  const backgrounds = Array.from(root.querySelectorAll<HTMLElement>('[class*="bg-[url(/assets/codia/"][class*=".png)]"]'));
+  const elements = Array.from(root.querySelectorAll<HTMLElement>("div, span"));
 
   await Promise.all(
-    backgrounds.map(async (element) => {
-      const className = typeof element.className === "string" ? element.className : "";
-      const match = className.match(/bg-\[url\((\/assets\/codia\/[^)]+\.png)\)\]/);
-      if (!match) return;
-      const objectUrl = await svgObjectUrlFor(match[1]);
+    elements.map(async (element) => {
+      const path = codiaPngPath(element);
+      if (!path) return;
+      const objectUrl = await svgObjectUrlFor(path);
       if (objectUrl) element.style.backgroundImage = `url("${objectUrl}")`;
     }),
   );
 
-  const images = Array.from(root.querySelectorAll<HTMLImageElement>('img[src$=".png"]'));
+  const images = Array.from(root.querySelectorAll<HTMLImageElement>("img"));
   await Promise.all(
     images.map(async (image) => {
       const path = image.getAttribute("src");
-      if (!path?.startsWith("/assets/codia/")) return;
+      if (!path?.startsWith("/assets/codia/") || !path.endsWith(".png")) return;
       const objectUrl = await svgObjectUrlFor(path);
       if (objectUrl) image.src = objectUrl;
     }),
@@ -119,7 +123,7 @@ document.addEventListener("click", (event) => {
   if (!(target instanceof Element)) return;
 
   const action = target.closest<HTMLElement>("[data-mah-company-href]");
-  if (!action || !action.closest(companyRootSelector)) return;
+  if (!action || !action.closest(".main-container")) return;
 
   event.preventDefault();
   followCompanyLink(action);
@@ -129,7 +133,7 @@ document.addEventListener("keydown", (event) => {
   if (!isCompanyPage() || (event.key !== "Enter" && event.key !== " ")) return;
   const target = event.target;
   if (!(target instanceof HTMLElement) || !target.dataset.mahCompanyHref) return;
-  if (!target.closest(companyRootSelector)) return;
+  if (!target.closest(".main-container")) return;
 
   event.preventDefault();
   followCompanyLink(target);
