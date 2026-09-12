@@ -8,20 +8,21 @@
   };
 
   const clickableTarget = (node) =>
-    node.closest('div[class*="rounded"]') || node.closest('div[class*="border"]') || node;
+    node.closest('div[class*="rounded"]') || node.closest('div[class*="border"]') || node.parentElement || node;
 
   const bindTextLink = (label, path) => {
     document.querySelectorAll('span').forEach((span) => {
       if (span.textContent.trim() !== label) return;
       const target = clickableTarget(span);
-      const key = `mahBound${label}`;
-      if (target.dataset[key]) return;
-      target.dataset[key] = '1';
+      if (!target) return;
+      if (target.getAttribute('data-mah-bound-path') === path) return;
+      target.setAttribute('data-mah-bound-path', path);
       target.style.cursor = 'pointer';
       target.setAttribute('role', 'link');
       target.tabIndex = 0;
       const activate = (event) => {
         event.preventDefault();
+        event.stopPropagation();
         go(path);
       };
       target.addEventListener('click', activate);
@@ -55,7 +56,10 @@
     const placeholderSpan = [...document.querySelectorAll('span')].find((span) =>
       span.textContent.includes('مبلغ مورد نظر را وارد کنید')
     );
-    if (!placeholderSpan || placeholderSpan.dataset.mahAmountInput === '1') return;
+    if (!placeholderSpan) return;
+
+    const parent = placeholderSpan.parentElement;
+    if (parent?.querySelector('input[data-mah-amount-input="1"]')) return;
 
     const input = document.createElement('input');
     input.type = 'text';
@@ -83,10 +87,12 @@
       document.querySelectorAll('span').forEach((span) => {
         if (span.textContent.trim() !== label) return;
         const target = clickableTarget(span);
-        if (target.dataset.mahAmountChoice) return;
+        if (!target || target.dataset.mahAmountChoice) return;
         target.dataset.mahAmountChoice = label;
         target.style.cursor = 'pointer';
-        target.addEventListener('click', () => {
+        target.setAttribute('role', 'button');
+        target.tabIndex = 0;
+        const selectAmount = () => {
           document.querySelectorAll('[data-mah-amount-choice]').forEach((item) => {
             item.style.borderColor = '#e4ebf1';
             item.style.background = 'transparent';
@@ -94,7 +100,17 @@
           target.style.borderColor = '#2094e3';
           target.style.background = '#eaf5fd';
           const input = document.querySelector('input[data-mah-amount-input="1"]');
-          if (input) input.value = label.replace(/[^۰-۹0-9]/g, '');
+          if (input) {
+            input.value = label.replace(/[^۰-۹0-9]/g, '');
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+          }
+        };
+        target.addEventListener('click', selectAmount);
+        target.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            selectAmount();
+          }
         });
       });
     });
@@ -105,10 +121,12 @@
       document.querySelectorAll('span').forEach((span) => {
         if (span.textContent.trim() !== label) return;
         const target = clickableTarget(span);
-        if (target.dataset.mahParticipationTab) return;
+        if (!target || target.dataset.mahParticipationTab) return;
         target.dataset.mahParticipationTab = label;
         target.style.cursor = 'pointer';
-        target.addEventListener('click', () => {
+        target.setAttribute('role', 'button');
+        target.tabIndex = 0;
+        const selectTab = () => {
           document.querySelectorAll('[data-mah-participation-tab]').forEach((item) => {
             const active = item.dataset.mahParticipationTab === label;
             item.style.background = active ? '#fff' : 'transparent';
@@ -118,6 +136,13 @@
               text.style.color = active ? '#17324d' : '#60758a';
             }
           });
+        };
+        target.addEventListener('click', selectTab);
+        target.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            selectTab();
+          }
         });
       });
     });
@@ -127,13 +152,14 @@
     document.querySelectorAll('span').forEach((span) => {
       if (span.textContent.trim() !== 'ادامه مشارکت') return;
       const target = clickableTarget(span);
-      if (target.dataset.mahContinueBound) return;
+      if (!target || target.dataset.mahContinueBound) return;
       target.dataset.mahContinueBound = '1';
       target.style.cursor = 'pointer';
       target.setAttribute('role', 'button');
       target.tabIndex = 0;
       const activate = (event) => {
         event.preventDefault();
+        event.stopPropagation();
         const input = document.querySelector('input[data-mah-amount-input="1"]');
         const amount = input?.value?.trim();
         const suffix = amount ? `?amount=${encodeURIComponent(amount)}` : '';
@@ -160,10 +186,16 @@
     bindProjectCta();
   };
 
-  bindAll();
-  const observer = new MutationObserver(bindAll);
-  observer.observe(document.getElementById('app') || document.body, {
-    childList: true,
-    subtree: true,
-  });
+  const start = () => {
+    bindAll();
+    const app = document.getElementById('app') || document.body;
+    const observer = new MutationObserver(bindAll);
+    observer.observe(app, { childList: true, subtree: true });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start, { once: true });
+  } else {
+    start();
+  }
 })();
