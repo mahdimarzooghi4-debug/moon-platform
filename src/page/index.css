@@ -33,3 +33,16 @@ textarea,
 button {
   outline: 0;
 }
+
+/* Auth screen content is Persian-first: keep all form copy and typed values
+ * anchored to the right while preserving the centered CTA/hint styles. */
+.main-container main > div {
+  direction: rtl;
+  text-align: right;
+}
+
+.main-container main input,
+.main-container main input::placeholder {
+  direction: rtl;
+  text-align: right;
+}
