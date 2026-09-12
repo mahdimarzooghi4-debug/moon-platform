@@ -1,0 +1,39 @@
+/* Landing footer contact details supplied for production content.
+ * Scoped to the landing export so other pages remain untouched.
+ */
+html[dir="rtl"] body .main-container [class~="z-[315]"] [class~="z-[319]"] {
+  width: 220px;
+  min-height: 22px;
+  font-size: 0 !important;
+  color: transparent !important;
+  white-space: normal;
+}
+
+html[dir="rtl"] body .main-container [class~="z-[315]"] [class~="z-[319]"]::before {
+  content: "تلفن: 021-66485374" !important;
+  display: block;
+  color: #e4ebf1;
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+  direction: rtl;
+  unicode-bidi: plaintext;
+  text-align: right;
+}
+
+html[dir="rtl"] body .main-container [class~="z-[315]"] [class~="z-[320]"] {
+  width: 240px;
+  min-height: 96px;
+}
+
+html[dir="rtl"] body .main-container [class~="z-[315]"] [class~="z-[320]"]::before {
+  content: "ایمیل: info@mahcsr.ir" !important;
+  unicode-bidi: plaintext;
+}
+
+html[dir="rtl"] body .main-container [class~="z-[315]"] [class~="z-[320]"]::after {
+  content: "آدرس: تهران، خیابان انقلاب، خیابان رازی، کوچه شهبازیان، پلاک 22" !important;
+  max-width: 214px;
+  white-space: normal;
+}
