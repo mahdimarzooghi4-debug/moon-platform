@@ -25,11 +25,6 @@ const companyRoutes: Record<string, string> = {
 };
 
 const svgAssetCache = new Map<string, Promise<string | null>>();
-const projectImageSuffixes = [
-  "/OVPcmhB9Gi.png",
-  "/bZ15zUixSc.png",
-  "/oniW8J37sN.png",
-];
 
 function isCompanyPage() {
   return COMPANY_PATHS.has(window.location.pathname);
@@ -95,23 +90,34 @@ async function repairFigmaSvgAssets(root: HTMLElement) {
 
 function styleProjectCards(root: HTMLElement) {
   const elements = Array.from(root.querySelectorAll<HTMLElement>("div"));
-  const cards = projectImageSuffixes
-    .map((suffix) => {
-      const image = elements.find((element) => codiaPngPath(element)?.endsWith(suffix));
-      return image?.parentElement instanceof HTMLElement ? image.parentElement : null;
-    })
-    .filter((card): card is HTMLElement => Boolean(card));
+  const firstImage = elements.find((element) =>
+    codiaPngPath(element)?.endsWith("/OVPcmhB9Gi.png"),
+  );
 
-  if (cards.length !== 3) return;
+  const firstCard = firstImage?.parentElement;
+  const cardRow = firstCard?.parentElement;
+  if (!(firstCard instanceof HTMLElement) || !(cardRow instanceof HTMLElement)) return;
 
-  const cardRow = cards[0].parentElement;
-  if (!cardRow || !cards.every((card) => card.parentElement === cardRow)) return;
+  const cards = Array.from(cardRow.children).filter(
+    (child): child is HTMLElement => child instanceof HTMLElement,
+  );
+  if (cards.length < 3) return;
+
+  const middleCard = cards[1];
+
+  // The requested middle card is an exact copy of Project Card 1.
+  // Doing the copy before the visual normalization guarantees identical image,
+  // text, stats, progress and button placement.
+  if (middleCard.dataset.mahCopiedFromFirst !== "true") {
+    middleCard.innerHTML = firstCard.innerHTML;
+    middleCard.dataset.mahCopiedFromFirst = "true";
+  }
 
   cardRow.classList.add("mah-company-projects-row");
   cardRow.style.alignItems = "stretch";
   cardRow.style.direction = "ltr";
 
-  cards.forEach((card) => {
+  cards.slice(0, 3).forEach((card) => {
     card.classList.add("mah-company-project-card");
     card.setAttribute("dir", "rtl");
     card.style.direction = "rtl";
@@ -180,12 +186,9 @@ function styleProjectCards(root: HTMLElement) {
     }
 
     card.querySelectorAll<HTMLElement>("span, p").forEach((text) => {
-      if (button?.contains(text)) {
-        text.style.textAlign = "center";
-        return;
-      }
       text.style.direction = "rtl";
-      text.style.textAlign = "right";
+      text.style.unicodeBidi = "plaintext";
+      text.style.textAlign = button?.contains(text) ? "center" : "right";
     });
   });
 }
