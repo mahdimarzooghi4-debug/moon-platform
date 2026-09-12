@@ -1,5 +1,6 @@
 const FINAL_REPORT_PATH = "/projects/impact-report/states/final";
 const PRINT_REPORT_PATH = "/projects/impact-report/print";
+const DOCUMENTS_REPORT_PATH = "/projects/impact-report/documents";
 
 function normalize(value: string | null | undefined) {
   return (value ?? "").replace(/\s+/g, " ").trim();
@@ -9,45 +10,57 @@ function isFinalReportPage() {
   return window.location.pathname === FINAL_REPORT_PATH;
 }
 
+function markAction(element: HTMLElement, action: "print" | "documents") {
+  element.dataset.mahImpactReportAction = action;
+  element.setAttribute("role", "link");
+  element.tabIndex = 0;
+  element.style.cursor = "pointer";
+}
+
 function enhanceFinalReportPage() {
   if (!isFinalReportPage()) return;
 
   const root = document.querySelector<HTMLElement>(".main-container");
   if (!root) return;
 
-  const printButton = Array.from(root.querySelectorAll<HTMLElement>("button, a, span")).find(
+  const actions = Array.from(root.querySelectorAll<HTMLElement>("button, a, span"));
+
+  const printButton = actions.find(
     (element) => normalize(element.textContent) === "دریافت نسخه چاپی",
   );
+  if (printButton) markAction(printButton, "print");
 
-  if (!printButton) return;
-
-  printButton.dataset.mahPrintReport = "true";
-  printButton.setAttribute("role", "link");
-  printButton.tabIndex = 0;
-  printButton.style.cursor = "pointer";
+  const documentsButton = actions.find(
+    (element) => normalize(element.textContent) === "مشاهده مستندات",
+  );
+  if (documentsButton) markAction(documentsButton, "documents");
 }
 
-function openPrintReport() {
+function openReportAction(action: "print" | "documents") {
   const query = window.location.search;
-  window.location.assign(`${PRINT_REPORT_PATH}${query}`);
+  const target = action === "print" ? PRINT_REPORT_PATH : DOCUMENTS_REPORT_PATH;
+  window.location.assign(`${target}${query}`);
 }
 
 document.addEventListener("click", (event) => {
   if (!isFinalReportPage()) return;
   const target = event.target;
   if (!(target instanceof Element)) return;
-  const action = target.closest<HTMLElement>("[data-mah-print-report='true']");
-  if (!action) return;
+  const element = target.closest<HTMLElement>("[data-mah-impact-report-action]");
+  const action = element?.dataset.mahImpactReportAction;
+  if (action !== "print" && action !== "documents") return;
   event.preventDefault();
-  openPrintReport();
+  openReportAction(action);
 });
 
 document.addEventListener("keydown", (event) => {
   if (!isFinalReportPage() || (event.key !== "Enter" && event.key !== " ")) return;
   const target = event.target;
-  if (!(target instanceof HTMLElement) || target.dataset.mahPrintReport !== "true") return;
+  if (!(target instanceof HTMLElement)) return;
+  const action = target.dataset.mahImpactReportAction;
+  if (action !== "print" && action !== "documents") return;
   event.preventDefault();
-  openPrintReport();
+  openReportAction(action);
 });
 
 let scheduled = false;
