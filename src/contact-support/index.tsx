@@ -7,7 +7,6 @@ import { QuickLinksSection } from "./sections/QuickLinksSection";
 import { ContactAndRequestSection } from "./sections/ContactAndRequestSection";
 import { FaqSection } from "./sections/FaqSection";
 import { TrackingActionsSection } from "./sections/TrackingActionsSection";
-import { SiteFooterSection } from "./sections/SiteFooterSection";
 
 export default function Main() {
   return (
@@ -20,7 +19,6 @@ export default function Main() {
       <ContactAndRequestSection />
       <FaqSection />
       <TrackingActionsSection />
-      <SiteFooterSection />
     </div>
   );
 }
