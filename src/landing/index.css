@@ -30,6 +30,47 @@
   unicode-bidi: plaintext;
 }
 
+/*
+ * The generated Codia export stored a number of SVG vectors under a .png
+ * suffix. Use real .svg paths for the visible landing icons so both Vite and
+ * the production nginx runtime serve the vectors with the correct MIME type.
+ */
+.main-container [class*="Nn6705XhfS.png"] {
+  background-image: url("/assets/codia/Nn6705XhfS.svg") !important;
+}
+
+.main-container [class*="cxdojLhODQ.png"] {
+  background-image: url("/assets/codia/cxdojLhODQ.svg") !important;
+}
+
+.main-container [class*="m3qsgpUX3g.png"] {
+  background-image: url("/assets/codia/m3qsgpUX3g.svg") !important;
+}
+
+.main-container [class*="i7rWP6OzWu.png"] {
+  background-image: url("/assets/codia/i7rWP6OzWu.svg") !important;
+}
+
+.main-container [class*="N1ctvrtnG3.png"] {
+  background-image: url("/assets/codia/N1ctvrtnG3.svg") !important;
+}
+
+.main-container [class*="ZuP4QiPSK8.png"] {
+  background-image: url("/assets/codia/ZuP4QiPSK8.svg") !important;
+}
+
+.main-container [class*="MtRTcVQGjH.png"] {
+  background-image: url("/assets/codia/MtRTcVQGjH.svg") !important;
+}
+
+.main-container [class*="HfESrrAcfV.png"] {
+  background-image: url("/assets/codia/HfESrrAcfV.svg") !important;
+}
+
+.main-container [class*="hEyKrXaGAW.png"] {
+  background-image: url("/assets/codia/hEyKrXaGAW.svg") !important;
+}
+
 input,
 select,
 textarea,
