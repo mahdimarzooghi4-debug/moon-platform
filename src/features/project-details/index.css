@@ -34,6 +34,12 @@ body {
   box-sizing: border-box;
 }
 
+/* Let each Persian text run determine its own bidi direction so punctuation
+   stays at the visual end of the sentence instead of jumping to the start. */
+.main-container span {
+  unicode-bidi: plaintext;
+}
+
 input,
 select,
 textarea {
@@ -151,26 +157,21 @@ button {
   text-align: right !important;
 }
 
-/* Custom amount placeholder: keep the ellipsis visually in front of the Persian text. */
-.main-container [class*="z-[115]"] {
+/* Custom amount: remove the decorative ellipsis and let the interaction
+   script replace the generated text with a real input. */
+.main-container span[class*="z-[115]"] {
   font-size: 0 !important;
   display: flex;
-  flex-direction: row-reverse;
-  justify-content: flex-start;
+  justify-content: flex-end;
   align-items: center;
-  direction: ltr;
+  direction: rtl;
 }
 
-.main-container [class*="z-[115]"]::before {
-  content: "...";
-  font-family: "Vazirmatn Variable", "Vazirmatn", sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 22px;
-  color: #17324d;
+.main-container span[class*="z-[115]"]::before {
+  content: none !important;
 }
 
-.main-container [class*="z-[115]"]::after {
+.main-container span[class*="z-[115]"]::after {
   content: "مبلغ مورد نظر را وارد کنید";
   direction: rtl;
   unicode-bidi: isolate;
@@ -180,6 +181,15 @@ button {
   line-height: 22px;
   color: #17324d;
   white-space: nowrap;
+}
+
+.main-container input[class*="z-[115]"] {
+  display: block !important;
+  font-size: 14px !important;
+  direction: rtl !important;
+  unicode-bidi: plaintext;
+  text-align: right !important;
+  color: #17324d !important;
 }
 
 /* Similar-project cards: Figma places "هدف پروژه" on the right and amount on the left. */
