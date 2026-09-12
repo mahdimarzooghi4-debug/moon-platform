@@ -11,7 +11,11 @@
 }
 
 .main-container {
+  width: 100%;
+  max-width: 1440px;
   overflow: hidden;
+  direction: rtl;
+  text-align: right;
 }
 
 .main-container,
@@ -24,4 +28,65 @@ select,
 textarea,
 button {
   outline: 0;
+}
+
+/* Contact rows were exported in LTR source order. In RTL, reverse the row so
+   the semantic icon is visually placed on the right of its label/value. */
+.main-container [class~="z-[84]"],
+.main-container [class~="z-[88]"],
+.main-container [class~="z-[92]"],
+.main-container [class~="z-[96]"] {
+  flex-direction: row-reverse;
+}
+
+.main-container [class~="z-[85]"],
+.main-container [class~="z-[89]"] {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/* Keep the contact footer consistent with the canonical support details. */
+.main-container [class~="z-[274]"] [class~="z-[278]"] {
+  width: 220px;
+  align-self: stretch;
+  justify-content: flex-start;
+  direction: rtl;
+  text-align: right;
+}
+
+.main-container [class~="z-[274]"] [class~="z-[279]"] {
+  width: 220px;
+  height: auto;
+  min-height: 60px;
+  align-self: stretch;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
+  gap: 8px;
+  color: transparent;
+  font-size: 0;
+  white-space: normal;
+  direction: rtl;
+  text-align: right;
+}
+
+.main-container [class~="z-[274]"] [class~="z-[279]"]::before,
+.main-container [class~="z-[274]"] [class~="z-[279]"]::after {
+  display: block;
+  color: #e4ebf1;
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+  text-align: right;
+  direction: rtl;
+}
+
+.main-container [class~="z-[274]"] [class~="z-[279]"]::before {
+  content: "ایمیل: support@mahplatform.ir";
+  unicode-bidi: plaintext;
+}
+
+.main-container [class~="z-[274]"] [class~="z-[279]"]::after {
+  content: "آدرس: تهران، خیابان ولیعصر، بالاتر از میدان ونک، کوچه نگار، پلاک ۱۰، خانه خلاق ماه";
 }
