@@ -12,8 +12,8 @@ export const checkoutAssets = {
   checkbox: "/assets/codia/wCtLuLQhmc.svg",
   shield: "/assets/codia/Rrst5TZZ9v.svg",
   arrowLeft: "/assets/codia/60t9COadfY.svg",
-  telegram: "https://www.figma.com/api/mcp/asset/e633cfe0-b673-47ce-b8af-bbe61540d6c8.svg",
-  eitaa: "https://www.figma.com/api/mcp/asset/dc5d64c2-1a62-481c-b843-348214c80ab0.svg",
+  instagram: "/assets/codia/KXDRuRatym.svg",
+  linkedin: "/assets/codia/gSndMiYa1W.svg",
 };
 
 const faDigits = "۰۱۲۳۴۵۶۷۸۹";
