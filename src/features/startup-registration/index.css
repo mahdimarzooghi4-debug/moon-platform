@@ -17,13 +17,48 @@ body {
   background: #f7fafc;
 }
 
+/* The Figma frame uses physical LTR ordering for horizontal layout
+ * (logo on the right, back actions on the left, step 1 on the right).
+ * Text itself remains Persian/RTL. */
 .main-container {
   overflow: hidden;
+  direction: ltr;
 }
 
 .main-container,
 .main-container * {
   box-sizing: border-box;
+}
+
+.main-container span,
+.main-container p,
+.main-container label,
+.main-container input,
+.main-container select,
+.main-container textarea,
+.main-container button,
+.main-container a {
+  direction: rtl;
+}
+
+/* Keep Latin-only values readable without changing the surrounding layout. */
+.main-container input[type="url"],
+.main-container input[type="email"] {
+  direction: ltr;
+  text-align: right;
+}
+
+/* Replace the expiring Codia header-logo URL with the committed Figma asset. */
+.main-container [class*="fdy2TS149S.png"] {
+  background-image: url("/assets/codia/PHNkOFHS4y.png") !important;
+}
+
+/* Generated Figma controls are div/span based; show pointer affordance for
+ * actions that are wired by the page interaction helper. */
+.main-container [data-mah-register-action],
+.main-container button,
+.main-container a {
+  cursor: pointer;
 }
 
 input,
