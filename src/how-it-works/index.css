@@ -48,9 +48,8 @@
   background-image: url("/assets/codia/Z4PqZykJBG.svg") !important;
 }
 
-/* Project Journey: keep all eight cards the same size and tighten the second
- * row. The generated markup groups each row in an absolutely-positioned
- * wrapper; flatten those wrappers into one grid so row spacing is consistent. */
+/* Project Journey: keep all eight cards the same size, tighten the two rows,
+ * and show steps 4-1 on the first row while steps 8-5 move to the second row. */
 .main-container [class*="z-[77]"] {
   display: grid !important;
   grid-template-columns: repeat(4, 282px) !important;
@@ -70,6 +69,14 @@
   left: auto !important;
   width: 282px !important;
   height: 176px !important;
+}
+
+.main-container [class*="z-[77]"] > [class*="w-[1200px]"]:first-child > [class*="w-[282px]"] {
+  grid-row: 2 !important;
+}
+
+.main-container [class*="z-[77]"] > [class*="w-[1200px]"]:last-child > [class*="w-[282px]"] {
+  grid-row: 1 !important;
 }
 
 .main-container,
