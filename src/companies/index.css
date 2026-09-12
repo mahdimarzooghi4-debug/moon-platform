@@ -41,9 +41,7 @@ button, input, select, textarea {
   font: inherit;
 }
 
-/* Figma keeps the physical page composition left-to-right (header actions on the
- * left, brand/navigation on the right, hero image on the left), while Persian
- * copy itself is RTL. Scope that behavior to the companies page only. */
+/* Keep the overall Figma composition physical LTR while Persian content stays RTL. */
 .mah-companies-page {
   direction: ltr;
 }
@@ -62,32 +60,40 @@ button, input, select, textarea {
   cursor: pointer;
 }
 
-/* Figma node 664:4030 — Project Grid.
- * The grid is physically LTR. Persian copy is right-aligned inside each field;
- * the whole card must NOT be direction:rtl because that reverses the stat rows. */
+/* Figma node 664:4030 — three equal 384×540 cards. The row keeps its physical
+ * order, while every card is a Persian RTL content block. */
 .mah-company-projects-row {
-  align-items: flex-start !important;
+  align-items: stretch !important;
+  direction: ltr !important;
 }
 
 .mah-company-project-card {
-  direction: ltr !important;
+  direction: rtl !important;
   height: 540px !important;
   min-height: 540px !important;
   max-height: 540px !important;
-  text-align: right;
+  text-align: right !important;
+  align-items: stretch !important;
 }
 
 .mah-company-project-card > div {
+  width: 100%;
+  align-self: stretch;
   flex-shrink: 0;
 }
 
-.mah-company-project-card span:not([class*="text-center"]) {
-  text-align: right !important;
+.mah-company-project-card > div:last-child {
+  margin-top: auto !important;
 }
 
-/* Keep Persian glyph order RTL without reversing the flex geometry from Figma. */
-.mah-company-project-card span,
-.mah-company-project-card p {
-  direction: rtl;
+.mah-company-project-card span:not([class*="text-center"]),
+.mah-company-project-card p:not([class*="text-center"]) {
+  direction: rtl !important;
+  text-align: right !important;
   unicode-bidi: plaintext;
+}
+
+.mah-company-project-card [class*="gap-[16px]"],
+.mah-company-project-card [class*="gap-[8px]"] {
+  direction: rtl;
 }
