@@ -46,13 +46,13 @@ export default function StartupTeamMemberAddPage() {
 
       <main className="mx-auto flex w-[1000px] flex-col gap-[24px] py-[48px]" dir="rtl">
         <section className="flex flex-col gap-[16px]">
-          <div className="flex items-center justify-between">
-            <span className="text-[14px] font-normal text-[#159455]">✓ ذخیره خودکار انجام شد</span>
-            <div className="flex items-center gap-[16px]">
-              <span className="rounded-[8px] bg-[#eaf5fd] px-[12px] py-[4px] text-[13px] font-medium text-[#2094e3]">
+          <div className="flex items-center justify-between" dir="ltr">
+            <span className="text-[14px] font-normal text-[#159455]" dir="rtl">✓ ذخیره خودکار انجام شد</span>
+            <div className="flex items-center gap-[16px]" dir="ltr">
+              <span className="rounded-[8px] bg-[#eaf5fd] px-[12px] py-[4px] text-[13px] font-medium text-[#2094e3]" dir="rtl">
                 مرحله ۲ از ۴
               </span>
-              <h1 className="m-0 text-[24px] font-bold text-[#1a202c]">افزودن عضو جدید به تیم</h1>
+              <h1 className="m-0 text-[24px] font-bold text-[#1a202c]" dir="rtl">افزودن عضو جدید به تیم</h1>
             </div>
           </div>
           <p className="m-0 text-right text-[14px] text-[#718096]">
@@ -60,17 +60,17 @@ export default function StartupTeamMemberAddPage() {
           </p>
         </section>
 
-        <section className="flex items-center justify-center gap-[16px] py-[16px] text-[14px]">
-          <div className="flex items-center gap-[8px] text-[#718096]">
+        <section className="flex items-center justify-center gap-[16px] py-[16px] text-[14px]" dir="ltr">
+          <div className="flex items-center gap-[8px] text-[#718096]" dir="rtl">
             <span>بازبینی و ارسال</span><span className="flex h-[28px] w-[28px] items-center justify-center rounded-full bg-[#e2e8f0] text-[12px] font-bold">۴</span>
           </div>
-          <div className="flex items-center gap-[8px] text-[#718096]">
+          <div className="flex items-center gap-[8px] text-[#718096]" dir="rtl">
             <span>اثر اجتماعی و مدارک</span><span className="flex h-[28px] w-[28px] items-center justify-center rounded-full bg-[#e2e8f0] text-[12px] font-bold">۳</span><span className="h-px w-[40px] bg-[#e2e8f0]" />
           </div>
-          <div className="flex items-center gap-[8px] font-bold text-[#2094e3]">
+          <div className="flex items-center gap-[8px] font-bold text-[#2094e3]" dir="rtl">
             <span>محصول و تیم</span><span className="flex h-[28px] w-[28px] items-center justify-center rounded-full border-[1.5px] border-[#2094e3] bg-[#eaf5fd] text-[12px]">۲</span><span className="h-px w-[40px] bg-[#2094e3]" />
           </div>
-          <div className="flex items-center gap-[8px] text-[#159455]">
+          <div className="flex items-center gap-[8px] text-[#159455]" dir="rtl">
             <span>اطلاعات پایه</span><span className="flex h-[28px] w-[28px] items-center justify-center rounded-full border-[1.5px] border-[#159455] bg-[#eaf8f0] text-[12px] font-bold">✓</span>
           </div>
         </section>
