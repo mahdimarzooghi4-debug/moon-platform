@@ -12,8 +12,24 @@
     "Source Han Sans CN", sans-serif;
 }
 
-.main-container {
+.article-172-page {
   overflow: hidden;
+  direction: ltr;
+  text-align: right;
+}
+
+/* Figma keeps the page's spatial layout left-to-right (for example Hero image
+ * on the left and copy on the right) while Persian copy itself is right-aligned.
+ * Keep generated flex/grid ordering intact and normalize old text-left exports. */
+.article-172-page .text-left {
+  text-align: right;
+}
+
+/* Match Figma's dir="auto" behavior for mixed Persian/Latin/numeric labels
+ * without changing the order of flex and grid children. */
+.article-172-page span,
+.article-172-page p {
+  unicode-bidi: plaintext;
 }
 
 .main-container,
