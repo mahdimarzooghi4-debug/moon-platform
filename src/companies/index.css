@@ -61,3 +61,34 @@ button, input, select, textarea {
 .mah-companies-page [data-mah-company-href] {
   cursor: pointer;
 }
+
+/* The project cards themselves are Persian UI blocks. Keep the page's physical
+ * LTR composition, but make every card internally RTL and structurally identical. */
+.mah-company-projects-row {
+  align-items: stretch !important;
+}
+
+.mah-company-project-card {
+  direction: rtl !important;
+  text-align: right;
+  min-height: 100%;
+}
+
+.mah-company-project-card > div:not(:first-child) {
+  width: 100%;
+  align-self: stretch;
+}
+
+.mah-company-project-card > div:last-child {
+  margin-top: auto;
+}
+
+.mah-company-project-card span:not([class*="text-center"]) {
+  text-align: right !important;
+}
+
+.mah-company-project-card [class*="justify-between"],
+.mah-company-project-card [class*="gap-[16px]"],
+.mah-company-project-card [class*="gap-[8px]"] {
+  direction: rtl;
+}
