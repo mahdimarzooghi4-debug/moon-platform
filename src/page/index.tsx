@@ -9,10 +9,9 @@ import {
 import "./index.css";
 
 const IMG = {
-  logoIcon: "/assets/image_ae1865f7-c201-457c-b7c6-cb0573e56337.png",
-  logoText: "/assets/image_ca277b70-8bb4-4096-9bc1-ea6881a35524.png",
+  logo: "/assets/codia/qreWA0b9ix.png",
   backIcon: "/assets/image_cd1430e5-409a-40f6-a742-c82761e81fa7.png",
-  phoneFlag: "/assets/image_bcf4aaa2-a2ce-459b-85c8-e1b5f6395009.png",
+  phoneIcon: "/assets/image_bcf4aaa2-a2ce-459b-85c8-e1b5f6395009.png",
   otpIcon: "/assets/image_fd57a38b-06b3-4cb8-ab22-2e4701d4b6ab.png",
   companyIcon: "/assets/image_f95f66f0-8705-40ba-ae7c-412f53c3f831.png",
   startupIcon: "/assets/image_4f6087ed-2d7c-4200-b9de-09d5fd3eca2b.png",
@@ -54,6 +53,16 @@ const ERROR_MESSAGES: Record<string, string> = {
   "no-panel-access": "برای این حساب هنوز دسترسی به پنلی تعریف نشده است.",
 };
 
+function selectedCardClass(accountType: AccountType) {
+  if (accountType === "internal") {
+    return "bg-[#eaf5fd] border-2 border-[#2094e3]";
+  }
+  if (accountType === "startup") {
+    return "bg-[#f0f7fe] border-[1.5px] border-[rgba(32,148,227,0.78)]";
+  }
+  return "bg-[#f6fbfe] border-[1.5px] border-[#2094e3]";
+}
+
 export default function Main() {
   const [searchParams] = useSearchParams();
   const returnTo = searchParams.get("returnTo");
@@ -65,6 +74,7 @@ export default function Main() {
 
   const normalizedPhone = normalizeIranMobile(phone);
   const canSubmit = Boolean(selected && isValidIranMobile(normalizedPhone) && !busy);
+  const hasSelection = selected !== null;
 
   async function handleLogin() {
     if (!selected || !isValidIranMobile(normalizedPhone) || busy) return;
@@ -80,164 +90,229 @@ export default function Main() {
     }
   }
 
+  function renderAccountHint() {
+    if (error) {
+      return (
+        <p className="m-0 text-center text-[13px] text-[#c53030]">
+          {ERROR_MESSAGES[error] ?? "ورود انجام نشد. دوباره تلاش کنید."}
+        </p>
+      );
+    }
+
+    if (!selected) {
+      return (
+        <p className="m-0 text-center text-[13px] text-[#a0aec0]">
+          جهت فعال‌سازی دکمه ورود، ابتدا نوع حساب خود را از بالا انتخاب کنید.
+        </p>
+      );
+    }
+
+    if (selected === "company") {
+      return (
+        <p className="m-0 flex items-center justify-center gap-1 text-[14px] text-[#718096]">
+          <span>هنوز حساب سازمانی ندارید؟</span>
+          <a href="/register/company" className="font-semibold text-[#2094e3] underline">
+            ثبت‌نام شرکت
+          </a>
+        </p>
+      );
+    }
+
+    if (selected === "startup") {
+      return (
+        <p className="m-0 flex items-center justify-center gap-1 text-[14px] text-[#718096]">
+          <span>هنوز حساب استارتاپی ندارید؟</span>
+          <a href="/register/startup" className="font-semibold text-[#2094e3] underline">
+            ثبت‌نام استارتاپ
+          </a>
+        </p>
+      );
+    }
+
+    return (
+      <p className="m-0 text-center text-[13px] text-[#718096]">
+        حساب کاربران داخلی توسط مدیر سامانه ایجاد می‌شود.
+      </p>
+    );
+  }
+
   return (
     <div
-      className="main-container min-h-screen flex flex-col bg-[#F6F9FB]"
+      className="main-container min-h-screen flex flex-col items-center bg-[#f7fafc]"
       dir="rtl"
       style={{ fontFamily: "'Vazirmatn', sans-serif" }}
     >
-      <header className="flex items-center justify-between h-[80px] px-[120px] bg-white border-b border-[#E4EBF1] shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="flex flex-col items-end gap-0.5">
-            <img src={IMG.logoText} alt="ماه" className="h-8 object-contain" />
-            <span className="text-[10px] text-[#5781AD] leading-tight">مسئولیت اجتماعی هوشمند</span>
-          </div>
-          <img src={IMG.logoIcon} alt="" className="w-[42px] h-[41px] object-contain" />
-        </div>
+      <header className="flex h-[80px] w-full shrink-0 items-center justify-between border-b border-[#e5ebf2] bg-white px-[120px]">
+        <img src={IMG.logo} alt="سامانه ماه" className="h-[46px] w-[137px] object-contain" />
 
         <button
           type="button"
+          dir="ltr"
           onClick={() => window.location.assign("/")}
-          className="flex items-center gap-2 text-[#4D5A6D] hover:opacity-80 transition-opacity cursor-pointer bg-transparent border-none"
+          className="flex cursor-pointer items-center justify-center gap-2 border-none bg-transparent text-[#2e3d54] transition-opacity hover:opacity-80"
         >
-          <img src={IMG.backIcon} alt="" className="w-[13px] h-[12px]" />
-          <span className="text-[16px] font-medium">بازگشت به صفحه اصلی</span>
+          <img src={IMG.backIcon} alt="" className="h-4 w-4 object-contain" />
+          <span dir="rtl" className="text-[14px] font-medium">بازگشت به صفحه اصلی</span>
         </button>
       </header>
 
-      <main className="relative flex-1 flex items-center justify-center py-12">
-        <div className="relative z-10 w-[780px] bg-white border border-[#E4EBF1] rounded-[20px] p-8 flex flex-col gap-6">
-          <div className="flex items-center justify-between gap-3">
+      <main className="relative flex w-full flex-1 flex-col items-center justify-center py-12">
+        <div
+          className={[
+            "relative z-10 flex w-[780px] flex-col items-end rounded-[20px] border border-[#e4ebf1] bg-white",
+            selected === "internal" ? "gap-7 p-9" : hasSelection ? "gap-6 p-9" : "gap-6 p-8",
+          ].join(" ")}
+        >
+          <div className="flex w-full items-center justify-between">
             <div className="flex flex-col items-end gap-1.5">
-              <h1 className="text-[24px] font-bold text-[#1A202C] leading-tight">
+              <h1 className="m-0 text-[24px] font-bold leading-normal text-[#1a202c]">
                 ورود به سامانه ماه
               </h1>
-              <p className="text-[14px] font-medium text-[#8A97A9]">
+              <p className="m-0 text-[14px] font-normal leading-normal text-[#718096]">
                 نوع حساب خود را انتخاب کنید و با شماره موبایل وارد شوید.
               </p>
             </div>
-            <div className="flex items-center gap-1.5 bg-[#EAF8F0] rounded-[8px] px-2.5 py-1">
-              <span className="text-[11px] text-[#159455] font-semibold">
+            <div dir="ltr" className="flex items-center gap-1.5 rounded-[8px] bg-[#eaf8f0] px-2.5 py-1">
+              <span dir="rtl" className="text-[11px] font-semibold text-[#159455]">
                 ورود امن با کد یک‌بار مصرف
               </span>
-              <img src={IMG.otpIcon} alt="" className="w-[14px] h-[16px] object-contain" />
+              <img src={IMG.otpIcon} alt="" className="h-[14px] w-[14px] object-contain" />
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid w-full grid-cols-3 gap-4">
             {CARDS.map((card) => {
               const isActive = selected === card.id;
+              const baseCompany = !selected && card.id === "company";
+
               return (
                 <button
                   key={card.id}
                   type="button"
                   onClick={() => setSelected(card.id)}
                   className={[
-                    "h-[180px] flex flex-col gap-3 p-[18px] rounded-[14px] text-right transition-all cursor-pointer border",
+                    "flex h-[180px] cursor-pointer flex-col items-end gap-3 text-right transition-all",
+                    hasSelection ? "rounded-[12px] p-4" : "rounded-[14px] p-[18px]",
                     isActive
-                      ? "bg-[#F6FBFE] border-[#2194E3]"
-                      : "bg-white border-[#E4EBF1] hover:border-[#B0C8E8]",
+                      ? selectedCardClass(card.id)
+                      : hasSelection
+                        ? "border border-[#e4ebf1] bg-white hover:border-[#b0c8e8]"
+                        : "border border-[#e0e5ed] bg-white hover:border-[#b0c8e8]",
                   ].join(" ")}
                 >
-                  <div className="flex items-center justify-between">
+                  <div dir="ltr" className="flex w-full items-center justify-between">
                     <div
                       className={[
-                        "w-[18px] h-[18px] rounded-full",
+                        "h-[18px] w-[18px] shrink-0 rounded-[9px] bg-white",
                         isActive
-                          ? "border-4 border-[#2194E3] bg-white"
-                          : "border border-[#CBD5E1] bg-white",
+                          ? card.id === "internal"
+                            ? "border-[5px] border-[#2094e3]"
+                            : "border-4 border-[#2094e3]"
+                          : "border border-[#cbd5e1]",
                       ].join(" ")}
                     />
                     <div
                       className={[
-                        "w-10 h-10 rounded-[8px] flex items-center justify-center",
-                        isActive ? "bg-[rgba(32,148,227,0.1)]" : "bg-[#F7FAFC]",
+                        "flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px]",
+                        isActive ? "bg-[rgba(32,148,227,0.08)]" : "bg-[#f7fafc]",
                       ].join(" ")}
                     >
-                      <img src={card.icon} alt="" className="w-6 h-6 object-contain" />
+                      <img src={card.icon} alt="" className="h-[22px] w-[22px] object-contain" />
                     </div>
                   </div>
+
                   <span
                     className={[
-                      "text-[15px] font-bold",
-                      isActive ? "text-[#2094E3]" : "text-[#2E343F]",
+                      "w-full text-[16px] font-bold leading-normal",
+                      isActive
+                        ? "text-[#2094e3]"
+                        : baseCompany
+                          ? "text-[#0f3d78]"
+                          : "text-[#1a202c]",
                     ].join(" ")}
                   >
                     {card.title}
                   </span>
-                  <span className="text-[12px] text-[#718096] leading-5">{card.desc}</span>
+                  <span
+                    className={[
+                      "w-full text-[12px] font-normal leading-[18px]",
+                      baseCompany ? "text-[#3d526b]" : "text-[#718096]",
+                    ].join(" ")}
+                  >
+                    {card.desc}
+                  </span>
                 </button>
               );
             })}
           </div>
 
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-2">
-              <label htmlFor="moon-login-mobile" className="text-[14px] font-semibold text-[#454E5D]">
-                شماره موبایل
-              </label>
-              <div className="flex items-center gap-2 h-[48px] px-4 bg-white rounded-[12px] border border-[#CBD5E1] focus-within:border-[#2194E3]">
-                <input
-                  id="moon-login-mobile"
-                  type="tel"
-                  inputMode="numeric"
-                  autoComplete="tel"
-                  dir="ltr"
-                  value={phone}
-                  onChange={(event) => setPhone(event.target.value)}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter") void handleLogin();
-                  }}
-                  placeholder="09121234567"
-                  className="text-[14px] text-[#2E343F] placeholder:text-[#A0AEC0] grow outline-none bg-transparent border-none"
-                />
-                <img src={IMG.phoneFlag} alt="" className="w-[18px] h-[18px] object-contain" />
-              </div>
-              <span className="text-[12px] text-[#8794A7]">
-                کد تأیید به این شماره ارسال می‌شود.
-              </span>
-            </div>
-
-            <button
-              type="button"
-              disabled={!canSubmit}
-              onClick={() => void handleLogin()}
+          <div className="flex w-full flex-col items-end gap-2">
+            <label htmlFor="moon-login-mobile" className="text-[14px] font-semibold text-[#2d3748]">
+              شماره موبایل
+            </label>
+            <div
+              dir="ltr"
               className={[
-                "h-[50px] rounded-[12px] flex items-center justify-center text-[16px] font-semibold border-none transition-colors",
-                canSubmit
-                  ? "bg-[#2094E3] text-white cursor-pointer hover:bg-[#1886CF]"
-                  : "bg-[#E2E8F0] text-[#A0AEC0] cursor-not-allowed",
+                "flex h-[48px] w-full items-center gap-2 rounded-[12px] bg-white px-4",
+                selected && phone
+                  ? "border-2 border-[#2094e3]"
+                  : "border border-[#cbd5e1] focus-within:border-2 focus-within:border-[#2094e3]",
               ].join(" ")}
             >
-              {busy ? "در حال انتقال به ورود امن..." : "ادامه و دریافت کد تأیید"}
-            </button>
+              <input
+                id="moon-login-mobile"
+                type="tel"
+                inputMode="numeric"
+                autoComplete="tel"
+                dir="rtl"
+                value={phone}
+                onChange={(event) => setPhone(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") void handleLogin();
+                }}
+                placeholder="مثال: ۰۹۱۲۱۲۳۴۵۶۷"
+                className="min-w-0 grow border-none bg-transparent text-right text-[14px] font-normal text-[#1a202c] outline-none placeholder:text-[#a0aec0]"
+              />
+              <img src={IMG.phoneIcon} alt="" className="h-[18px] w-[18px] shrink-0 object-contain" />
+            </div>
+            <span className="w-full text-right text-[12px] font-normal text-[#718096]">
+              کد تأیید به این شماره ارسال می‌شود.
+            </span>
+          </div>
 
-            <p className={`text-center text-[13px] ${error ? "text-[#C53030]" : "text-[#A0AEC0]"}`}>
-              {error
-                ? ERROR_MESSAGES[error] ?? "ورود انجام نشد. دوباره تلاش کنید."
-                : !selected
-                  ? "جهت فعال‌سازی دکمه ورود، ابتدا نوع حساب خود را از بالا انتخاب کنید."
-                  : !isValidIranMobile(normalizedPhone)
-                    ? "شماره موبایل را به‌صورت ۱۱ رقمی وارد کنید."
-                    : "پس از ورود، بر اساس نقش حساب به پنل مجاز هدایت می‌شوید."}
-            </p>
+          <button
+            type="button"
+            disabled={!canSubmit}
+            onClick={() => void handleLogin()}
+            className={[
+              "flex h-[50px] w-full items-center justify-center rounded-[12px] border-none text-[16px] font-semibold transition-opacity",
+              canSubmit
+                ? "cursor-pointer bg-gradient-to-r from-[#2094e3] to-[#159455] text-white hover:opacity-90"
+                : "cursor-not-allowed bg-[#e2e8f0] text-[#a0aec0]",
+            ].join(" ")}
+          >
+            {busy ? "در حال انتقال به ورود امن..." : "ادامه و دریافت کد تأیید"}
+          </button>
+
+          <div className="flex w-full items-center justify-center">
+            {renderAccountHint()}
           </div>
         </div>
       </main>
 
-      <footer className="flex flex-col items-center gap-4 py-6 border-t border-[#E8E8E8] shrink-0 bg-[#F6F9FB]">
-        <div className="flex flex-col items-center gap-1">
-          <span className="text-[14px] text-[#8794A7]">
+      <footer className="flex h-[139px] w-full shrink-0 flex-col items-center gap-[18px] py-6">
+        <div className="flex h-[54px] w-[780px] flex-col items-center gap-[10px] border-t border-[#e8e8e8]">
+          <span className="text-[14px] font-normal text-[#718096]">
             برای مشارکت فردی نیازی به ساخت حساب کاربری نیست.
           </span>
-          <a href="/participate" className="text-[14px] font-semibold text-[#3FA2E6] underline">
+          <a href="/projects" className="text-[14px] font-semibold text-[#2094e3] underline">
             مشارکت بدون ثبت‌نام
           </a>
         </div>
-        <div className="flex items-center gap-3">
-          <a href="/terms" className="text-[12px] text-[#8693A6] underline">قوانین و مقررات</a>
-          <span className="text-[12px] text-[#A0AEC0]">|</span>
-          <a href="/privacy" className="text-[12px] text-[#8895A8] underline">حریم خصوصی</a>
+        <div dir="ltr" className="flex h-[19px] w-[180px] items-center justify-center gap-[14px] text-[12px]">
+          <a href="/terms" className="text-[#718096] underline">قوانین و مقررات</a>
+          <span className="text-[#a0aec0]">|</span>
+          <a href="/privacy-policy" className="text-[#718096] underline">حریم خصوصی</a>
         </div>
       </footer>
     </div>
