@@ -121,91 +121,18 @@ function styleProjectCards(root: HTMLElement) {
 
   const middleCard = cards[1];
 
-  // The requested middle card is an exact copy of Project Card 1.
-  // Doing the copy before the visual normalization guarantees identical image,
-  // text, stats, progress and button placement.
+  // Keep the requested middle card as an exact copy of Project Card 1.
   if (middleCard.dataset.mahCopiedFromFirst !== "true") {
     middleCard.innerHTML = firstCard.innerHTML;
     middleCard.dataset.mahCopiedFromFirst = "true";
   }
 
+  // Layout/alignment belongs to index.css. This helper only identifies the
+  // Figma card row/cards and preserves the requested middle-card copy.
   cardRow.classList.add("mah-company-projects-row");
-  cardRow.style.alignItems = "stretch";
-  cardRow.style.direction = "ltr";
-
   cards.slice(0, 3).forEach((card) => {
     card.classList.add("mah-company-project-card");
     card.setAttribute("dir", "rtl");
-    card.style.direction = "rtl";
-    card.style.textAlign = "right";
-    card.style.height = "540px";
-    card.style.minHeight = "540px";
-    card.style.maxHeight = "540px";
-    card.style.display = "flex";
-    card.style.flexDirection = "column";
-    card.style.alignItems = "stretch";
-    card.style.gap = "20px";
-
-    const parts = Array.from(card.children).filter(
-      (child): child is HTMLElement => child instanceof HTMLElement,
-    );
-
-    parts.forEach((part) => {
-      part.style.width = "100%";
-      part.style.alignSelf = "stretch";
-    });
-
-    const [, heading, stats, progress, button] = parts;
-
-    if (heading) {
-      heading.style.direction = "rtl";
-      heading.style.textAlign = "right";
-      heading.style.alignItems = "flex-end";
-      const metaRow = heading.firstElementChild;
-      if (metaRow instanceof HTMLElement) {
-        metaRow.style.direction = "rtl";
-        metaRow.style.justifyContent = "flex-start";
-      }
-    }
-
-    if (stats) {
-      stats.style.direction = "rtl";
-      stats.style.textAlign = "right";
-      Array.from(stats.children).forEach((row) => {
-        if (!(row instanceof HTMLElement)) return;
-        row.style.direction = "rtl";
-        Array.from(row.children).forEach((stat) => {
-          if (!(stat instanceof HTMLElement)) return;
-          stat.style.alignItems = "flex-end";
-          stat.style.textAlign = "right";
-        });
-      });
-    }
-
-    if (progress) {
-      progress.style.direction = "rtl";
-      progress.style.textAlign = "right";
-      const labels = progress.firstElementChild;
-      if (labels instanceof HTMLElement) labels.style.direction = "rtl";
-      const track = progress.children[1];
-      if (track instanceof HTMLElement) {
-        track.style.direction = "rtl";
-        track.style.justifyContent = "flex-start";
-      }
-    }
-
-    if (button) {
-      button.style.marginTop = "auto";
-      button.style.width = "100%";
-      button.style.direction = "rtl";
-      button.style.textAlign = "center";
-    }
-
-    card.querySelectorAll<HTMLElement>("span, p").forEach((text) => {
-      text.style.direction = "rtl";
-      text.style.unicodeBidi = "plaintext";
-      text.style.textAlign = button?.contains(text) ? "center" : "right";
-    });
   });
 }
 
