@@ -1,11 +1,11 @@
 import React, { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
-  beginLogin,
   isValidIranMobile,
   normalizeIranMobile,
   type AccountType,
 } from "../auth/oidc";
+import OtpStep from "./OtpStep";
 import "./index.css";
 
 const IMG = {
@@ -47,6 +47,10 @@ function accountTypeForReturnTo(returnTo: string | null): AccountType | null {
   return null;
 }
 
+function accountTypeFromParam(value: string | null): AccountType | null {
+  return value === "company" || value === "startup" || value === "internal" ? value : null;
+}
+
 const ERROR_MESSAGES: Record<string, string> = {
   forbidden: "این حساب اجازه دسترسی به پنل درخواستی را ندارد.",
   callback: "ورود کامل نشد. دوباره تلاش کنید.",
@@ -64,30 +68,43 @@ function selectedCardClass(accountType: AccountType) {
 }
 
 export default function Main() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const returnTo = searchParams.get("returnTo");
   const error = searchParams.get("error");
+  const queryAccountType = accountTypeFromParam(searchParams.get("accountType"));
+  const queryMobile = searchParams.get("mobile") ?? "";
   const suggestedType = useMemo(() => accountTypeForReturnTo(returnTo), [returnTo]);
-  const [selected, setSelected] = useState<AccountType | null>(suggestedType);
-  const [phone, setPhone] = useState("");
-  const [busy, setBusy] = useState(false);
+  const [selected, setSelected] = useState<AccountType | null>(suggestedType ?? queryAccountType);
+  const [phone, setPhone] = useState(queryMobile);
 
   const normalizedPhone = normalizeIranMobile(phone);
-  const canSubmit = Boolean(selected && isValidIranMobile(normalizedPhone) && !busy);
+  const canSubmit = Boolean(selected && isValidIranMobile(normalizedPhone));
   const hasSelection = selected !== null;
+  const isOtpStep = searchParams.get("step") === "otp";
 
-  async function handleLogin() {
-    if (!selected || !isValidIranMobile(normalizedPhone) || busy) return;
-    setBusy(true);
-    try {
-      await beginLogin({
-        accountType: selected,
-        mobile: normalizedPhone,
-        returnTo: returnTo ?? undefined,
-      });
-    } catch {
-      setBusy(false);
-    }
+  if (
+    isOtpStep &&
+    queryAccountType &&
+    isValidIranMobile(normalizeIranMobile(queryMobile))
+  ) {
+    return (
+      <OtpStep
+        accountType={queryAccountType}
+        mobile={normalizeIranMobile(queryMobile)}
+        returnTo={returnTo ?? undefined}
+      />
+    );
+  }
+
+  function handleLogin() {
+    if (!selected || !isValidIranMobile(normalizedPhone)) return;
+    const params = new URLSearchParams({
+      step: "otp",
+      accountType: selected,
+      mobile: normalizedPhone,
+    });
+    if (returnTo) params.set("returnTo", returnTo);
+    setSearchParams(params);
   }
 
   function renderAccountHint() {
@@ -164,15 +181,15 @@ export default function Main() {
           ].join(" ")}
         >
           <div className="flex w-full items-center justify-between">
-            <div className="flex flex-col items-end gap-1.5">
-              <h1 className="m-0 text-[24px] font-bold leading-normal text-[#1a202c]">
+            <div className="flex w-full flex-col items-end gap-1.5 text-right">
+              <h1 className="m-0 w-full text-right text-[24px] font-bold leading-normal text-[#1a202c]">
                 ورود به سامانه ماه
               </h1>
-              <p className="m-0 text-[14px] font-normal leading-normal text-[#718096]">
+              <p className="m-0 w-full text-right text-[14px] font-normal leading-normal text-[#718096]">
                 نوع حساب خود را انتخاب کنید و با شماره موبایل وارد شوید.
               </p>
             </div>
-            <div dir="ltr" className="flex items-center gap-1.5 rounded-[8px] bg-[#eaf8f0] px-2.5 py-1">
+            <div dir="ltr" className="flex shrink-0 items-center gap-1.5 rounded-[8px] bg-[#eaf8f0] px-2.5 py-1">
               <span dir="rtl" className="text-[11px] font-semibold text-[#159455]">
                 ورود امن با کد یک‌بار مصرف
               </span>
@@ -223,7 +240,7 @@ export default function Main() {
 
                   <span
                     className={[
-                      "w-full text-[16px] font-bold leading-normal",
+                      "w-full text-right text-[16px] font-bold leading-normal",
                       isActive
                         ? "text-[#2094e3]"
                         : baseCompany
@@ -235,7 +252,7 @@ export default function Main() {
                   </span>
                   <span
                     className={[
-                      "w-full text-[12px] font-normal leading-[18px]",
+                      "w-full text-right text-[12px] font-normal leading-[18px]",
                       baseCompany ? "text-[#3d526b]" : "text-[#718096]",
                     ].join(" ")}
                   >
@@ -246,8 +263,8 @@ export default function Main() {
             })}
           </div>
 
-          <div className="flex w-full flex-col items-end gap-2">
-            <label htmlFor="moon-login-mobile" className="text-[14px] font-semibold text-[#2d3748]">
+          <div className="flex w-full flex-col items-end gap-2 text-right">
+            <label htmlFor="moon-login-mobile" className="block w-full text-right text-[14px] font-semibold text-[#2d3748]">
               شماره موبایل
             </label>
             <div
@@ -268,7 +285,7 @@ export default function Main() {
                 value={phone}
                 onChange={(event) => setPhone(event.target.value)}
                 onKeyDown={(event) => {
-                  if (event.key === "Enter") void handleLogin();
+                  if (event.key === "Enter") handleLogin();
                 }}
                 placeholder="مثال: ۰۹۱۲۱۲۳۴۵۶۷"
                 className="min-w-0 grow border-none bg-transparent text-right text-[14px] font-normal text-[#1a202c] outline-none placeholder:text-[#a0aec0]"
@@ -283,7 +300,7 @@ export default function Main() {
           <button
             type="button"
             disabled={!canSubmit}
-            onClick={() => void handleLogin()}
+            onClick={handleLogin}
             className={[
               "flex h-[50px] w-full items-center justify-center rounded-[12px] border-none text-[16px] font-semibold transition-opacity",
               canSubmit
@@ -291,7 +308,7 @@ export default function Main() {
                 : "cursor-not-allowed bg-[#e2e8f0] text-[#a0aec0]",
             ].join(" ")}
           >
-            {busy ? "در حال انتقال به ورود امن..." : "ادامه و دریافت کد تأیید"}
+            ادامه و دریافت کد تأیید
           </button>
 
           <div className="flex w-full items-center justify-center">
