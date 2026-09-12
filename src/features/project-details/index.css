@@ -143,6 +143,14 @@ button {
   text-align: center !important;
 }
 
+/* Project duration must read naturally in Persian: ۱۲ ماه. */
+.main-container [class*="z-[62]"] {
+  direction: rtl !important;
+  unicode-bidi: isolate;
+  justify-content: flex-end !important;
+  text-align: right !important;
+}
+
 /* Custom amount placeholder: keep the ellipsis visually in front of the Persian text. */
 .main-container [class*="z-[115]"] {
   font-size: 0 !important;
