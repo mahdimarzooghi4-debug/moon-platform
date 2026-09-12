@@ -11,6 +11,15 @@
 
 .main-container {
   overflow: hidden;
+  direction: rtl;
+  text-align: right;
+}
+
+/* This generated page still contains a few LTR text utilities. Keep deliberate
+ * centered labels/buttons intact, but normalize all left-aligned Persian copy
+ * to the page's RTL reading direction. */
+.main-container .text-left {
+  text-align: right;
 }
 
 .main-container,
