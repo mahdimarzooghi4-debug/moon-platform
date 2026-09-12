@@ -90,6 +90,14 @@ html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[
   direction: ltr;
 }
 
+/* Current Figma export for the hero play-circle. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[24]"] {
+  background-image: url("/assets/codia/Nn6705XhfS.svg") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+}
+
 /* Impact cards: Figma order is resources -> projects -> jobs -> people -> startups. */
 html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[38]"] {
   direction: ltr;
@@ -211,6 +219,14 @@ html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[
   text-align: right;
 }
 
+/* Exact Figma arrow-left used by the projects view-all control. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[233]"] {
+  background-image: url("/assets/codia/E97ur6XkVG.svg") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+}
+
 /* Trusted companies: preserve the physical Figma order while keeping each Persian
  * logo block visually RTL (label on the left, icon on the right). */
 html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[239]"] {
@@ -302,6 +318,13 @@ html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[
 /* View-all arrow/text/empty-slot arrangement is authored physically LTR in Figma. */
 html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[306]"] {
   direction: ltr;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[307]"] {
+  background-image: url("/assets/codia/6mrr4HWzfu.svg") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
 }
 
 html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[308]"] {
