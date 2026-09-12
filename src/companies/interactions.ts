@@ -30,6 +30,22 @@ function isCompanyPage() {
   return COMPANY_PATHS.has(window.location.pathname);
 }
 
+function setCompanyBootVisibility(visible: boolean) {
+  const app = document.getElementById("app");
+  if (!app) return;
+
+  app.style.visibility = visible ? "visible" : "hidden";
+  app.style.opacity = visible ? "1" : "0";
+  app.style.background = "#fcfbf8";
+}
+
+// This module is imported eagerly from main.tsx, before React renders the lazy
+// companies route. Hide the app during that first paint so the unpositioned
+// footer/content can never flash before the page CSS and DOM enhancements land.
+if (isCompanyPage()) {
+  setCompanyBootVisibility(false);
+}
+
 function normalize(value: string | null | undefined) {
   return (value ?? "").replace(/\s+/g, " ").trim();
 }
@@ -215,6 +231,10 @@ function enhanceCompanyPage() {
   styleProjectCards(root);
   markCompanyLinks(root);
   void repairFigmaSvgAssets(root);
+
+  // Reveal only after the route DOM exists and all synchronous layout fixes have
+  // been applied. requestAnimationFrame keeps the first visible frame stable.
+  window.requestAnimationFrame(() => setCompanyBootVisibility(true));
 }
 
 function followCompanyLink(element: HTMLElement) {
