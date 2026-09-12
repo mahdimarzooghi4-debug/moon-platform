@@ -104,6 +104,30 @@ function findStakeholderCard(root: HTMLElement, label: string, partial = false) 
   return null;
 }
 
+function markStakeholderCards(root: HTMLElement) {
+  const cards = [
+    findStakeholderCard(root, "افراد حقیقی"),
+    findStakeholderCard(root, "شرکت‌ها و سازمان‌ها"),
+    findStakeholderCard(root, "استارتاپ‌ها"),
+    findStakeholderCard(root, "کمیته امداد امام خمینی", true),
+    findStakeholderCard(root, "خانه خلاق و نوآوری آینه (ارزیاب)"),
+  ].filter((card): card is HTMLElement => card instanceof HTMLElement);
+
+  const ctaLabels = new Set(["شروع مشارکت فردی", "مشارکت سازمانی", "ثبت‌نام استارتاپ"]);
+
+  cards.forEach((card) => {
+    card.classList.add("mah-about-stakeholder-card");
+
+    Array.from(card.children).forEach((child) => {
+      if (!(child instanceof HTMLElement)) return;
+      const hasCta = Array.from(child.querySelectorAll<HTMLElement>("span")).some((span) =>
+        ctaLabels.has(normalize(span.textContent)),
+      );
+      if (hasCta) child.classList.add("mah-about-stakeholder-cta");
+    });
+  });
+}
+
 function swapStakeholderCards(root: HTMLElement) {
   if (root.dataset.mahStakeholderCardsSwapped === "true") return;
 
@@ -144,6 +168,7 @@ function markAboutLinks(root: HTMLElement) {
 function enhanceAboutPage() {
   const root = getAboutRoot();
   if (!root) return;
+  markStakeholderCards(root);
   swapStakeholderCards(root);
   markAboutLinks(root);
   void repairFigmaSvgAssets(root);
