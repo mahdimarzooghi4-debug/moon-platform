@@ -79,6 +79,46 @@ async function repairFigmaSvgAssets(root: HTMLElement) {
   );
 }
 
+function findRoleCard(root: HTMLElement, label: string) {
+  const title = Array.from(root.querySelectorAll<HTMLElement>("span")).find(
+    (element) => normalize(element.textContent) === label,
+  );
+  if (!title) return null;
+
+  let current = title.parentElement;
+  while (current && current !== root) {
+    const className = typeof current.className === "string" ? current.className : "";
+    if (
+      className.includes("rounded-[16px]") &&
+      className.includes("border") &&
+      current.querySelectorAll("span").length >= 2
+    ) {
+      return current;
+    }
+    current = current.parentElement;
+  }
+
+  return null;
+}
+
+function swapStakeholderCards(root: HTMLElement) {
+  if (root.dataset.mahStakeholderCardsSwapped === "true") return;
+
+  const emdadCard = findRoleCard(root, "کمیته امداد امام خمینی(ره)");
+  const startupCard = findRoleCard(root, "استارتاپ‌ها");
+  if (!emdadCard || !startupCard || emdadCard === startupCard) return;
+
+  const emdadMarker = document.createComment("mah-emdad-card-slot");
+  const startupMarker = document.createComment("mah-startup-card-slot");
+
+  emdadCard.replaceWith(emdadMarker);
+  startupCard.replaceWith(startupMarker);
+  emdadMarker.replaceWith(startupCard);
+  startupMarker.replaceWith(emdadCard);
+
+  root.dataset.mahStakeholderCardsSwapped = "true";
+}
+
 function markAboutLinks(root: HTMLElement) {
   root.querySelectorAll<HTMLElement>("span, a, button, div").forEach((element) => {
     const label = normalize(element.textContent);
@@ -96,6 +136,7 @@ function markAboutLinks(root: HTMLElement) {
 function enhanceAboutPage() {
   const root = getAboutRoot();
   if (!root) return;
+  swapStakeholderCards(root);
   markAboutLinks(root);
   void repairFigmaSvgAssets(root);
 }
