@@ -104,6 +104,31 @@ async function repairFigmaSvgAssets(root: HTMLElement) {
   );
 }
 
+function markHeroLayout(root: HTMLElement) {
+  const elements = Array.from(root.querySelectorAll<HTMLElement>("div"));
+  const heroImage = elements.find((element) =>
+    codiaPngPath(element)?.endsWith("/484NJFWM9O.png"),
+  );
+  const heroRow = heroImage?.parentElement;
+  if (!(heroImage instanceof HTMLElement) || !(heroRow instanceof HTMLElement)) return;
+
+  const heroCopy = Array.from(heroRow.children).find(
+    (child): child is HTMLElement => child instanceof HTMLElement && child !== heroImage,
+  );
+  if (!(heroCopy instanceof HTMLElement)) return;
+
+  const copyParts = Array.from(heroCopy.children).filter(
+    (child): child is HTMLElement => child instanceof HTMLElement,
+  );
+  const [title, description] = copyParts;
+
+  heroRow.classList.add("mah-company-hero");
+  heroCopy.classList.add("mah-company-hero-copy");
+  heroCopy.setAttribute("dir", "rtl");
+  title?.classList.add("mah-company-hero-title");
+  description?.classList.add("mah-company-hero-description");
+}
+
 function styleProjectCards(root: HTMLElement) {
   const elements = Array.from(root.querySelectorAll<HTMLElement>("div"));
   const firstImage = elements.find((element) =>
@@ -155,6 +180,7 @@ function enhanceCompanyPage() {
   if (!root) return;
 
   root.classList.add("mah-companies-page");
+  markHeroLayout(root);
   styleProjectCards(root);
   markCompanyLinks(root);
   void repairFigmaSvgAssets(root);
