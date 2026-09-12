@@ -42,7 +42,9 @@ export default function CheckoutSidebar({ amount, onProject, onCompany }: { amou
               <strong className="text-[#2094e3]" dir="rtl">۵۸٪ تأمین شده</strong>
               <span className="text-[#60758a]" dir="rtl">هدف: ۴٫۲ میلیارد تومان</span>
             </div>
-            <div className="flex h-2 w-full justify-end overflow-hidden rounded bg-[#e4ebf1]"><div className="h-full w-[58%] bg-[#2094e3]" /></div>
+            <div className="relative h-2 w-full overflow-hidden rounded bg-[#e4ebf1]">
+              <div className="absolute inset-y-0 right-0 w-[58%] bg-[#2094e3]" />
+            </div>
           </div>
           <Row label="تأمین‌شده" value="۲٫۴ میلیارد تومان" />
           <Row label="باقی‌مانده" value="۱٫۸ میلیارد تومان" />
