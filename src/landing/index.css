@@ -10,12 +10,20 @@
 }
 
 .main-container {
+  width: 100%;
+  max-width: 1440px;
   overflow: hidden;
+  direction: rtl;
+  text-align: right;
 }
 
 .main-container,
 .main-container * {
   box-sizing: border-box;
+}
+
+.main-container [class~="text-left"]:not([dir="ltr"]) {
+  text-align: right;
 }
 
 input,
@@ -36,4 +44,50 @@ body {
   font-family: "Vazirmatn Variable", "Vazirmatn", sans-serif;
   direction: rtl;
   background: #fcfbf8;
+}
+
+/* Landing footer contact data: keep the row RTL while isolating mixed LTR data. */
+.main-container [class~="z-[315]"] [class~="z-[319]"] {
+  width: 220px;
+  align-self: stretch;
+  justify-content: flex-start;
+  direction: rtl;
+  text-align: right;
+}
+
+.main-container [class~="z-[315]"] [class~="z-[320]"] {
+  width: 220px;
+  height: auto;
+  min-height: 60px;
+  align-self: stretch;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
+  gap: 8px;
+  color: transparent;
+  font-size: 0;
+  white-space: normal;
+  direction: rtl;
+  text-align: right;
+}
+
+.main-container [class~="z-[315]"] [class~="z-[320]"]::before,
+.main-container [class~="z-[315]"] [class~="z-[320]"]::after {
+  display: block;
+  color: #e4ebf1;
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+  text-align: right;
+  direction: rtl;
+}
+
+.main-container [class~="z-[315]"] [class~="z-[320]"]::before {
+  content: "ایمیل: support@mahplatform.ir";
+  unicode-bidi: plaintext;
+}
+
+.main-container [class~="z-[315]"] [class~="z-[320]"]::after {
+  content: "آدرس: تهران، خیابان ولیعصر، بالاتر از میدان ونک، کوچه نگار، پلاک ۱۰، خانه خلاق ماه";
 }
