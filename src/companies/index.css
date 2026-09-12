@@ -40,3 +40,24 @@ body {
 button, input, select, textarea {
   font: inherit;
 }
+
+/* Figma keeps the physical page composition left-to-right (header actions on the
+ * left, brand/navigation on the right, hero image on the left), while Persian
+ * copy itself is RTL. Scope that behavior to the companies page only. */
+.mah-companies-page {
+  direction: ltr;
+}
+
+.mah-companies-page span,
+.mah-companies-page p,
+.mah-companies-page label,
+.mah-companies-page input,
+.mah-companies-page textarea,
+.mah-companies-page select {
+  direction: rtl;
+  unicode-bidi: plaintext;
+}
+
+.mah-companies-page [data-mah-company-href] {
+  cursor: pointer;
+}
