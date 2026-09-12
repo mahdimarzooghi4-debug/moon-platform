@@ -1,32 +1,66 @@
-const STEP2_PATH = "/register/startup/states/step2";
+const STARTUP_REGISTER_ROOT = "/register/startup";
 
-const routeActions: Record<string, string> = {
+const commonRoutes: Record<string, string> = {
   "بازگشت به ورود": "/auth",
   "بازگشت به صفحه اصلی": "/",
-  "مرحله قبل": "/register/startup",
-  "ذخیره و ادامه": "/register/startup/states/step3",
   "قوانین و مقررات": "/terms",
   "حریم خصوصی": "/privacy-policy",
 };
 
-function isStep2Page() {
-  return window.location.pathname === STEP2_PATH;
+const routesByPath: Record<string, Record<string, string>> = {
+  [STARTUP_REGISTER_ROOT]: {
+    "ذخیره و ادامه": "/register/startup/states/step2",
+  },
+  "/register/startup/states/step2": {
+    "مرحله قبل": STARTUP_REGISTER_ROOT,
+    "ذخیره و ادامه": "/register/startup/states/step3",
+  },
+  "/register/startup/states/step3": {
+    "مرحله قبل": "/register/startup/states/step2",
+    "ذخیره و ادامه": "/register/startup/states/step4",
+  },
+  "/register/startup/states/step4": {
+    "بازگشت و ویرایش": "/register/startup/states/step3",
+    "ارسال درخواست ثبت‌نام": "/register/startup/states/success",
+  },
+  "/register/startup/states/success": {
+    "ورود به حساب کاربری": "/auth",
+    "خروج از سامانه": "/",
+    "پیگیری درخواست": "/registration/track",
+    "بازگشت به صفحه اصلی": "/",
+  },
+};
+
+function isStartupRegistrationFlow() {
+  return window.location.pathname === STARTUP_REGISTER_ROOT ||
+    window.location.pathname.startsWith(`${STARTUP_REGISTER_ROOT}/states/`);
 }
 
 function normalize(value: string | null | undefined) {
   return (value ?? "").replace(/\s+/g, " ").trim();
 }
 
-function markStep2Actions() {
-  if (!isStep2Page()) return;
+function currentRoutes() {
+  return {
+    ...commonRoutes,
+    ...(routesByPath[window.location.pathname] ?? {}),
+  };
+}
 
+function markActions() {
+  if (!isStartupRegistrationFlow()) return;
+
+  const routes = currentRoutes();
   document
     .querySelectorAll<HTMLElement>(".main-container span, .main-container button, .main-container a")
     .forEach((node) => {
       const label = normalize(node.textContent);
-      if (!routeActions[label]) return;
+      if (!routes[label]) {
+        delete node.dataset.mahStartupFlowAction;
+        return;
+      }
 
-      node.dataset.mahStartupStep2Action = label;
+      node.dataset.mahStartupFlowAction = label;
       node.style.cursor = "pointer";
       if (node.tagName !== "BUTTON" && node.tagName !== "A") {
         node.setAttribute("role", "button");
@@ -36,31 +70,31 @@ function markStep2Actions() {
 }
 
 function navigateFor(node: HTMLElement) {
-  const label = normalize(node.dataset.mahStartupStep2Action || node.textContent);
-  const path = routeActions[label];
+  const label = normalize(node.dataset.mahStartupFlowAction || node.textContent);
+  const path = currentRoutes()[label];
   if (!path || window.location.pathname === path) return;
   window.location.assign(path);
 }
 
 document.addEventListener("click", (event) => {
-  if (!isStep2Page()) return;
+  if (!isStartupRegistrationFlow()) return;
   const target = event.target as HTMLElement | null;
-  const action = target?.closest<HTMLElement>("[data-mah-startup-step2-action]");
+  const action = target?.closest<HTMLElement>("[data-mah-startup-flow-action]");
   if (!action) return;
   event.preventDefault();
   navigateFor(action);
 });
 
 document.addEventListener("keydown", (event) => {
-  if (!isStep2Page() || (event.key !== "Enter" && event.key !== " ")) return;
+  if (!isStartupRegistrationFlow() || (event.key !== "Enter" && event.key !== " ")) return;
   const target = event.target as HTMLElement | null;
-  const action = target?.closest<HTMLElement>("[data-mah-startup-step2-action]");
+  const action = target?.closest<HTMLElement>("[data-mah-startup-flow-action]");
   if (!action) return;
   event.preventDefault();
   navigateFor(action);
 });
 
-window.addEventListener("load", markStep2Actions);
-window.addEventListener("popstate", () => window.setTimeout(markStep2Actions, 0));
-document.addEventListener("click", () => window.setTimeout(markStep2Actions, 0));
-window.setTimeout(markStep2Actions, 0);
+window.addEventListener("load", markActions);
+window.addEventListener("popstate", () => window.setTimeout(markActions, 0));
+document.addEventListener("click", () => window.setTimeout(markActions, 0));
+window.setTimeout(markActions, 0);
