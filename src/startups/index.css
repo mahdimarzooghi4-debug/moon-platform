@@ -9,13 +9,132 @@
     "Source Han Sans CN", sans-serif;
 }
 
+/*
+ * Figma uses physical left/right placement for the page sections. Keep those
+ * structural flex rows LTR and make Persian content RTL instead; this preserves
+ * the exact header, hero and footer positions while fixing bidi/alignment.
+ */
 .main-container {
+  width: 100% !important;
+  max-width: 1440px;
+  margin-inline: auto;
   overflow: hidden;
+  direction: ltr;
 }
 
 .main-container,
 .main-container * {
   box-sizing: border-box;
+}
+
+.main-container span,
+.main-container p {
+  direction: rtl;
+  unicode-bidi: plaintext;
+}
+
+.main-container [class*="text-right"] {
+  text-align: right !important;
+}
+
+.main-container [class*="text-center"] {
+  text-align: center !important;
+}
+
+/* Exact Figma vectors. The generated page had SVG bytes saved with .png names;
+ * browsers can decode those as broken PNGs. Point each generated class at the
+ * exact same Figma asset committed with a correct .svg extension. */
+.main-container [class*="DQQXr26rup.png"] {
+  background-image: url('/assets/startups/icons/credit-card.svg') !important;
+  background-size: contain !important;
+}
+.main-container [class*="7MdUwOakaT.png"] {
+  background-image: url('/assets/startups/icons/target.svg') !important;
+  background-size: contain !important;
+}
+.main-container [class*="O93beHLK5u.png"] {
+  background-image: url('/assets/startups/icons/shield-check.svg') !important;
+  background-size: contain !important;
+}
+.main-container [class*="2cap8Th1PP.png"] {
+  background-image: url('/assets/startups/icons/file-text.svg') !important;
+  background-size: contain !important;
+}
+.main-container [class*="cetVLc9UMN.png"] {
+  background-image: url('/assets/startups/icons/users.svg') !important;
+  background-size: contain !important;
+}
+.main-container [class*="JAZr1gE3vb.png"] {
+  background-image: url('/assets/startups/icons/trending-up.svg') !important;
+  background-size: contain !important;
+}
+.main-container [class*="ijU2fr83Ma.png"] {
+  background-image: url('/assets/startups/icons/box.svg') !important;
+  background-size: contain !important;
+}
+
+.main-container [class*="NrUYPVVhN4.png"],
+.main-container [class*="5csw4MyOGy.png"],
+.main-container [class*="F7sWEKVLKt.png"],
+.main-container [class*="2DrGwtaT3f.png"],
+.main-container [class*="mtoV6t7dgM.png"],
+.main-container [class*="ui0kbxz9rX.png"],
+.main-container [class*="gfLhiv3tN2.png"],
+.main-container [class*="aMoTJ1L7Wh.png"] {
+  background-image: url('/assets/startups/icons/circle-dot.svg') !important;
+  background-size: contain !important;
+}
+
+.main-container [class*="eJ60JxVbK5.png"],
+.main-container [class*="An5fgerjkq.png"],
+.main-container [class*="VSoF19vSPg.png"],
+.main-container [class*="XpcrFmNOgp.png"],
+.main-container [class*="ugE2CVCWdq.png"],
+.main-container [class*="maaLXaGW8w.png"],
+.main-container [class*="2JZWJFMj73.png"] {
+  background-image: url('/assets/startups/icons/check-circle.svg') !important;
+  background-size: contain !important;
+}
+
+.main-container [class*="kbYMgPru6q.png"],
+.main-container [class*="n512FKZ2j0.png"],
+.main-container [class*="jMvkLpHXu2.png"],
+.main-container [class*="GORwgK3TSy.png"],
+.main-container [class*="yt2qewiDcz.png"],
+.main-container [class*="8tZyrtxhnO.png"],
+.main-container [class*="zEqUN9sE1K.png"],
+.main-container [class*="9B8LaEc8WO.png"],
+.main-container [class*="6TX2C90tJ1.png"],
+.main-container [class*="R4sya7eqPC.png"],
+.main-container [class*="wHCqGCEpfU.png"],
+.main-container [class*="d7w285iSEP.png"] {
+  background-image: url('/assets/startups/icons/circle-check.svg') !important;
+  background-size: contain !important;
+}
+
+.main-container [class*="N5FyTYvBJd.png"] {
+  background-image: url('/assets/startups/icons/leaf.svg') !important;
+  background-size: contain !important;
+}
+
+.main-container [class*="U3CssSk7Sm.png"],
+.main-container [class*="cgoGvBg56H.png"],
+.main-container [class*="AGqCWRK4On.png"],
+.main-container [class*="9TDFkCJJNm.png"],
+.main-container [class*="TA65gJwyXr.png"],
+.main-container [class*="j3G37e2yha.png"],
+.main-container [class*="8nx9wqmJ5j.png"] {
+  background-image: url('/assets/startups/icons/chevron-down.svg') !important;
+  background-size: contain !important;
+}
+
+.main-container [class*="V6GHw0n0TZ.png"] {
+  background-image: url('/assets/startups/icons/instagram.svg') !important;
+  background-size: contain !important;
+}
+.main-container [class*="tK3ELcejWo.png"] {
+  background-image: url('/assets/startups/icons/linkedin.svg') !important;
+  background-size: contain !important;
 }
 
 input,
