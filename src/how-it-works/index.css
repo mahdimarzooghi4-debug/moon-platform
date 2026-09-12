@@ -11,16 +11,22 @@
 
 .main-container {
   overflow: hidden;
-  direction: rtl;
+  direction: ltr;
   text-align: right;
 }
 
-/* Figma keeps section headings/buttons centered, while full-width Persian copy
- * inside content cards is right-aligned. Only correct the generated LTR utility
- * on those stretched text blocks so compact labels (for example step badges)
- * retain their original Figma layout. */
-.main-container .self-stretch.text-left {
+/* Figma keeps the generated spatial layout left-to-right (for example the hero
+ * illustration is on the left and its copy is on the right), while Persian
+ * copy itself is right-aligned. Keep layout direction LTR and normalize any
+ * generated left-aligned text utility back to the Figma text alignment. */
+.main-container .text-left {
   text-align: right;
+}
+
+/* Match Figma's dir="auto" behavior for mixed Persian/Latin text without
+ * changing flex/grid ordering. */
+.main-container span {
+  unicode-bidi: plaintext;
 }
 
 .main-container,
