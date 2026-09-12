@@ -81,12 +81,12 @@ export default function OtpStep({ accountType, mobile, returnTo }: Props) {
       focusInput(index - 1);
       return;
     }
-    if (event.key === "ArrowLeft" && index < 4) {
-      focusInput(index + 1);
+    if (event.key === "ArrowLeft" && index > 0) {
+      focusInput(index - 1);
       return;
     }
-    if (event.key === "ArrowRight" && index > 0) {
-      focusInput(index - 1);
+    if (event.key === "ArrowRight" && index < 4) {
+      focusInput(index + 1);
     }
   }
 
@@ -157,14 +157,18 @@ export default function OtpStep({ accountType, mobile, returnTo }: Props) {
               onClick={editMobile}
               className="flex cursor-pointer items-center justify-center gap-2 border-none bg-transparent p-0"
             >
-              <span className="text-[15px] font-medium text-[#1a202c]" dir="ltr">
+              <span
+                className="text-[15px] font-medium text-[#1a202c]"
+                dir="ltr"
+                style={{ direction: "ltr", unicodeBidi: "bidi-override" }}
+              >
                 {maskedMobile(mobile)}
               </span>
               <span className="text-[14px] font-semibold text-[#2094e3]">ویرایش شماره</span>
             </button>
           </div>
 
-          <div className="flex w-full flex-row-reverse items-start justify-center gap-3" dir="ltr">
+          <div className="flex w-full items-start justify-center gap-3" dir="ltr">
             {digits.map((digit, index) => (
               <input
                 key={index}
