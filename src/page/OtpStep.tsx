@@ -6,6 +6,13 @@ import securityShieldIcon from "../assets/auth-otp-shield.svg";
 const LOGO = "/assets/codia/qreWA0b9ix.png";
 const BACK_ICON = "/assets/image_cd1430e5-409a-40f6-a742-c82761e81fa7.png";
 const PERSIAN_DIGITS = "۰۱۲۳۴۵۶۷۸۹";
+const DEV_PANEL_PREVIEW_KEY = "moon.auth.dev-panel-preview";
+
+const DEV_PANEL_DESTINATIONS: Record<AccountType, string> = {
+  company: "/panel/company",
+  startup: "/panel/startup",
+  internal: "/panel/admin",
+};
 
 type Props = {
   accountType: AccountType;
@@ -114,6 +121,16 @@ export default function OtpStep({ accountType, mobile, returnTo }: Props) {
   async function confirmLogin() {
     if (!completed || busy) return;
     setBusy(true);
+
+    if (import.meta.env.DEV) {
+      sessionStorage.setItem(DEV_PANEL_PREVIEW_KEY, accountType);
+      const destination = returnTo?.startsWith("/panel/")
+        ? returnTo
+        : DEV_PANEL_DESTINATIONS[accountType];
+      window.location.assign(destination);
+      return;
+    }
+
     try {
       await beginLogin({ accountType, mobile, returnTo });
     } catch {
