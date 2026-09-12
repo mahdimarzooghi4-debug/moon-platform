@@ -1,66 +1,63 @@
 /* Landing visual corrections layered after the generated landing stylesheet.
- * Keep the original Codia/Figma-exported assets instead of approximating icons.
+ * Scope with the landing-only logo asset so generated z-index class names on
+ * other screens are never affected.
  */
 
-/* Header: the generated DOM stores the action cluster first and the nav/logo
- * cluster second. Keep that physical order so actions stay left and logo/nav
- * stay right, while Persian text itself remains RTL. */
-html[dir="rtl"] body .main-container > div:first-child {
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) > div:first-child {
   direction: ltr;
 }
 
-html[dir="rtl"] body .main-container > div:first-child [class~="z-[1]"],
-html[dir="rtl"] body .main-container > div:first-child [class~="z-[8]"],
-html[dir="rtl"] body .main-container > div:first-child [class~="z-[9]"] {
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) > div:first-child [class~="z-[1]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) > div:first-child [class~="z-[8]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) > div:first-child [class~="z-[9]"] {
   flex-direction: row !important;
 }
 
-html[dir="rtl"] body .main-container > div:first-child span {
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) > div:first-child span {
   direction: rtl;
   unicode-bidi: isolate;
 }
 
-/* Restore exact exported icons hidden by the previous approximation pass. */
-html[dir="rtl"] body .main-container [class~="z-[40]"] > *,
-html[dir="rtl"] body .main-container [class~="z-[47]"] > *,
-html[dir="rtl"] body .main-container [class~="z-[54]"] > *,
-html[dir="rtl"] body .main-container [class~="z-[61]"] > *,
-html[dir="rtl"] body .main-container [class~="z-[68]"] > *,
-html[dir="rtl"] body .main-container [class~="z-[81]"] > *,
-html[dir="rtl"] body .main-container [class~="z-[96]"] > *,
-html[dir="rtl"] body .main-container [class~="z-[111]"] > * {
+/* Restore exact Codia/Figma-exported icons hidden by the approximation pass. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[40]"] > *,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[47]"] > *,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[54]"] > *,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[61]"] > *,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[68]"] > *,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[81]"] > *,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[96]"] > *,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[111]"] > * {
   opacity: 1 !important;
 }
 
-html[dir="rtl"] body .main-container [class~="z-[40]"]::after,
-html[dir="rtl"] body .main-container [class~="z-[47]"]::after,
-html[dir="rtl"] body .main-container [class~="z-[54]"]::after,
-html[dir="rtl"] body .main-container [class~="z-[61]"]::after,
-html[dir="rtl"] body .main-container [class~="z-[68]"]::after,
-html[dir="rtl"] body .main-container [class~="z-[81]"]::after,
-html[dir="rtl"] body .main-container [class~="z-[96]"]::after,
-html[dir="rtl"] body .main-container [class~="z-[111]"]::after,
-html[dir="rtl"] body .main-container [class~="z-[306]"]::before {
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[40]"]::after,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[47]"]::after,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[54]"]::after,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[61]"]::after,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[68]"]::after,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[81]"]::after,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[96]"]::after,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[111]"]::after,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[306]"]::before {
   content: none !important;
   background-image: none !important;
 }
 
-/* Footer order is genuinely RTL: contact at the visual right and brand at the
- * visual left. */
-html[dir="rtl"] body .main-container [class~="z-[316]"] {
+/* Footer order is genuinely RTL: contact at the visual right, brand at left. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[316]"] {
   direction: rtl;
   flex-direction: row !important;
 }
 
-html[dir="rtl"] body .main-container [class~="z-[315]"] [class~="z-[317]"] {
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[317]"] {
   align-items: flex-start !important;
   direction: rtl;
   text-align: right;
 }
 
-/* Verified production contact details. Exact contact icons reuse the assets
- * already exported with the contact/support Figma screen. */
-html[dir="rtl"] body .main-container [class~="z-[315]"] [class~="z-[319]"] {
+/* Verified production contact details. Exact contact glyphs reuse assets from
+ * the project's Figma/Codia contact screen rather than hand-drawn SVGs. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[319]"] {
   width: 240px;
   min-height: 22px;
   padding-right: 28px;
@@ -75,7 +72,7 @@ html[dir="rtl"] body .main-container [class~="z-[315]"] [class~="z-[319]"] {
   background-size: 18px 18px !important;
 }
 
-html[dir="rtl"] body .main-container [class~="z-[315]"] [class~="z-[319]"]::before {
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[319]"]::before {
   content: "تلفن: 021-66485374" !important;
   display: block;
   color: #e4ebf1;
@@ -88,7 +85,7 @@ html[dir="rtl"] body .main-container [class~="z-[315]"] [class~="z-[319]"]::befo
   text-align: right;
 }
 
-html[dir="rtl"] body .main-container [class~="z-[315]"] [class~="z-[320]"] {
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[320]"] {
   width: 260px;
   height: auto;
   min-height: 98px;
@@ -103,12 +100,12 @@ html[dir="rtl"] body .main-container [class~="z-[315]"] [class~="z-[320]"] {
   background-size: 18px 18px, 18px 18px !important;
 }
 
-html[dir="rtl"] body .main-container [class~="z-[315]"] [class~="z-[320]"]::before {
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[320]"]::before {
   content: "ایمیل: info@mahcsr.ir" !important;
   unicode-bidi: plaintext;
 }
 
-html[dir="rtl"] body .main-container [class~="z-[315]"] [class~="z-[320]"]::after {
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[320]"]::after {
   content: "آدرس: تهران، خیابان انقلاب، خیابان رازی، کوچه شهبازیان، پلاک 22" !important;
   display: block;
   max-width: 228px;
