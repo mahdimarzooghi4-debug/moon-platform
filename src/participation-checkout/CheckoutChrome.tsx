@@ -75,7 +75,10 @@ export function CheckoutFooter({ navigateTo }: { navigateTo: (path: string) => v
           <span className="w-full text-right text-[13px] text-[#e4ebf1]">تلفن: <bdi dir="ltr">۰۲۱-۶۶۴۸۵۳۷۴</bdi></span>
           <span className="w-full text-right text-[13px] text-[#e4ebf1]">ایمیل: <bdi dir="ltr">info@mahcsr.ir</bdi></span>
           <span className="w-full text-right text-[12px] leading-5 text-[#e4ebf1]">آدرس: تهران، خیابان انقلاب، خیابان رازی، کوچه شهبازیان، پلاک ۲۲</span>
-          <div className="flex items-center gap-3 pt-2" dir="rtl"><img src={checkoutAssets.telegram} alt="تلگرام" className="h-[18px] w-[18px]" /><img src={checkoutAssets.eitaa} alt="ایتا" className="h-[18px] w-[18px]" /></div>
+          <div className="flex items-center gap-3 pt-2" dir="rtl">
+            <img src={checkoutAssets.instagram} alt="اینستاگرام" className="h-[18px] w-[18px]" />
+            <img src={checkoutAssets.linkedin} alt="لینکدین" className="h-[18px] w-[18px]" />
+          </div>
         </div>
       </div>
 
