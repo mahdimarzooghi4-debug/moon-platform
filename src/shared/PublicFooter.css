@@ -1,0 +1,188 @@
+/* One canonical public footer for all public routes. Legacy generated dark footers
+ * are hidden only when this shared footer is active. */
+html.moon-public-footer-active [class~="bg-[#111e30]"]:last-child {
+  display: none !important;
+}
+
+.moon-shared-footer,
+.moon-shared-footer * {
+  box-sizing: border-box;
+}
+
+.moon-shared-footer {
+  width: min(1440px, 100%);
+  margin: 0 auto;
+  background: #111e30;
+  color: #e4ebf1;
+  font-family: "Vazirmatn", sans-serif;
+  direction: rtl;
+}
+
+.moon-shared-footer__inner {
+  width: 100%;
+  padding: 80px 120px 40px;
+}
+
+.moon-shared-footer__grid {
+  display: grid;
+  grid-template-columns: 298px 180px 160px 150px 220px;
+  gap: 48px;
+  align-items: start;
+  direction: rtl;
+}
+
+.moon-footer-brand,
+.moon-footer-column,
+.moon-footer-contact {
+  min-width: 0;
+  text-align: right;
+  direction: rtl;
+}
+
+.moon-footer-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.moon-footer-logo {
+  display: block;
+  width: 210px;
+  height: 70px;
+  object-fit: contain;
+  object-position: right center;
+}
+
+.moon-footer-brand p,
+.moon-footer-address {
+  margin: 0;
+  color: #e4ebf1;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 22px;
+  text-align: right;
+  direction: rtl;
+}
+
+.moon-footer-column,
+.moon-footer-contact {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.moon-footer-column strong,
+.moon-footer-contact strong {
+  width: 100%;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 22px;
+  text-align: right;
+}
+
+.moon-footer-link {
+  width: 100%;
+  color: #e4ebf1;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+  text-align: right;
+  text-decoration: none;
+  direction: rtl;
+}
+
+.moon-footer-link:hover {
+  color: #fff;
+}
+
+.moon-footer-contact-row {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: baseline;
+  gap: 4px;
+  color: #e4ebf1;
+  font-size: 13px;
+  line-height: 20px;
+  text-align: right;
+  direction: rtl;
+}
+
+.moon-footer-contact-row > span {
+  flex: 0 0 auto;
+}
+
+.moon-footer-contact-row bdi {
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.moon-footer-address {
+  width: 100%;
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.moon-footer-socials {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 8px;
+}
+
+.moon-footer-socials img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.moon-footer-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e4ebf1;
+  font-size: 12px;
+  line-height: 19px;
+  text-align: center;
+  direction: rtl;
+}
+
+@media (max-width: 1100px) {
+  .moon-shared-footer__inner {
+    padding: 56px 48px 32px;
+  }
+
+  .moon-shared-footer__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 36px 48px;
+  }
+
+  .moon-footer-brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .moon-shared-footer__inner {
+    padding: 40px 24px 28px;
+  }
+
+  .moon-shared-footer__grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .moon-footer-brand {
+    grid-column: auto;
+  }
+}
