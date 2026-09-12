@@ -270,6 +270,45 @@ html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[
   background-size: contain !important;
 }
 
+/* News: keep Figma's physical card order, but make each card's copy truly RTL. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[269]"] {
+  direction: ltr;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[270]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[282]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[294]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[272]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[284]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[296]"] {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Figma has date at the physical left and badge at the physical right. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[273]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[285]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[297]"] {
+  direction: ltr;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[273]"] > *,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[285]"] > *,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[297]"] > * {
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
+/* View-all arrow/text/empty-slot arrangement is authored physically LTR in Figma. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[306]"] {
+  direction: ltr;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[308]"] {
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
 /* Latin identifiers stay readable without changing the row's Persian layout. */
 html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [dir="ltr"],
 html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) a[href^="mailto:"],
