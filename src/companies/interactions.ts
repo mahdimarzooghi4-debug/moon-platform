@@ -25,6 +25,11 @@ const companyRoutes: Record<string, string> = {
 };
 
 const svgAssetCache = new Map<string, Promise<string | null>>();
+const projectImageSuffixes = [
+  "/OVPcmhB9Gi.png",
+  "/bZ15zUixSc.png",
+  "/oniW8J37sN.png",
+];
 
 function isCompanyPage() {
   return COMPANY_PATHS.has(window.location.pathname);
@@ -90,20 +95,98 @@ async function repairFigmaSvgAssets(root: HTMLElement) {
 
 function styleProjectCards(root: HTMLElement) {
   const elements = Array.from(root.querySelectorAll<HTMLElement>("div"));
-  const middleImage = elements.find((element) =>
-    codiaPngPath(element)?.endsWith("/bZ15zUixSc.png"),
-  );
+  const cards = projectImageSuffixes
+    .map((suffix) => {
+      const image = elements.find((element) => codiaPngPath(element)?.endsWith(suffix));
+      return image?.parentElement instanceof HTMLElement ? image.parentElement : null;
+    })
+    .filter((card): card is HTMLElement => Boolean(card));
 
-  const middleCard = middleImage?.parentElement;
-  const cardRow = middleCard?.parentElement;
-  if (!middleCard || !cardRow) return;
+  if (cards.length !== 3) return;
+
+  const cardRow = cards[0].parentElement;
+  if (!cardRow || !cards.every((card) => card.parentElement === cardRow)) return;
 
   cardRow.classList.add("mah-company-projects-row");
+  cardRow.style.alignItems = "stretch";
+  cardRow.style.direction = "ltr";
 
-  Array.from(cardRow.children).forEach((child) => {
-    if (!(child instanceof HTMLElement)) return;
-    child.classList.add("mah-company-project-card");
-    child.removeAttribute("dir");
+  cards.forEach((card) => {
+    card.classList.add("mah-company-project-card");
+    card.setAttribute("dir", "rtl");
+    card.style.direction = "rtl";
+    card.style.textAlign = "right";
+    card.style.height = "540px";
+    card.style.minHeight = "540px";
+    card.style.maxHeight = "540px";
+    card.style.display = "flex";
+    card.style.flexDirection = "column";
+    card.style.alignItems = "stretch";
+    card.style.gap = "20px";
+
+    const parts = Array.from(card.children).filter(
+      (child): child is HTMLElement => child instanceof HTMLElement,
+    );
+
+    parts.forEach((part) => {
+      part.style.width = "100%";
+      part.style.alignSelf = "stretch";
+    });
+
+    const [, heading, stats, progress, button] = parts;
+
+    if (heading) {
+      heading.style.direction = "rtl";
+      heading.style.textAlign = "right";
+      heading.style.alignItems = "flex-end";
+      const metaRow = heading.firstElementChild;
+      if (metaRow instanceof HTMLElement) {
+        metaRow.style.direction = "rtl";
+        metaRow.style.justifyContent = "flex-start";
+      }
+    }
+
+    if (stats) {
+      stats.style.direction = "rtl";
+      stats.style.textAlign = "right";
+      Array.from(stats.children).forEach((row) => {
+        if (!(row instanceof HTMLElement)) return;
+        row.style.direction = "rtl";
+        Array.from(row.children).forEach((stat) => {
+          if (!(stat instanceof HTMLElement)) return;
+          stat.style.alignItems = "flex-end";
+          stat.style.textAlign = "right";
+        });
+      });
+    }
+
+    if (progress) {
+      progress.style.direction = "rtl";
+      progress.style.textAlign = "right";
+      const labels = progress.firstElementChild;
+      if (labels instanceof HTMLElement) labels.style.direction = "rtl";
+      const track = progress.children[1];
+      if (track instanceof HTMLElement) {
+        track.style.direction = "rtl";
+        track.style.justifyContent = "flex-start";
+      }
+    }
+
+    if (button) {
+      button.style.marginTop = "auto";
+      button.style.width = "100%";
+      button.style.direction = "rtl";
+      button.style.textAlign = "center";
+    }
+
+    card.querySelectorAll<HTMLElement>("span, p").forEach((text) => {
+      if (button?.contains(text)) {
+        text.style.textAlign = "center";
+        return;
+      }
+      text.style.direction = "rtl";
+      text.style.textAlign = "right";
+    });
   });
 }
 
