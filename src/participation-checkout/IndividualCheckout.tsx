@@ -17,11 +17,11 @@ export default function IndividualCheckout() {
   const paymentPath = `/projects/${projectId}/participate/redirecting?type=individual&amount=${amount}`;
 
   return (
-    <div className="main-container mx-auto flex w-[1440px] max-w-full flex-col items-center bg-[#fcfbf8] text-[#17324d]" dir="ltr">
+    <div className="main-container mx-auto flex w-[1440px] max-w-full flex-col items-center bg-[#fcfbf8] text-right text-[#17324d]" dir="rtl">
       <CheckoutHeader onBack={() => navigate(projectPath)} />
-      <main className="flex w-full items-start gap-8 px-[120px] pb-24">
+      <main className="flex w-full items-start gap-8 px-[120px] pb-24" dir="ltr">
         <CheckoutSidebar amount={amount} onProject={() => navigate(projectPath)} onCompany={() => navigate(companyPath)} />
-        <div className="flex w-[798px] shrink-0 flex-col gap-6">
+        <div className="flex w-[798px] shrink-0 flex-col gap-6 text-right" dir="rtl">
           <ParticipantInfoCard />
           <CheckoutFormCards
             amount={amount}
