@@ -50,3 +50,66 @@ textarea,
 button {
   outline: 0;
 }
+
+/* Projects desktop: keep Persian text RTL, but preserve the physical LTR flex
+   ordering used by the Figma frame. */
+.mah-projects-page > header + section > div:nth-child(2) > div:last-child {
+  direction: ltr;
+}
+
+.mah-projects-page > header + section > div:nth-child(2) > div:last-child > * {
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
+/* Project-card badge positions: approved on the left, funding status on the right. */
+.mah-projects-page article > div:first-child > div {
+  direction: ltr;
+}
+
+.mah-projects-page article > div:first-child > div > span {
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
+/* Province is physically before the separator; impact area finishes at the right edge. */
+.mah-projects-page article > div:nth-child(2) > div:first-child {
+  direction: ltr;
+}
+
+.mah-projects-page article > div:nth-child(2) > div:first-child > span {
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
+/* Metric pairs follow the Figma left-to-right physical column order. */
+.mah-projects-page article > div:nth-child(3) > div {
+  direction: ltr;
+}
+
+/* Funding block is laid out LTR physically; Persian labels remain RTL. */
+.mah-projects-page article > div:nth-child(4) {
+  direction: ltr;
+}
+
+.mah-projects-page article > div:nth-child(4) > div:nth-child(2) {
+  direction: ltr;
+}
+
+.mah-projects-page article > div:nth-child(4) > span {
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
+/* Footer columns are right-aligned inside their fixed-width Figma columns. */
+.mah-projects-page footer > div:first-child > div {
+  direction: ltr;
+}
+
+.mah-projects-page footer > div:first-child > div > strong,
+.mah-projects-page footer > div:first-child > div > p,
+.mah-projects-page footer > div:first-child > div > a {
+  direction: rtl;
+  unicode-bidi: isolate;
+  text-align: right;
+}
