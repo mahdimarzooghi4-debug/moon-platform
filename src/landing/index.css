@@ -309,6 +309,86 @@ html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[
   unicode-bidi: isolate;
 }
 
+/* Footer core follows the physical Figma canvas left-to-right; each Persian column remains RTL. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[316]"] {
+  direction: ltr;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[317]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[326]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[330]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[335]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[342]"] {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Replace design placeholders with production contact details while preserving the Figma typography. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[319]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[320]"] {
+  width: auto !important;
+  font-size: 0 !important;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[319]"]::after {
+  content: "تلفن: ۰۲۱-۶۶۴۸۵۳۷۴";
+  font-size: 13px;
+  line-height: 20px;
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[320]"]::after {
+  content: "ایمیل: \200e info@mahcsr.ir";
+  font-size: 13px;
+  line-height: 20px;
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
+/* The supplied production address is an additional contact line; it fits the original 182px column. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[317]"]::after {
+  content: "آدرس: تهران، خیابان انقلاب، خیابان رازی، کوچه شهبازیان، پلاک ۲۲";
+  display: block;
+  width: 220px;
+  order: 1;
+  flex: 0 0 auto;
+  color: #e4ebf1;
+  font-family: "Vazirmatn Variable", "Vazirmatn", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 20px;
+  text-align: right;
+  white-space: normal;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[321]"] {
+  order: 2;
+}
+
+/* Use the exact exported Figma vectors with an SVG MIME-safe extension. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[323]"] {
+  background-image: url("/assets/codia/NQaXAcuYaN.svg") !important;
+}
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[325]"] {
+  background-image: url("/assets/codia/0ryT0zMK7e.svg") !important;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[323]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[325]"] {
+  width: 18px !important;
+  height: 18px !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+}
+
+/* Figma's footer divider is above the base copy, not below it. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[345]"] {
+  border-bottom: 0 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
 /* Latin identifiers stay readable without changing the row's Persian layout. */
 html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [dir="ltr"],
 html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) a[href^="mailto:"],
