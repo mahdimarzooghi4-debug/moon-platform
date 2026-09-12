@@ -28,7 +28,7 @@ export default function IndividualCheckout() {
             onEditAmount={() => navigate(projectPath)}
             onHowItWorks={() => navigate("/how-it-works")}
             onTerms={() => navigate("/terms")}
-            onPrivacy={() => navigate("/privacy-policy")}
+            onPrivacy={() => navigate("/privacy")}
             onPay={() => navigate(paymentPath)}
             onBack={() => navigate(projectPath)}
           />
