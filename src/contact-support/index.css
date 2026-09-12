@@ -42,7 +42,8 @@ body {
 
 .mah-contact-page [data-mah-contact-href],
 .mah-contact-page [data-mah-contact-external],
-.mah-contact-page [data-mah-contact-scroll] {
+.mah-contact-page [data-mah-contact-scroll],
+.mah-contact-page [data-mah-contact-form-action] {
   cursor: pointer;
 }
 
@@ -53,6 +54,50 @@ body {
 
 #mah-support-form {
   scroll-margin-top: 24px;
+}
+
+.mah-support-editable {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: auto !important;
+  min-height: 20px;
+  white-space: normal !important;
+  cursor: text;
+  border-radius: 4px;
+}
+
+.mah-support-editable:focus {
+  outline: 2px solid rgba(32, 148, 227, 0.18) !important;
+  outline-offset: 2px !important;
+}
+
+.mah-support-editable:empty::before {
+  content: attr(data-placeholder);
+  color: #aebccb;
+  pointer-events: none;
+}
+
+.mah-support-form-status {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 13px;
+  line-height: 22px;
+  direction: rtl;
+  text-align: right;
+}
+
+.mah-support-form-status--success {
+  color: #116b40;
+  background: #eef9f3;
+  border: 1px solid #bfe7d0;
+}
+
+.mah-support-form-status--error {
+  color: #a34c12;
+  background: #fff7ed;
+  border: 1px solid #f4d2b8;
 }
 
 input,
