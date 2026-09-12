@@ -62,23 +62,34 @@ html.moon-public-footer-active [class~="bg-[#111e30]"]:last-child {
   object-position: right center;
 }
 
+/* The source PNG contains a blue tagline baked into the bottom edge.
+ * Cover only that thin strip, then redraw the tagline in white directly
+ * beneath the MAH wordmark (not beneath the crescent). */
 .moon-footer-logo-tagline {
   position: absolute;
-  right: 0;
-  bottom: 0;
+  right: 39px;
+  bottom: 1px;
   z-index: 2;
   display: flex;
-  width: 210px;
-  height: 17px;
+  width: 132px;
+  height: 10px;
   align-items: center;
   justify-content: center;
   background: #111e30;
   color: #fff;
-  font-size: 9px;
+  font-size: 7px;
   font-weight: 500;
-  line-height: 17px;
+  line-height: 10px;
   text-align: center;
   white-space: nowrap;
+}
+
+.moon-footer-logo-tagline::before {
+  content: "";
+  position: absolute;
+  inset: -1px 0 0;
+  z-index: -1;
+  background: #111e30;
 }
 
 .moon-footer-brand p,
