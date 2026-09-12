@@ -135,6 +135,14 @@ button {
   transform: none !important;
 }
 
+/* Gallery counter must read naturally in Persian: ۱ از ۴. */
+.main-container [class*="z-[31]"] {
+  direction: rtl !important;
+  unicode-bidi: isolate;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
 /* Custom amount placeholder: keep the ellipsis visually in front of the Persian text. */
 .main-container [class*="z-[115]"] {
   font-size: 0 !important;
