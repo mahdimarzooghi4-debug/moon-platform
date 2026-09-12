@@ -9,6 +9,17 @@ const steps = [
   { label: "حساب تأییدشده", icon: "/assets/codia/ya4k9TxCqx.svg" },
 ];
 
+function FlowCard({ label, icon }: { label: string; icon: string }) {
+  return (
+    <div className="flex min-w-0 flex-1 flex-col items-center gap-[10px] rounded-[12px] border border-[#e4ebf1] bg-white p-[16px] shadow-[0_4px_8px_rgba(23,46,71,0.08)]">
+      <img src={icon} alt="" className="h-[24px] w-[24px]" />
+      <p className="whitespace-nowrap text-center font-['Vazirmatn'] text-[13px] font-bold leading-[20px] text-[#17324d]" dir="auto">
+        {label}
+      </p>
+    </div>
+  );
+}
+
 export function Article172P04S02() {
   return (
     <section className="flex flex-col items-start gap-[40px] px-[120px] py-[80px]" data-node-id="745:4432">
@@ -23,19 +34,10 @@ export function Article172P04S02() {
 
       <div className="flex w-full items-start justify-center gap-[16px]">
         {steps.map((step, index) => (
-          <React.Fragment key={step.label}>
-            {index > 0 && (
-              <div className="flex h-[86px] w-[16px] shrink-0 items-center justify-center">
-                <img src="/assets/codia/ukNyoSxCht.svg" alt="" className="h-[16px] w-[16px]" />
-              </div>
-            )}
-            <div className="flex min-w-0 flex-1 flex-col items-center gap-[10px] rounded-[12px] border border-[#e4ebf1] bg-white p-[16px] shadow-[0_4px_8px_rgba(23,46,71,0.08)]">
-              <img src={step.icon} alt="" className="h-[24px] w-[24px]" />
-              <p className="whitespace-nowrap text-center font-['Vazirmatn'] text-[13px] font-bold leading-[20px] text-[#17324d]" dir="auto">
-                {step.label}
-              </p>
-            </div>
-          </React.Fragment>
+          <div key={step.label} className={`flex min-w-0 flex-1 items-center ${index === 0 ? "" : "gap-[12px]"}`}>
+            {index > 0 && <img src="/assets/codia/ukNyoSxCht.svg" alt="" className="h-[16px] w-[16px] shrink-0" />}
+            <FlowCard label={step.label} icon={step.icon} />
+          </div>
         ))}
       </div>
 
