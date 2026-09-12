@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import "./PublicFooter.css";
 
 const HIDDEN_PREFIXES = ["/panel/", "/auth", "/register/"];
@@ -26,6 +26,60 @@ function usePathname() {
   return pathname;
 }
 
+function hasMountedRouteContent() {
+  const app = document.getElementById("app");
+  if (!app) return false;
+
+  return Array.from(app.children).some(
+    (child) => !(child instanceof HTMLElement && child.classList.contains("moon-shared-footer")),
+  );
+}
+
+function useRouteContentReady() {
+  const [ready, setReady] = useState(false);
+
+  useLayoutEffect(() => {
+    const app = document.getElementById("app");
+    if (!app) return;
+
+    const sync = () => setReady(hasMountedRouteContent());
+    sync();
+
+    const observer = new MutationObserver(sync);
+    observer.observe(app, { childList: true });
+
+    const hideBeforeNavigation = (event: MouseEvent) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+
+      const anchor = target.closest<HTMLAnchorElement>("a[href]");
+      if (!anchor) return;
+
+      try {
+        const destination = new URL(anchor.href, window.location.href);
+        if (destination.origin !== window.location.origin) return;
+        if (destination.pathname === window.location.pathname && destination.search === window.location.search) return;
+        setReady(false);
+      } catch {
+        // Ignore malformed/non-navigation href values.
+      }
+    };
+
+    const hideForHistoryNavigation = () => setReady(false);
+
+    document.addEventListener("click", hideBeforeNavigation, true);
+    window.addEventListener("popstate", hideForHistoryNavigation);
+
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("click", hideBeforeNavigation, true);
+      window.removeEventListener("popstate", hideForHistoryNavigation);
+    };
+  }, []);
+
+  return ready;
+}
+
 function shouldShowFooter(pathname: string) {
   if (pathname.includes("/print")) return false;
   return !HIDDEN_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(prefix));
@@ -37,7 +91,8 @@ const FooterLink = ({ href, children }: { href: string; children: React.ReactNod
 
 export default function PublicFooter() {
   const pathname = usePathname();
-  const visible = shouldShowFooter(pathname);
+  const routeContentReady = useRouteContentReady();
+  const visible = shouldShowFooter(pathname) && routeContentReady;
 
   useEffect(() => {
     document.documentElement.classList.toggle("moon-public-footer-active", visible);
