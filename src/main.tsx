@@ -8,7 +8,6 @@ import "./app/rtl.css";
 import App from "./App";
 import "./landing/contact-details.css";
 import "./landing/interactions";
-import "./participation-checkout/interactions";
 
 document.documentElement.lang = "fa";
 document.documentElement.dir = "rtl";
