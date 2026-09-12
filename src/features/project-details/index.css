@@ -129,3 +129,46 @@ button {
   background-position: center !important;
   background-repeat: no-repeat !important;
 }
+
+/* Gallery controls: left control points left; right control points right. */
+.main-container [class*="z-[32]"] {
+  transform: none !important;
+}
+
+/* Custom amount placeholder: keep the ellipsis visually in front of the Persian text. */
+.main-container [class*="z-[115]"] {
+  font-size: 0 !important;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+  align-items: center;
+  direction: ltr;
+}
+
+.main-container [class*="z-[115]"]::before {
+  content: "...";
+  font-family: "Vazirmatn Variable", "Vazirmatn", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: #17324d;
+}
+
+.main-container [class*="z-[115]"]::after {
+  content: "مبلغ مورد نظر را وارد کنید";
+  direction: rtl;
+  unicode-bidi: isolate;
+  font-family: "Vazirmatn Variable", "Vazirmatn", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: #17324d;
+  white-space: nowrap;
+}
+
+/* Similar-project cards: Figma places "هدف پروژه" on the right and amount on the left. */
+.main-container [class*="z-[418]"],
+.main-container [class*="z-[450]"],
+.main-container [class*="z-[482]"] {
+  flex-direction: row-reverse;
+}
