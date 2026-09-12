@@ -114,3 +114,18 @@ button {
 .main-container > div:last-child > div:first-child > div:first-child > div:last-child {
   order: 4;
 }
+
+/* Figma footer uses Telegram and Eitaa, not the legacy Instagram/LinkedIn glyphs. */
+.main-container > div:last-child > div:first-child > div:first-child > div:last-child > div:nth-child(1) > div {
+  background-image: url('/assets/codia/projects-telegram.svg') !important;
+  background-size: contain !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+.main-container > div:last-child > div:first-child > div:first-child > div:last-child > div:nth-child(2) > div {
+  background-image: url('/assets/codia/projects-eitaa.svg') !important;
+  background-size: contain !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
