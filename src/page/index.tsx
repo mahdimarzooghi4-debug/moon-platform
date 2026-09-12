@@ -74,11 +74,11 @@ export default function Main() {
   const queryAccountType = accountTypeFromParam(searchParams.get("accountType"));
   const queryMobile = searchParams.get("mobile") ?? "";
   const suggestedType = useMemo(() => accountTypeForReturnTo(returnTo), [returnTo]);
-  const [selected, setSelected] = useState<AccountType | null>(suggestedType ?? queryAccountType);
+  const [selected, setSelected] = useState<AccountType>(suggestedType ?? queryAccountType ?? "company");
   const [phone, setPhone] = useState(queryMobile);
 
   const normalizedPhone = normalizeIranMobile(phone);
-  const canSubmit = Boolean(selected && isValidIranMobile(normalizedPhone));
+  const canSubmit = isValidIranMobile(normalizedPhone);
   const hasSelection = selected !== null;
   const isOtpStep = searchParams.get("step") === "otp";
 
@@ -97,7 +97,7 @@ export default function Main() {
   }
 
   function handleLogin() {
-    if (!selected || !isValidIranMobile(normalizedPhone)) return;
+    if (!isValidIranMobile(normalizedPhone)) return;
     const params = new URLSearchParams({
       step: "otp",
       accountType: selected,
@@ -112,14 +112,6 @@ export default function Main() {
       return (
         <p className="m-0 text-center text-[13px] text-[#c53030]">
           {ERROR_MESSAGES[error] ?? "ورود انجام نشد. دوباره تلاش کنید."}
-        </p>
-      );
-    }
-
-    if (!selected) {
-      return (
-        <p className="m-0 text-center text-[13px] text-[#a0aec0]">
-          جهت فعال‌سازی دکمه ورود، ابتدا نوع حساب خود را از بالا انتخاب کنید.
         </p>
       );
     }
@@ -164,12 +156,11 @@ export default function Main() {
 
         <button
           type="button"
-          dir="ltr"
           onClick={() => window.location.assign("/")}
           className="flex cursor-pointer items-center justify-center gap-2 border-none bg-transparent text-[#2e3d54] transition-opacity hover:opacity-80"
         >
+          <span className="text-[14px] font-medium">بازگشت به صفحه اصلی</span>
           <img src={IMG.backIcon} alt="" className="h-4 w-4 object-contain" />
-          <span dir="rtl" className="text-[14px] font-medium">بازگشت به صفحه اصلی</span>
         </button>
       </header>
 
@@ -200,7 +191,7 @@ export default function Main() {
           <div className="grid w-full grid-cols-3 gap-4">
             {CARDS.map((card) => {
               const isActive = selected === card.id;
-              const baseCompany = !selected && card.id === "company";
+              const baseCompany = selected === "company" && card.id === "company";
 
               return (
                 <button
@@ -212,9 +203,7 @@ export default function Main() {
                     hasSelection ? "rounded-[12px] p-4" : "rounded-[14px] p-[18px]",
                     isActive
                       ? selectedCardClass(card.id)
-                      : hasSelection
-                        ? "border border-[#e4ebf1] bg-white hover:border-[#b0c8e8]"
-                        : "border border-[#e0e5ed] bg-white hover:border-[#b0c8e8]",
+                      : "border border-[#e4ebf1] bg-white hover:border-[#b0c8e8]",
                   ].join(" ")}
                 >
                   <div dir="ltr" className="flex w-full items-center justify-between">
@@ -271,7 +260,7 @@ export default function Main() {
               dir="ltr"
               className={[
                 "flex h-[48px] w-full items-center gap-2 rounded-[12px] bg-white px-4",
-                selected && phone
+                phone
                   ? "border-2 border-[#2094e3]"
                   : "border border-[#cbd5e1] focus-within:border-2 focus-within:border-[#2094e3]",
               ].join(" ")}
