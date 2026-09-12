@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./PublicFooter.css";
 
-const HIDDEN_PREFIXES = ["/panel/", "/auth"];
+const HIDDEN_PREFIXES = ["/panel/", "/auth", "/register/"];
 
 function usePathname() {
   const [pathname, setPathname] = useState(() => window.location.pathname);
