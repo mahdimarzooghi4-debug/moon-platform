@@ -1,12 +1,78 @@
-/* Landing footer contact details supplied for production content.
- * Scoped to the landing export so other pages remain untouched.
+/* Landing visual corrections layered after the generated landing stylesheet.
+ * Keep the original Codia/Figma-exported assets instead of approximating icons.
  */
+
+/* Header: the generated DOM stores the action cluster first and the nav/logo
+ * cluster second. Keep that physical order so actions stay left and logo/nav
+ * stay right, while Persian text itself remains RTL. */
+html[dir="rtl"] body .main-container > div:first-child {
+  direction: ltr;
+}
+
+html[dir="rtl"] body .main-container > div:first-child [class~="z-[1]"],
+html[dir="rtl"] body .main-container > div:first-child [class~="z-[8]"],
+html[dir="rtl"] body .main-container > div:first-child [class~="z-[9]"] {
+  flex-direction: row !important;
+}
+
+html[dir="rtl"] body .main-container > div:first-child span {
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
+/* Restore exact exported icons hidden by the previous approximation pass. */
+html[dir="rtl"] body .main-container [class~="z-[40]"] > *,
+html[dir="rtl"] body .main-container [class~="z-[47]"] > *,
+html[dir="rtl"] body .main-container [class~="z-[54]"] > *,
+html[dir="rtl"] body .main-container [class~="z-[61]"] > *,
+html[dir="rtl"] body .main-container [class~="z-[68]"] > *,
+html[dir="rtl"] body .main-container [class~="z-[81]"] > *,
+html[dir="rtl"] body .main-container [class~="z-[96]"] > *,
+html[dir="rtl"] body .main-container [class~="z-[111]"] > * {
+  opacity: 1 !important;
+}
+
+html[dir="rtl"] body .main-container [class~="z-[40]"]::after,
+html[dir="rtl"] body .main-container [class~="z-[47]"]::after,
+html[dir="rtl"] body .main-container [class~="z-[54]"]::after,
+html[dir="rtl"] body .main-container [class~="z-[61]"]::after,
+html[dir="rtl"] body .main-container [class~="z-[68]"]::after,
+html[dir="rtl"] body .main-container [class~="z-[81]"]::after,
+html[dir="rtl"] body .main-container [class~="z-[96]"]::after,
+html[dir="rtl"] body .main-container [class~="z-[111]"]::after,
+html[dir="rtl"] body .main-container [class~="z-[306]"]::before {
+  content: none !important;
+  background-image: none !important;
+}
+
+/* Footer order is genuinely RTL: contact at the visual right and brand at the
+ * visual left. */
+html[dir="rtl"] body .main-container [class~="z-[316]"] {
+  direction: rtl;
+  flex-direction: row !important;
+}
+
+html[dir="rtl"] body .main-container [class~="z-[315]"] [class~="z-[317]"] {
+  align-items: flex-start !important;
+  direction: rtl;
+  text-align: right;
+}
+
+/* Verified production contact details. Exact contact icons reuse the assets
+ * already exported with the contact/support Figma screen. */
 html[dir="rtl"] body .main-container [class~="z-[315]"] [class~="z-[319]"] {
-  width: 220px;
+  width: 240px;
   min-height: 22px;
+  padding-right: 28px;
   font-size: 0 !important;
   color: transparent !important;
   white-space: normal;
+  direction: rtl;
+  text-align: right;
+  background-image: url("/assets/codia/5xxFrHwTbn.png") !important;
+  background-repeat: no-repeat !important;
+  background-position: right center !important;
+  background-size: 18px 18px !important;
 }
 
 html[dir="rtl"] body .main-container [class~="z-[315]"] [class~="z-[319]"]::before {
@@ -23,8 +89,18 @@ html[dir="rtl"] body .main-container [class~="z-[315]"] [class~="z-[319]"]::befo
 }
 
 html[dir="rtl"] body .main-container [class~="z-[315]"] [class~="z-[320]"] {
-  width: 240px;
-  min-height: 96px;
+  width: 260px;
+  height: auto;
+  min-height: 98px;
+  padding-right: 28px;
+  direction: rtl;
+  text-align: right;
+  background-image:
+    url("/assets/codia/icfFwFNDN0.png"),
+    url("/assets/codia/tbz8m7Giir.png") !important;
+  background-repeat: no-repeat, no-repeat !important;
+  background-position: right top 1px, right top 36px !important;
+  background-size: 18px 18px, 18px 18px !important;
 }
 
 html[dir="rtl"] body .main-container [class~="z-[315]"] [class~="z-[320]"]::before {
@@ -34,6 +110,8 @@ html[dir="rtl"] body .main-container [class~="z-[315]"] [class~="z-[320]"]::befo
 
 html[dir="rtl"] body .main-container [class~="z-[315]"] [class~="z-[320]"]::after {
   content: "آدرس: تهران، خیابان انقلاب، خیابان رازی، کوچه شهبازیان، پلاک 22" !important;
-  max-width: 214px;
+  display: block;
+  max-width: 228px;
   white-space: normal;
+  line-height: 20px;
 }
