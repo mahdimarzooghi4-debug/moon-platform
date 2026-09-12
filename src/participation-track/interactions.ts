@@ -1,4 +1,5 @@
 const LIST_PATH = "/participation/track/list";
+const DETAILS_PATH = "/participation/track/details";
 
 function normalize(value: string | null | undefined) {
   return (value ?? "").replace(/\s+/g, " ").trim();
@@ -6,6 +7,14 @@ function normalize(value: string | null | undefined) {
 
 function isParticipationListPage() {
   return window.location.pathname === LIST_PATH;
+}
+
+function isParticipationDetailsPage() {
+  return window.location.pathname === DETAILS_PATH || /^\/participation\/track\/[^/]+$/.test(window.location.pathname);
+}
+
+function isParticipationTrackPage() {
+  return isParticipationListPage() || isParticipationDetailsPage();
 }
 
 function toLatinDigits(value: string) {
@@ -90,6 +99,19 @@ function enhanceParticipationList() {
   });
 }
 
+function removeSmsUpdatesOption() {
+  if (!isParticipationDetailsPage()) return;
+  const root = document.querySelector<HTMLElement>(".main-container");
+  if (!root) return;
+
+  const label = Array.from(root.querySelectorAll<HTMLElement>("span, p")).find(
+    (element) => normalize(element.textContent) === "به‌روزرسانی‌های مهم پروژه برای من پیامک شود.",
+  );
+
+  const row = label?.parentElement;
+  if (row instanceof HTMLElement) row.remove();
+}
+
 function activate(element: HTMLElement) {
   const href = element.dataset.mahParticipationHref;
   if (!href) return;
@@ -116,11 +138,12 @@ document.addEventListener("keydown", (event) => {
 
 let scheduled = false;
 function scheduleEnhance() {
-  if (scheduled || !isParticipationListPage()) return;
+  if (scheduled || !isParticipationTrackPage()) return;
   scheduled = true;
   window.setTimeout(() => {
     scheduled = false;
     enhanceParticipationList();
+    removeSmsUpdatesOption();
   }, 0);
 }
 
