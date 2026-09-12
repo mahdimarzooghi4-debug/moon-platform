@@ -103,6 +103,66 @@ function markSupportForm(root: HTMLElement) {
   }
 }
 
+function editableElement(form: HTMLElement, predicate: (text: string) => boolean) {
+  return Array.from(form.querySelectorAll<HTMLElement>("span, p")).find((element) =>
+    predicate(normalize(element.textContent)),
+  );
+}
+
+function markEditableField(
+  form: HTMLElement,
+  key: string,
+  placeholder: string,
+  predicate: (text: string) => boolean,
+  required = false,
+) {
+  if (form.querySelector<HTMLElement>(`[data-mah-support-field="${key}"]`)) return;
+
+  const element = editableElement(form, predicate);
+  if (!element) return;
+
+  element.dataset.mahSupportField = key;
+  element.dataset.placeholder = placeholder;
+  if (required) element.dataset.required = "true";
+  element.contentEditable = "true";
+  element.spellcheck = false;
+  element.setAttribute("role", "textbox");
+  element.setAttribute("aria-label", placeholder);
+  element.classList.add("mah-support-editable");
+}
+
+function markSupportFields() {
+  const form = document.getElementById("mah-support-form");
+  if (!(form instanceof HTMLElement)) return;
+
+  markEditableField(form, "mobile", "شماره موبایل", (text) => text === "۰۹۱۲۳۴۵۶۷۸۹", true);
+  markEditableField(form, "name", "نام و نام خانوادگی", (text) => text === "علیرضا محمدی", true);
+  markEditableField(
+    form,
+    "title",
+    "عنوان درخواست",
+    (text) => text === "عدم دریافت پیامک پس از تراکنش",
+    true,
+  );
+  markEditableField(form, "email", "ایمیل (اختیاری)", (text) => text === "example@mail.com");
+  markEditableField(
+    form,
+    "description",
+    "توضیحات درخواست",
+    (text) => text.startsWith("مبلغ مشارکت به میزان ۳۰۰٬۰۰۰ تومان"),
+    true,
+  );
+  markEditableField(form, "gateway", "شماره پیگیری درگاه", (text) => text === "۸۳۷۴۹۲۱۰۵۶");
+  markEditableField(form, "card", "۴ رقم آخر کارت", (text) => text === "۱۲۳۴");
+  markEditableField(form, "amount", "مبلغ پرداخت شده", (text) => text === "۳۰۰,۰۰۰ تومان");
+  markEditableField(
+    form,
+    "payment-time",
+    "تاریخ و ساعت تقریبی",
+    (text) => text === "۲۴ مرداد ۱۴۰۵ - ساعت ۱۴:۳۲",
+  );
+}
+
 function markContactActions(root: HTMLElement) {
   root.querySelectorAll<HTMLElement>("span, p, a, button, div").forEach((element) => {
     const label = normalize(element.textContent);
@@ -133,8 +193,107 @@ function markContactActions(root: HTMLElement) {
       element.dataset.mahContactExternal = "tel:+982166485374";
       element.setAttribute("role", "link");
       element.tabIndex = 0;
+      return;
+    }
+
+    if (label === "پاک‌کردن فرم") {
+      element.dataset.mahContactFormAction = "clear";
+      element.setAttribute("role", "button");
+      element.tabIndex = 0;
+      return;
+    }
+
+    if (label === "ارسال درخواست") {
+      element.dataset.mahContactFormAction = "submit";
+      element.setAttribute("role", "button");
+      element.tabIndex = 0;
     }
   });
+}
+
+function removeFormStatus(form: HTMLElement) {
+  form.querySelector(".mah-support-form-status")?.remove();
+}
+
+function showFormStatus(form: HTMLElement, type: "success" | "error", text: string) {
+  removeFormStatus(form);
+  const status = document.createElement("div");
+  status.className = `mah-support-form-status mah-support-form-status--${type}`;
+  status.setAttribute("role", type === "error" ? "alert" : "status");
+  status.textContent = text;
+
+  const fieldsContainer = form.children.item(1);
+  if (fieldsContainer) form.insertBefore(status, fieldsContainer);
+  else form.appendChild(status);
+}
+
+function clearSupportForm() {
+  const form = document.getElementById("mah-support-form");
+  if (!(form instanceof HTMLElement)) return;
+
+  form.querySelectorAll<HTMLElement>("[data-mah-support-field]").forEach((field) => {
+    field.textContent = "";
+  });
+
+  const uploadedFile = Array.from(form.querySelectorAll<HTMLElement>("span, p, div")).find((element) =>
+    normalize(element.textContent).includes("receipt_1405.jpg"),
+  );
+  if (uploadedFile) {
+    let row: HTMLElement | null = uploadedFile;
+    while (row && row !== form) {
+      const className = typeof row.className === "string" ? row.className : "";
+      if (className.includes("justify-between") && className.includes("rounded-[8px]")) {
+        row.style.display = "none";
+        break;
+      }
+      row = row.parentElement;
+    }
+  }
+
+  removeFormStatus(form);
+  form.querySelector<HTMLElement>("[data-mah-support-field]")?.focus();
+}
+
+function supportPayload(form: HTMLElement) {
+  return Object.fromEntries(
+    Array.from(form.querySelectorAll<HTMLElement>("[data-mah-support-field]")).map((field) => [
+      field.dataset.mahSupportField ?? "field",
+      normalize(field.textContent),
+    ]),
+  );
+}
+
+function submitSupportForm() {
+  const form = document.getElementById("mah-support-form");
+  if (!(form instanceof HTMLElement)) return;
+
+  const requiredFields = Array.from(
+    form.querySelectorAll<HTMLElement>('[data-mah-support-field][data-required="true"]'),
+  );
+  const missing = requiredFields.find((field) => !normalize(field.textContent));
+  if (missing) {
+    showFormStatus(form, "error", "لطفاً فیلدهای ضروری فرم را تکمیل کنید.");
+    missing.focus();
+    return;
+  }
+
+  const trackingCode = `MAH-${Date.now().toString().slice(-8)}`;
+  const request = {
+    trackingCode,
+    createdAt: new Date().toISOString(),
+    ...supportPayload(form),
+  };
+
+  try {
+    const current = JSON.parse(localStorage.getItem("mah-support-requests") ?? "[]");
+    const requests = Array.isArray(current) ? current : [];
+    requests.unshift(request);
+    localStorage.setItem("mah-support-requests", JSON.stringify(requests.slice(0, 20)));
+  } catch {
+    // The confirmation still works when local storage is unavailable.
+  }
+
+  showFormStatus(form, "success", `درخواست شما ثبت شد. کد پیگیری: ${trackingCode}`);
 }
 
 function enhanceContactPage() {
@@ -143,11 +302,22 @@ function enhanceContactPage() {
 
   root.classList.add("mah-contact-page");
   markSupportForm(root);
+  markSupportFields();
   markContactActions(root);
   void repairFigmaSvgAssets(root);
 }
 
 function activate(element: HTMLElement) {
+  const formAction = element.dataset.mahContactFormAction;
+  if (formAction === "clear") {
+    clearSupportForm();
+    return;
+  }
+  if (formAction === "submit") {
+    submitSupportForm();
+    return;
+  }
+
   const href = element.dataset.mahContactHref;
   if (href && href !== window.location.pathname) {
     window.location.assign(href);
@@ -171,7 +341,7 @@ document.addEventListener("click", (event) => {
   if (!(target instanceof Element)) return;
 
   const action = target.closest<HTMLElement>(
-    "[data-mah-contact-href], [data-mah-contact-external], [data-mah-contact-scroll]",
+    "[data-mah-contact-href], [data-mah-contact-external], [data-mah-contact-scroll], [data-mah-contact-form-action]",
   );
   if (!action || !action.closest(".main-container")) return;
 
@@ -186,7 +356,8 @@ document.addEventListener("keydown", (event) => {
   if (
     !target.dataset.mahContactHref &&
     !target.dataset.mahContactExternal &&
-    !target.dataset.mahContactScroll
+    !target.dataset.mahContactScroll &&
+    !target.dataset.mahContactFormAction
   ) {
     return;
   }
