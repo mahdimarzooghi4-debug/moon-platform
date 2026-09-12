@@ -48,6 +48,30 @@
   background-image: url("/assets/codia/Z4PqZykJBG.svg") !important;
 }
 
+/* Project Journey: keep all eight cards the same size and tighten the second
+ * row. The generated markup groups each row in an absolutely-positioned
+ * wrapper; flatten those wrappers into one grid so row spacing is consistent. */
+.main-container [class*="z-[77]"] {
+  display: grid !important;
+  grid-template-columns: repeat(4, 282px) !important;
+  grid-auto-rows: 176px !important;
+  column-gap: 24px !important;
+  row-gap: 12px !important;
+  width: 1200px !important;
+}
+
+.main-container [class*="z-[77]"] > [class*="w-[1200px]"] {
+  display: contents !important;
+}
+
+.main-container [class*="z-[77]"] > [class*="w-[1200px]"] > [class*="w-[282px]"] {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  width: 282px !important;
+  height: 176px !important;
+}
+
 .main-container,
 .main-container * {
   box-sizing: border-box;
