@@ -106,10 +106,15 @@ export default function PublicFooter() {
       <div className="moon-shared-footer__inner">
         <div className="moon-shared-footer__grid">
           <section className="moon-footer-brand">
-            <div className="moon-footer-logo-lockup">
+            <a
+              className="moon-footer-logo-lockup"
+              href="/"
+              aria-label="بازگشت به صفحه اصلی سامانه ماه"
+              style={{ display: "block" }}
+            >
               <img className="moon-footer-logo" src="/assets/codia/2u7HsAp67E.png" alt="سامانه ماه" />
               <span className="moon-footer-logo-tagline">مسئولیت اجتماعی هوشمند</span>
-            </div>
+            </a>
             <p>سامانه مشارکت در پروژه‌های اثر اجتماعی با مسیر مالی شفاف و اثر قابل‌اندازه‌گیری.</p>
           </section>
 
@@ -139,11 +144,15 @@ export default function PublicFooter() {
             <strong>ارتباط با ما</strong>
             <div className="moon-footer-contact-row">
               <span>تلفن:</span>
-              <bdi dir="ltr">۰۲۱-۶۶۴۸۵۳۷۴</bdi>
+              <a className="moon-footer-link" href="tel:+982166485374" aria-label="تماس با سامانه ماه">
+                <bdi dir="ltr">۰۲۱-۶۶۴۸۵۳۷۴</bdi>
+              </a>
             </div>
             <div className="moon-footer-contact-row">
               <span>ایمیل:</span>
-              <bdi dir="ltr">info@mahcsr.ir</bdi>
+              <a className="moon-footer-link" href="mailto:info@mahcsr.ir">
+                <bdi dir="ltr">info@mahcsr.ir</bdi>
+              </a>
             </div>
             <p className="moon-footer-address">آدرس: تهران، خیابان انقلاب، خیابان رازی، کوچه شهبازیان، پلاک ۲۲</p>
             <div className="moon-footer-socials" aria-label="شبکه‌های اجتماعی">
