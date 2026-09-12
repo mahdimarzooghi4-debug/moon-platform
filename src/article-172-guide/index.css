@@ -32,6 +32,25 @@
   unicode-bidi: plaintext;
 }
 
+/* These exported Figma icons are SVG bytes that were originally committed with
+ * a .png extension. Point the generated background-image classes at the same
+ * exact assets with the correct extension so browsers render the glyphs. */
+.article-172-page [class*="hNPBQzusJX.png"] {
+  background-image: url("/assets/codia/hNPBQzusJX.svg") !important;
+}
+
+.article-172-page [class*="zjsj0Ut6Ts.png"] {
+  background-image: url("/assets/codia/zjsj0Ut6Ts.svg") !important;
+}
+
+.article-172-page [class*="aAPU7URAz6.png"] {
+  background-image: url("/assets/codia/aAPU7URAz6.svg") !important;
+}
+
+.article-172-page [class*="T4OS0ttuhK.png"] {
+  background-image: url("/assets/codia/T4OS0ttuhK.svg") !important;
+}
+
 .main-container,
 .main-container * {
   box-sizing: border-box;
