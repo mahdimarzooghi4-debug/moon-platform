@@ -79,6 +79,14 @@ async function repairFigmaSvgAssets(root: HTMLElement) {
   );
 }
 
+function removeTrackingBadge(root: HTMLElement) {
+  const label = Array.from(root.querySelectorAll<HTMLElement>("span")).find(
+    (element) => normalize(element.textContent) === "رصد ریال‌به‌ریال نتایج",
+  );
+  const badge = label?.parentElement;
+  if (badge instanceof HTMLElement) badge.remove();
+}
+
 function findStakeholderCard(root: HTMLElement, label: string, partial = false) {
   const titles = Array.from(root.querySelectorAll<HTMLElement>("span"));
 
@@ -168,6 +176,7 @@ function markAboutLinks(root: HTMLElement) {
 function enhanceAboutPage() {
   const root = getAboutRoot();
   if (!root) return;
+  removeTrackingBadge(root);
   markStakeholderCards(root);
   swapStakeholderCards(root);
   markAboutLinks(root);
