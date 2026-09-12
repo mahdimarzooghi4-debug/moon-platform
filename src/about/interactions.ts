@@ -15,6 +15,8 @@ const aboutRoutes: Record<string, string> = {
   "ورود به بخش شرکت‌ها و سازمان‌ها": "/companies",
 };
 
+const svgAssetCache = new Map<string, Promise<string | null>>();
+
 function normalize(value: string | null | undefined) {
   return (value ?? "").replace(/\s+/g, " ").trim();
 }
@@ -26,6 +28,55 @@ function isAboutPage() {
 function getAboutRoot() {
   if (!isAboutPage()) return null;
   return document.querySelector<HTMLElement>(".main-container");
+}
+
+function codiaPngPath(element: HTMLElement) {
+  const className = typeof element.className === "string" ? element.className : "";
+  const match = className.match(/(\/assets\/codia\/[^)\]\s]+\.png)/);
+  return match?.[1] ?? null;
+}
+
+async function svgObjectUrlFor(path: string) {
+  const existing = svgAssetCache.get(path);
+  if (existing) return existing;
+
+  const pending = (async () => {
+    try {
+      const response = await fetch(path);
+      if (!response.ok) return null;
+      const source = await response.text();
+      if (!source.trimStart().startsWith("<svg")) return null;
+      return URL.createObjectURL(new Blob([source], { type: "image/svg+xml" }));
+    } catch {
+      return null;
+    }
+  })();
+
+  svgAssetCache.set(path, pending);
+  return pending;
+}
+
+async function repairFigmaSvgAssets(root: HTMLElement) {
+  const elements = Array.from(root.querySelectorAll<HTMLElement>("div, span"));
+
+  await Promise.all(
+    elements.map(async (element) => {
+      const path = codiaPngPath(element);
+      if (!path) return;
+      const objectUrl = await svgObjectUrlFor(path);
+      if (objectUrl) element.style.backgroundImage = `url("${objectUrl}")`;
+    }),
+  );
+
+  const images = Array.from(root.querySelectorAll<HTMLImageElement>("img"));
+  await Promise.all(
+    images.map(async (image) => {
+      const path = image.getAttribute("src");
+      if (!path?.startsWith("/assets/codia/") || !path.endsWith(".png")) return;
+      const objectUrl = await svgObjectUrlFor(path);
+      if (objectUrl) image.src = objectUrl;
+    }),
+  );
 }
 
 function markAboutLinks(root: HTMLElement) {
@@ -46,6 +97,7 @@ function enhanceAboutPage() {
   const root = getAboutRoot();
   if (!root) return;
   markAboutLinks(root);
+  void repairFigmaSvgAssets(root);
 }
 
 function followAboutLink(element: HTMLElement) {
