@@ -1,6 +1,9 @@
 (() => {
-  const isProjectDetails = () => /^\/projects\/[^/]+\/?$/.test(window.location.pathname);
+  const projectMatch = () => window.location.pathname.match(/^\/projects\/([^/]+)\/?$/);
+  const isProjectDetails = () => Boolean(projectMatch());
   if (!isProjectDetails()) return;
+
+  const currentProjectId = () => decodeURIComponent(projectMatch()?.[1] || 'sustainable-agriculture');
 
   const go = (path) => {
     if (window.location.pathname + window.location.search === path) return;
@@ -116,6 +119,23 @@
     });
   };
 
+  const setParticipationType = (type) => {
+    const normalizedType = type === 'organization' ? 'organization' : 'individual';
+    document.documentElement.dataset.mahParticipationType = normalizedType;
+
+    document.querySelectorAll('[data-mah-participation-tab]').forEach((item) => {
+      const active = item.dataset.mahParticipationTab ===
+        (normalizedType === 'organization' ? 'مشارکت سازمانی' : 'مشارکت فردی');
+      item.style.background = active ? '#fff' : 'transparent';
+      const text = item.querySelector('span');
+      if (text) {
+        text.style.fontWeight = active ? '700' : '400';
+        text.style.color = active ? '#17324d' : '#60758a';
+      }
+      item.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+  };
+
   const bindParticipationTabs = () => {
     ['مشارکت فردی', 'مشارکت سازمانی'].forEach((label) => {
       document.querySelectorAll('span').forEach((span) => {
@@ -129,17 +149,7 @@
         const selectTab = (event) => {
           event?.preventDefault();
           event?.stopPropagation();
-          document.querySelectorAll('[data-mah-participation-tab]').forEach((item) => {
-            const active = item.dataset.mahParticipationTab === label;
-            item.style.background = active ? '#fff' : 'transparent';
-            const text = item.querySelector('span');
-            if (text) {
-              text.style.fontWeight = active ? '700' : '400';
-              text.style.color = active ? '#17324d' : '#60758a';
-            }
-          });
-          document.documentElement.dataset.mahParticipationType =
-            label === 'مشارکت سازمانی' ? 'organization' : 'individual';
+          setParticipationType(label === 'مشارکت سازمانی' ? 'organization' : 'individual');
         };
         target.addEventListener('click', selectTab);
         target.addEventListener('keydown', (event) => {
@@ -161,13 +171,20 @@
       const activate = (event) => {
         event.preventDefault();
         event.stopPropagation();
+
+        const projectId = currentProjectId();
+        const participationType = document.documentElement.dataset.mahParticipationType || 'individual';
+
+        if (participationType === 'organization') {
+          go(`/panel/company/projects/${encodeURIComponent(projectId)}/participate`);
+          return;
+        }
+
         const input = document.querySelector('input[data-mah-amount-input="1"]');
         const amount = input?.value?.trim();
-        const participationType = document.documentElement.dataset.mahParticipationType || 'individual';
-        const params = new URLSearchParams();
+        const params = new URLSearchParams({ type: 'individual' });
         if (amount) params.set('amount', amount);
-        params.set('type', participationType);
-        go(`/projects/sustainable-agriculture/participate?${params.toString()}`);
+        go(`/projects/${encodeURIComponent(projectId)}/participate?${params.toString()}`);
       };
       target.addEventListener('click', activate);
       target.addEventListener('keydown', (event) => {
@@ -179,10 +196,9 @@
   const bindProjectCta = () => {
     bindTextLink(
       'مشارکت در پروژه',
-      '/projects/sustainable-agriculture/participate',
+      `/projects/${encodeURIComponent(currentProjectId())}/participate?type=individual`,
       (target) => {
         const text = target.textContent || '';
-        // Do not bind the participation-card heading/whole card as a link.
         return !(text.includes('مشارکت فردی') && text.includes('مشارکت سازمانی'));
       },
     );
@@ -199,10 +215,14 @@
   };
 
   const start = () => {
-    document.documentElement.dataset.mahParticipationType = 'individual';
     bindAll();
+    setParticipationType('individual');
     const app = document.getElementById('app') || document.body;
-    const observer = new MutationObserver(bindAll);
+    const observer = new MutationObserver(() => {
+      bindAll();
+      const currentType = document.documentElement.dataset.mahParticipationType || 'individual';
+      setParticipationType(currentType);
+    });
     observer.observe(app, { childList: true, subtree: true });
   };
 
