@@ -34,8 +34,7 @@ button {
   outline: 0;
 }
 
-/* Auth screen content is Persian-first: keep all form copy and typed values
- * anchored to the right while preserving the centered CTA/hint styles. */
+/* Auth entry content is Persian-first and aligned to the right. */
 .main-container main > div {
   direction: rtl;
   text-align: right;
@@ -47,11 +46,19 @@ button {
   text-align: right;
 }
 
-/* In an RTL flex column, flex-end can visually land on the left side.
- * Give the title and mobile label a full-width text box so their copy is
- * unambiguously aligned to the right edge of the auth card. */
 .main-container main h1,
 .main-container main label[for="moon-login-mobile"] {
   width: 100%;
   text-align: right;
+}
+
+/* OTP is intentionally centered in Figma; keep it isolated from entry-form RTL overrides. */
+.main-container main section h1 {
+  text-align: center;
+}
+
+.main-container main section input,
+.main-container main section input::placeholder {
+  direction: ltr;
+  text-align: center;
 }
