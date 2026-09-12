@@ -101,6 +101,15 @@ function handleKeydown(event: KeyboardEvent) {
   navigate(routes[action.label]);
 }
 
+function removeMobileVerificationPrompt() {
+  if (window.location.pathname !== STEP2_PATH) return;
+
+  document.querySelectorAll<HTMLElement>(".main-container span").forEach((node) => {
+    if (normalize(node.textContent) !== "دریافت کد تأیید") return;
+    node.parentElement?.remove();
+  });
+}
+
 function applyPointerAffordance() {
   const routes = activeRoutes();
   if (!routes) return;
@@ -121,11 +130,16 @@ function applyPointerAffordance() {
     });
 }
 
+function applyPageEnhancements() {
+  removeMobileVerificationPrompt();
+  applyPointerAffordance();
+}
+
 document.addEventListener("click", handleClick);
 document.addEventListener("keydown", handleKeydown);
 
-const observer = new MutationObserver(applyPointerAffordance);
+const observer = new MutationObserver(applyPageEnhancements);
 observer.observe(document.documentElement, { childList: true, subtree: true });
-window.addEventListener("load", applyPointerAffordance);
-window.addEventListener("popstate", applyPointerAffordance);
-window.setTimeout(applyPointerAffordance, 0);
+window.addEventListener("load", applyPageEnhancements);
+window.addEventListener("popstate", applyPageEnhancements);
+window.setTimeout(applyPageEnhancements, 0);
