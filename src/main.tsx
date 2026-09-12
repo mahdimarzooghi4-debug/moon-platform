@@ -13,6 +13,7 @@ import "./companies/interactions";
 import "./companies/proposals-interaction";
 import "./about/interactions";
 import "./contact-support/interactions";
+import "./participation-track/interactions";
 import "./features/startup-registration/states/step2/interactions";
 import "./features/company-registration/interactions";
 
