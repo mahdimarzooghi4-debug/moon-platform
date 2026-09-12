@@ -51,7 +51,10 @@ export default function PublicFooter() {
       <div className="moon-shared-footer__inner">
         <div className="moon-shared-footer__grid">
           <section className="moon-footer-brand">
-            <img className="moon-footer-logo" src="/assets/codia/2u7HsAp67E.png" alt="سامانه ماه" />
+            <div className="moon-footer-logo-lockup">
+              <img className="moon-footer-logo" src="/assets/codia/2u7HsAp67E.png" alt="سامانه ماه" />
+              <span className="moon-footer-logo-tagline">مسئولیت اجتماعی هوشمند</span>
+            </div>
             <p>سامانه مشارکت در پروژه‌های اثر اجتماعی با مسیر مالی شفاف و اثر قابل‌اندازه‌گیری.</p>
           </section>
 
