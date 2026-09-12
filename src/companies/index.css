@@ -60,35 +60,41 @@ button, input, select, textarea {
   cursor: pointer;
 }
 
-/* Figma node 664:3921 — Hero Right must be allowed to shrink to its allocated
- * 720px column. The generated JSX uses flex spans here; rendering the title and
- * body copy as block text prevents their intrinsic flex width from entering the
- * 480px image column. */
-.mah-companies-page > div:nth-child(3) > div:nth-child(2) {
-  flex: 1 1 0% !important;
-  min-width: 0 !important;
-  max-width: 720px;
+/* Figma node 664:3921 — explicit hero hooks are assigned in interactions.ts so
+ * this layout does not depend on generated child positions. */
+.mah-company-hero {
+  direction: ltr !important;
 }
 
-.mah-companies-page > div:nth-child(3) > div:nth-child(2) > span:first-child {
+.mah-company-hero-copy {
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+  max-width: 720px !important;
+  direction: rtl !important;
+}
+
+.mah-company-hero-title {
   display: block !important;
   width: 640px !important;
   max-width: 100% !important;
   height: auto !important;
-  align-self: flex-end;
+  align-self: flex-end !important;
   text-align: right !important;
 }
 
-.mah-companies-page > div:nth-child(3) > div:nth-child(2) > span:nth-child(2) {
+.mah-company-hero-description {
   display: block !important;
   width: 100% !important;
   min-width: 0 !important;
   max-width: 100% !important;
   height: auto !important;
-  align-self: stretch;
+  align-self: stretch !important;
+  padding-left: 32px !important;
+  direction: rtl !important;
   text-align: right !important;
   white-space: normal !important;
-  overflow-wrap: break-word;
+  overflow-wrap: normal !important;
+  line-height: 28px !important;
 }
 
 /* Figma node 664:4030 — three equal 384×540 cards. The card row keeps its
