@@ -113,3 +113,21 @@ button {
   unicode-bidi: isolate;
   text-align: right;
 }
+
+/* Projects footer uses the same real contact address as the landing footer. */
+.mah-projects-page footer > div:first-child > div:first-child::after {
+  content: "آدرس: تهران، خیابان انقلاب، خیابان رازی، کوچه شهبازیان، پلاک ۲۲";
+  order: 4;
+  width: 100%;
+  color: #e4ebf1;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 22px;
+  direction: rtl;
+  unicode-bidi: isolate;
+  text-align: right;
+}
+
+.mah-projects-page footer > div:first-child > div:first-child > div {
+  order: 5;
+}
