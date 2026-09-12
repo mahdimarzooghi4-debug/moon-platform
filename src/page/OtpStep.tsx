@@ -131,9 +131,8 @@ export default function OtpStep({ accountType, mobile, returnTo }: Props) {
         <img src={LOGO} alt="سامانه ماه" className="h-[46px] w-[137px] object-contain" />
         <button
           type="button"
-          dir="ltr"
           onClick={editMobile}
-          className="flex cursor-pointer items-center gap-2 border-none bg-transparent text-[#4a5568]"
+          className="flex flex-row-reverse cursor-pointer items-center gap-2 border-none bg-transparent text-[#4a5568]"
         >
           <img src={BACK_ICON} alt="" className="h-4 w-4 object-contain" />
           <span dir="rtl" className="text-[14px] font-medium">بازگشت به صفحه ورود</span>
@@ -165,7 +164,7 @@ export default function OtpStep({ accountType, mobile, returnTo }: Props) {
             </button>
           </div>
 
-          <div className="flex w-full items-start justify-center gap-3" dir="rtl">
+          <div className="flex w-full flex-row-reverse items-start justify-center gap-3" dir="ltr">
             {digits.map((digit, index) => (
               <input
                 key={index}
