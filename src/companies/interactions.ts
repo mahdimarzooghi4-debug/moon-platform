@@ -103,7 +103,7 @@ function styleProjectCards(root: HTMLElement) {
   Array.from(cardRow.children).forEach((child) => {
     if (!(child instanceof HTMLElement)) return;
     child.classList.add("mah-company-project-card");
-    child.setAttribute("dir", "rtl");
+    child.removeAttribute("dir");
   });
 }
 
