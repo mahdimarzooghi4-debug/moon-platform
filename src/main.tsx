@@ -9,7 +9,6 @@ import App from "./App";
 import "./landing/contact-details.css";
 import "./landing/interactions";
 import "./startups/interactions";
-import "./features/startup-registration/interactions";
 
 document.documentElement.lang = "fa";
 document.documentElement.dir = "rtl";
