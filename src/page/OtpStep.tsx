@@ -42,8 +42,17 @@ export default function OtpStep({ accountType, mobile, returnTo }: Props) {
 
   const completed = useMemo(() => digits.every(Boolean), [digits]);
 
+  function focusInput(index: number) {
+    window.requestAnimationFrame(() => {
+      const target = inputRefs.current[index];
+      if (!target) return;
+      target.focus();
+      target.select();
+    });
+  }
+
   useEffect(() => {
-    inputRefs.current[4]?.focus();
+    focusInput(0);
   }, []);
 
   useEffect(() => {
@@ -53,34 +62,47 @@ export default function OtpStep({ accountType, mobile, returnTo }: Props) {
   }, [seconds]);
 
   function setDigit(index: number, rawValue: string) {
-    const numeric = toLatinDigits(rawValue).replace(/\D/g, "").slice(-1);
+    const numeric = toLatinDigits(rawValue).replace(/\D/g, "");
+    const digit = numeric.slice(-1);
+
     setDigits((current) => {
       const next = [...current];
-      next[index] = numeric;
+      next[index] = digit;
       return next;
     });
-    if (numeric && index > 0) inputRefs.current[index - 1]?.focus();
+
+    if (digit && index < 4) {
+      focusInput(index + 1);
+    }
   }
 
   function handleKeyDown(index: number, event: React.KeyboardEvent<HTMLInputElement>) {
-    if (event.key === "Backspace" && !digits[index] && index < 4) {
-      inputRefs.current[index + 1]?.focus();
+    if (event.key === "Backspace" && !digits[index] && index > 0) {
+      focusInput(index - 1);
+      return;
     }
-    if (event.key === "ArrowLeft" && index > 0) inputRefs.current[index - 1]?.focus();
-    if (event.key === "ArrowRight" && index < 4) inputRefs.current[index + 1]?.focus();
+    if (event.key === "ArrowLeft" && index < 4) {
+      focusInput(index + 1);
+      return;
+    }
+    if (event.key === "ArrowRight" && index > 0) {
+      focusInput(index - 1);
+    }
   }
 
   function handlePaste(event: React.ClipboardEvent<HTMLInputElement>) {
     const pasted = toLatinDigits(event.clipboardData.getData("text")).replace(/\D/g, "").slice(0, 5);
     if (!pasted) return;
+
     event.preventDefault();
     const next = ["", "", "", "", ""];
-    pasted.split("").forEach((digit, logicalIndex) => {
-      next[4 - logicalIndex] = digit;
+    pasted.split("").forEach((digit, index) => {
+      next[index] = digit;
     });
     setDigits(next);
+
     const nextEmpty = next.findIndex((digit) => !digit);
-    inputRefs.current[nextEmpty >= 0 ? nextEmpty : 0]?.focus();
+    focusInput(nextEmpty >= 0 ? nextEmpty : 4);
   }
 
   function editMobile() {
@@ -143,7 +165,7 @@ export default function OtpStep({ accountType, mobile, returnTo }: Props) {
             </button>
           </div>
 
-          <div className="flex w-full items-start justify-center gap-3" dir="ltr">
+          <div className="flex w-full items-start justify-center gap-3" dir="rtl">
             {digits.map((digit, index) => (
               <input
                 key={index}
@@ -153,15 +175,14 @@ export default function OtpStep({ accountType, mobile, returnTo }: Props) {
                 onKeyDown={(event) => handleKeyDown(index, event)}
                 onPaste={handlePaste}
                 inputMode="numeric"
-                autoComplete={index === 4 ? "one-time-code" : "off"}
-                aria-label={`رقم ${5 - index} کد تأیید`}
+                autoComplete={index === 0 ? "one-time-code" : "off"}
+                aria-label={`رقم ${index + 1} کد تأیید`}
+                style={{ textAlign: "center", direction: "ltr", padding: 0 }}
                 className={[
-                  "h-[56px] w-[52px] rounded-[12px] bg-white text-center text-[20px] font-bold text-[#1a202c] caret-[#2094e3] outline-none",
-                  document.activeElement === inputRefs.current[index]
-                    ? "border-2 border-[#2094e3]"
-                    : digit
-                      ? "border border-[#a0aec0]"
-                      : "border border-[#e4ebf1] focus:border-2 focus:border-[#2094e3]",
+                  "h-[56px] w-[52px] rounded-[12px] bg-white text-[20px] font-bold leading-[56px] text-[#1a202c] caret-[#2094e3] outline-none",
+                  digit
+                    ? "border border-[#a0aec0] focus:border-2 focus:border-[#2094e3]"
+                    : "border border-[#e4ebf1] focus:border-2 focus:border-[#2094e3]",
                 ].join(" ")}
               />
             ))}
