@@ -7,6 +7,7 @@ import "@fontsource/vazirmatn/700.css";
 import "./app/rtl.css";
 import App from "./App";
 import "./landing/contact-details.css";
+import "./landing/interactions";
 
 document.documentElement.lang = "fa";
 document.documentElement.dir = "rtl";
