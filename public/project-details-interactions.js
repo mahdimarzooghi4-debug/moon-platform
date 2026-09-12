@@ -10,11 +10,12 @@
   const clickableTarget = (node) =>
     node.closest('div[class*="rounded"]') || node.closest('div[class*="border"]') || node.parentElement || node;
 
-  const bindTextLink = (label, path) => {
+  const bindTextLink = (label, path, shouldBind) => {
     document.querySelectorAll('span').forEach((span) => {
       if (span.textContent.trim() !== label) return;
       const target = clickableTarget(span);
       if (!target) return;
+      if (typeof shouldBind === 'function' && !shouldBind(target, span)) return;
       if (target.getAttribute('data-mah-bound-path') === path) return;
       target.setAttribute('data-mah-bound-path', path);
       target.style.cursor = 'pointer';
@@ -92,7 +93,9 @@
         target.style.cursor = 'pointer';
         target.setAttribute('role', 'button');
         target.tabIndex = 0;
-        const selectAmount = () => {
+        const selectAmount = (event) => {
+          event?.preventDefault();
+          event?.stopPropagation();
           document.querySelectorAll('[data-mah-amount-choice]').forEach((item) => {
             item.style.borderColor = '#e4ebf1';
             item.style.background = 'transparent';
@@ -107,10 +110,7 @@
         };
         target.addEventListener('click', selectAmount);
         target.addEventListener('keydown', (event) => {
-          if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            selectAmount();
-          }
+          if (event.key === 'Enter' || event.key === ' ') selectAmount(event);
         });
       });
     });
@@ -126,7 +126,9 @@
         target.style.cursor = 'pointer';
         target.setAttribute('role', 'button');
         target.tabIndex = 0;
-        const selectTab = () => {
+        const selectTab = (event) => {
+          event?.preventDefault();
+          event?.stopPropagation();
           document.querySelectorAll('[data-mah-participation-tab]').forEach((item) => {
             const active = item.dataset.mahParticipationTab === label;
             item.style.background = active ? '#fff' : 'transparent';
@@ -136,13 +138,12 @@
               text.style.color = active ? '#17324d' : '#60758a';
             }
           });
+          document.documentElement.dataset.mahParticipationType =
+            label === 'مشارکت سازمانی' ? 'organization' : 'individual';
         };
         target.addEventListener('click', selectTab);
         target.addEventListener('keydown', (event) => {
-          if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            selectTab();
-          }
+          if (event.key === 'Enter' || event.key === ' ') selectTab(event);
         });
       });
     });
@@ -162,8 +163,11 @@
         event.stopPropagation();
         const input = document.querySelector('input[data-mah-amount-input="1"]');
         const amount = input?.value?.trim();
-        const suffix = amount ? `?amount=${encodeURIComponent(amount)}` : '';
-        go(`/projects/sustainable-agriculture/participate${suffix}`);
+        const participationType = document.documentElement.dataset.mahParticipationType || 'individual';
+        const params = new URLSearchParams();
+        if (amount) params.set('amount', amount);
+        params.set('type', participationType);
+        go(`/projects/sustainable-agriculture/participate?${params.toString()}`);
       };
       target.addEventListener('click', activate);
       target.addEventListener('keydown', (event) => {
@@ -173,7 +177,15 @@
   };
 
   const bindProjectCta = () => {
-    bindTextLink('مشارکت در پروژه', '/projects/sustainable-agriculture/participate');
+    bindTextLink(
+      'مشارکت در پروژه',
+      '/projects/sustainable-agriculture/participate',
+      (target) => {
+        const text = target.textContent || '';
+        // Do not bind the participation-card heading/whole card as a link.
+        return !(text.includes('مشارکت فردی') && text.includes('مشارکت سازمانی'));
+      },
+    );
   };
 
   const bindAll = () => {
@@ -187,6 +199,7 @@
   };
 
   const start = () => {
+    document.documentElement.dataset.mahParticipationType = 'individual';
     bindAll();
     const app = document.getElementById('app') || document.body;
     const observer = new MutationObserver(bindAll);
