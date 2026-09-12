@@ -99,6 +99,38 @@ function enhanceParticipationList() {
   });
 }
 
+function enhanceParticipationDetails() {
+  if (!isParticipationDetailsPage() || isParticipationListPage()) return;
+  const root = document.querySelector<HTMLElement>(".main-container");
+  if (!root) return;
+
+  const params = new URLSearchParams(window.location.search);
+  const receiptParams = new URLSearchParams();
+  const code = params.get("code");
+  const mobile = params.get("mobile");
+  if (code) receiptParams.set("code", code);
+  if (mobile) receiptParams.set("mobile", mobile);
+
+  root.querySelectorAll<HTMLElement>("span, p").forEach((element) => {
+    const label = normalize(element.textContent);
+
+    if (label === "بازگشت به صفحه اصلی") {
+      markLink(element, "/");
+      return;
+    }
+
+    if (label === "مشاهده پروژه‌ها") {
+      markLink(element, "/projects");
+      return;
+    }
+
+    if (label === "دریافت رسید مشارکت") {
+      const suffix = receiptParams.toString();
+      markLink(element, `/payment/result/receipt${suffix ? `?${suffix}` : ""}`);
+    }
+  });
+}
+
 function removeSmsUpdatesOption() {
   if (!isParticipationDetailsPage()) return;
   const root = document.querySelector<HTMLElement>(".main-container");
@@ -119,7 +151,7 @@ function activate(element: HTMLElement) {
 }
 
 document.addEventListener("click", (event) => {
-  if (!isParticipationListPage()) return;
+  if (!isParticipationTrackPage()) return;
   const target = event.target;
   if (!(target instanceof Element)) return;
   const action = target.closest<HTMLElement>("[data-mah-participation-href]");
@@ -129,7 +161,7 @@ document.addEventListener("click", (event) => {
 });
 
 document.addEventListener("keydown", (event) => {
-  if (!isParticipationListPage() || (event.key !== "Enter" && event.key !== " ")) return;
+  if (!isParticipationTrackPage() || (event.key !== "Enter" && event.key !== " ")) return;
   const target = event.target;
   if (!(target instanceof HTMLElement) || !target.dataset.mahParticipationHref) return;
   event.preventDefault();
@@ -143,6 +175,7 @@ function scheduleEnhance() {
   window.setTimeout(() => {
     scheduled = false;
     enhanceParticipationList();
+    enhanceParticipationDetails();
     removeSmsUpdatesOption();
   }, 0);
 }
