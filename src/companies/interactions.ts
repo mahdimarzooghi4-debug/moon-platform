@@ -88,7 +88,7 @@ async function repairFigmaSvgAssets(root: HTMLElement) {
   );
 }
 
-function equalizeProjectCardHeights(root: HTMLElement) {
+function styleProjectCards(root: HTMLElement) {
   const elements = Array.from(root.querySelectorAll<HTMLElement>("div"));
   const middleImage = elements.find((element) =>
     codiaPngPath(element)?.endsWith("/bZ15zUixSc.png"),
@@ -98,7 +98,13 @@ function equalizeProjectCardHeights(root: HTMLElement) {
   const cardRow = middleCard?.parentElement;
   if (!middleCard || !cardRow) return;
 
-  cardRow.style.alignItems = "stretch";
+  cardRow.classList.add("mah-company-projects-row");
+
+  Array.from(cardRow.children).forEach((child) => {
+    if (!(child instanceof HTMLElement)) return;
+    child.classList.add("mah-company-project-card");
+    child.setAttribute("dir", "rtl");
+  });
 }
 
 function markCompanyLinks(root: HTMLElement) {
@@ -120,7 +126,7 @@ function enhanceCompanyPage() {
   if (!root) return;
 
   root.classList.add("mah-companies-page");
-  equalizeProjectCardHeights(root);
+  styleProjectCards(root);
   markCompanyLinks(root);
   void repairFigmaSvgAssets(root);
 }
