@@ -46,12 +46,39 @@ html.moon-public-footer-active [class~="bg-[#111e30]"]:last-child {
   gap: 14px;
 }
 
+.moon-footer-logo-lockup {
+  position: relative;
+  width: 210px;
+  height: 70px;
+  overflow: hidden;
+  background: #111e30;
+}
+
 .moon-footer-logo {
   display: block;
   width: 210px;
   height: 70px;
   object-fit: contain;
   object-position: right center;
+}
+
+.moon-footer-logo-tagline {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  width: 210px;
+  height: 17px;
+  align-items: center;
+  justify-content: center;
+  background: #111e30;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 500;
+  line-height: 17px;
+  text-align: center;
+  white-space: nowrap;
 }
 
 .moon-footer-brand p,
