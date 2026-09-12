@@ -237,6 +237,19 @@ button {
   opacity: 1;
 }
 
+/* Organization participation is a separate authenticated company flow.
+   Hide individual-only amount controls and notes when that tab is active. */
+html[data-mah-participation-type="organization"] .main-container [class*="z-[100]"],
+html[data-mah-participation-type="organization"] .main-container [class*="z-[111]"],
+html[data-mah-participation-type="organization"] .main-container [class*="z-[121]"] {
+  display: none !important;
+}
+
+html[data-mah-participation-type="organization"] .main-container [class*="z-[75]"] {
+  height: auto !important;
+  min-height: 500px;
+}
+
 /* Similar-project cards: Figma places "هدف پروژه" on the right and amount on the left. */
 .main-container [class*="z-[418]"],
 .main-container [class*="z-[450]"],
