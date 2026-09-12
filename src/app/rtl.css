@@ -1,0 +1,43 @@
+html,
+body,
+#app {
+  direction: rtl;
+  text-align: right;
+}
+
+body {
+  margin: 0;
+  font-family: "Vazirmatn", Arial, sans-serif;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+input:not([type="email"]):not([type="tel"]),
+select,
+textarea {
+  direction: rtl;
+  text-align: right;
+}
+
+input[type="email"],
+input[type="tel"],
+[dir="ltr"] {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/* Generated screens occasionally carry a left-align utility from design export. */
+[dir="rtl"] [class~="text-left"]:not([dir="ltr"]) {
+  text-align: right;
+}
+
+/* Keep icons from shrinking or changing the baseline of RTL label rows. */
+[dir="rtl"] svg,
+[dir="rtl"] img {
+  flex-shrink: 0;
+}
