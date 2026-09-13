@@ -395,3 +395,49 @@
   left: 14px !important;
   top: 10px !important;
 }
+
+/* Main dashboard RTL structure: titles and leading columns start from the right. */
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] > [data-name="Main Content"] {
+  direction: rtl;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Top Bar"],
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="stats-header"],
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-list-header"] {
+  direction: ltr;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Top Bar"] [data-name="Page Title"],
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="stats-header"] > p,
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-list-header"] > p {
+  direction: rtl;
+  text-align: right !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Top Bar"] [data-name="Page Title"] {
+  margin-left: 0;
+  margin-right: auto;
+  align-items: flex-end !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Top Bar"] [data-name="Top Actions"] {
+  margin-right: 0;
+  margin-left: auto;
+  direction: rtl;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-table-head"],
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name^="startup-row-"] {
+  direction: ltr;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-table-head"] > *,
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name^="startup-row-"] > * {
+  direction: rtl;
+  text-align: right;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-table-head"] > *:not([data-name="number-header-cell"]),
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name^="startup-row-"] > *:not([data-name="row-number-cell"]) {
+  justify-content: flex-end !important;
+}
