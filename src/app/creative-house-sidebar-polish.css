@@ -1,7 +1,7 @@
 /* Shared creative-house sidebar polish. */
 .creative-house-dashboard > [data-name="colored-sidebar"] [data-name="brand-logo"] {
   direction: rtl !important;
-  justify-content: flex-start !important;
+  justify-content: center !important;
 }
 
 .creative-house-dashboard > [data-name="colored-sidebar"] [data-name="panel-identity"] {
