@@ -17,6 +17,7 @@ import "./panels/creative-house/dashboard-startup-overview";
 import "./panels/creative-house/startup-evaluation-detail/interactions";
 import "./panels/creative-house/project-evaluation-detail/interactions";
 import "./panels/creative-house/report-detail/interactions";
+import "./panels/creative-house/reports/pagination-interactions";
 import "./landing/contact-details.css";
 import "./landing/interactions";
 import "./startups/interactions";
