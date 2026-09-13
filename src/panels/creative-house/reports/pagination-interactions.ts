@@ -45,9 +45,9 @@ function renderPagination(root: HTMLElement) {
   setPageButtonState(pageOne, currentPage === 1);
   setPageButtonState(pageTwo, currentPage === 2);
 
-  // Requested arrow direction: left arrow = previous, right arrow = next.
-  setArrowGlyph(leftArrow, "‹");
-  setArrowGlyph(rightArrow, "›");
+  // Keep behavior unchanged; only reverse the visible arrow glyphs.
+  setArrowGlyph(leftArrow, "›");
+  setArrowGlyph(rightArrow, "‹");
   setArrowState(leftArrow, currentPage > 1, "صفحه قبل");
   setArrowState(rightArrow, currentPage < 2, "صفحه بعد");
 
