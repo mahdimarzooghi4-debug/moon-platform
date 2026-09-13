@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import {
   DEFAULT_CERTIFICATE_ISSUER,
   readCertificateIssuerSettings,
