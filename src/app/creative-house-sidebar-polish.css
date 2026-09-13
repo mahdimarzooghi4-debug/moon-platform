@@ -28,3 +28,19 @@
   width: auto !important;
   text-align: center !important;
 }
+
+/* Dashboard landing: keep the logout label exactly centered in the full button. */
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] > [data-name="colored-sidebar"] [data-name="logout-nav"] {
+  gap: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] > [data-name="colored-sidebar"] [data-name="logout-nav"] > p {
+  flex: 0 0 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
+  text-align: center !important;
+}
