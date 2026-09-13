@@ -39,6 +39,24 @@ function faNumber(value: number) {
   return new Intl.NumberFormat("fa-IR", { maximumFractionDigits: 1 }).format(value);
 }
 
+function updateProfitCycleCopy(root: HTMLElement) {
+  const cycle = root.querySelector<HTMLElement>('[data-name="active-funding-projects"]');
+  if (!cycle) return;
+
+  const directParagraphs = cycle.querySelectorAll<HTMLElement>(":scope > p");
+  setText(directParagraphs.item(0), "سود و بازگشت به منابع صندوق");
+  setText(
+    directParagraphs.item(1),
+    "سود هر دوره بر اساس نسبت ثبت‌شده همان دوره بین منابع صندوق و درآمد ماه تقسیم می‌شود.",
+  );
+
+  setText(cycle.querySelector<HTMLElement>('[data-name="active-projects-count"] p'), "نسبت هر دوره");
+
+  const headers = cycle.querySelectorAll<HTMLElement>('[data-name="eligible-header"] > p');
+  setText(headers.item(2), "بازگشت به منابع صندوق");
+  setText(headers.item(3), "درآمد ماه");
+}
+
 function applyDashboardRatio() {
   if (!window.location.pathname.startsWith(PANEL_PREFIX)) return;
   const root = document.querySelector<HTMLElement>('[data-name="fund-manager-main-dashboard"]');
@@ -59,6 +77,8 @@ function applyDashboardRatio() {
     setText(paragraphs.item(0), "سهم درآمد ماه");
     setText(paragraphs.item(2), `${faNumber(settings.incomeShare)}٪`);
   }
+
+  updateProfitCycleCopy(root);
 }
 
 applyDashboardRatio();
