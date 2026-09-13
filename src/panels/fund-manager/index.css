@@ -37,6 +37,35 @@
   flex: 0 0 224px !important;
 }
 
+/* Dashboard polish requested after matching the Figma frame. */
+[data-name="fund-manager-main-dashboard"] [data-name="Top Bar"] {
+  direction: rtl !important;
+}
+
+[data-name="fund-manager-main-dashboard"] [data-name="Page Title"] {
+  align-items: flex-end !important;
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+[data-name="fund-manager-main-dashboard"] [data-name="Page Title"] > p {
+  width: 100% !important;
+  text-align: right !important;
+}
+
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name="brand-logo"] {
+  justify-content: center !important;
+}
+
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name="brand-logo"] > div {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+[data-name="fund-manager-main-dashboard"] [data-name="Overview Metrics"] [data-name="kpi-icon-badge"] {
+  display: none !important;
+}
+
 @media (max-width: 1439px) {
   [data-name="fund-manager-main-dashboard"] {
     margin: 0 !important;
