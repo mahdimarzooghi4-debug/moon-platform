@@ -1,0 +1,175 @@
+/* Figma node 1739:2 — restore the startup-evaluations screen to its authored 1440px layout. */
+body .creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name="startup-evaluation-list"] {
+  box-shadow: none !important;
+}
+
+/* The global dashboard table rules also match startup-row-* on this internal screen.
+   Neutralize those rules here and keep the exact Figma absolute layout. */
+body .creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name^="startup-row-"] {
+  display: block !important;
+  width: 1124px !important;
+  min-width: 1124px !important;
+  padding: 0 !important;
+  direction: rtl !important;
+  overflow: hidden !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name^="startup-row-"] > * {
+  position: absolute !important;
+  min-width: 0 !important;
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+/* Action */
+body .creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name^="startup-row-"] > :nth-child(1) {
+  left: 17px !important;
+  top: 16px !important;
+  width: 104px !important;
+  height: 36px !important;
+  display: block !important;
+  transform: none !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name^="startup-row-"] > :nth-child(1) > div {
+  position: absolute !important;
+  left: 52px !important;
+  top: 18px !important;
+  width: 104px !important;
+  height: 36px !important;
+  transform: translate(-50%, -50%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: stretch !important;
+}
+
+/* Status */
+body .creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name^="startup-row-"] > :nth-child(2) {
+  left: 145px !important;
+  top: 19px !important;
+  width: 126px !important;
+  height: 30px !important;
+  display: block !important;
+  transform: none !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name^="startup-row-"] > :nth-child(2) > div {
+  position: absolute !important;
+  left: 63px !important;
+  top: 15px !important;
+  width: 126px !important;
+  height: 30px !important;
+  transform: translate(-50%, -50%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: stretch !important;
+}
+
+/* Date, domain and manager */
+body .creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name^="startup-row-"] > :nth-child(3),
+body .creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name^="startup-row-"] > :nth-child(4),
+body .creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name^="startup-row-"] > :nth-child(5) {
+  top: 34px !important;
+  height: 42px !important;
+  transform: translate(-100%, -50%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: stretch !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name^="startup-row-"] > :nth-child(3) {
+  left: 427px !important;
+  width: 136px !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name^="startup-row-"] > :nth-child(4) {
+  left: 619px !important;
+  width: 174px !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name^="startup-row-"] > :nth-child(5) {
+  left: 809px !important;
+  width: 166px !important;
+}
+
+/* Startup name and subtitle */
+body .creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name^="startup-row-"] > :nth-child(6) {
+  left: 1103px !important;
+  top: 22px !important;
+  width: 270px !important;
+  height: 26px !important;
+  transform: translate(-100%, -50%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: stretch !important;
+  padding: 0 !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name^="startup-row-"] > :nth-child(7) {
+  left: 1103px !important;
+  top: 46px !important;
+  width: 270px !important;
+  height: 22px !important;
+  transform: translate(-100%, -50%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: stretch !important;
+  padding: 0 !important;
+}
+
+/* Figma table header widths: 120 / 150 / 150 / 200 / 190 / 278. */
+body .creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name="table-header"] {
+  display: block !important;
+  padding: 0 !important;
+  direction: rtl !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name="table-header"] > div {
+  position: absolute !important;
+  top: 22px !important;
+  height: 44px !important;
+  transform: translate(-100%, -50%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: stretch !important;
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name="table-header"] > :nth-child(1) { left: 138px !important; width: 120px !important; }
+body .creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name="table-header"] > :nth-child(2) { left: 288px !important; width: 150px !important; }
+body .creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name="table-header"] > :nth-child(3) { left: 438px !important; width: 150px !important; }
+body .creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name="table-header"] > :nth-child(4) { left: 638px !important; width: 200px !important; }
+body .creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name="table-header"] > :nth-child(5) { left: 828px !important; width: 190px !important; }
+body .creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name="table-header"] > :nth-child(6) { left: 1106px !important; width: 278px !important; }
+
+/* The five top filter chips are absolute in Figma; keep them out of the row status-chip override. */
+body .creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name="startup-evaluation-list"] > [data-name="status-chip"] {
+  position: absolute !important;
+}
+
+/* Search box as authored in Figma. */
+body .creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name="search-box"] {
+  display: block !important;
+  padding: 0 !important;
+  text-align: right !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name="search-box"] > div {
+  position: absolute !important;
+  left: 273px !important;
+  top: 18px !important;
+  width: 260px !important;
+  height: 38px !important;
+  transform: translate(-100%, -50%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: stretch !important;
+}
