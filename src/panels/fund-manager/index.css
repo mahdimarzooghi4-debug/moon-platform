@@ -45,6 +45,93 @@
   margin-right: auto !important;
 }
 
+/* Shared sidebar polish for the dashboard and all fund-manager tabs. */
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name="brand-logo"],
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name="brand-logo"] {
+  justify-content: center !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name="brand-logo"] > div,
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name="brand-logo"] > div {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name="brand-logo"] img,
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name="brand-logo"] img {
+  left: 0 !important;
+  top: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+}
+
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name$="-nav"] > p,
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name$="-nav"] > p {
+  flex: 1 1 auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+}
+
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name$="-icon"],
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name$="-icon"] {
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  flex: 0 0 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+}
+
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name$="-icon"] > [data-name="Frame"],
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name$="-icon"] > [data-name="Frame"] {
+  position: relative !important;
+  inset: auto !important;
+  left: auto !important;
+  top: auto !important;
+  width: 18px !important;
+  height: 18px !important;
+  flex: 0 0 18px !important;
+}
+
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name$="-icon"] img,
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name$="-icon"] img {
+  display: block !important;
+  max-width: 18px !important;
+  max-height: 18px !important;
+  object-fit: contain !important;
+}
+
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name="logout-nav"],
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name="logout-nav"] {
+  position: relative !important;
+  justify-content: center !important;
+  gap: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  text-align: center !important;
+}
+
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name="logout-nav"] > p,
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name="logout-nav"] > p {
+  flex: 0 0 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
+  text-align: center !important;
+}
+
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name="logout-nav"] [data-name="logout-icon"],
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name="logout-nav"] [data-name="logout-icon"] {
+  position: absolute !important;
+  right: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
+
 /* The standalone funding-flow control was removed from the product flow. */
 .fund-manager-panel > [data-name="colored-sidebar"] [data-name="funding-flow-control-nav"] {
   display: none !important;
