@@ -22,6 +22,7 @@ import "./panels/creative-house/project-evaluation-detail/interactions";
 import "./panels/creative-house/report-detail/interactions";
 import "./panels/creative-house/reports/pagination-interactions";
 import "./panels/creative-house/milestone-evaluation-detail/interactions";
+import "./app/creative-house-release-flow";
 import "./panels/fund-manager/interactions";
 import "./panels/fund-manager/list-interactions";
 import "./panels/fund-manager/financials/settings-sync";
