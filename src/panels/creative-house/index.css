@@ -1,15 +1,46 @@
 .creative-house-dashboard {
-  min-width: 1200px;
-  min-height: 900px;
-  font-family: "Vazirmatn", sans-serif;
+  width: 100%;
+  min-width: 0;
+  min-height: 100vh;
+  height: auto;
+  overflow-x: hidden;
+  font-family: "Vazirmatn", sans-serif !important;
   direction: rtl;
   flex-direction: row-reverse;
   text-align: right;
 }
 
+.creative-house-dashboard,
+.creative-house-dashboard * {
+  font-family: "Vazirmatn", sans-serif !important;
+}
+
+.creative-house-dashboard *,
+.creative-house-dashboard *::before,
+.creative-house-dashboard *::after {
+  box-sizing: border-box;
+}
+
 .creative-house-dashboard > [data-name="Main Content"] {
   direction: rtl;
   text-align: right;
+  flex: 1 1 0 !important;
+  width: auto !important;
+  min-width: 0;
+  max-width: none;
+  height: auto !important;
+  min-height: 100vh;
+  align-items: stretch !important;
+}
+
+.creative-house-dashboard > [data-name="colored-sidebar"] {
+  flex: 0 0 224px;
+  width: 224px !important;
+  min-height: 100vh;
+  height: auto !important;
+  align-self: flex-start;
+  position: sticky;
+  top: 0;
 }
 
 .creative-house-dashboard [dir="auto"] {
@@ -17,8 +48,230 @@
   unicode-bidi: plaintext;
 }
 
-.creative-house-dashboard *,
-.creative-house-dashboard *::before,
-.creative-house-dashboard *::after {
-  box-sizing: border-box;
+.creative-house-dashboard > [data-name="Main Content"] > [data-name="Top Bar"],
+.creative-house-dashboard > [data-name="Main Content"] > [data-name="Overview Metrics"],
+.creative-house-dashboard > [data-name="Main Content"] > [data-name="evaluation-stats-overview"],
+.creative-house-dashboard > [data-name="Main Content"] > [data-name="startup-list-section"] {
+  width: 100% !important;
+  max-width: 100%;
+}
+
+.creative-house-dashboard [data-name="Overview Metrics"] {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  height: auto !important;
+}
+
+.creative-house-dashboard [data-name="Overview Metrics"] > * {
+  width: auto !important;
+  min-width: 0;
+}
+
+.creative-house-dashboard [data-name="Overview Metrics"] [data-name="value"],
+.creative-house-dashboard [data-name="Overview Metrics"] [data-name="accent"] {
+  width: 100% !important;
+  min-width: 0;
+}
+
+.creative-house-dashboard [data-name="evaluation-stats-overview"] {
+  height: auto !important;
+  align-items: stretch !important;
+}
+
+.creative-house-dashboard [data-name="stats-header"],
+.creative-house-dashboard [data-name="stats-body"],
+.creative-house-dashboard [data-name="stats-summary-strip"] {
+  width: 100% !important;
+}
+
+.creative-house-dashboard [data-name="stats-body"] {
+  display: grid !important;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(0, 2fr);
+  height: auto !important;
+  overflow: visible !important;
+}
+
+.creative-house-dashboard [data-name="selected-impact-stats"],
+.creative-house-dashboard [data-name="featured-project-funding"] {
+  width: auto !important;
+  min-width: 0;
+}
+
+.creative-house-dashboard [data-name="selected-impact-stats"] > p,
+.creative-house-dashboard [data-name="featured-project-funding"] > p,
+.creative-house-dashboard [data-name="impact-stat-row"],
+.creative-house-dashboard [data-name="funding-row"] {
+  width: 100% !important;
+}
+
+.creative-house-dashboard [data-name="impact-stat-row"] {
+  display: grid !important;
+  grid-template-columns: 80px minmax(72px, 90px) minmax(0, 1fr);
+  gap: 8px;
+}
+
+.creative-house-dashboard [data-name="impact-stat-row"] > * {
+  width: auto !important;
+  min-width: 0;
+}
+
+.creative-house-dashboard [data-name="funding-row"] {
+  display: grid !important;
+  grid-template-columns: 48px minmax(100px, 1fr) minmax(84px, 0.42fr) minmax(110px, 0.62fr);
+  gap: 12px;
+}
+
+.creative-house-dashboard [data-name="funding-row"] > * {
+  width: auto !important;
+  min-width: 0;
+}
+
+.creative-house-dashboard [data-name="funding-row"] [data-name="progress-track"] {
+  width: 100% !important;
+}
+
+.creative-house-dashboard [data-name="stats-summary-strip"] {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  height: auto !important;
+  overflow: visible !important;
+}
+
+.creative-house-dashboard [data-name="stats-summary-strip"] > * {
+  width: auto !important;
+  min-width: 0;
+}
+
+.creative-house-dashboard [data-name="stats-summary-strip"] > * > p {
+  width: 100% !important;
+}
+
+.creative-house-dashboard [data-name="startup-list-section"],
+.creative-house-dashboard [data-name="startup-list"] {
+  width: 100% !important;
+  min-width: 0;
+}
+
+.creative-house-dashboard [data-name="startup-list-header"],
+.creative-house-dashboard [data-name="startup-table-head"],
+.creative-house-dashboard [data-name^="startup-row-"],
+.creative-house-dashboard [data-name="startup-pagination-footer"] {
+  width: 100% !important;
+}
+
+.creative-house-dashboard [data-name="startup-table-head"],
+.creative-house-dashboard [data-name^="startup-row-"] {
+  display: grid !important;
+  grid-template-columns: minmax(108px, 1.7fr) minmax(130px, 2.8fr) minmax(112px, 2.4fr) minmax(160px, 3.8fr) 58px;
+}
+
+.creative-house-dashboard [data-name="startup-table-head"] > *,
+.creative-house-dashboard [data-name^="startup-row-"] > * {
+  width: auto !important;
+  min-width: 0;
+}
+
+@media (max-width: 1100px) {
+  .creative-house-dashboard > [data-name="Main Content"] {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+
+  .creative-house-dashboard [data-name="Overview Metrics"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .creative-house-dashboard [data-name="stats-body"] {
+    grid-template-columns: 1fr;
+  }
+
+  .creative-house-dashboard [data-name="selected-impact-stats"],
+  .creative-house-dashboard [data-name="featured-project-funding"] {
+    height: auto !important;
+    min-height: 214px;
+  }
+
+  .creative-house-dashboard [data-name="stats-summary-strip"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .creative-house-dashboard {
+    flex-direction: column !important;
+    overflow-x: hidden;
+  }
+
+  .creative-house-dashboard > [data-name="colored-sidebar"] {
+    order: -1;
+    position: static;
+    width: 100% !important;
+    min-height: 0;
+    height: auto !important;
+    flex: 0 0 auto;
+    align-self: stretch;
+    align-items: stretch !important;
+  }
+
+  .creative-house-dashboard > [data-name="colored-sidebar"] > * {
+    width: 100% !important;
+    max-width: 100%;
+  }
+
+  .creative-house-dashboard > [data-name="Main Content"] {
+    width: 100% !important;
+    min-height: 0;
+  }
+
+  .creative-house-dashboard [data-name="Top Bar"] {
+    height: auto !important;
+    min-height: 54px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .creative-house-dashboard [data-name="Top Bar"] > * {
+    max-width: 100%;
+  }
+
+  .creative-house-dashboard [data-name="startup-list"] {
+    overflow-x: auto !important;
+  }
+
+  .creative-house-dashboard [data-name="startup-table-head"],
+  .creative-house-dashboard [data-name^="startup-row-"],
+  .creative-house-dashboard [data-name="startup-pagination-footer"] {
+    min-width: 760px;
+  }
+}
+
+@media (max-width: 640px) {
+  .creative-house-dashboard > [data-name="Main Content"] {
+    padding: 16px 12px !important;
+  }
+
+  .creative-house-dashboard [data-name="Overview Metrics"],
+  .creative-house-dashboard [data-name="stats-summary-strip"] {
+    grid-template-columns: 1fr;
+  }
+
+  .creative-house-dashboard [data-name="Top Bar"] [data-name="Page Title"] {
+    width: 100% !important;
+  }
+
+  .creative-house-dashboard [data-name="Top Bar"] [data-name="Top Actions"] {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .creative-house-dashboard [data-name="funding-row"] {
+    grid-template-columns: 42px minmax(90px, 1fr);
+    height: auto !important;
+    row-gap: 8px;
+  }
+
+  .creative-house-dashboard [data-name="funding-row"] > p:nth-of-type(2),
+  .creative-house-dashboard [data-name="funding-row"] > p:nth-of-type(3) {
+    grid-column: span 1;
+  }
 }
