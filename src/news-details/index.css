@@ -72,3 +72,9 @@ textarea {
 .main-container:has(> :nth-child(2) [class*="w-[850px]"]) > :nth-child(4) > * {
   direction: rtl;
 }
+
+/* Product decision: remove the article utility actions (report issue, save,
+ * share) from the news detail hero. */
+.main-container:has(> :nth-child(2) [class*="w-[850px]"]) > :nth-child(2) [class*="w-[381px]"] {
+  display: none !important;
+}
