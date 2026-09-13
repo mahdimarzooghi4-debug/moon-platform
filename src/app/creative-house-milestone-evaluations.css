@@ -39,3 +39,21 @@ body .creative-house-dashboard[data-name="ayeneh-milestone-evaluations"] [data-n
 body .creative-house-dashboard[data-name="ayeneh-milestone-evaluations"] [data-name^="milestone-stat-"] > [data-name="status-accent"] {
   display: none !important;
 }
+
+/* Milestone evaluation detail: override the shared 900px internal-screen clamp so the full 1900px design can scroll. */
+body .creative-house-dashboard[data-name="ayeneh-milestone-evaluation-detail"] {
+  height: 1900px !important;
+  min-height: 1900px !important;
+  overflow: visible !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-milestone-evaluation-detail"] > [data-name="Main Content"] {
+  height: 1900px !important;
+  min-height: 1900px !important;
+  overflow: visible !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-milestone-evaluation-detail"] > [data-name="colored-sidebar"] {
+  height: 1900px !important;
+  min-height: 1900px !important;
+}

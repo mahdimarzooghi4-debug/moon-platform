@@ -67,8 +67,12 @@ function applyActionHrefs(root: ParentNode = document) {
 
   root
     .querySelectorAll<HTMLAnchorElement>(MILESTONE_EVALUATION_ACTION_SELECTOR)
-    .forEach((anchor) => {
+    .forEach((anchor, index) => {
       anchor.setAttribute("href", MILESTONE_EVALUATION_DETAIL_ROUTE);
+      if (index === 1) {
+        const label = anchor.querySelector("p");
+        if (label) label.textContent = "مشاهده";
+      }
     });
 }
 
