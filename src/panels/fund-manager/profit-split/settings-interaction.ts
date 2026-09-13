@@ -121,7 +121,7 @@ function ensureSettingsButton(root: HTMLElement, settings: SplitSettings) {
     });
     header.appendChild(button);
   }
-  setText(button, `تنظیم نسبت · ${ratioLabel(settings)}`);
+  setText(button, "تنظیم نسبت");
 }
 
 function updateProfitSplitPage(settings: SplitSettings) {
