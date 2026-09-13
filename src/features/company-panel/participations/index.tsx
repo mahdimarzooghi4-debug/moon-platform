@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { CompanySidebar } from "../components/CompanySidebar";
 import "../index.css";
@@ -13,6 +13,8 @@ type Participation = {
   certificate: string;
 };
 
+const PAGE_SIZE = 5;
+
 const participations: Participation[] = [
   { id: "MAH-C-1405-0061", project: "سلامت خانواده", amount: "۵۰٬۰۰۰٬۰۰۰ تومان", payment: "پرداخت موفق", projectStatus: "در حال اجرا", certificate: "در انتظار بررسی" },
 ];
@@ -21,6 +23,7 @@ export default function CompanyOrganizationalParticipations() {
   const [query, setQuery] = useState("");
   const [paymentFilter, setPaymentFilter] = useState("همه");
   const [projectFilter, setProjectFilter] = useState("همه");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const rows = useMemo(() => participations.filter((item) => {
     const q = query.trim();
@@ -29,6 +32,20 @@ export default function CompanyOrganizationalParticipations() {
     const matchesProject = projectFilter === "همه" || item.projectStatus === projectFilter;
     return matchesQuery && matchesPayment && matchesProject;
   }), [query, paymentFilter, projectFilter]);
+
+  const totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+  const visibleRows = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return rows.slice(start, start + PAGE_SIZE);
+  }, [rows, currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [query, paymentFilter, projectFilter]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) setCurrentPage(totalPages);
+  }, [currentPage, totalPages]);
 
   return (
     <div className="company-panel-shell" data-node-id="1897:2">
@@ -55,7 +72,7 @@ export default function CompanyOrganizationalParticipations() {
           <div className="company-participations-heading"><div><h2>فهرست مشارکت‌های سازمانی</h2><p>ساختار پیگیری مشارکت‌ها در پنل شرکت</p></div></div>
           <div className="company-participation-table-header"><span>پروژه</span><span>مبلغ مشارکت</span><span>وضعیت پرداخت</span><span>وضعیت پروژه</span><span>گواهی ماده ۱۷۲</span><span>اقدام</span></div>
           <div className="company-participation-table-body">
-            {rows.map((item) => (
+            {visibleRows.map((item) => (
               <article className="company-participation-table-row" key={item.id}>
                 <div><strong>{item.project}</strong><small>پیگیری پرداخت، پیشرفت و گزارش اثر از همین مشارکت</small></div>
                 <b>{item.amount}</b>
@@ -67,7 +84,17 @@ export default function CompanyOrganizationalParticipations() {
             ))}
             {!rows.length && <div className="company-participations-empty">مشارکتی با فیلترهای فعلی پیدا نشد.</div>}
           </div>
-          <footer className="company-participations-footer"><span className="company-participations-count">{rows.length.toLocaleString("fa-IR")} مشارکت</span><div><b>۱</b><span>صفحه ۱ از ۱</span></div></footer>
+          <footer className="company-participations-footer">
+            <span className="company-participations-count">{rows.length.toLocaleString("fa-IR")} مشارکت</span>
+            <div className="company-participations-pagination">
+              <button type="button" disabled={currentPage === 1} onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}>قبلی</button>
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                <button className={page === currentPage ? "is-active" : ""} type="button" key={page} onClick={() => setCurrentPage(page)}>{page.toLocaleString("fa-IR")}</button>
+              ))}
+              <button type="button" disabled={currentPage === totalPages} onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}>بعدی</button>
+              <span>صفحه {currentPage.toLocaleString("fa-IR")} از {totalPages.toLocaleString("fa-IR")}</span>
+            </div>
+          </footer>
         </section>
       </main>
       <CompanySidebar active="participations" />
