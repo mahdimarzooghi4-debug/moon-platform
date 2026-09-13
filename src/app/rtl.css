@@ -233,12 +233,12 @@ input[type="tel"],
   align-items: stretch !important;
 }
 
-/* Main dashboard startup list: keep columns grouped from the row number on the right. */
+/* Main dashboard startup list: keep the RTL order but distribute columns across the full box. */
 .creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-table-head"],
 .creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name^="startup-row-"] {
   direction: ltr !important;
-  grid-template-columns: 160px 190px 180px 320px 58px !important;
-  justify-content: end !important;
+  grid-template-columns: minmax(130px, 1.4fr) minmax(145px, 1.7fr) minmax(140px, 1.5fr) minmax(240px, 2.6fr) 58px !important;
+  justify-content: stretch !important;
 }
 
 .creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-table-head"] > *,
