@@ -1,0 +1,557 @@
+.fund-financials-page {
+  background: #f5f8fb;
+  color: #17324d;
+}
+
+.fund-financials-main {
+  width: 1216px;
+  height: 900px;
+  padding: 22px 28px 28px;
+  overflow-y: auto;
+  background: #f5f8fb;
+}
+
+.fund-financials-header {
+  width: 1160px;
+  min-height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+
+.fund-financials-heading {
+  text-align: right;
+}
+
+.fund-financials-heading h1,
+.fund-financials-heading p,
+.fund-financials-section-title h2,
+.fund-financials-section-title p {
+  margin: 0;
+}
+
+.fund-financials-heading h1 {
+  font-size: 23px;
+  line-height: 32px;
+  font-weight: 700;
+}
+
+.fund-financials-heading p {
+  margin-top: 4px;
+  color: #60758a;
+  font-size: 11px;
+  line-height: 20px;
+}
+
+.fund-financials-header-actions {
+  display: flex;
+  gap: 10px;
+  direction: ltr;
+}
+
+.fund-financials-header-actions button {
+  height: 40px;
+  border-radius: 9px;
+  padding: 0 18px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.fund-financials-primary {
+  min-width: 150px;
+  border: 1px solid #2094e3;
+  background: #2094e3;
+  color: #fff;
+}
+
+.fund-financials-secondary {
+  min-width: 110px;
+  border: 1px solid #2094e3;
+  background: #fff;
+  color: #2094e3;
+}
+
+.fund-financials-kpis {
+  width: 1160px;
+  display: grid;
+  grid-template-columns: repeat(4, 278px);
+  gap: 16px;
+  margin-bottom: 16px;
+  direction: ltr;
+}
+
+.fund-financials-kpis article {
+  min-height: 100px;
+  padding: 13px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  border: 1px solid #dbe5f0;
+  border-radius: 12px;
+  background: #fff;
+  direction: rtl;
+  text-align: right;
+}
+
+.fund-financials-kpis span {
+  width: 100%;
+  color: #60758a;
+  font-size: 10px;
+  line-height: 18px;
+}
+
+.fund-financials-kpis strong {
+  width: 100%;
+  margin-top: 4px;
+  color: #17324d;
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: 700;
+}
+
+.fund-financials-kpis small {
+  width: 100%;
+  margin-top: auto;
+  color: #60758a;
+  font-size: 9px;
+  line-height: 18px;
+}
+
+.fund-financials-section {
+  width: 1160px;
+  margin-bottom: 16px;
+  padding: 16px 18px 18px;
+  border: 1px solid #dbe5f0;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.fund-financials-section-title {
+  min-height: 48px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  text-align: right;
+}
+
+.fund-financials-section-title h2 {
+  font-size: 17px;
+  line-height: 28px;
+  font-weight: 700;
+}
+
+.fund-financials-section-title p {
+  color: #60758a;
+  font-size: 10px;
+  line-height: 18px;
+}
+
+.fund-financials-section-title > span {
+  min-width: 88px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: #e8f5fc;
+  color: #2094e3;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.fund-financials-profit-head,
+.fund-financials-profit-row {
+  display: grid;
+  grid-template-columns: 1.45fr 1fr 1fr 1fr .9fr .9fr;
+  gap: 8px;
+  align-items: center;
+  text-align: center;
+}
+
+.fund-financials-profit-head {
+  min-height: 38px;
+  padding: 0 12px;
+  border-radius: 8px;
+  background: #f5f9fd;
+  color: #60758a;
+  font-size: 10px;
+}
+
+.fund-financials-profit-list {
+  max-height: 236px;
+  padding-top: 8px;
+  overflow-y: auto;
+}
+
+.fund-financials-profit-row {
+  min-height: 60px;
+  padding: 7px 12px;
+  margin-bottom: 7px;
+  border: 1px solid #e4ebf1;
+  border-radius: 9px;
+  color: #17324d;
+  font-size: 10px;
+  background: #fff;
+}
+
+.fund-financials-profit-row:nth-child(even) {
+  background: #f9fbfd;
+}
+
+.fund-financials-primary-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: right;
+}
+
+.fund-financials-primary-cell strong {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.fund-financials-primary-cell small {
+  color: #60758a;
+  font-size: 9px;
+  font-weight: 400;
+}
+
+.fund-financials-events-section {
+  margin-bottom: 0;
+}
+
+.fund-financials-events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.fund-financials-event {
+  min-height: 58px;
+  padding: 8px 12px;
+  display: grid;
+  grid-template-columns: 1.7fr .7fr 1fr .8fr .9fr;
+  gap: 8px;
+  align-items: center;
+  border: 1px solid #e4ebf1;
+  border-radius: 9px;
+  font-size: 10px;
+  text-align: center;
+}
+
+.fund-financials-event-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: right;
+}
+
+.fund-financials-event-main strong {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.fund-financials-event-main small {
+  color: #60758a;
+  font-size: 9px;
+}
+
+.fund-financials-event-type {
+  min-width: 76px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  border-radius: 13px;
+  background: #e8faf0;
+  color: #149e57;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.fund-financials-event-type[data-type="payment"] {
+  background: #fff3ed;
+  color: #d9592e;
+}
+
+.fund-financials-event-amount {
+  color: #149e57;
+  font-weight: 700;
+}
+
+.fund-financials-event-amount[data-negative="true"] {
+  color: #d9592e;
+}
+
+.fund-financials-sidebar {
+  width: 224px;
+  height: 900px;
+  padding: 20px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  background: #17324d;
+}
+
+.fund-financials-logo {
+  width: 192px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.fund-financials-logo img {
+  width: 118px;
+  height: 42px;
+  object-fit: contain;
+}
+
+.fund-financials-profile {
+  width: 192px;
+  min-height: 58px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  color: #fff;
+  text-align: center;
+}
+
+.fund-financials-profile strong {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.fund-financials-profile small {
+  color: #d8e7f3;
+  font-size: 9px;
+}
+
+.fund-financials-nav {
+  width: 192px;
+  height: 38px;
+  flex: 0 0 38px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #edf5fc;
+  font-family: inherit;
+  font-size: 12px;
+  text-align: right;
+  cursor: pointer;
+}
+
+.fund-financials-nav[data-active="true"],
+.fund-financials-nav:hover {
+  background: #2094e3;
+  color: #fff;
+}
+
+.fund-financials-nav span {
+  width: 142px;
+}
+
+.fund-financials-nav img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.fund-financials-sidebar-spacer {
+  flex: 1 1 auto;
+}
+
+.fund-financials-logout {
+  margin-top: auto;
+}
+
+.fund-financials-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(16, 38, 59, .46);
+  direction: rtl;
+}
+
+.fund-financials-modal {
+  width: 620px;
+  padding: 22px;
+  border: 1px solid #dbe5f0;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 18px 48px rgba(23, 50, 77, .2);
+  color: #17324d;
+}
+
+.fund-financials-modal h2,
+.fund-financials-modal > p {
+  margin: 0;
+}
+
+.fund-financials-modal h2 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.fund-financials-modal > p {
+  margin-top: 6px;
+  margin-bottom: 16px;
+  color: #60758a;
+  font-size: 10px;
+  line-height: 1.9;
+}
+
+.fund-financials-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.fund-financials-form-grid label,
+.fund-financials-ratio-fields label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #17324d;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.fund-financials-form-grid input,
+.fund-financials-form-grid textarea,
+.fund-financials-ratio-fields input {
+  width: 100%;
+  border: 1px solid #dbe5f0;
+  border-radius: 9px;
+  background: #f8fbfe;
+  color: #17324d;
+  font-family: inherit;
+  font-size: 11px;
+  outline: none;
+}
+
+.fund-financials-form-grid input {
+  height: 40px;
+  padding: 0 11px;
+}
+
+.fund-financials-form-grid input[type="number"] {
+  direction: ltr;
+  text-align: center;
+}
+
+.fund-financials-form-grid input[readonly] {
+  color: #2094e3;
+  background: #edf7fe;
+}
+
+.fund-financials-form-grid textarea {
+  min-height: 68px;
+  padding: 10px 11px;
+  resize: vertical;
+}
+
+.fund-financials-wide {
+  grid-column: 1 / -1;
+}
+
+.fund-financials-error {
+  margin-top: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #fff3ed;
+  color: #d9592e;
+  font-size: 10px;
+}
+
+.fund-financials-modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.fund-financials-modal-actions button {
+  height: 40px;
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.fund-financials-modal-cancel {
+  flex: 0 0 110px;
+  border: 1px solid #dbe5f0;
+  background: #fff;
+  color: #60758a;
+}
+
+.fund-financials-modal-save {
+  flex: 1 1 auto;
+  border: 1px solid #2094e3;
+  background: #2094e3;
+  color: #fff;
+}
+
+.fund-financials-ratio-modal {
+  width: 470px;
+}
+
+.fund-financials-ratio-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.fund-financials-ratio-fields label > div {
+  position: relative;
+}
+
+.fund-financials-ratio-fields input {
+  height: 42px;
+  padding: 0 34px 0 12px;
+  direction: ltr;
+  text-align: center;
+}
+
+.fund-financials-ratio-fields b {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #60758a;
+  font-size: 11px;
+}
+
+.fund-financials-ratio-total {
+  margin-top: 14px;
+  padding: 9px 11px;
+  border-radius: 9px;
+  background: #e8faf0;
+  color: #149e57;
+  font-size: 10px;
+  text-align: center;
+}
