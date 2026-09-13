@@ -22,7 +22,161 @@
   max-width: 224px !important;
   height: 900px !important;
   flex: 0 0 224px !important;
+  padding: 20px 16px 18px !important;
+  gap: 10px !important;
+  align-items: flex-end !important;
+  background: #17324d !important;
   direction: rtl !important;
   display: flex !important;
   visibility: visible !important;
+}
+
+/* Keep the financial center sidebar visually identical to the generated
+   fund-manager sidebar used by dashboard/resources/investments. */
+.fund-financials-sidebar .fund-financials-logo {
+  width: 192px !important;
+  height: 56px !important;
+  min-height: 56px !important;
+  flex: 0 0 56px !important;
+  margin: 0 !important;
+  padding: 8px 10px !important;
+  border-radius: 12px !important;
+  background: #fff !important;
+  overflow: hidden !important;
+}
+
+.fund-financials-sidebar .fund-financials-logo img {
+  width: 118px !important;
+  height: 40px !important;
+  object-fit: contain !important;
+}
+
+.fund-financials-sidebar .fund-financials-profile {
+  width: 192px !important;
+  height: 64px !important;
+  min-height: 64px !important;
+  flex: 0 0 64px !important;
+  padding: 7px 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  color: #fff !important;
+  overflow: hidden !important;
+}
+
+.fund-financials-sidebar .fund-financials-profile strong {
+  width: 176px !important;
+  height: 39px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #fff !important;
+  font-size: 0 !important;
+  font-weight: 700 !important;
+  line-height: normal !important;
+  text-align: center !important;
+}
+
+.fund-financials-sidebar .fund-financials-profile strong::after {
+  content: "مدیر صندوق ماه";
+  font-size: 13px !important;
+}
+
+.fund-financials-sidebar .fund-financials-profile small {
+  display: none !important;
+}
+
+.fund-financials-sidebar .fund-financials-nav {
+  width: 192px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  flex: 0 0 38px !important;
+  padding: 0 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 10px !important;
+  border: 0 !important;
+  border-radius: 9px !important;
+  background: transparent !important;
+  color: #fff !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  line-height: normal !important;
+  text-align: right !important;
+  overflow: hidden !important;
+}
+
+.fund-financials-sidebar .fund-financials-nav > span {
+  width: 142px !important;
+  flex: 0 0 142px !important;
+  text-align: right !important;
+}
+
+.fund-financials-sidebar .fund-financials-nav > img {
+  width: 18px !important;
+  height: 18px !important;
+  flex: 0 0 18px !important;
+  object-fit: contain !important;
+}
+
+.fund-financials-sidebar .fund-financials-nav[data-active="true"] {
+  background: #2094e3 !important;
+  color: #fff !important;
+}
+
+/* The same revenues-nav item on the generated pages uses the percentage mark. */
+.fund-financials-sidebar [data-name="revenues-nav"] > img {
+  display: none !important;
+}
+
+.fund-financials-sidebar [data-name="revenues-nav"]::after {
+  content: "٪";
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 18px;
+}
+
+.fund-financials-sidebar .fund-financials-sidebar-spacer {
+  width: 192px !important;
+  min-height: 1px !important;
+  flex: 1 1 auto !important;
+}
+
+.fund-financials-sidebar .fund-financials-logout {
+  margin-top: 0 !important;
+  position: relative !important;
+  background: #fff !important;
+  color: #17324d !important;
+  opacity: .96 !important;
+  font-weight: 500 !important;
+  justify-content: center !important;
+  gap: 0 !important;
+}
+
+.fund-financials-sidebar .fund-financials-logout > span {
+  width: 100% !important;
+  flex: 0 0 100% !important;
+  color: #17324d !important;
+  font-size: 0 !important;
+  text-align: center !important;
+}
+
+.fund-financials-sidebar .fund-financials-logout > span::after {
+  content: "خروج از سیستم";
+  font-size: 12px !important;
+}
+
+.fund-financials-sidebar .fund-financials-logout > img {
+  position: absolute !important;
+  right: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
 }
