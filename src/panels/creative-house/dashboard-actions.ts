@@ -6,6 +6,8 @@ const PROJECT_EVALUATION_ACTION_SELECTOR =
   '.creative-house-dashboard[data-name="ayeneh-project-evaluations"] [data-name="action-button"]';
 const REPORT_ACTION_SELECTOR =
   '.creative-house-dashboard[data-name="ayeneh-reports"] a[data-name^="report-row-"]';
+const EVALUATION_HISTORY_ACTION_SELECTOR =
+  '.creative-house-dashboard[data-name="ayeneh-evaluation-history"] a[data-name^="report-row-"]';
 
 const DASHBOARD_ACTION_ROUTES = new Map<string, string>([
   ["گزارش‌های آماری", "/panel/creative-house/reports"],
@@ -73,6 +75,12 @@ function applyActionHrefs(root: ParentNode = document) {
     .forEach((anchor) => {
       setHrefIfNeeded(anchor, REPORT_DETAIL_ROUTE);
     });
+
+  root
+    .querySelectorAll<HTMLAnchorElement>(EVALUATION_HISTORY_ACTION_SELECTOR)
+    .forEach((anchor) => {
+      setHrefIfNeeded(anchor, REPORT_DETAIL_ROUTE);
+    });
 }
 
 function navigateWithinApp(route: string) {
@@ -94,6 +102,15 @@ document.addEventListener("click", (event) => {
 
   const target = event.target;
   if (!(target instanceof Element)) return;
+
+  const historyAction = target.closest<HTMLAnchorElement>(
+    EVALUATION_HISTORY_ACTION_SELECTOR,
+  );
+  if (historyAction) {
+    event.preventDefault();
+    navigateWithinApp(REPORT_DETAIL_ROUTE);
+    return;
+  }
 
   const reportAction = target.closest<HTMLAnchorElement>(REPORT_ACTION_SELECTOR);
   if (reportAction) {
