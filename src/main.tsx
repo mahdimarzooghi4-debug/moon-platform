@@ -24,7 +24,6 @@ import "./panels/creative-house/reports/pagination-interactions";
 import "./panels/creative-house/milestone-evaluation-detail/interactions";
 import "./panels/fund-manager/interactions";
 import "./panels/fund-manager/list-interactions";
-import "./panels/fund-manager/funding-flow-control/save-interaction";
 import "./landing/contact-details.css";
 import "./landing/interactions";
 import "./startups/interactions";
