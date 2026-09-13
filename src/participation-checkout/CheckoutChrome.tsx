@@ -53,8 +53,8 @@ export function CheckoutFooter({ navigateTo }: { navigateTo: (path: string) => v
           <FooterButton onClick={() => navigateTo("/projects")}>پروژه‌ها</FooterButton>
           <FooterButton onClick={() => navigateTo("/companies")}>برای شرکت‌ها</FooterButton>
           <FooterButton onClick={() => navigateTo("/how-it-works")}>نحوه مشارکت</FooterButton>
-          <FooterButton onClick={() => navigateTo("/startups/register")}>ثبت‌نام استارتاپ</FooterButton>
-          <FooterButton onClick={() => navigateTo("/events")}>اخبار و رویدادها</FooterButton>
+          <FooterButton onClick={() => navigateTo("/register/startup")}>ثبت‌نام استارتاپ</FooterButton>
+          <FooterButton onClick={() => navigateTo("/news")}>اخبار و رویدادها</FooterButton>
         </div>
 
         <div className="flex h-[182px] w-[160px] flex-col items-start gap-3 text-right">
@@ -67,7 +67,7 @@ export function CheckoutFooter({ navigateTo }: { navigateTo: (path: string) => v
         <div className="flex h-[182px] w-[150px] flex-col items-start gap-3 text-right">
           <strong className="w-full text-right text-[14px] text-white">حقوقی</strong>
           <FooterButton onClick={() => navigateTo("/terms")}>قوانین و مقررات</FooterButton>
-          <FooterButton onClick={() => navigateTo("/privacy")}>حریم خصوصی</FooterButton>
+          <FooterButton onClick={() => navigateTo("/privacy-policy")}>حریم خصوصی</FooterButton>
         </div>
 
         <div className="flex w-[220px] flex-col items-start gap-3 text-right">
