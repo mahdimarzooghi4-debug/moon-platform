@@ -3,6 +3,10 @@ html.emdad-shared-sidebar-active [data-name="colored-sidebar"]:not(.emdad-shared
   pointer-events: none !important;
 }
 
+html.emdad-shared-sidebar-active .emdad-certificate-issuer-trigger {
+  display: none !important;
+}
+
 .emdad-shared-sidebar {
   position: fixed;
   z-index: 500;
