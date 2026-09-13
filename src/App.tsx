@@ -5,6 +5,7 @@ import PublicFooter from "./shared/PublicFooter";
 import StartupTeamMemberAddPage from "./features/startup-registration/states/step2/team-member";
 import ProjectImpactDocumentsPage from "./project-impact-report/documents";
 import HowItWorksInteractions from "./how-it-works/HowItWorksInteractions";
+import NewsListInteractions from "./news-list/NewsListInteractions";
 
 const STARTUP_TEAM_MEMBER_PATH = "/register/startup/states/step2/team-member/new";
 const PROJECT_IMPACT_DOCUMENTS_PATH = "/projects/impact-report/documents";
@@ -17,6 +18,7 @@ export default function App() {
     <AppProviders>
       <AuthGate>
         <HowItWorksInteractions />
+        <NewsListInteractions />
         {isStartupTeamMemberPage ? (
           <StartupTeamMemberAddPage />
         ) : isProjectImpactDocumentsPage ? (
