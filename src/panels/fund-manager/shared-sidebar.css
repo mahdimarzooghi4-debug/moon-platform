@@ -20,6 +20,7 @@ html.fund-manager-shared-sidebar-active [data-name="colored-sidebar"]:not(.fund-
   gap: 10px;
   background: #17324d;
   direction: rtl;
+  text-align: right;
   font-family: "Vazirmatn", sans-serif;
 }
 
@@ -53,25 +54,28 @@ html.fund-manager-shared-sidebar-active [data-name="colored-sidebar"]:not(.fund-
   width: 192px;
   height: 64px;
   flex: 0 0 64px;
-  padding: 7px 8px;
+  padding: 7px 12px;
   display: flex;
   align-items: flex-end;
-  justify-content: center;
+  justify-content: flex-start;
   overflow: hidden;
+  direction: rtl;
+  text-align: right;
 }
 
 .fund-manager-shared-identity p {
-  width: 176px;
+  width: 100%;
   min-height: 39px;
   margin: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   color: #fff;
   font-size: 13px;
   font-weight: 700;
   line-height: 20px;
-  text-align: center;
+  direction: rtl;
+  text-align: right;
 }
 
 .fund-manager-shared-nav {
@@ -91,6 +95,7 @@ html.fund-manager-shared-sidebar-active [data-name="colored-sidebar"]:not(.fund-
   font-size: 12px;
   font-weight: 400;
   line-height: 20px;
+  direction: ltr;
   text-align: right;
   cursor: pointer;
 }
@@ -103,6 +108,7 @@ html.fund-manager-shared-sidebar-active [data-name="colored-sidebar"]:not(.fund-
 .fund-manager-shared-nav > span:first-child {
   width: 142px;
   min-width: 142px;
+  direction: rtl;
   text-align: right;
 }
 
@@ -115,6 +121,7 @@ html.fund-manager-shared-sidebar-active [data-name="colored-sidebar"]:not(.fund-
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  direction: rtl;
 }
 
 .fund-manager-shared-icon img {
@@ -141,11 +148,12 @@ html.fund-manager-shared-sidebar-active [data-name="colored-sidebar"]:not(.fund-
 .fund-manager-shared-logout {
   position: relative;
   margin-top: auto;
-  justify-content: center;
+  justify-content: flex-end;
   background: rgba(255, 255, 255, 0.96);
   color: #17324d;
   font-weight: 500;
-  text-align: center;
+  direction: rtl;
+  text-align: right;
 }
 
 .fund-manager-shared-logout:hover {
@@ -153,16 +161,15 @@ html.fund-manager-shared-sidebar-active [data-name="colored-sidebar"]:not(.fund-
 }
 
 .fund-manager-shared-logout > span:first-child {
-  width: 100%;
-  min-width: 100%;
-  text-align: center;
+  width: 142px;
+  min-width: 142px;
+  direction: rtl;
+  text-align: right;
 }
 
 .fund-manager-shared-logout .fund-manager-shared-icon {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
+  position: static;
+  transform: none;
 }
 
 @media (max-width: 1439px) {
