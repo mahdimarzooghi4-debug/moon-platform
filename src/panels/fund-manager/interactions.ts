@@ -271,7 +271,7 @@ document.addEventListener("click", (event) => {
           syncFundingFlowKpi(page);
         }
 
-        const originalLabel = saveFlow.dataset.originalFlowLabel ?? normalizedText(saveFlow.textContent) || "ثبت جریان";
+        const originalLabel = saveFlow.dataset.originalFlowLabel ?? (normalizedText(saveFlow.textContent) || "ثبت جریان");
         saveFlow.dataset.originalFlowLabel = originalLabel;
         setButtonLabel(saveFlow, exists ? "قبلاً ثبت شده" : "جریان ثبت شد");
         saveFlow.disabled = true;
