@@ -46,43 +46,109 @@ function findSectionRow(root: HTMLElement, headingText: string) {
   );
 }
 
-function rightAlignCards(root: HTMLElement, headingText: string) {
-  const row = findSectionRow(root, headingText);
+function rightAlignRelatedNewsCards(root: HTMLElement) {
+  const row = findSectionRow(root, "مطالب مرتبط با این گزارش");
   if (!row) return;
 
-  row.setAttribute("dir", "rtl");
-  row.style.direction = "rtl";
-  row.style.textAlign = "right";
+  // Keep the three-card visual order unchanged. Only the content inside each
+  // generated card is forced into a physical right-aligned Persian layout.
+  row.style.direction = "ltr";
 
-  Array.from(row.children).forEach((child) => {
-    if (!(child instanceof HTMLElement)) return;
+  Array.from(row.children).forEach((card) => {
+    if (!(card instanceof HTMLElement)) return;
 
-    child.setAttribute("dir", "rtl");
-    child.style.direction = "rtl";
-    child.style.textAlign = "right";
+    card.setAttribute("dir", "rtl");
+    card.style.direction = "rtl";
+    card.style.textAlign = "right";
+    card.style.alignItems = "stretch";
 
-    child.querySelectorAll<HTMLElement>("div").forEach((group) => {
-      group.setAttribute("dir", "rtl");
-      group.style.direction = "rtl";
-      group.style.textAlign = "right";
+    const cardChildren = Array.from(card.children).filter(
+      (child): child is HTMLElement => child instanceof HTMLElement,
+    );
+    if (cardChildren.length < 2) return;
 
-      if (
-        group.className.includes("items-start") ||
-        group.className.includes("items-end")
-      ) {
-        group.style.alignItems = "flex-end";
-      }
+    // Generated news cards use the last direct child as the text/content area.
+    const content = cardChildren[cardChildren.length - 1];
+    content.setAttribute("dir", "rtl");
+    content.style.direction = "rtl";
+    content.style.width = "100%";
+    content.style.alignItems = "stretch";
+    content.style.textAlign = "right";
+
+    const directContentChildren = Array.from(content.children).filter(
+      (child): child is HTMLElement => child instanceof HTMLElement,
+    );
+
+    directContentChildren.forEach((item) => {
+      item.setAttribute("dir", "rtl");
+      item.style.direction = "rtl";
+      item.style.width = "100%";
+      item.style.maxWidth = "100%";
+      item.style.textAlign = "right";
     });
 
-    child.querySelectorAll<HTMLElement>("span, p, a").forEach((text) => {
+    // First content row is category/date. Keep date on the physical right and
+    // category on the left exactly like the design.
+    const metaRow = directContentChildren[0];
+    if (metaRow) {
+      metaRow.style.display = "flex";
+      metaRow.style.flexDirection = "row";
+      metaRow.style.direction = "rtl";
+      metaRow.style.justifyContent = "space-between";
+      metaRow.style.alignItems = "center";
+      metaRow.style.width = "100%";
+
+      Array.from(metaRow.children).forEach((item) => {
+        if (!(item instanceof HTMLElement)) return;
+        item.style.width = "auto";
+        item.style.maxWidth = "none";
+        item.style.display = "block";
+        item.style.direction = "rtl";
+        item.style.textAlign = "right";
+        item.style.justifyContent = "initial";
+      });
+    }
+
+    content.querySelectorAll<HTMLElement>("span, p, a").forEach((text) => {
       text.setAttribute("dir", "rtl");
       text.style.direction = "rtl";
       text.style.textAlign = "right";
-
-      if (text.className.includes("flex")) {
-        text.style.justifyContent = "flex-start";
-      }
     });
+
+    // Generated title/description spans have fixed widths; stretching them is
+    // required for text-align:right to reach the card's right padding edge.
+    directContentChildren.slice(1).forEach((item) => {
+      if (normalizedText(item).includes("مطالعه خبر")) return;
+      item.style.width = "100%";
+      item.style.maxWidth = "100%";
+      item.style.justifyContent = "flex-start";
+      item.style.textAlign = "right";
+    });
+
+    // Keep the CTA at the physical right edge regardless of inherited RTL/LTR
+    // flex behavior.
+    const ctaText = Array.from(
+      content.querySelectorAll<HTMLElement>("span, p, a"),
+    ).find((node) => normalizedText(node).includes("مطالعه خبر"));
+
+    if (ctaText) {
+      ctaText.style.width = "auto";
+      ctaText.style.maxWidth = "none";
+      ctaText.style.display = "inline-flex";
+      ctaText.style.direction = "rtl";
+      ctaText.style.textAlign = "right";
+      ctaText.style.justifyContent = "flex-start";
+
+      const ctaRow = ctaText.parentElement;
+      if (ctaRow instanceof HTMLElement) {
+        ctaRow.style.width = "100%";
+        ctaRow.style.direction = "ltr";
+        ctaRow.style.display = "flex";
+        ctaRow.style.justifyContent = "flex-end";
+        ctaRow.style.alignItems = "center";
+        ctaRow.style.textAlign = "right";
+      }
+    }
   });
 }
 
@@ -153,7 +219,7 @@ export default function NewsDetailsInteractions() {
       if (!root) return;
 
       removeOnlineButtons(root);
-      rightAlignCards(root, "مطالب مرتبط با این گزارش");
+      rightAlignRelatedNewsCards(root);
       rightAlignProjectCards(root);
     };
 
