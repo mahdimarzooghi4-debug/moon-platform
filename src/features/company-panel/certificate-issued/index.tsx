@@ -8,8 +8,13 @@ import {
 import "../index.css";
 import "./index.css";
 
-const OFFICIAL_LOGO = "/assets/emdad/dashboard/logo.png";
+const OFFICIAL_LOGO = "/assets/company-panel/emdad-logo-official.png";
 const STAMP = "/assets/company-panel/emdad-stamp.svg";
+const ISSUER_LABEL = "مسئول صدور گواهی";
+const LEGACY_ISSUER_TITLES = new Set([
+  "مدیر مسئول ماده ۱۷۲",
+  "مدیر مسئول صدور گواهی ماده ۱۷۲",
+]);
 
 export default function CompanyArticle172CertificateIssued() {
   const [issuer, setIssuer] = useState(() => readCertificateIssuerSettings());
@@ -23,6 +28,11 @@ export default function CompanyArticle172CertificateIssued() {
       window.removeEventListener(CERTIFICATE_ISSUER_UPDATED_EVENT, syncIssuer);
     };
   }, []);
+
+  const managerName = issuer.managerName.trim();
+  const managerTitle = issuer.managerTitle.trim();
+  const showManagerName = Boolean(managerName && managerName !== ISSUER_LABEL);
+  const showManagerTitle = Boolean(managerTitle && !LEGACY_ISSUER_TITLES.has(managerTitle));
 
   return (
     <div className="company-panel-shell company-certificate-issued-shell" data-node-id="1928:2">
@@ -41,14 +51,16 @@ export default function CompanyArticle172CertificateIssued() {
           <div className="company-official-fields"><div><span>نام شرکت</span><strong>پایدار پرداز خلاق آریا</strong></div><div><span>شناسه ملی</span><strong>۱۰۱۰۴۵۸۶۹۲۱</strong></div><div><span>عنوان پروژه</span><strong>سلامت خانواده</strong></div><div><span>مبلغ مورد تأیید</span><strong>۵۰٬۰۰۰٬۰۰۰ تومان</strong></div></div>
           <p className="company-official-note">این گواهی پس از بررسی اطلاعات حقوقی و مالیاتی شرکت، تأیید پرداخت واجد شرایط و احراز ضوابط مرتبط با ماده ۱۷۲ صادر شده و برای ارائه به مراجع ذی‌ربط قابل استناد است.</p>
           <div className="company-official-signature">
-            <div className="company-official-signer">
-              <span>مسئول صدور گواهی</span>
-              <strong>{issuer.managerName}</strong>
-              <small>{issuer.managerTitle}</small>
-              <small>{issuer.unitName}</small>
-              {issuer.signatureDataUrl ? <img className="company-official-signer-image" src={issuer.signatureDataUrl} alt={`امضای ${issuer.managerName}`} /> : <em>امضا از پنل امداد تعریف نشده است</em>}
+            <div className="company-official-signature-mark">
+              {issuer.signatureDataUrl ? <img className="company-official-signer-image" src={issuer.signatureDataUrl} alt={`امضای ${managerName || ISSUER_LABEL}`} /> : <em>امضا از پنل امداد تعریف نشده است</em>}
             </div>
             <div className="company-official-stamp"><span>مهر و تأیید</span><img src={STAMP} alt="مهر کمیته امداد" /></div>
+            <div className="company-official-signer">
+              <span>{ISSUER_LABEL}</span>
+              {showManagerName ? <strong>{managerName}</strong> : null}
+              {showManagerTitle ? <small>{managerTitle}</small> : null}
+              <small>{issuer.unitName}</small>
+            </div>
           </div>
         </section>
       </main>
