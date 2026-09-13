@@ -15,3 +15,63 @@
 .emdad-panel *::after {
   box-sizing: border-box;
 }
+
+.emdad-panel > [data-name="colored-sidebar"] {
+  direction: rtl !important;
+  text-align: right !important;
+  align-items: flex-end !important;
+}
+
+.emdad-panel > [data-name="colored-sidebar"] > [data-name="panel-identity"] {
+  direction: rtl !important;
+  align-items: flex-end !important;
+  text-align: right !important;
+}
+
+.emdad-panel > [data-name="colored-sidebar"] > [data-name="panel-identity"] > p,
+.emdad-panel > [data-name="colored-sidebar"] > [data-name="panel-identity"] > div,
+.emdad-panel > [data-name="colored-sidebar"] > [data-name="panel-identity"] > div > p {
+  width: 176px !important;
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+.emdad-panel > [data-name="colored-sidebar"] > [data-name$="-nav"] {
+  width: 192px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 10px !important;
+  padding: 0 12px !important;
+  direction: ltr !important;
+  text-align: right !important;
+}
+
+.emdad-panel > [data-name="colored-sidebar"] > [data-name$="-nav"] > p {
+  position: relative !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+  width: 142px !important;
+  min-width: 142px !important;
+  transform: none !important;
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+.emdad-panel > [data-name="colored-sidebar"] > [data-name$="-nav"] > div {
+  position: relative !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+  width: 18px !important;
+  min-width: 18px !important;
+  height: 18px !important;
+  flex: 0 0 18px !important;
+  transform: none !important;
+}
