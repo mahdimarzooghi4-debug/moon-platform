@@ -1,0 +1,198 @@
+html.emdad-shared-sidebar-active [data-name="colored-sidebar"]:not(.emdad-shared-sidebar) {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.emdad-shared-sidebar {
+  position: fixed;
+  z-index: 500;
+  top: 0;
+  left: calc(50% + 496px);
+  width: 224px;
+  min-width: 224px;
+  max-width: 224px;
+  height: 900px;
+  box-sizing: border-box;
+  padding: 20px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  background: #17324d;
+  direction: rtl;
+  text-align: right;
+  font-family: "Vazirmatn", sans-serif;
+}
+
+.emdad-shared-sidebar,
+.emdad-shared-sidebar * {
+  box-sizing: border-box;
+  font-family: "Vazirmatn", sans-serif;
+}
+
+.emdad-shared-logo {
+  width: 192px;
+  height: 56px;
+  flex: 0 0 56px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.emdad-shared-logo img {
+  display: block;
+  width: 118px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.emdad-shared-identity {
+  width: 192px;
+  height: 64px;
+  flex: 0 0 64px;
+  padding: 7px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 2px;
+  overflow: hidden;
+  color: #fff;
+  direction: rtl;
+  text-align: right;
+}
+
+.emdad-shared-identity p,
+.emdad-shared-identity span {
+  width: 100%;
+  margin: 0;
+  direction: rtl;
+  text-align: right;
+}
+
+.emdad-shared-identity p {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 20px;
+}
+
+.emdad-shared-identity span {
+  color: #d8e7f3;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+.emdad-shared-nav {
+  width: 192px;
+  height: 38px;
+  flex: 0 0 38px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #edf5fc;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 20px;
+  direction: ltr;
+  text-align: right;
+  cursor: pointer;
+}
+
+.emdad-shared-nav:hover,
+.emdad-shared-nav[data-active="true"] {
+  background: #2094e3;
+  color: #fff;
+}
+
+.emdad-shared-nav > span:first-child {
+  width: 142px;
+  min-width: 142px;
+  direction: rtl;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.emdad-shared-icon {
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  flex: 0 0 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.emdad-shared-icon img {
+  display: block;
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.emdad-shared-inline-icon {
+  color: currentColor;
+  overflow: visible;
+}
+
+.emdad-shared-inline-icon svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.emdad-shared-spacer {
+  width: 192px;
+  flex: 1 1 auto;
+  min-height: 1px;
+}
+
+.emdad-shared-logout {
+  position: relative;
+  margin-top: auto;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.96);
+  color: #17324d;
+  font-weight: 500;
+  direction: rtl;
+  text-align: center;
+}
+
+.emdad-shared-logout:hover {
+  background: #fff;
+  color: #17324d;
+}
+
+.emdad-shared-logout > span:first-child {
+  width: 100%;
+  min-width: 100%;
+  text-align: center;
+}
+
+.emdad-shared-logout .emdad-shared-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@media (max-width: 1439px) {
+  .emdad-shared-sidebar {
+    left: 1216px;
+  }
+}
