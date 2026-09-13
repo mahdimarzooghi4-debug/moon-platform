@@ -89,3 +89,59 @@
   font-weight: 500;
   direction: rtl;
 }
+
+.admin-funding-view-control {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.admin-fund-request-list {
+  max-height: 286px;
+  overflow-y: auto;
+  padding-left: 2px;
+}
+
+.admin-fund-request-empty {
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+  border: 1px dashed #dbe3ed;
+  border-radius: 9px;
+  color: #60758a;
+  background: #f9fbfd;
+  font-size: 11px;
+}
+
+.admin-fund-request-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  color: #60758a;
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+.admin-fund-request-actions button {
+  width: 58px;
+  height: 30px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.admin-fund-request-approve {
+  border: 1px solid #2094e3;
+  background: #2094e3;
+  color: #fff;
+}
+
+.admin-fund-request-reject {
+  border: 1px solid #e1b8aa;
+  background: #fff5f1;
+  color: #b34d2f;
+}
