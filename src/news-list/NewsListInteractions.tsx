@@ -4,6 +4,8 @@ const ACTIONS: Record<string, string> = {
   "مشاهده گزارش اثر": "/impact-reports",
   "مشاهده گزارش‌های اثر": "/impact-reports",
   "مرور اثر سامانه ماه": "/impact-overview",
+  "مطالعه خبر": "/news/social-impact-1404",
+  "مطالعه خبر ←": "/news/social-impact-1404",
 };
 
 function normalizedText(node: Element) {
