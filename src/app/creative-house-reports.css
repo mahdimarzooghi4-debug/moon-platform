@@ -66,3 +66,17 @@ body .creative-house-dashboard[data-name="ayeneh-evaluation-history"] [data-node
   text-align: right !important;
   direction: rtl !important;
 }
+
+/* Evaluation-history pagination: RTL visual order and arrow direction. */
+body .creative-house-dashboard[data-name="ayeneh-evaluation-history"] [data-node-id="1801:133"] {
+  left: 475px !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-evaluation-history"] [data-node-id="1801:135"] {
+  left: 513px !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-evaluation-history"] [data-node-id="1801:138"],
+body .creative-house-dashboard[data-name="ayeneh-evaluation-history"] [data-node-id="1801:140"] {
+  transform: translate(-50%, -50%) scaleX(-1) !important;
+}
