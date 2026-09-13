@@ -38,6 +38,13 @@ function activeSection(pathname: string): Section {
   return "dashboard";
 }
 
+function navigate(path: string) {
+  if (window.location.pathname === path) return;
+  window.history.pushState({}, "", path);
+  window.dispatchEvent(new PopStateEvent("popstate"));
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+}
+
 export default function EmdadSharedSidebar({ pathname }: Props) {
   const active = activeSection(pathname);
 
@@ -64,17 +71,17 @@ export default function EmdadSharedSidebar({ pathname }: Props) {
         <span>پنل کمیته امداد</span>
       </div>
 
-      <button type="button" data-name="dashboard-nav" className="emdad-shared-nav" data-active={active === "dashboard"}>
+      <button type="button" data-name="dashboard-nav" className="emdad-shared-nav" data-active={active === "dashboard"} onClick={() => navigate("/panel/emdad")}>
         <span>داشبورد</span>
         <span className="emdad-shared-icon"><img src={dashboardIcon} alt="" /></span>
       </button>
 
-      <button type="button" data-name="release-requests-nav" className="emdad-shared-nav" data-active={active === "release"}>
+      <button type="button" data-name="release-requests-nav" className="emdad-shared-nav" data-active={active === "release"} onClick={() => navigate("/panel/emdad/release-requests")}>
         <span>درخواست‌های آزادسازی</span>
         <span className="emdad-shared-icon"><img src={releaseIcon} alt="" /></span>
       </button>
 
-      <button type="button" data-name="fund-payments-nav" className="emdad-shared-nav" data-active={active === "fund-payments"}>
+      <button type="button" data-name="fund-payments-nav" className="emdad-shared-nav" data-active={active === "fund-payments"} onClick={() => navigate("/panel/emdad/fund-payments")}>
         <span>پرداخت‌های تأییدشده صندوق</span>
         <span className="emdad-shared-icon emdad-shared-inline-icon" aria-hidden="true">
           <svg viewBox="0 0 18 18" focusable="false">
@@ -85,32 +92,32 @@ export default function EmdadSharedSidebar({ pathname }: Props) {
         </span>
       </button>
 
-      <button type="button" data-name="article-172-approvals-nav" className="emdad-shared-nav" data-active={active === "article172"}>
+      <button type="button" data-name="article-172-approvals-nav" className="emdad-shared-nav" data-active={active === "article172"} onClick={() => navigate("/panel/emdad/article172-approvals")}>
         <span>تأیید گواهی ماده ۱۷۲</span>
         <span className="emdad-shared-icon"><img src={certificateIcon} alt="" /></span>
       </button>
 
-      <button type="button" data-name="fund-synergy-nav" className="emdad-shared-nav" data-active={active === "synergy"}>
+      <button type="button" data-name="fund-synergy-nav" className="emdad-shared-nav" data-active={active === "synergy"} onClick={() => navigate("/panel/emdad/fund-synergy")}>
         <span>هم‌افزایی صندوق</span>
         <span className="emdad-shared-icon"><img src={synergyIcon} alt="" /></span>
       </button>
 
-      <button type="button" data-name="fund-synergy-history-nav" className="emdad-shared-nav" data-active={active === "synergy-history"}>
+      <button type="button" data-name="fund-synergy-history-nav" className="emdad-shared-nav" data-active={active === "synergy-history"} onClick={() => navigate("/panel/emdad/fund-synergy/history")}>
         <span>سوابق هم‌افزایی صندوق</span>
         <span className="emdad-shared-icon"><img src={historyIcon} alt="" /></span>
       </button>
 
-      <button type="button" data-name="payment-history-nav" className="emdad-shared-nav" data-active={active === "payment-history"}>
+      <button type="button" data-name="payment-history-nav" className="emdad-shared-nav" data-active={active === "payment-history"} onClick={() => navigate("/panel/emdad/payment-history")}>
         <span>سوابق پرداخت</span>
         <span className="emdad-shared-icon"><img src={historyIcon} alt="" /></span>
       </button>
 
-      <button type="button" data-name="financial-reports-nav" className="emdad-shared-nav" data-active={active === "reports"}>
+      <button type="button" data-name="financial-reports-nav" className="emdad-shared-nav" data-active={active === "reports"} onClick={() => navigate("/panel/emdad/financial-reports")}>
         <span>گزارش‌های مالی</span>
         <span className="emdad-shared-icon"><img src={reportsIcon} alt="" /></span>
       </button>
 
-      <button type="button" data-name="fund-returns-nav" className="emdad-shared-nav" data-active={active === "fund-returns"}>
+      <button type="button" data-name="fund-returns-nav" className="emdad-shared-nav" data-active={active === "fund-returns"} onClick={() => navigate("/panel/emdad/fund-returns")}>
         <span>بازگشت‌های صندوق</span>
         <span className="emdad-shared-icon emdad-shared-inline-icon" aria-hidden="true">
           <svg viewBox="0 0 18 18" focusable="false">
