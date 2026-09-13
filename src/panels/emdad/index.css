@@ -1,2 +1,17 @@
-.emdad-panel { min-width: 1200px; min-height: 900px; font-family: "Vazirmatn", sans-serif; }
-.emdad-panel *, .emdad-panel *::before, .emdad-panel *::after { box-sizing: border-box; }
+.emdad-panel {
+  width: 1440px !important;
+  min-width: 1440px !important;
+  max-width: 1440px !important;
+  height: 900px !important;
+  min-height: 900px !important;
+  margin: 0 auto !important;
+  position: relative;
+  flex: 0 0 1440px !important;
+  font-family: "Vazirmatn", sans-serif;
+}
+
+.emdad-panel *,
+.emdad-panel *::before,
+.emdad-panel *::after {
+  box-sizing: border-box;
+}
