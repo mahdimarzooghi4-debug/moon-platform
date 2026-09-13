@@ -14,13 +14,17 @@ export default function CompanyFinancialImpactReportDetail() {
   const { reportId = "MAH-R-1405-0018" } = useParams();
   void reportId;
 
+  const handleDownloadReport = () => {
+    window.print();
+  };
+
   return (
-    <div className="company-panel-shell" data-node-id="1908:2">
+    <div className="company-panel-shell company-report-detail-shell" data-node-id="1908:2">
       <main className="company-report-detail-page" dir="rtl">
-        <header className="company-topbar">
+        <header className="company-topbar company-report-detail-topbar">
           <div className="company-page-title"><h1>جزئیات گزارش مالی و اثر</h1><p>جزئیات عملکرد، شاخص‌ها، وضعیت مالی و ارزیابی گزارش منتشرشده</p></div>
           <div className="company-top-actions">
-            <button type="button" className="company-action company-action-primary company-report-download" title="دریافت گزارش در محصول نهایی فعال می‌شود">دریافت گزارش</button>
+            <button type="button" className="company-action company-action-primary company-report-download" onClick={handleDownloadReport} title="چاپ یا ذخیره گزارش به‌صورت PDF">دریافت گزارش</button>
             <Link className="company-action company-action-secondary" to="/panel/company/reports">بازگشت به گزارش‌ها</Link>
           </div>
         </header>
