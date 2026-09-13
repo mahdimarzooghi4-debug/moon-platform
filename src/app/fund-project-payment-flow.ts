@@ -4,7 +4,7 @@ const FUND_DETAIL_PATH = "/panel/fund-manager/investments/detail";
 const EMDAD_PAYMENTS_PATH = "/panel/emdad/fund-payments";
 const REQUESTS_KEY = "mah.fundProjectPaymentRequests.v1";
 
-export type FundProjectPaymentStatus = "pending" | "paid";
+export type FundProjectPaymentStatus = "pending_admin" | "approved" | "rejected" | "paid";
 
 export type FundProjectPaymentRequest = {
   id: string;
@@ -16,17 +16,14 @@ export type FundProjectPaymentRequest = {
   note: string;
   status: FundProjectPaymentStatus;
   createdAt: string;
+  approvedAt?: string;
+  rejectedAt?: string;
   paidAt?: string;
   receipt?: string;
 };
 
 function normalize(value: string | null | undefined) {
   return (value ?? "").replace(/\s+/g, " ").trim();
-}
-
-function setText(node: Element | null | undefined, text: string) {
-  if (!(node instanceof HTMLElement)) return;
-  if (normalize(node.textContent) !== text) node.textContent = text;
 }
 
 function toLatinDigits(value: string) {
@@ -55,28 +52,54 @@ function formatAmount(value: number) {
   return `${faNumber(value)} تومان`;
 }
 
+function normalizeRequest(item: unknown): FundProjectPaymentRequest | null {
+  if (!item || typeof item !== "object") return null;
+  const value = item as Record<string, unknown>;
+  const legacyStatus = value.status === "pending" ? "pending_admin" : value.status;
+  if (
+    typeof value.id !== "string" ||
+    typeof value.project !== "string" ||
+    typeof value.executor !== "string" ||
+    typeof value.stage !== "string" ||
+    typeof value.investmentAmount !== "number" ||
+    !Number.isFinite(value.investmentAmount) ||
+    typeof value.requestedAmount !== "number" ||
+    !Number.isFinite(value.requestedAmount) ||
+    typeof value.note !== "string" ||
+    !["pending_admin", "approved", "rejected", "paid"].includes(String(legacyStatus)) ||
+    typeof value.createdAt !== "string"
+  ) {
+    return null;
+  }
+
+  return {
+    id: value.id,
+    project: value.project,
+    executor: value.executor,
+    stage: value.stage,
+    investmentAmount: value.investmentAmount,
+    requestedAmount: value.requestedAmount,
+    note: value.note,
+    status: legacyStatus as FundProjectPaymentStatus,
+    createdAt: value.createdAt,
+    approvedAt: typeof value.approvedAt === "string" ? value.approvedAt : undefined,
+    rejectedAt: typeof value.rejectedAt === "string" ? value.rejectedAt : undefined,
+    paidAt: typeof value.paidAt === "string" ? value.paidAt : undefined,
+    receipt: typeof value.receipt === "string" ? value.receipt : undefined,
+  };
+}
+
 function readRequests(): FundProjectPaymentRequest[] {
   try {
     const raw = localStorage.getItem(REQUESTS_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
-    return parsed.filter((item): item is FundProjectPaymentRequest =>
-      Boolean(
-        item &&
-          typeof item.id === "string" &&
-          typeof item.project === "string" &&
-          typeof item.executor === "string" &&
-          typeof item.stage === "string" &&
-          typeof item.investmentAmount === "number" &&
-          Number.isFinite(item.investmentAmount) &&
-          typeof item.requestedAmount === "number" &&
-          Number.isFinite(item.requestedAmount) &&
-          typeof item.note === "string" &&
-          (item.status === "pending" || item.status === "paid") &&
-          typeof item.createdAt === "string",
-      ),
-    );
+    const requests = parsed.map(normalizeRequest).filter((item): item is FundProjectPaymentRequest => Boolean(item));
+    if (parsed.some((item) => item && typeof item === "object" && (item as { status?: unknown }).status === "pending")) {
+      localStorage.setItem(REQUESTS_KEY, JSON.stringify(requests));
+    }
+    return requests;
   } catch {
     return [];
   }
@@ -110,7 +133,9 @@ function investmentData(root: HTMLElement) {
   const investmentLabel = findDetailValue(root, "مبلغ تخصیص‌یافته");
   const investmentAmount = parseAmount(investmentLabel);
   const requests = readRequests().filter((request) => normalize(request.project) === project);
-  const reservedAmount = requests.reduce((sum, request) => sum + request.requestedAmount, 0);
+  const reservedAmount = requests
+    .filter((request) => request.status !== "rejected")
+    .reduce((sum, request) => sum + request.requestedAmount, 0);
   const remainingAmount = Math.max(0, investmentAmount - reservedAmount);
   return { project, executor, investmentAmount, reservedAmount, remainingAmount, requests };
 }
@@ -141,7 +166,7 @@ function openDialog(root: HTMLElement) {
   const description = document.createElement("p");
   description.className = "fund-project-payment-dialog-description";
   description.textContent =
-    "مدیر صندوق مبلغ موردنیاز پروژه را از محل منابع صندوق درخواست می‌کند. کمیته امداد فقط اجرای پرداخت را بررسی و ثبت می‌کند؛ این جریان از آزادسازی خانه خلاق و سهم ۱۰٪ صندوق مستقل است.";
+    "درخواست ابتدا برای مدیر ماه ارسال می‌شود. پس از تأیید مدیر ماه، درخواست برای اجرای پرداخت به پروژه در اختیار کمیته امداد قرار می‌گیرد.";
 
   const summary = document.createElement("div");
   summary.className = "fund-project-payment-summary";
@@ -191,7 +216,7 @@ function openDialog(root: HTMLElement) {
   const noteLabel = document.createElement("span");
   noteLabel.textContent = "توضیح درخواست";
   const noteInput = document.createElement("textarea");
-  noteInput.placeholder = "توضیح اختیاری برای کمیته امداد";
+  noteInput.placeholder = "توضیح اختیاری برای مدیر ماه";
   noteField.append(noteLabel, noteInput);
 
   fields.append(stageField, amountField, noteField);
@@ -210,7 +235,7 @@ function openDialog(root: HTMLElement) {
   const submit = document.createElement("button");
   submit.type = "button";
   submit.className = "fund-project-payment-submit";
-  submit.textContent = "ارسال درخواست به امداد";
+  submit.textContent = "ارسال درخواست به مدیر ماه";
   submit.addEventListener("click", () => {
     const stage = normalize(stageInput.value);
     const amount = Number(amountInput.value);
@@ -233,7 +258,7 @@ function openDialog(root: HTMLElement) {
     const requests = readRequests();
     const duplicate = requests.some(
       (request) =>
-        request.status === "pending" &&
+        (request.status === "pending_admin" || request.status === "approved") &&
         normalize(request.project) === data.project &&
         normalize(request.stage) === stage,
     );
@@ -250,7 +275,7 @@ function openDialog(root: HTMLElement) {
       investmentAmount: data.investmentAmount,
       requestedAmount: amount,
       note: normalize(noteInput.value),
-      status: "pending",
+      status: "pending_admin",
       createdAt: new Date().toISOString(),
     };
     writeRequests([request, ...requests]);
@@ -266,6 +291,13 @@ function openDialog(root: HTMLElement) {
   });
   document.body.appendChild(backdrop);
   stageInput.focus();
+}
+
+function requestStatusText(request: FundProjectPaymentRequest) {
+  if (request.status === "pending_admin") return `در انتظار تأیید مدیر ماه · ${formatAmount(request.requestedAmount)}`;
+  if (request.status === "approved") return `تأیید مدیر ماه · در انتظار پرداخت · ${formatAmount(request.requestedAmount)}`;
+  if (request.status === "rejected") return `رد شده توسط مدیر ماه · ${formatAmount(request.requestedAmount)}`;
+  return `پرداخت‌شده · ${formatAmount(request.requestedAmount)}`;
 }
 
 function applyFundDetail() {
@@ -313,10 +345,7 @@ function applyFundDetail() {
     summary.appendChild(status);
   }
   status.dataset.status = latest.status;
-  status.textContent =
-    latest.status === "pending"
-      ? `در انتظار پرداخت امداد · ${formatAmount(latest.requestedAmount)}`
-      : `پرداخت‌شده · ${formatAmount(latest.requestedAmount)}`;
+  status.textContent = requestStatusText(latest);
 }
 
 function ensureEmdadNav() {
@@ -332,7 +361,7 @@ function ensureEmdadNav() {
     link.className = "moon-emdad-fund-payments-nav";
     const label = document.createElement("span");
     label.className = "moon-nav-label";
-    label.textContent = "پرداخت‌های صندوق";
+    label.textContent = "پرداخت‌های تأییدشده صندوق";
     const icon = document.createElement("span");
     icon.className = "moon-nav-icon";
     icon.textContent = "↗";
