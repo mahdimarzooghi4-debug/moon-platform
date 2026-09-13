@@ -24,21 +24,32 @@ function setArrowState(element: HTMLElement, enabled: boolean, label: string) {
   element.tabIndex = enabled ? 0 : -1;
 }
 
+function setArrowGlyph(element: HTMLElement, glyph: string) {
+  const label = element.querySelector<HTMLElement>("p");
+  if (label && label.textContent !== glyph) label.textContent = glyph;
+}
+
 function renderPagination(root: HTMLElement) {
   const pageOne = root.querySelector<HTMLElement>('[data-node-id="1791:284"]');
   const pageTwo = root.querySelector<HTMLElement>('[data-name="page-2"]');
-  const nextRtl = root.querySelector<HTMLElement>('[data-name="prev-disabled"]');
-  const previousRtl = root.querySelector<HTMLElement>('[data-name="next"]');
+  const leftArrow = root.querySelector<HTMLElement>('[data-name="prev-disabled"]');
+  const rightArrow = root.querySelector<HTMLElement>('[data-name="next"]');
   const counter = root.querySelector<HTMLElement>('[data-node-id="1791:283"] p');
 
-  if (!pageOne || !pageTwo || !nextRtl || !previousRtl || !counter) return;
+  if (!pageOne || !pageTwo || !leftArrow || !rightArrow || !counter) return;
+
+  // Requested visual order: left arrow, page 1, page 2, right arrow.
+  pageOne.style.left = "475px";
+  pageTwo.style.left = "513px";
 
   setPageButtonState(pageOne, currentPage === 1);
   setPageButtonState(pageTwo, currentPage === 2);
 
-  // RTL pagination: left arrow moves forward, right arrow moves back.
-  setArrowState(nextRtl, currentPage < 2, "صفحه بعد");
-  setArrowState(previousRtl, currentPage > 1, "صفحه قبل");
+  // Requested arrow direction: left arrow = previous, right arrow = next.
+  setArrowGlyph(leftArrow, "‹");
+  setArrowGlyph(rightArrow, "›");
+  setArrowState(leftArrow, currentPage > 1, "صفحه قبل");
+  setArrowState(rightArrow, currentPage < 2, "صفحه بعد");
 
   counter.textContent = `صفحه ${currentPage === 1 ? "۱" : "۲"} از ۲`;
   root.dataset.reportsPage = String(currentPage);
@@ -64,12 +75,12 @@ function handlePaginationAction(target: Element) {
   }
 
   if (target.closest('[data-name="prev-disabled"]')) {
-    setPage(currentPage + 1, root);
+    setPage(currentPage - 1, root);
     return true;
   }
 
   if (target.closest('[data-name="next"]')) {
-    setPage(currentPage - 1, root);
+    setPage(currentPage + 1, root);
     return true;
   }
 
