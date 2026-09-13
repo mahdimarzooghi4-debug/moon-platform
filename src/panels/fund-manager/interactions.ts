@@ -23,8 +23,36 @@ const detailRoutes: Record<string, string> = {
   [`${PANEL_PREFIX}/financial-history`]: `${PANEL_PREFIX}/financial-history/detail`,
 };
 
+const navSelector = Object.keys(navRoutes)
+  .map((name) => `[data-name="${name}"]`)
+  .join(",");
+
 function isFundManagerPage() {
   return window.location.pathname.startsWith(PANEL_PREFIX);
+}
+
+function navigatePanel(route: string) {
+  if (window.location.pathname === route) return;
+  window.history.pushState({}, "", route);
+  window.dispatchEvent(new PopStateEvent("popstate"));
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+}
+
+function preloadPanelRoutes() {
+  if (!isFundManagerPage()) return;
+  void Promise.allSettled([
+    import("./resources"),
+    import("./resource-detail"),
+    import("./investments"),
+    import("./investment-detail"),
+    import("./profit-returns"),
+    import("./profit-return-detail"),
+    import("./cycle-returns"),
+    import("./cycle-return-detail"),
+    import("./profit-split"),
+    import("./profit-split-detail"),
+    import("./reports"),
+  ]);
 }
 
 function applyDestinations(root: ParentNode = document) {
@@ -51,6 +79,7 @@ function applyDestinations(root: ParentNode = document) {
   }
 }
 
+preloadPanelRoutes();
 applyDestinations();
 
 if (document.body) {
@@ -62,6 +91,8 @@ if (document.body) {
 
 document.addEventListener("click", (event) => {
   if (!isFundManagerPage()) return;
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+
   const target = event.target;
   if (!(target instanceof Element)) return;
 
@@ -75,22 +106,23 @@ document.addEventListener("click", (event) => {
     return;
   }
 
-  const nav = target.closest<HTMLElement>("[data-name]");
+  const nav = target.closest<HTMLElement>(navSelector);
   const navName = nav?.getAttribute("data-name") ?? "";
   const route = navRoutes[navName];
-  if (route && !(nav instanceof HTMLAnchorElement)) {
+  if (route) {
     event.preventDefault();
-    if (window.location.pathname !== route) window.location.assign(route);
+    navigatePanel(route);
     return;
   }
 
-  const backAction = target.closest<HTMLElement>('a[data-name="action"], button[data-name="action"]');
-  if (backAction && !backAction.getAttribute("href")) {
-    const detailRoute = detailRoutes[window.location.pathname];
-    if (detailRoute) {
-      event.preventDefault();
-      window.location.assign(detailRoute);
-    }
+  const action = target.closest<HTMLElement>('a[data-name="action"], button[data-name="action"]');
+  if (!action) return;
+
+  const fallbackRoute = detailRoutes[window.location.pathname];
+  const href = action.getAttribute("href") || fallbackRoute;
+  if (href?.startsWith(PANEL_PREFIX)) {
+    event.preventDefault();
+    navigatePanel(href);
   }
 });
 
@@ -98,9 +130,10 @@ document.addEventListener("keydown", (event) => {
   if (!isFundManagerPage() || (event.key !== "Enter" && event.key !== " ")) return;
   const target = event.target;
   if (!(target instanceof HTMLElement)) return;
-  const name = target.getAttribute("data-name") ?? "";
+  const nav = target.closest<HTMLElement>(navSelector);
+  const name = nav?.getAttribute("data-name") ?? "";
   const route = navRoutes[name];
-  if (!route || target instanceof HTMLAnchorElement) return;
+  if (!route) return;
   event.preventDefault();
-  if (window.location.pathname !== route) window.location.assign(route);
+  navigatePanel(route);
 });
