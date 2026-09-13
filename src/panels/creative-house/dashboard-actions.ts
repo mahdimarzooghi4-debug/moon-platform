@@ -96,12 +96,11 @@ document.addEventListener("click", (event) => {
   const target = event.target;
   if (!(target instanceof Element)) return;
 
-  // Milestone actions keep their real href and use native browser navigation.
-  // This is more reliable for the lazy-loaded detail route and guarantees
-  // the detail screen is mounted before its full-height scrolling CSS applies.
   const milestoneEvaluationAction =
     target.closest<HTMLAnchorElement>(MILESTONE_EVALUATION_ACTION_SELECTOR);
   if (milestoneEvaluationAction) {
+    event.preventDefault();
+    navigateWithinApp(MILESTONE_EVALUATION_DETAIL_ROUTE);
     return;
   }
 
