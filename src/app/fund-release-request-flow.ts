@@ -1,82 +1,61 @@
 import "./fund-release-request-flow.css";
 
-const FUND_MANAGER_DETAIL_PATH = "/panel/fund-manager/investments/detail";
-const EMDAD_QUEUE_PATH = "/panel/emdad/release-requests";
-const EMDAD_DETAIL_PATH = "/panel/emdad/release-requests/detail";
-const EMDAD_SUCCESS_PATH = "/panel/emdad/release-requests/success";
-const REQUESTS_KEY = "mah.fundReleaseRequests.v1";
-const SELECTED_KEY = "mah.fundReleaseRequests.selected.v1";
+const FUND_RESOURCE_DETAIL_PATH = "/panel/fund-manager/resources/detail";
+const FUND_RESOURCES_PATH = "/panel/fund-manager/resources";
+const EMDAD_SYNERGY_PATH = "/panel/emdad/fund-synergy";
+const EMDAD_ALLOCATION_PATH = "/panel/emdad/fund-synergy/allocation";
+const EMDAD_SUCCESS_PATH = "/panel/emdad/fund-synergy/success";
 
-type ReleaseRequestStatus = "pending" | "released";
+const REQUESTS_KEY = "mah.fundSynergyRequests.v2";
+const SELECTED_KEY = "mah.fundSynergyRequests.selected.v2";
+const LEGACY_REQUESTS_KEY = "mah.fundReleaseRequests.v1";
+const LEGACY_SELECTED_KEY = "mah.fundReleaseRequests.selected.v1";
 
-type ReleaseRequest = {
+type SynergyRequestStatus = "pending" | "allocated";
+
+type SynergyRequest = {
   id: string;
+  company: string;
   project: string;
-  executor: string;
-  stage: string;
-  amount: number;
+  companyPayment: number;
+  fundShare: number;
   note: string;
-  status: ReleaseRequestStatus;
+  status: SynergyRequestStatus;
   createdAt: string;
-  releasedAt?: string;
+  allocatedAt?: string;
+  receipt?: string;
 };
 
 function normalize(value: string | null | undefined) {
   return (value ?? "").replace(/\s+/g, " ").trim();
 }
 
-function readRequests(): ReleaseRequest[] {
-  try {
-    const raw = localStorage.getItem(REQUESTS_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-    return parsed.filter((item): item is ReleaseRequest => {
-      return Boolean(
-        item &&
-          typeof item.id === "string" &&
-          typeof item.project === "string" &&
-          typeof item.executor === "string" &&
-          typeof item.stage === "string" &&
-          typeof item.amount === "number" &&
-          Number.isFinite(item.amount) &&
-          typeof item.note === "string" &&
-          (item.status === "pending" || item.status === "released") &&
-          typeof item.createdAt === "string",
-      );
-    });
-  } catch {
-    return [];
-  }
-}
-
-function writeRequests(requests: ReleaseRequest[]) {
-  localStorage.setItem(REQUESTS_KEY, JSON.stringify(requests));
-  window.dispatchEvent(new CustomEvent("moon:fund-release-requests-changed"));
-}
-
-function setSelectedRequest(id: string) {
-  localStorage.setItem(SELECTED_KEY, id);
-}
-
-function getSelectedRequest() {
-  const id = localStorage.getItem(SELECTED_KEY);
-  if (!id) return null;
-  return readRequests().find((request) => request.id === id) ?? null;
-}
-
-function navigate(path: string) {
-  if (window.location.pathname === path) return;
-  window.history.pushState({}, "", path);
-  window.dispatchEvent(new PopStateEvent("popstate"));
+function setText(node: Element | null | undefined, text: string) {
+  if (!(node instanceof HTMLElement)) return;
+  if (normalize(node.textContent) !== text) node.textContent = text;
 }
 
 function faNumber(value: number) {
-  return new Intl.NumberFormat("fa-IR").format(value);
+  return new Intl.NumberFormat("fa-IR", { maximumFractionDigits: 0 }).format(value);
 }
 
 function formatAmount(value: number) {
   return `${faNumber(value)} تومان`;
+}
+
+function formatDate(value: string | undefined) {
+  if (!value) return "—";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "—";
+  try {
+    return new Intl.DateTimeFormat("fa-IR-u-ca-persian", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(date);
+  } catch {
+    return new Intl.DateTimeFormat("fa-IR").format(date);
+  }
 }
 
 function toLatinDigits(value: string) {
@@ -97,9 +76,51 @@ function parseAmountLabel(value: string) {
   return amount;
 }
 
-function setText(node: Element | null | undefined, text: string) {
-  if (!(node instanceof HTMLElement)) return;
-  if (normalize(node.textContent) !== text) node.textContent = text;
+function readRequests(): SynergyRequest[] {
+  try {
+    const raw = localStorage.getItem(REQUESTS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((item): item is SynergyRequest => {
+      return Boolean(
+        item &&
+          typeof item.id === "string" &&
+          typeof item.company === "string" &&
+          typeof item.project === "string" &&
+          typeof item.companyPayment === "number" &&
+          Number.isFinite(item.companyPayment) &&
+          typeof item.fundShare === "number" &&
+          Number.isFinite(item.fundShare) &&
+          typeof item.note === "string" &&
+          (item.status === "pending" || item.status === "allocated") &&
+          typeof item.createdAt === "string",
+      );
+    });
+  } catch {
+    return [];
+  }
+}
+
+function writeRequests(requests: SynergyRequest[]) {
+  localStorage.setItem(REQUESTS_KEY, JSON.stringify(requests));
+  window.dispatchEvent(new CustomEvent("moon:fund-synergy-requests-changed"));
+}
+
+function setSelectedRequest(id: string) {
+  localStorage.setItem(SELECTED_KEY, id);
+}
+
+function getSelectedRequest() {
+  const id = localStorage.getItem(SELECTED_KEY);
+  if (!id) return null;
+  return readRequests().find((request) => request.id === id) ?? null;
+}
+
+function navigate(path: string) {
+  if (window.location.pathname === path) return;
+  window.history.pushState({}, "", path);
+  window.dispatchEvent(new PopStateEvent("popstate"));
 }
 
 function findDetailValue(root: HTMLElement, label: string) {
@@ -113,308 +134,332 @@ function findDetailValue(root: HTMLElement, label: string) {
   return "";
 }
 
-function closeReleaseDialog() {
-  document.querySelector<HTMLElement>('[data-fund-release-dialog="true"]')?.remove();
+function findSummaryField(root: HTMLElement, label: string) {
+  const fields = root.querySelectorAll<HTMLElement>('[data-name="summary-field"]');
+  for (const field of fields) {
+    const paragraphs = field.querySelectorAll<HTMLElement>("p");
+    if (normalize(paragraphs.item(0)?.textContent) === label) return field;
+  }
+  return null;
 }
 
-function openReleaseDialog(root: HTMLElement) {
-  closeReleaseDialog();
+function currentResourceData(root: HTMLElement) {
+  const company = findDetailValue(root, "شرکت") || "شرکت پرداخت‌کننده";
+  const project = findDetailValue(root, "پروژه") || "پروژه";
+  const companyPaymentLabel = findDetailValue(root, "مبلغ پرداخت شرکت");
+  const fundShareLabel =
+    findDetailValue(root, "مبلغ ورودی صندوق") ||
+    findDetailValue(root, "سهم قابل درخواست") ||
+    normalize(findSummaryField(root, "سهم صندوق")?.querySelectorAll("p").item(1)?.textContent);
+  const companyPayment = parseAmountLabel(companyPaymentLabel);
+  const parsedShare = parseAmountLabel(fundShareLabel);
+  const fundShare = parsedShare > 0 ? parsedShare : Math.round(companyPayment * 0.1);
+  return { company, project, companyPayment, fundShare };
+}
 
-  const project = findDetailValue(root, "پروژه") || "پروژه منتخب";
-  const executor = findDetailValue(root, "استارتاپ / مجری") || "مجری پروژه";
-  const investmentLabel = findDetailValue(root, "مبلغ تخصیص‌یافته");
-  const maxAmount = parseAmountLabel(investmentLabel);
+function findLatestRequest(company: string, project: string) {
+  return readRequests()
+    .filter((request) => normalize(request.company) === company && normalize(request.project) === project)
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0];
+}
+
+function closeSynergyDialog() {
+  document.querySelector<HTMLElement>('[data-fund-synergy-dialog="true"]')?.remove();
+}
+
+function openSynergyDialog(root: HTMLElement) {
+  closeSynergyDialog();
+  const data = currentResourceData(root);
+  if (data.companyPayment <= 0 || data.fundShare <= 0) return;
+
+  const existing = findLatestRequest(data.company, data.project);
+  if (existing?.status === "pending" || existing?.status === "allocated") return;
 
   const backdrop = document.createElement("div");
-  backdrop.dataset.fundReleaseDialog = "true";
-  backdrop.className = "fund-release-dialog-backdrop";
+  backdrop.dataset.fundSynergyDialog = "true";
+  backdrop.className = "fund-synergy-dialog-backdrop";
   backdrop.setAttribute("dir", "rtl");
 
   const dialog = document.createElement("div");
-  dialog.className = "fund-release-dialog";
+  dialog.className = "fund-synergy-dialog";
   dialog.setAttribute("role", "dialog");
   dialog.setAttribute("aria-modal", "true");
-  dialog.setAttribute("aria-label", "ثبت درخواست آزادسازی وجه");
+  dialog.setAttribute("aria-label", "درخواست سهم ده درصد صندوق");
 
   const title = document.createElement("h2");
-  title.textContent = "درخواست آزادسازی وجه";
+  title.textContent = "درخواست سهم ۱۰٪ صندوق";
 
   const description = document.createElement("p");
-  description.className = "fund-release-dialog-description";
+  description.className = "fund-synergy-dialog-description";
   description.textContent =
-    "مدیر صندوق درخواست تخصیص را ثبت می‌کند؛ پرداخت نهایی پس از بررسی در پنل کمیته امداد انجام می‌شود.";
+    "این درخواست مربوط به سهم ۱۰٪ صندوق از پرداخت نقدی شرکت است. مبلغ توسط سامانه محاسبه می‌شود و مدیر صندوق فقط درخواست آن را برای کمیته امداد ارسال می‌کند.";
 
-  const projectSummary = document.createElement("div");
-  projectSummary.className = "fund-release-project-summary";
-  projectSummary.textContent = `پروژه: ${project} · مجری: ${executor}${investmentLabel ? ` · سقف سرمایه‌گذاری: ${investmentLabel}` : ""}`;
+  const summary = document.createElement("div");
+  summary.className = "fund-synergy-dialog-summary";
+  const summaryItems = [
+    ["پروژه", data.project],
+    ["شرکت", data.company],
+    ["پرداخت نقدی شرکت", formatAmount(data.companyPayment)],
+    ["سهم ۱۰٪ صندوق", formatAmount(data.fundShare)],
+  ];
+  summaryItems.forEach(([label, value]) => {
+    const item = document.createElement("div");
+    const labelNode = document.createElement("span");
+    const valueNode = document.createElement("strong");
+    labelNode.textContent = label;
+    valueNode.textContent = value;
+    item.append(labelNode, valueNode);
+    summary.appendChild(item);
+  });
 
-  const fields = document.createElement("div");
-  fields.className = "fund-release-fields";
-
-  const stageField = document.createElement("label");
-  stageField.className = "fund-release-field";
-  const stageLabel = document.createElement("span");
-  stageLabel.textContent = "مرحله پروژه";
-  const stageInput = document.createElement("input");
-  stageInput.type = "text";
-  stageInput.placeholder = "نام مرحله را وارد کنید";
-  stageInput.autocomplete = "off";
-  stageField.append(stageLabel, stageInput);
-
-  const amountField = document.createElement("label");
-  amountField.className = "fund-release-field";
-  const amountLabel = document.createElement("span");
-  amountLabel.textContent = "مبلغ درخواست (تومان)";
-  const amountInput = document.createElement("input");
-  amountInput.type = "number";
-  amountInput.min = "1";
-  amountInput.step = "1000";
-  if (maxAmount > 0) amountInput.max = String(maxAmount);
-  amountInput.placeholder = maxAmount > 0 ? `حداکثر ${faNumber(maxAmount)}` : "مبلغ";
-  amountField.append(amountLabel, amountInput);
-
-  const noteField = document.createElement("label");
-  noteField.className = "fund-release-field fund-release-field-wide";
-  const noteLabel = document.createElement("span");
-  noteLabel.textContent = "توضیح درخواست";
+  const noteLabel = document.createElement("label");
+  noteLabel.className = "fund-synergy-note-field";
+  const noteTitle = document.createElement("span");
+  noteTitle.textContent = "توضیح اختیاری";
   const noteInput = document.createElement("textarea");
-  noteInput.placeholder = "در صورت نیاز توضیح کوتاه ثبت کنید";
-  noteField.append(noteLabel, noteInput);
-
-  fields.append(stageField, amountField, noteField);
-
-  const error = document.createElement("div");
-  error.className = "fund-release-error";
+  noteInput.placeholder = "در صورت نیاز توضیح کوتاه برای کمیته امداد ثبت کنید";
+  noteLabel.append(noteTitle, noteInput);
 
   const actions = document.createElement("div");
-  actions.className = "fund-release-dialog-actions";
-
+  actions.className = "fund-synergy-dialog-actions";
   const cancel = document.createElement("button");
   cancel.type = "button";
-  cancel.className = "fund-release-cancel";
+  cancel.className = "fund-synergy-cancel";
   cancel.textContent = "انصراف";
-  cancel.addEventListener("click", closeReleaseDialog);
+  cancel.addEventListener("click", closeSynergyDialog);
 
   const submit = document.createElement("button");
   submit.type = "button";
-  submit.className = "fund-release-submit";
-  submit.textContent = "ثبت و ارسال به امداد";
+  submit.className = "fund-synergy-submit";
+  submit.textContent = "ارسال درخواست به امداد";
   submit.addEventListener("click", () => {
-    const stage = normalize(stageInput.value);
-    const amount = Number(amountInput.value);
-    const note = normalize(noteInput.value);
-
-    if (!stage) {
-      error.textContent = "مرحله پروژه را وارد کنید.";
-      stageInput.focus();
-      return;
-    }
-    if (!Number.isFinite(amount) || amount <= 0) {
-      error.textContent = "مبلغ درخواست را به‌درستی وارد کنید.";
-      amountInput.focus();
-      return;
-    }
-    if (maxAmount > 0 && amount > maxAmount) {
-      error.textContent = `مبلغ درخواست نمی‌تواند بیشتر از ${formatAmount(maxAmount)} باشد.`;
-      amountInput.focus();
-      return;
-    }
-
     const requests = readRequests();
     const duplicate = requests.find(
       (request) =>
         request.status === "pending" &&
-        normalize(request.project) === project &&
-        normalize(request.stage) === stage,
+        normalize(request.company) === data.company &&
+        normalize(request.project) === data.project,
     );
     if (duplicate) {
-      error.textContent = "برای این پروژه و مرحله یک درخواست باز وجود دارد.";
+      closeSynergyDialog();
+      applyFundResourceDetail();
       return;
     }
 
-    const request: ReleaseRequest = {
-      id: `FR-${Date.now()}`,
-      project,
-      executor,
-      stage,
-      amount,
-      note,
+    const request: SynergyRequest = {
+      id: `FS-${Date.now()}`,
+      company: data.company,
+      project: data.project,
+      companyPayment: data.companyPayment,
+      fundShare: data.fundShare,
+      note: normalize(noteInput.value),
       status: "pending",
       createdAt: new Date().toISOString(),
     };
     writeRequests([request, ...requests]);
     setSelectedRequest(request.id);
-    closeReleaseDialog();
-    applyFundManagerInvestmentDetail();
+    closeSynergyDialog();
+    applyFundResourceDetail();
+    applyFundResourcesList();
   });
 
   actions.append(cancel, submit);
-  dialog.append(title, description, projectSummary, fields, error, actions);
+  dialog.append(title, description, summary, noteLabel, actions);
   backdrop.appendChild(dialog);
   backdrop.addEventListener("click", (event) => {
-    if (event.target === backdrop) closeReleaseDialog();
+    if (event.target === backdrop) closeSynergyDialog();
   });
   document.body.appendChild(backdrop);
-  stageInput.focus();
+  noteInput.focus();
 }
 
-function applyFundManagerInvestmentDetail() {
-  if (window.location.pathname !== FUND_MANAGER_DETAIL_PATH) return;
-  const root = document.querySelector<HTMLElement>('[data-name="fund-manager-investment-detail"]');
+function applyFundResourceDetail() {
+  if (window.location.pathname !== FUND_RESOURCE_DETAIL_PATH) return;
+  const root = document.querySelector<HTMLElement>('[data-name="fund-manager-resource-detail"]');
   if (!root) return;
 
+  const data = currentResourceData(root);
+  const latest = findLatestRequest(data.company, data.project);
   const header = root.querySelector<HTMLElement>('[data-name="header"]');
-  if (header && !header.querySelector('[data-fund-release-button="true"]')) {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.dataset.fundReleaseButton = "true";
-    button.className = "fund-release-request-button";
-    button.textContent = "درخواست آزادسازی وجه";
-    button.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      openReleaseDialog(root);
-    });
-    header.appendChild(button);
+  if (header) {
+    let button = header.querySelector<HTMLButtonElement>('[data-fund-synergy-request-button="true"]');
+    if (!button) {
+      button = document.createElement("button");
+      button.type = "button";
+      button.dataset.fundSynergyRequestButton = "true";
+      button.className = "fund-synergy-request-button";
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        openSynergyDialog(root);
+      });
+      header.appendChild(button);
+    }
+    if (!latest) {
+      button.disabled = false;
+      button.dataset.status = "ready";
+      button.textContent = "درخواست سهم ۱۰٪ صندوق";
+    } else if (latest.status === "pending") {
+      button.disabled = true;
+      button.dataset.status = "pending";
+      button.textContent = "درخواست ارسال شد";
+    } else {
+      button.disabled = true;
+      button.dataset.status = "allocated";
+      button.textContent = "سهم ۱۰٪ دریافت شد";
+    }
   }
 
-  const project = findDetailValue(root, "پروژه");
-  if (!project) return;
-  const latest = readRequests()
-    .filter((request) => normalize(request.project) === project)
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0];
   const summary = root.querySelector<HTMLElement>('[data-name="resource-summary"]');
-  if (!summary) return;
+  const summaryStatus = summary?.querySelector<HTMLElement>('[data-name="chip"] p');
+  if (!latest) setText(summaryStatus, "آماده درخواست");
+  else if (latest.status === "pending") setText(summaryStatus, "در انتظار تخصیص");
+  else setText(summaryStatus, "ثبت قطعی");
 
-  let status = summary.querySelector<HTMLElement>('[data-fund-release-status="true"]');
-  if (!latest) {
-    status?.remove();
-    return;
+  const dateField = root.querySelectorAll<HTMLElement>('[data-name="summary-field"]').item(3);
+  if (dateField) {
+    const paragraphs = dateField.querySelectorAll<HTMLElement>("p");
+    if (!latest) {
+      setText(paragraphs.item(0), "تاریخ پرداخت شرکت");
+    } else if (latest.status === "pending") {
+      setText(paragraphs.item(0), "تاریخ درخواست");
+      setText(paragraphs.item(1), formatDate(latest.createdAt));
+    } else {
+      setText(paragraphs.item(0), "تاریخ تخصیص");
+      setText(paragraphs.item(1), formatDate(latest.allocatedAt));
+    }
   }
-  if (!status) {
-    status = document.createElement("div");
-    status.dataset.fundReleaseStatus = "true";
-    status.className = "fund-release-request-status";
-    summary.appendChild(status);
-  }
-  status.dataset.status = latest.status;
-  status.textContent = latest.status === "pending" ? "در انتظار اقدام کمیته امداد" : "آزادسازی وجه انجام شده";
+
+  const fields = root.querySelectorAll<HTMLElement>('[data-name="detail-field"]');
+  fields.forEach((field) => {
+    const paragraphs = field.querySelectorAll<HTMLElement>("p");
+    const label = normalize(paragraphs.item(0)?.textContent);
+    if (label === "مبلغ ورودی صندوق" || label === "سهم قابل درخواست") {
+      setText(paragraphs.item(0), latest?.status === "allocated" ? "مبلغ ورودی صندوق" : "سهم قابل درخواست");
+      if (data.fundShare > 0) setText(paragraphs.item(1), formatAmount(data.fundShare));
+    }
+  });
 }
 
-function makeCell(text: string, extraClass = "") {
+function applyFundResourcesList() {
+  if (window.location.pathname !== FUND_RESOURCES_PATH) return;
+  const root = document.querySelector<HTMLElement>('[data-name="fund-manager-resources"]');
+  if (!root) return;
+
+  const rows = root.querySelectorAll<HTMLElement>('[data-name="resource-row"]');
+  rows.forEach((row) => {
+    const text = normalize(row.textContent);
+    if (!text.includes("۱۰٪ پرداخت نقدی شرکت") && !text.includes("هم‌افزایی")) return;
+    const title = normalize(row.querySelector<HTMLElement>("p")?.textContent).replace(/^هم‌افزایی\s*/, "");
+    const request = readRequests()
+      .filter((item) => !title || normalize(item.project) === title)
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0];
+    const chip = row.querySelector<HTMLElement>('[data-name="chip"] p');
+    if (!request) setText(chip, "آماده درخواست");
+    else if (request.status === "pending") setText(chip, "در انتظار تخصیص");
+    else setText(chip, "ثبت قطعی");
+  });
+}
+
+function makeQueueCell(text: string, className = "") {
   const cell = document.createElement("div");
-  cell.className = `moon-release-queue-cell ${extraClass}`.trim();
+  cell.className = `moon-synergy-request-cell ${className}`.trim();
   cell.textContent = text;
   return cell;
 }
 
-function renderEmdadQueue(root: HTMLElement) {
-  const requests = readRequests();
-  if (requests.length === 0) return;
+function renderEmdadSynergyQueue() {
+  if (window.location.pathname !== EMDAD_SYNERGY_PATH) return;
+  const root = document.querySelector<HTMLElement>('[data-name="emdad-fund-synergy"]');
+  if (!root) return;
+  const table = root.querySelector<HTMLElement>('[data-name="fund-synergy-table"]');
+  if (!table) return;
 
-  const table = root.querySelector<HTMLElement>('[data-name="release-requests-table"]');
-  const toolbar = root.querySelector<HTMLElement>('[data-name="toolbar"]');
-  if (!table || !toolbar) return;
-
-  root.querySelector<HTMLElement>('[data-name="request-row"]')?.style.setProperty("display", "none", "important");
+  root.querySelector<HTMLElement>('[data-name="fund-synergy-row"]')?.style.setProperty("display", "none", "important");
+  root.querySelector<HTMLElement>('[data-name="table-note"]')?.style.setProperty("display", "none", "important");
   root.querySelector<HTMLElement>('[data-name="pagination-footer"]')?.style.setProperty("display", "none", "important");
 
-  const headers = table.querySelectorAll<HTMLElement>('[data-name="table-header"] p');
-  setText(headers.item(0), "پروژه");
-  setText(headers.item(1), "مرحله");
-  setText(headers.item(2), "مرجع درخواست");
-  setText(headers.item(3), "مبلغ");
-  setText(headers.item(4), "وضعیت");
-  setText(headers.item(5), "اقدام");
+  const tableParagraphs = table.querySelectorAll<HTMLElement>(":scope > div, :scope > p");
+  const title = table.querySelector<HTMLElement>('[data-node-id="2222:31"] p') ?? table.querySelector<HTMLElement>("p");
+  setText(title, "درخواست‌های سهم ۱۰٪ صندوق");
+  const subtitle = table.querySelector<HTMLElement>('[data-node-id="2222:32"] p');
+  setText(subtitle, "فقط درخواست‌هایی که مدیر صندوق برای سهم ۱۰٪ ثبت کرده است در این بخش قابل اقدام هستند.");
+  void tableParagraphs;
 
-  const pendingCount = requests.filter((request) => request.status === "pending").length;
-  const releasedCount = requests.filter((request) => request.status === "released").length;
-  const toolbarParagraphs = toolbar.querySelectorAll<HTMLElement>("p");
-  setText(toolbarParagraphs.item(0), `${faNumber(requests.length)} درخواست مدیر صندوق`);
+  const requests = readRequests();
+  const countPill = root.querySelector<HTMLElement>('[data-name="count-pill"] p');
+  setText(countPill, `${faNumber(requests.length)} درخواست`);
 
-  const waitingTab = toolbar.querySelector<HTMLElement>('[data-name="waiting-tab"]');
-  const releasedTab = toolbar.querySelector<HTMLElement>('[data-name="released-tab"]');
-  setText(waitingTab?.querySelector("p"), `در انتظار اقدام ${faNumber(pendingCount)}`);
-  setText(releasedTab?.querySelector("p"), `آزادسازی‌شده ${faNumber(releasedCount)}`);
-
-  if (waitingTab && waitingTab.dataset.moonBound !== "true") {
-    waitingTab.dataset.moonBound = "true";
-    waitingTab.style.cursor = "pointer";
-    waitingTab.setAttribute("role", "button");
-    waitingTab.tabIndex = 0;
-    const activate = () => {
-      table.dataset.moonReleaseView = "pending";
-      renderEmdadQueue(root);
-    };
-    waitingTab.addEventListener("click", activate);
-    waitingTab.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" || event.key === " ") activate();
-    });
-  }
-  if (releasedTab && releasedTab.dataset.moonBound !== "true") {
-    releasedTab.dataset.moonBound = "true";
-    const activate = () => {
-      table.dataset.moonReleaseView = "released";
-      renderEmdadQueue(root);
-    };
-    releasedTab.addEventListener("click", activate);
+  const summaryCards = root.querySelectorAll<HTMLElement>('[data-name="summary-row"] [data-name="summary-card"]');
+  const pending = requests.filter((request) => request.status === "pending");
+  const allocated = requests.filter((request) => request.status === "allocated");
+  const pendingAmount = pending.reduce((sum, request) => sum + request.fundShare, 0);
+  const allocatedAmount = allocated.reduce((sum, request) => sum + request.fundShare, 0);
+  if (requests.length > 0) {
+    const c0 = summaryCards.item(0)?.querySelectorAll<HTMLElement>("p");
+    setText(c0?.item(0), "درخواست‌های صندوق");
+    setText(c0?.item(1), faNumber(requests.length));
+    setText(c0?.item(2), `${faNumber(pending.length)} مورد در انتظار اقدام`);
+    const c1 = summaryCards.item(1)?.querySelectorAll<HTMLElement>("p");
+    setText(c1?.item(0), "سهم در انتظار تخصیص");
+    setText(c1?.item(1), formatAmount(pendingAmount));
+    setText(c1?.item(2), "درخواست‌شده توسط مدیر صندوق");
+    const c2 = summaryCards.item(2)?.querySelectorAll<HTMLElement>("p");
+    setText(c2?.item(0), "سهم تخصیص‌یافته");
+    setText(c2?.item(1), formatAmount(allocatedAmount));
+    setText(c2?.item(2), "ثبت‌شده برای صندوق");
   }
 
-  const view: ReleaseRequestStatus = table.dataset.moonReleaseView === "released" ? "released" : "pending";
-  waitingTab?.setAttribute("data-moon-active", view === "pending" ? "true" : "false");
-  releasedTab?.setAttribute("data-moon-active", view === "released" ? "true" : "false");
-
-  let list = table.querySelector<HTMLElement>('[data-moon-release-queue="true"]');
+  let list = table.querySelector<HTMLElement>('[data-moon-synergy-request-list="true"]');
   if (!list) {
     list = document.createElement("div");
-    list.dataset.moonReleaseQueue = "true";
-    list.className = "moon-release-queue-list";
+    list.dataset.moonSynergyRequestList = "true";
+    list.className = "moon-synergy-request-list";
     table.appendChild(list);
   }
   list.replaceChildren();
 
-  const visible = requests.filter((request) => request.status === view);
-  if (visible.length === 0) {
+  if (requests.length === 0) {
     const empty = document.createElement("div");
-    empty.className = "moon-release-queue-empty";
-    empty.textContent = view === "pending" ? "درخواست در انتظار اقدامی وجود ندارد." : "هنوز آزادسازی ثبت نشده است.";
+    empty.className = "moon-synergy-request-empty";
+    empty.textContent = "هنوز مدیر صندوق درخواست سهم ۱۰٪ ثبت نکرده است.";
     list.appendChild(empty);
     return;
   }
 
-  visible.forEach((request) => {
+  requests.forEach((request, index) => {
     const row = document.createElement("div");
-    row.className = "moon-release-queue-row";
-    row.dataset.releaseRequestId = request.id;
+    row.className = "moon-synergy-request-row";
+    row.dataset.requestId = request.id;
+    row.appendChild(makeQueueCell(faNumber(index + 1)));
 
-    const project = makeCell(request.project, "moon-release-queue-project");
-    const executor = document.createElement("small");
-    executor.textContent = request.executor;
-    project.appendChild(executor);
-
+    const project = makeQueueCell(request.project, "moon-synergy-request-project");
+    const company = document.createElement("small");
+    company.textContent = request.company;
+    project.appendChild(company);
     row.appendChild(project);
-    row.appendChild(makeCell(request.stage));
-    row.appendChild(makeCell("مدیر صندوق"));
-    row.appendChild(makeCell(formatAmount(request.amount)));
+
+    row.appendChild(makeQueueCell(formatAmount(request.companyPayment)));
+    row.appendChild(makeQueueCell(formatAmount(request.fundShare)));
 
     const statusCell = document.createElement("div");
-    statusCell.className = "moon-release-queue-cell";
+    statusCell.className = "moon-synergy-request-cell";
     const status = document.createElement("span");
-    status.className = "moon-release-queue-status";
+    status.className = "moon-synergy-request-status";
     status.dataset.status = request.status;
-    status.textContent = request.status === "pending" ? "در انتظار آزادسازی" : "آزادسازی‌شده";
+    status.textContent = request.status === "pending" ? "در انتظار تخصیص" : "تخصیص‌شده";
     statusCell.appendChild(status);
     row.appendChild(statusCell);
 
     const actionCell = document.createElement("div");
-    actionCell.className = "moon-release-queue-cell";
+    actionCell.className = "moon-synergy-request-cell";
     const action = document.createElement("button");
     action.type = "button";
-    action.className = "moon-release-queue-action";
+    action.className = "moon-synergy-request-action";
     action.textContent = request.status === "pending" ? "بررسی درخواست" : "مشاهده";
     action.addEventListener("click", () => {
       setSelectedRequest(request.id);
-      navigate(EMDAD_DETAIL_PATH);
+      navigate(EMDAD_ALLOCATION_PATH);
     });
     actionCell.appendChild(action);
     row.appendChild(actionCell);
@@ -422,92 +467,84 @@ function renderEmdadQueue(root: HTMLElement) {
   });
 }
 
-function setInfoPair(container: HTMLElement, label: string, nextLabel: string, value: string) {
-  const rows = container.querySelectorAll<HTMLElement>('[data-name="info-row"]');
-  for (const row of rows) {
-    const paragraphs = row.querySelectorAll<HTMLElement>("p");
-    if (normalize(paragraphs.item(0)?.textContent) === label) {
-      setText(paragraphs.item(0), nextLabel);
-      setText(paragraphs.item(1), value);
-      return;
-    }
-  }
+function setField(field: HTMLElement | undefined, label: string, value: string) {
+  if (!field) return;
+  const paragraphs = field.querySelectorAll<HTMLElement>("p");
+  setText(paragraphs.item(0), label);
+  setText(paragraphs.item(1), value);
 }
 
-function applyEmdadDetail() {
-  if (window.location.pathname !== EMDAD_DETAIL_PATH) return;
+function applyEmdadAllocation() {
+  if (window.location.pathname !== EMDAD_ALLOCATION_PATH) return;
   const request = getSelectedRequest();
   if (!request) return;
-  const root = document.querySelector<HTMLElement>('[data-name="emdad-release-request-detail"]');
+  const root = document.querySelector<HTMLElement>('[data-name="emdad-fund-synergy-allocation"]');
   if (!root) return;
 
-  const headerParagraphs = root.querySelectorAll<HTMLElement>('[data-name="header"] p');
-  setText(headerParagraphs.item(0), "بررسی درخواست آزادسازی وجه صندوق");
-  setText(headerParagraphs.item(1), "بررسی درخواست تخصیص ثبت‌شده توسط مدیر صندوق و ثبت تصمیم کمیته امداد");
+  const header = root.querySelector<HTMLElement>('[data-name="header"]');
+  const headerParagraphs = header?.querySelectorAll<HTMLElement>("p");
+  setText(headerParagraphs?.item(0), "بررسی درخواست سهم ۱۰٪ صندوق");
+  setText(headerParagraphs?.item(1), "بررسی درخواست ثبت‌شده توسط مدیر صندوق و تأیید تخصیص سهم هم‌افزایی");
+  setText(header?.querySelector<HTMLElement>('[data-name="status"] p'), request.status === "pending" ? "در انتظار بررسی" : "تخصیص‌شده");
 
-  const summary = root.querySelector<HTMLElement>('[data-name="request-summary"]');
-  if (summary) {
-    const paragraphs = summary.querySelectorAll<HTMLElement>("p");
-    setText(paragraphs.item(0), request.project);
-    setText(paragraphs.item(1), `درخواست مدیر صندوق · ${request.executor}`);
-    setText(paragraphs.item(2), request.status === "pending" ? "در انتظار آزادسازی" : "آزادسازی‌شده");
-    setText(paragraphs.item(4), request.stage);
-    setText(paragraphs.item(5), "مبلغ درخواست");
-    setText(paragraphs.item(6), formatAmount(request.amount));
-    setText(paragraphs.item(7), "مرجع درخواست");
-    setText(paragraphs.item(8), "مدیر صندوق");
+  const fields = root.querySelectorAll<HTMLElement>('[data-name="request-summary"] [data-name="field"]');
+  setField(fields.item(0), "شرکت", request.company);
+  setField(fields.item(1), "مرجع درخواست", "مدیر صندوق");
+  setField(fields.item(2), "پروژه", request.project);
+  setField(fields.item(3), "مبلغ پرداخت شرکت", formatAmount(request.companyPayment));
+  setField(fields.item(4), "سهم ۱۰٪ درخواستی", formatAmount(request.fundShare));
+  setField(fields.item(5), "تاریخ درخواست", formatDate(request.createdAt));
+
+  const checks = root.querySelectorAll<HTMLElement>('[data-name="final-controls"] [data-name="check-row"]');
+  const checkData = [
+    ["پرداخت شرکت", `پرداخت نقدی ${formatAmount(request.companyPayment)} مبنای درخواست است`, "تأیید"],
+    ["محاسبه سهم صندوق", `۱۰٪ پرداخت برابر ${formatAmount(request.fundShare)} است`, "تأیید"],
+    ["درخواست مدیر صندوق", `درخواست در تاریخ ${formatDate(request.createdAt)} ثبت شده است`, "ثبت شده"],
+    ["وضعیت تخصیص", request.status === "pending" ? "در انتظار اقدام کمیته امداد" : "سهم صندوق تخصیص داده شده است", request.status === "pending" ? "در انتظار" : "انجام شد"],
+  ];
+  checks.forEach((row, index) => {
+    const paragraphs = row.querySelectorAll<HTMLElement>("p");
+    setText(paragraphs.item(0), checkData[index]?.[0] ?? "");
+    setText(paragraphs.item(1), checkData[index]?.[1] ?? "");
+    setText(paragraphs.item(2), checkData[index]?.[2] ?? "");
+  });
+
+  const steps = root.querySelectorAll<HTMLElement>('[data-name="process-step"]');
+  const stepData = [
+    ["ثبت پرداخت شرکت", `پرداخت ${formatAmount(request.companyPayment)} ثبت شده است`],
+    ["محاسبه سهم ۱۰٪", `سهم صندوق ${formatAmount(request.fundShare)} محاسبه شده است`],
+    ["ثبت درخواست صندوق", "مدیر صندوق درخواست سهم خود را ارسال کرده است"],
+    ["تخصیص توسط امداد", request.status === "pending" ? "در انتظار تأیید و واریز سهم صندوق" : "تخصیص سهم صندوق ثبت شده است"],
+  ];
+  steps.forEach((step, index) => {
+    const paragraphs = step.querySelectorAll<HTMLElement>("p");
+    setText(paragraphs.item(1), stepData[index]?.[0] ?? "");
+    setText(paragraphs.item(2), stepData[index]?.[1] ?? "");
+  });
+
+  const finalDecision = root.querySelector<HTMLElement>('[data-name="final-decision"]');
+  const finalParagraphs = finalDecision?.querySelectorAll<HTMLElement>(":scope > div > p, :scope > p");
+  if (finalParagraphs && finalParagraphs.length >= 2) {
+    setText(finalParagraphs.item(0), "تخصیص سهم صندوق");
     setText(
-      paragraphs.item(9),
-      "این درخواست پس از تصمیم تخصیص مدیر صندوق برای اقدام مالی به صف کمیته امداد ارسال شده است.",
+      finalParagraphs.item(1),
+      request.status === "pending"
+        ? `با تأیید، مبلغ ${formatAmount(request.fundShare)} به‌عنوان سهم ۱۰٪ صندوق ثبت و رسید مالی ایجاد می‌شود.`
+        : `مبلغ ${formatAmount(request.fundShare)} قبلاً برای صندوق تخصیص داده شده است.`,
     );
   }
 
-  const decision = root.querySelector<HTMLElement>('[data-name="release-decision"]');
-  if (decision) {
-    setInfoPair(decision, "مرجع ارزیابی مرحله", "مرجع درخواست", "مدیر صندوق");
-    setInfoPair(
-      decision,
-      "نتیجه ارزیابی",
-      "وضعیت درخواست",
-      request.status === "pending" ? "در انتظار اقدام" : "آزادسازی‌شده",
-    );
-    setInfoPair(decision, "سهم این مرحله", "مبلغ درخواست", formatAmount(request.amount));
-    setInfoPair(
-      decision,
-      "وضعیت مالی",
-      "وضعیت مالی",
-      request.status === "pending" ? "در انتظار آزادسازی" : "آزادسازی‌شده",
-    );
-    const note = decision.querySelector<HTMLElement>('[data-name="scope-note"] p');
-    setText(note, "کمیته امداد مبلغ و مشخصات درخواست مدیر صندوق را بررسی و نتیجه پرداخت را ثبت می‌کند.");
-  }
-
-  const actionArea = root.querySelector<HTMLElement>('[data-name="action-area"]');
-  if (actionArea) {
-    const paragraphs = actionArea.querySelectorAll<HTMLElement>("p");
-    setText(
-      paragraphs.item(1),
-      "با ثبت تأیید، آزادسازی وجه این درخواست انجام‌شده ثبت می‌شود و نتیجه در سوابق مالی قابل پیگیری خواهد بود.",
-    );
-    const info = actionArea.querySelector<HTMLElement>('[data-name="info"] p');
-    setText(
-      info,
-      `مبلغ درخواست: ${formatAmount(request.amount)}${request.note ? ` · توضیح: ${request.note}` : ""}`,
-    );
-  }
-
-  const approve = root.querySelector<HTMLElement>('[data-name="approve-release-button"]');
+  const approve = root.querySelector<HTMLElement>('[data-name="approve-final"]');
+  const approveText = approve?.querySelector<HTMLElement>("p");
   if (!approve) return;
-  const approveText = approve.querySelector<HTMLElement>("p");
-
-  if (request.status === "released") {
-    approve.dataset.moonReleased = "true";
-    setText(approveText, "آزادسازی انجام شده");
+  if (request.status === "allocated") {
+    approve.dataset.moonAllocated = "true";
+    setText(approveText, "تخصیص انجام شده");
     return;
   }
 
-  approve.removeAttribute("data-moon-released");
-  setText(approveText, "تأیید و آزادسازی وجه");
+  approve.removeAttribute("data-moon-allocated");
+  setText(approveText, "تأیید و واریز سهم صندوق");
   if (approve.dataset.moonBound !== "true") {
     approve.dataset.moonBound = "true";
     approve.addEventListener("click", (event) => {
@@ -515,13 +552,11 @@ function applyEmdadDetail() {
       if (!selected || selected.status !== "pending") return;
       event.preventDefault();
       event.stopPropagation();
+      const now = new Date().toISOString();
+      const receipt = `FSR-${Date.now()}`;
       const updated = readRequests().map((item) =>
         item.id === selected.id
-          ? {
-              ...item,
-              status: "released" as const,
-              releasedAt: new Date().toISOString(),
-            }
+          ? { ...item, status: "allocated" as const, allocatedAt: now, receipt }
           : item,
       );
       writeRequests(updated);
@@ -534,53 +569,61 @@ function applyEmdadSuccess() {
   if (window.location.pathname !== EMDAD_SUCCESS_PATH) return;
   const request = getSelectedRequest();
   if (!request) return;
-  const root = document.querySelector<HTMLElement>('[data-name="emdad-release-success"]');
+  const root = document.querySelector<HTMLElement>('[data-name="emdad-fund-synergy-success"]');
   if (!root) return;
 
-  const hero = root.querySelector<HTMLElement>('[data-name="release-success-hero"]');
-  if (hero) {
-    const paragraphs = hero.querySelectorAll<HTMLElement>("p");
-    setText(paragraphs.item(1), `آزادسازی وجه پروژه «${request.project}» ثبت شد`);
-    setText(paragraphs.item(2), `مبلغ ${formatAmount(request.amount)} برای مرحله «${request.stage}» آزادسازی شد.`);
-  }
+  const headerParagraphs = root.querySelectorAll<HTMLElement>('[data-name="header"] p');
+  setText(headerParagraphs.item(0), "سهم ۱۰٪ صندوق تخصیص داده شد");
+  setText(headerParagraphs.item(1), "درخواست مدیر صندوق توسط کمیته امداد تأیید و در سوابق مالی ثبت شد.");
 
-  const summaryItems = root.querySelectorAll<HTMLElement>('[data-name="release-result-summary"] [data-name="summary-item"]');
-  if (summaryItems.length >= 4) {
-    const project = summaryItems.item(0).querySelectorAll<HTMLElement>("p");
-    setText(project.item(1), request.project);
-    const stage = summaryItems.item(1).querySelectorAll<HTMLElement>("p");
-    setText(stage.item(1), request.stage);
-    const amount = summaryItems.item(2).querySelectorAll<HTMLElement>("p");
-    setText(amount.item(0), "مبلغ آزادشده");
-    setText(amount.item(1), formatAmount(request.amount));
-    const source = summaryItems.item(3).querySelectorAll<HTMLElement>("p");
-    setText(source.item(0), "مرجع درخواست");
-    setText(source.item(1), "مدیر صندوق");
-  }
+  const banner = root.querySelector<HTMLElement>('[data-name="success-banner"]');
+  const bannerParagraphs = banner?.querySelectorAll<HTMLElement>("p");
+  setText(bannerParagraphs?.item(1), "واریز سهم صندوق با موفقیت ثبت شد");
+  setText(bannerParagraphs?.item(2), `مبلغ ${formatAmount(request.fundShare)} برای پروژه «${request.project}» به‌عنوان سهم ۱۰٪ صندوق ثبت شد.`);
 
-  const steps = root.querySelectorAll<HTMLElement>('[data-name="release-process-result"] [data-name="completed-step"]');
-  setText(steps.item(0)?.querySelectorAll("p").item(1), "ثبت درخواست توسط مدیر صندوق");
-  setText(steps.item(1)?.querySelectorAll("p").item(1), "آزادسازی توسط کمیته امداد");
-  setText(steps.item(2)?.querySelectorAll("p").item(1), "ثبت نتیجه در سوابق پرداخت");
+  const cells = root.querySelectorAll<HTMLElement>('[data-name="certificate-summary"] [data-name="summary-cell"]');
+  setField(cells.item(0), "شرکت", request.company);
+  setField(cells.item(1), "پروژه", request.project);
+  setField(cells.item(2), "مبلغ پرداخت شرکت", formatAmount(request.companyPayment));
+  setField(cells.item(3), "سهم ۱۰٪ صندوق", formatAmount(request.fundShare));
+  setField(cells.item(4), "تاریخ تخصیص", formatDate(request.allocatedAt));
+  setField(cells.item(5), "شماره رسید", request.receipt ?? "—");
+
+  const steps = root.querySelectorAll<HTMLElement>('[data-name="process-state"] [data-name="process-step"]');
+  const stepData = [
+    ["ثبت پرداخت شرکت", `پرداخت ${formatAmount(request.companyPayment)} ثبت شد`],
+    ["ثبت درخواست صندوق", "مدیر صندوق سهم ۱۰٪ را درخواست کرد"],
+    ["تخصیص توسط امداد", `مبلغ ${formatAmount(request.fundShare)} برای صندوق ثبت شد`],
+    ["ثبت رسید", `رسید ${request.receipt ?? "مالی"} ایجاد شد`],
+  ];
+  steps.forEach((step, index) => {
+    const paragraphs = step.querySelectorAll<HTMLElement>("p");
+    setText(paragraphs.item(1), stepData[index]?.[0] ?? "");
+    setText(paragraphs.item(2), stepData[index]?.[1] ?? "");
+  });
+}
+
+function migrateWrongPrototype() {
+  if (localStorage.getItem(LEGACY_REQUESTS_KEY) !== null) localStorage.removeItem(LEGACY_REQUESTS_KEY);
+  if (localStorage.getItem(LEGACY_SELECTED_KEY) !== null) localStorage.removeItem(LEGACY_SELECTED_KEY);
 }
 
 function applyCurrentPage() {
-  applyFundManagerInvestmentDetail();
-  if (window.location.pathname === EMDAD_QUEUE_PATH) {
-    const root = document.querySelector<HTMLElement>('[data-name="emdad-release-requests"]');
-    if (root) renderEmdadQueue(root);
-  }
-  applyEmdadDetail();
+  applyFundResourceDetail();
+  applyFundResourcesList();
+  renderEmdadSynergyQueue();
+  applyEmdadAllocation();
   applyEmdadSuccess();
 }
 
 function hasRelevantPageNode(node: Node) {
   if (!(node instanceof Element)) return false;
   const selector =
-    '[data-name="fund-manager-investment-detail"], [data-name="emdad-release-requests"], [data-name="emdad-release-request-detail"], [data-name="emdad-release-success"]';
+    '[data-name="fund-manager-resource-detail"], [data-name="fund-manager-resources"], [data-name="emdad-fund-synergy"], [data-name="emdad-fund-synergy-allocation"], [data-name="emdad-fund-synergy-success"]';
   return node.matches(selector) || Boolean(node.querySelector(selector));
 }
 
+migrateWrongPrototype();
 applyCurrentPage();
 
 if (document.body) {
@@ -597,7 +640,7 @@ if (document.body) {
 }
 
 window.addEventListener("popstate", () => requestAnimationFrame(applyCurrentPage));
-window.addEventListener("moon:fund-release-requests-changed", () => requestAnimationFrame(applyCurrentPage));
+window.addEventListener("moon:fund-synergy-requests-changed", () => requestAnimationFrame(applyCurrentPage));
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") closeReleaseDialog();
+  if (event.key === "Escape") closeSynergyDialog();
 });
