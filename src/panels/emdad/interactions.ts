@@ -3,6 +3,7 @@ import { clearSession } from "../../auth/oidc";
 const EMDAD_ROOT = "/panel/emdad";
 const DEV_PANEL_PREVIEW_KEY = "moon.auth.dev-panel-preview";
 const SIDEBAR_SELECTOR = '.emdad-panel [data-name="colored-sidebar"]';
+const NAV_ITEM_SELECTOR = '[data-name$="-nav"], a, button';
 
 const NAV_ROUTES: Record<string, string> = {
   "dashboard-nav": EMDAD_ROOT,
@@ -28,6 +29,7 @@ const LABEL_ROUTES = new Map<string, string>([
   ["سوابق پرداخت", `${EMDAD_ROOT}/payment-history`],
   ["گزارش‌های مالی", `${EMDAD_ROOT}/financial-reports`],
   ["منابع برگشتی صندوق", `${EMDAD_ROOT}/fund-returns`],
+  ["بازگشت‌های صندوق", `${EMDAD_ROOT}/fund-returns`],
 ]);
 
 function normalize(value: string | null | undefined) {
@@ -58,8 +60,8 @@ function decorateSidebar(root: ParentNode = document) {
   root.querySelectorAll<HTMLElement>(SIDEBAR_SELECTOR).forEach((sidebar) => {
     sidebar.setAttribute("dir", "rtl");
 
-    sidebar.querySelectorAll<HTMLElement>('[data-name$="-nav"]').forEach((nav) => {
-      if (nav.dataset.name === "logout-nav") {
+    sidebar.querySelectorAll<HTMLElement>(NAV_ITEM_SELECTOR).forEach((nav) => {
+      if (nav.dataset.name === "logout-nav" || normalize(nav.textContent) === "خروج از سیستم") {
         nav.setAttribute("aria-label", "خروج از سیستم");
         nav.style.cursor = "pointer";
         return;
@@ -86,7 +88,7 @@ function decorateSidebar(root: ParentNode = document) {
 }
 
 function activateNav(nav: HTMLElement, event?: Event) {
-  if (nav.dataset.name === "logout-nav") {
+  if (nav.dataset.name === "logout-nav" || normalize(nav.textContent) === "خروج از سیستم") {
     event?.preventDefault();
     clearSession();
     sessionStorage.removeItem(DEV_PANEL_PREVIEW_KEY);
@@ -101,33 +103,47 @@ function activateNav(nav: HTMLElement, event?: Event) {
   return true;
 }
 
-document.addEventListener("click", (event) => {
-  if (
-    event.defaultPrevented ||
-    event.button !== 0 ||
-    event.metaKey ||
-    event.ctrlKey ||
-    event.shiftKey ||
-    event.altKey
-  ) {
-    return;
-  }
+function findSidebarNav(target: Element) {
+  const nav = target.closest<HTMLElement>(NAV_ITEM_SELECTOR);
+  if (!nav) return null;
+  return nav.closest(SIDEBAR_SELECTOR) ? nav : null;
+}
 
-  const target = event.target;
-  if (!(target instanceof Element)) return;
-  const nav = target.closest<HTMLElement>(`${SIDEBAR_SELECTOR} [data-name$="-nav"]`);
-  if (!nav) return;
-  activateNav(nav, event);
-});
+document.addEventListener(
+  "click",
+  (event) => {
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
 
-document.addEventListener("keydown", (event) => {
-  if (event.key !== "Enter" && event.key !== " ") return;
-  const target = event.target;
-  if (!(target instanceof Element)) return;
-  const nav = target.closest<HTMLElement>(`${SIDEBAR_SELECTOR} [data-name$="-nav"]`);
-  if (!nav || nav instanceof HTMLAnchorElement) return;
-  activateNav(nav, event);
-});
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const nav = findSidebarNav(target);
+    if (!nav) return;
+    if (activateNav(nav, event)) event.stopPropagation();
+  },
+  true,
+);
+
+document.addEventListener(
+  "keydown",
+  (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const nav = findSidebarNav(target);
+    if (!nav || nav instanceof HTMLAnchorElement) return;
+    if (activateNav(nav, event)) event.stopPropagation();
+  },
+  true,
+);
 
 window.addEventListener("popstate", () => requestAnimationFrame(() => decorateSidebar()));
 
