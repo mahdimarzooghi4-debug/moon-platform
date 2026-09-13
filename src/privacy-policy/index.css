@@ -66,6 +66,18 @@ button {
   text-align: right;
 }
 
+/* Keep the document copy RTL, but make the grid's physical flow LTR so the
+ * second grid item (table of contents) occupies the right-hand 300px column. */
+.main-container:has(aside a[href^="#section-"]) main {
+  direction: ltr;
+}
+
+.main-container:has(aside a[href^="#section-"]) main > article,
+.main-container:has(aside a[href^="#section-"]) main > aside {
+  direction: rtl;
+  text-align: right;
+}
+
 .main-container:has(aside a[href^="#section-"]) > section h1,
 .main-container:has(aside a[href^="#section-"]) > section h2,
 .main-container:has(aside a[href^="#section-"]) > section p,
