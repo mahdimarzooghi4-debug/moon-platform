@@ -232,3 +232,16 @@ input[type="tel"],
 .creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-list"] {
   align-items: stretch !important;
 }
+
+/* Main dashboard startup list: keep columns grouped from the row number on the right. */
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-table-head"],
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name^="startup-row-"] {
+  direction: ltr !important;
+  grid-template-columns: 160px 190px 180px 320px 58px !important;
+  justify-content: end !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-table-head"] > *,
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name^="startup-row-"] > * {
+  direction: rtl !important;
+}
