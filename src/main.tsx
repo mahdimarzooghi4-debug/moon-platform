@@ -24,7 +24,7 @@ import "./panels/creative-house/reports/pagination-interactions";
 import "./panels/creative-house/milestone-evaluation-detail/interactions";
 import "./panels/fund-manager/interactions";
 import "./panels/fund-manager/list-interactions";
-import "./panels/fund-manager/profit-split/settings-interaction";
+import "./panels/fund-manager/financials/settings-sync";
 import "./panels/fund-manager/dashboard-shell-fix.css";
 import "./panels/fund-manager/sidebar-simplify.css";
 import "./app/fund-release-request-flow";
