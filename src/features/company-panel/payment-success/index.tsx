@@ -57,7 +57,7 @@ export default function CompanyPaymentSuccess() {
             <div className="company-success-route"><span>مسیر پرداخت</span><strong>واریز مستقیم به حساب کمیته امداد</strong><small>امکان پیگیری نتیجه مشارکت از پنل سازمانی</small></div>
             <Link className="company-success-certificate" to="/panel/company/certificates"><span>گواهی ماده ۱۷۲</span><strong>مشروط به تأیید شرایط قانونی</strong><small>پرداخت موفق به‌تنهایی تضمین‌کننده صدور گواهی نیست.</small></Link>
             <div className="company-success-actions">
-              <button type="button" title="دریافت رسید در محصول نهایی فعال می‌شود">دریافت رسید</button>
+              <Link className="company-success-receipt" to={`/panel/company/projects/${projectId}/participate/success/receipt`}>دریافت رسید</Link>
               <Link to={`/panel/company/projects/${projectId}`}>بازگشت به پروژه</Link>
             </div>
           </aside>
