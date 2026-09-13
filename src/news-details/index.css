@@ -83,3 +83,81 @@ textarea {
 .main-container:has(> :nth-child(2) [class*="w-[850px]"]) > :nth-child(2) [class*="w-[381px]"] {
   display: none !important;
 }
+
+/* Related projects: three equal cards, matching the Figma row. */
+.main-container:has(> :nth-child(2) [class*="w-[850px]"])
+  > :nth-child(4)
+  > :nth-child(2)
+  > :nth-child(13)
+  > :nth-child(2) {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px !important;
+  align-items: stretch !important;
+  direction: ltr;
+}
+
+.main-container:has(> :nth-child(2) [class*="w-[850px]"])
+  > :nth-child(4)
+  > :nth-child(2)
+  > :nth-child(13)
+  > :nth-child(2)
+  > * {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 100% !important;
+  min-height: 132px;
+  align-self: stretch !important;
+}
+
+/* The middle project card must read exactly like the other RTL cards. */
+.main-container:has(> :nth-child(2) [class*="w-[850px]"])
+  > :nth-child(4)
+  > :nth-child(2)
+  > :nth-child(13)
+  > :nth-child(2)
+  > :nth-child(2),
+.main-container:has(> :nth-child(2) [class*="w-[850px]"])
+  > :nth-child(4)
+  > :nth-child(2)
+  > :nth-child(13)
+  > :nth-child(2)
+  > :nth-child(2)
+  > :first-child {
+  direction: rtl !important;
+  text-align: right !important;
+  align-items: flex-end !important;
+}
+
+.main-container:has(> :nth-child(2) [class*="w-[850px]"])
+  > :nth-child(4)
+  > :nth-child(2)
+  > :nth-child(13)
+  > :nth-child(2)
+  > :nth-child(2)
+  span {
+  text-align: right !important;
+}
+
+/* Related news below the article also stays as three equal-height cards. */
+.main-container:has(> :nth-child(2) [class*="w-[850px]"]) > :nth-child(5) > :nth-child(2) {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px !important;
+  align-items: stretch !important;
+  direction: ltr;
+}
+
+.main-container:has(> :nth-child(2) [class*="w-[850px]"]) > :nth-child(5) > :nth-child(2) > * {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 100% !important;
+  align-self: stretch !important;
+}
+
+.main-container:has(> :nth-child(2) [class*="w-[850px]"]) > :nth-child(5) > :nth-child(2) > :nth-child(2),
+.main-container:has(> :nth-child(2) [class*="w-[850px]"]) > :nth-child(5) > :nth-child(2) > :nth-child(2) > :nth-child(2) {
+  direction: rtl !important;
+  text-align: right !important;
+  align-items: flex-end !important;
+}
