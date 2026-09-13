@@ -73,7 +73,32 @@
   display: none !important;
 }
 
+/* Shared active controls for fund-manager list tabs. */
+.fund-manager-panel .fund-manager-filter-input {
+  cursor: text !important;
+  direction: rtl !important;
+  text-align: right !important;
+  padding: 0 16px !important;
+  color: #17324d !important;
+  outline: none !important;
+}
+
+.fund-manager-panel .fund-manager-filter-input::placeholder {
+  color: #60758a !important;
+  opacity: 1 !important;
+}
+
+.fund-manager-panel [data-name="filter-source"][data-filter-active="true"],
+.fund-manager-panel [data-name="filter-status"][data-filter-active="true"] {
+  border-color: #2094e3 !important;
+  background: #eef7fe !important;
+}
+
 /* Funding-flow control page polish. */
+[data-name="fund-manager-funding-flow-control"] [data-name="register-flow-button"] {
+  display: none !important;
+}
+
 [data-name="fund-manager-funding-flow-control"] [data-name="flow-list"],
 [data-name="fund-manager-funding-flow-control"] [data-name="register-flow-panel"] {
   box-shadow: 0 2px 8px rgba(23, 50, 77, 0.04);
@@ -117,8 +142,16 @@
   transition: border-color 160ms ease, box-shadow 160ms ease;
 }
 
-[data-name="fund-manager-funding-flow-control"] [data-name="register-flow-panel"] [data-name="field"]:hover {
-  border-color: #bfdef5 !important;
+[data-name="fund-manager-funding-flow-control"] [data-name="register-flow-panel"] [data-name="field"]:hover,
+[data-name="fund-manager-funding-flow-control"] [data-name="register-flow-panel"] [data-name="field"]:focus-within {
+  border-color: #2094e3 !important;
+  box-shadow: 0 0 0 2px rgba(32, 148, 227, 0.08);
+}
+
+[data-name="fund-manager-funding-flow-control"] .fund-flow-editable-value {
+  cursor: text !important;
+  outline: none !important;
+  user-select: text !important;
 }
 
 [data-name="fund-manager-funding-flow-control"] [data-name="register-flow-panel"] [data-name="match-status"] {
@@ -130,13 +163,11 @@
   height: 40px !important;
 }
 
-[data-name="fund-manager-funding-flow-control"] [data-name="register-flow-button"],
 [data-name="fund-manager-funding-flow-control"] [data-name="save-flow"] {
   box-shadow: 0 2px 6px rgba(32, 148, 227, 0.16);
   transition: transform 140ms ease, box-shadow 140ms ease, opacity 140ms ease;
 }
 
-[data-name="fund-manager-funding-flow-control"] [data-name="register-flow-button"]:hover,
 [data-name="fund-manager-funding-flow-control"] [data-name="save-flow"]:hover:not(:disabled) {
   transform: translateY(-1px);
   box-shadow: 0 4px 10px rgba(32, 148, 227, 0.2);
