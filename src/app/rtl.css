@@ -41,3 +41,115 @@ input[type="tel"],
 [dir="rtl"] img {
   flex-shrink: 0;
 }
+
+/* Creative-house dashboard: make every content box read from the right. */
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] > [data-name="Main Content"] {
+  direction: rtl;
+  text-align: right;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Top Bar"] {
+  direction: ltr !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Top Bar"] [data-name="Page Title"] {
+  direction: rtl;
+  margin: 0 !important;
+  align-items: flex-end !important;
+  text-align: right !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Top Bar"] [data-name="Page Title"] > * {
+  text-align: right !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Top Bar"] [data-name="Top Actions"] {
+  margin: 0 !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] > * {
+  direction: rtl;
+  align-items: flex-end !important;
+  text-align: right !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] > * > p,
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] [data-name="value"] > p {
+  width: 100%;
+  text-align: right !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] [data-name="value"] {
+  direction: rtl;
+  justify-content: flex-start !important;
+  text-align: right !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="evaluation-stats-overview"],
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="selected-impact-stats"],
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="featured-project-funding"],
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-list"] {
+  direction: rtl;
+  text-align: right !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="selected-impact-stats"],
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="featured-project-funding"] {
+  align-items: flex-end !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="selected-impact-stats"] > p,
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="featured-project-funding"] > p,
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="impact-stat-row"] > p,
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="funding-row"] > p {
+  text-align: right !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="stats-summary-strip"] > * {
+  direction: rtl;
+  align-items: flex-end !important;
+  text-align: right !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="stats-summary-strip"] > * > p {
+  text-align: right !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-list-header"] {
+  direction: ltr !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-list-header"] > p {
+  direction: rtl;
+  text-align: right !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-table-head"] > *,
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name^="startup-row-"] > * {
+  direction: rtl;
+  justify-content: flex-start !important;
+  padding-left: 0 !important;
+  padding-right: 12px !important;
+  text-align: right !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-table-head"] > * p,
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name^="startup-row-"] > * p {
+  text-align: right !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-name-and-project"] {
+  align-items: flex-end !important;
+  text-align: right !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="number-header-cell"],
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="row-number-cell"] {
+  justify-content: center !important;
+  padding-right: 0 !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-pagination-footer"] {
+  direction: rtl;
+  text-align: right !important;
+}
