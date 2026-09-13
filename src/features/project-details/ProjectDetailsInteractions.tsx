@@ -19,6 +19,13 @@ const PROJECT_GALLERY = [
   },
 ] as const;
 
+const CONTRIBUTION_AMOUNTS: Record<string, number> = {
+  "۵۰۰ هزار تومان": 500_000,
+  "۱ میلیون تومان": 1_000_000,
+  "۵ میلیون تومان": 5_000_000,
+  "۱۰ میلیون تومان": 10_000_000,
+};
+
 const PERSIAN_DIGITS = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
 
 function toPersianDigits(value: number) {
@@ -33,6 +40,21 @@ function findExactText(root: ParentNode, text: string) {
   return Array.from(root.querySelectorAll<HTMLElement>("span, p, div")).find(
     (node) => normalizedText(node) === text,
   );
+}
+
+function makeButton(target: HTMLElement, label: string, action: () => void) {
+  target.style.cursor = "pointer";
+  target.style.userSelect = "none";
+  target.setAttribute("role", "button");
+  target.setAttribute("tabindex", "0");
+  target.setAttribute("aria-label", label);
+  target.onclick = action;
+  target.onkeydown = (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      action();
+    }
+  };
 }
 
 export default function ProjectDetailsInteractions() {
@@ -158,23 +180,58 @@ export default function ProjectDetailsInteractions() {
           setGalleryImage(currentIndex + delta);
         };
 
-        const prepareControl = (control: HTMLElement, label: string, delta: number) => {
-          control.style.cursor = "pointer";
-          control.style.userSelect = "none";
-          control.setAttribute("role", "button");
-          control.setAttribute("tabindex", "0");
-          control.setAttribute("aria-label", label);
-          control.onclick = () => moveGallery(delta);
-          control.onkeydown = (event) => {
-            if (event.key === "Enter" || event.key === " ") {
-              event.preventDefault();
-              moveGallery(delta);
-            }
-          };
+        makeButton(previousControl, "تصویر قبلی پروژه", () => moveGallery(-1));
+        makeButton(nextControl, "تصویر بعدی پروژه", () => moveGallery(1));
+      }
+
+      if (!root.dataset.projectContributionAmount) {
+        root.dataset.projectContributionAmount = "5000000";
+      }
+
+      Object.entries(CONTRIBUTION_AMOUNTS).forEach(([label, amount]) => {
+        const text = findExactText(root, label);
+        const control = text?.parentElement;
+        if (!(control instanceof HTMLElement)) return;
+
+        const selectAmount = () => {
+          root.dataset.projectContributionAmount = String(amount);
+
+          Object.keys(CONTRIBUTION_AMOUNTS).forEach((otherLabel) => {
+            const otherText = findExactText(root, otherLabel);
+            const otherControl = otherText?.parentElement;
+            if (!(otherControl instanceof HTMLElement)) return;
+            const selected = otherLabel === label;
+            otherControl.style.borderColor = selected ? "#2094e3" : "#e4ebf1";
+            otherControl.style.backgroundColor = selected ? "#eaf5fd" : "transparent";
+            if (otherText) otherText.style.color = selected ? "#2094e3" : "#17324d";
+          });
         };
 
-        prepareControl(previousControl, "تصویر قبلی پروژه", -1);
-        prepareControl(nextControl, "تصویر بعدی پروژه", 1);
+        makeButton(control, `انتخاب مبلغ ${label}`, selectAmount);
+      });
+
+      const continueText = findExactText(root, "ادامه مشارکت");
+      const continueButton = continueText?.parentElement;
+      if (continueButton instanceof HTMLElement) {
+        makeButton(continueButton, "ادامه مشارکت", () => {
+          const amount = root.dataset.projectContributionAmount ?? "5000000";
+          window.location.assign(`${window.location.pathname}/participate?amount=${encodeURIComponent(amount)}`);
+        });
+      }
+
+      const organizationHelp = findExactText(root, "مشارکت سازمانی چگونه انجام می‌شود؟");
+      if (organizationHelp) {
+        makeButton(organizationHelp, "راهنمای مشارکت سازمانی", () => {
+          window.location.assign("/companies");
+        });
+      }
+
+      const organizationTab = findExactText(root, "مشارکت سازمانی");
+      const organizationControl = organizationTab?.parentElement;
+      if (organizationControl instanceof HTMLElement) {
+        makeButton(organizationControl, "مشارکت سازمانی", () => {
+          window.location.assign("/companies");
+        });
       }
     };
 
