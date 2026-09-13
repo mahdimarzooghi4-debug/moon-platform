@@ -79,13 +79,68 @@ function rightAlignCards(root: HTMLElement, headingText: string) {
       text.style.direction = "rtl";
       text.style.textAlign = "right";
 
-      // Generated cards use flex spans with justify-end. In an RTL row that
-      // can visually push the copy left, so force the inline start to the
-      // right edge of the element.
       if (text.className.includes("flex")) {
         text.style.justifyContent = "flex-start";
       }
     });
+  });
+}
+
+function rightAlignProjectCards(root: HTMLElement) {
+  const row = findSectionRow(root, "پروژه‌های مرتبط با این گزارش");
+  if (!row) return;
+
+  row.setAttribute("dir", "rtl");
+  row.style.direction = "rtl";
+
+  Array.from(row.children).forEach((card) => {
+    if (!(card instanceof HTMLElement)) return;
+
+    card.setAttribute("dir", "rtl");
+    card.style.direction = "rtl";
+    card.style.textAlign = "right";
+    card.style.alignItems = "stretch";
+
+    const info = card.children[0];
+    if (info instanceof HTMLElement) {
+      info.style.width = "100%";
+      info.style.alignItems = "stretch";
+      info.style.textAlign = "right";
+      info.style.direction = "rtl";
+
+      const meta = info.children[0];
+      if (meta instanceof HTMLElement) {
+        meta.style.width = "100%";
+        meta.style.direction = "rtl";
+        meta.style.justifyContent = "flex-start";
+        meta.style.textAlign = "right";
+      }
+
+      Array.from(info.children).slice(1).forEach((item) => {
+        if (!(item instanceof HTMLElement)) return;
+        item.style.width = "100%";
+        item.style.maxWidth = "100%";
+        item.style.textAlign = "right";
+        item.style.justifyContent = "flex-start";
+        item.style.direction = "rtl";
+      });
+    }
+
+    const footer = card.children[1];
+    if (footer instanceof HTMLElement) {
+      footer.style.width = "100%";
+      footer.style.direction = "rtl";
+      footer.style.justifyContent = "flex-start";
+      footer.style.textAlign = "right";
+
+      const link = footer.querySelector<HTMLElement>("span, a");
+      if (link) {
+        link.style.width = "100%";
+        link.style.textAlign = "right";
+        link.style.justifyContent = "flex-start";
+        link.style.direction = "rtl";
+      }
+    }
   });
 }
 
@@ -98,8 +153,8 @@ export default function NewsDetailsInteractions() {
       if (!root) return;
 
       removeOnlineButtons(root);
-      rightAlignCards(root, "پروژه‌های مرتبط با این گزارش");
       rightAlignCards(root, "مطالب مرتبط با این گزارش");
+      rightAlignProjectCards(root);
     };
 
     applyEnhancements();
