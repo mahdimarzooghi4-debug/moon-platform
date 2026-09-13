@@ -1,6 +1,7 @@
 import "./interactive-rows.css";
 
 const PROJECT_CREATE_ROOT = '.startup-panel-page[data-name^="startup-project-create-step"]';
+const PROJECT_SUBMITTED_ROUTE = "/panel/startup/projects/submitted";
 
 function clearRowInputs(row: HTMLElement) {
   row.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("input, textarea").forEach((field) => {
@@ -68,6 +69,14 @@ function addDataRow(card: HTMLElement, kind: "kpi" | "cost") {
 document.addEventListener("click", (event) => {
   const target = event.target;
   if (!(target instanceof Element)) return;
+
+  const submitButton = target.closest<HTMLButtonElement>("button.startup-create-submit");
+  if (submitButton?.closest(PROJECT_CREATE_ROOT)) {
+    event.preventDefault();
+    window.history.pushState({}, "", PROJECT_SUBMITTED_ROUTE);
+    window.dispatchEvent(new PopStateEvent("popstate"));
+    return;
+  }
 
   const button = target.closest<HTMLButtonElement>("button.startup-create-outline-action");
   if (!button || !button.closest(PROJECT_CREATE_ROOT)) return;
