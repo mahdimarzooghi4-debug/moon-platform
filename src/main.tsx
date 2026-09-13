@@ -32,6 +32,7 @@ import "./participation-track/interactions";
 import "./project-impact-report/interactions";
 import "./features/startup-registration/states/step2/interactions";
 import "./features/company-registration/interactions";
+import "./features/startup-panel/project-create/interactions";
 
 document.documentElement.lang = "fa";
 document.documentElement.dir = "rtl";
