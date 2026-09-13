@@ -43,36 +43,36 @@ function ensureProjectEvaluationIconStyle() {
   document.head.appendChild(style);
 }
 
+function setHrefIfNeeded(anchor: HTMLAnchorElement, route: string) {
+  if (anchor.getAttribute("href") !== route) {
+    anchor.setAttribute("href", route);
+  }
+}
+
 function applyActionHrefs(root: ParentNode = document) {
   root
     .querySelectorAll<HTMLAnchorElement>(DASHBOARD_ACTION_SELECTOR)
     .forEach((anchor) => {
       const route = getDashboardActionRoute(anchor);
-      if (route) {
-        anchor.setAttribute("href", route);
-      }
+      if (route) setHrefIfNeeded(anchor, route);
     });
 
   root
     .querySelectorAll<HTMLAnchorElement>(STARTUP_EVALUATION_ACTION_SELECTOR)
     .forEach((anchor) => {
-      anchor.setAttribute("href", STARTUP_EVALUATION_DETAIL_ROUTE);
+      setHrefIfNeeded(anchor, STARTUP_EVALUATION_DETAIL_ROUTE);
     });
 
   root
     .querySelectorAll<HTMLAnchorElement>(PROJECT_EVALUATION_ACTION_SELECTOR)
     .forEach((anchor) => {
-      anchor.setAttribute("href", PROJECT_EVALUATION_DETAIL_ROUTE);
+      setHrefIfNeeded(anchor, PROJECT_EVALUATION_DETAIL_ROUTE);
     });
 
   root
     .querySelectorAll<HTMLAnchorElement>(MILESTONE_EVALUATION_ACTION_SELECTOR)
-    .forEach((anchor, index) => {
-      anchor.setAttribute("href", MILESTONE_EVALUATION_DETAIL_ROUTE);
-      if (index === 1) {
-        const label = anchor.querySelector("p");
-        if (label) label.textContent = "مشاهده";
-      }
+    .forEach((anchor) => {
+      setHrefIfNeeded(anchor, MILESTONE_EVALUATION_DETAIL_ROUTE);
     });
 }
 
