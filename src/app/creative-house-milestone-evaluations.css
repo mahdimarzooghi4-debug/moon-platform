@@ -83,3 +83,24 @@ body .creative-house-dashboard[data-name="ayeneh-milestone-evaluation-detail"] [
   text-align: right !important;
   direction: rtl !important;
 }
+
+/* Section 5 validation cards: read from right to left (step 1 starts on the right). */
+body .creative-house-dashboard[data-name="ayeneh-milestone-evaluation-detail"] [data-name="validation-step"] {
+  direction: rtl !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-milestone-evaluation-detail"] [data-node-id="1788:448"] {
+  left: 565px !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-milestone-evaluation-detail"] [data-node-id="1788:452"] {
+  left: 381px !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-milestone-evaluation-detail"] [data-node-id="1788:456"] {
+  left: 197px !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-milestone-evaluation-detail"] [data-node-id="1788:460"] {
+  left: 13px !important;
+}
