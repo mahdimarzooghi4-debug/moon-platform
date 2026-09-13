@@ -61,7 +61,7 @@ export default function CompanyFinancialImpactReports() {
         </section>
 
         <section className="company-report-list">
-          <div className="company-report-heading"><div><h2>گزارش‌های منتشرشده</h2><p>گزارش‌های تأییدشده پروژه‌های مشارکت‌شده</p></div><span>{filtered.length.toLocaleString("fa-IR")} گزارش منتشرشده</span></div>
+          <div className="company-report-heading"><div><h2>گزارش‌های منتشرشده</h2><p>گزارش‌های تأییدشده پروژه‌های مشارکت‌شده</p></div></div>
           <div className="company-report-table-head"><span>گزارش</span><span>پروژه</span><span>نوع گزارش</span><span>دوره گزارش</span><span>شماره گزارش</span><span>وضعیت</span><span>اقدام</span></div>
           <div className="company-report-table-body">
             {filtered.map((item) => (
@@ -72,11 +72,13 @@ export default function CompanyFinancialImpactReports() {
             {!filtered.length && <div className="company-report-empty">گزارشی با فیلترهای فعلی پیدا نشد.</div>}
           </div>
           <aside className="company-report-review-note">گزارش‌های در حال بررسی پس از تأیید نهایی خانه خلاق و نوآوری آینه در این بخش قابل مشاهده خواهند بود.</aside>
+          <footer className="company-report-count-footer"><span>{filtered.length.toLocaleString("fa-IR")} گزارش منتشرشده</span></footer>
         </section>
 
         <section className="company-report-updates">
           <h2>آخرین به‌روزرسانی‌های اثر اجتماعی</h2><p>رویدادهای منتشرشده پروژه سلامت خانواده</p>
           <div>{updates.map(([date, text]) => <article key={date}><time>{date}</time><strong>{text}</strong><span>منتشرشده</span></article>)}</div>
+          <footer className="company-update-count-footer"><span>{updates.length.toLocaleString("fa-IR")} به‌روزرسانی</span></footer>
         </section>
       </main>
       <CompanySidebar active="reports" />
