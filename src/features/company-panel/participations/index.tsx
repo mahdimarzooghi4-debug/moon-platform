@@ -52,7 +52,7 @@ export default function CompanyOrganizationalParticipations() {
         </section>
 
         <section className="company-participations-list">
-          <div className="company-participations-heading"><div><h2>فهرست مشارکت‌های سازمانی</h2><p>ساختار پیگیری مشارکت‌ها در پنل شرکت</p></div><span>{rows.length.toLocaleString("fa-IR")} مشارکت</span></div>
+          <div className="company-participations-heading"><div><h2>فهرست مشارکت‌های سازمانی</h2><p>ساختار پیگیری مشارکت‌ها در پنل شرکت</p></div></div>
           <div className="company-participation-table-header"><span>پروژه</span><span>مبلغ مشارکت</span><span>وضعیت پرداخت</span><span>وضعیت پروژه</span><span>گواهی ماده ۱۷۲</span><span>اقدام</span></div>
           <div className="company-participation-table-body">
             {rows.map((item) => (
@@ -67,7 +67,7 @@ export default function CompanyOrganizationalParticipations() {
             ))}
             {!rows.length && <div className="company-participations-empty">مشارکتی با فیلترهای فعلی پیدا نشد.</div>}
           </div>
-          <footer className="company-participations-footer"><span>نمایش {rows.length.toLocaleString("fa-IR")} مشارکت</span><div><b>۱</b><span>صفحه ۱ از ۱</span></div></footer>
+          <footer className="company-participations-footer"><span className="company-participations-count">{rows.length.toLocaleString("fa-IR")} مشارکت</span><div><b>۱</b><span>صفحه ۱ از ۱</span></div></footer>
         </section>
       </main>
       <CompanySidebar active="participations" />
