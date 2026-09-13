@@ -2,6 +2,7 @@ import { AppProviders } from "./app/AppProviders";
 import { AppRouter } from "./app/router";
 import { AuthGate } from "./auth/AuthGate";
 import PublicFooter from "./shared/PublicFooter";
+import PublicPageInteractions from "./shared/PublicPageInteractions";
 import StartupTeamMemberAddPage from "./features/startup-registration/states/step2/team-member";
 import ProjectImpactDocumentsPage from "./project-impact-report/documents";
 import HowItWorksInteractions from "./how-it-works/HowItWorksInteractions";
@@ -20,6 +21,7 @@ export default function App() {
   return (
     <AppProviders>
       <AuthGate>
+        <PublicPageInteractions />
         <HowItWorksInteractions />
         <NewsListInteractions />
         <NewsDetailsInteractions />
