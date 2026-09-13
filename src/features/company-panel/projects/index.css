@@ -213,6 +213,10 @@
   text-align: right;
 }
 
+.company-project-impact {
+  padding-left: 14px;
+}
+
 .company-project-impact > span,
 .company-project-funding > span {
   height: 18px;
