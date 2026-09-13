@@ -1,0 +1,29 @@
+/* Shared 1440x900 reference frame for every startup-panel route. */
+.startup-panel-page {
+  width: 1440px !important;
+  min-width: 1440px !important;
+  min-height: 900px !important;
+  margin: 0 auto !important;
+  flex: 0 0 1440px !important;
+}
+
+.startup-panel-page > .startup-sidebar {
+  width: 224px !important;
+  min-width: 224px !important;
+  min-height: 900px !important;
+  flex: 0 0 224px !important;
+}
+
+.startup-panel-page > main {
+  width: 1216px !important;
+  min-width: 1216px !important;
+  min-height: 900px !important;
+  flex: 0 0 1216px !important;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1439px) {
+  .startup-panel-page {
+    margin: 0 !important;
+  }
+}

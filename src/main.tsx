@@ -6,6 +6,7 @@ import "@fontsource/vazirmatn/600.css";
 import "@fontsource/vazirmatn/700.css";
 import "./app/rtl.css";
 import App from "./App";
+import "./features/startup-panel/panel-frame.css";
 import "./app/creative-house-kpi.css";
 import "./app/creative-house-startup-evaluations-figma.css";
 import "./app/creative-house-startup-evaluation-detail.css";
@@ -33,6 +34,7 @@ import "./project-impact-report/interactions";
 import "./features/startup-registration/states/step2/interactions";
 import "./features/company-registration/interactions";
 import "./features/startup-panel/project-create/interactions";
+import "./features/startup-panel/audit-interactions";
 
 document.documentElement.lang = "fa";
 document.documentElement.dir = "rtl";
