@@ -10,3 +10,35 @@
 .fund-manager-panel *::after {
   box-sizing: border-box;
 }
+
+/* Figma 2284:3 — lock the fund-manager dashboard to its 1440×900 reference frame.
+   The generated DOM renders Main Content first and the sidebar second, so the
+   outer flex row must be LTR even though the copy itself is Persian/RTL. */
+[data-name="fund-manager-main-dashboard"] {
+  width: 1440px !important;
+  min-width: 1440px !important;
+  max-width: 1440px !important;
+  height: 900px !important;
+  min-height: 900px !important;
+  margin: 0 auto !important;
+  direction: ltr !important;
+  flex: 0 0 1440px !important;
+}
+
+[data-name="fund-manager-main-dashboard"] > [data-name="Main Content"] {
+  width: 1216px !important;
+  min-width: 1216px !important;
+  flex: 0 0 1216px !important;
+}
+
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] {
+  width: 224px !important;
+  min-width: 224px !important;
+  flex: 0 0 224px !important;
+}
+
+@media (max-width: 1439px) {
+  [data-name="fund-manager-main-dashboard"] {
+    margin: 0 !important;
+  }
+}
