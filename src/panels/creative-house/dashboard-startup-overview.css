@@ -5,7 +5,7 @@
 
 .creative-house-startup-overview {
   box-sizing: border-box;
-  width: min(920px, 100%);
+  width: 100%;
   min-height: 214px;
   padding: 16px;
   background: #fff;
