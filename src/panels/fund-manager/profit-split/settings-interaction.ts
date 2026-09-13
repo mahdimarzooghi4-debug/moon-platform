@@ -94,7 +94,7 @@ function updateDashboard(settings: SplitSettings) {
   const incomeCard = root.querySelector<HTMLElement>('[data-name="Raised Funds"]');
   if (returnCard) {
     const paragraphs = returnCard.querySelectorAll<HTMLElement>("p");
-    setText(paragraphs.item(0), "سهم بازگشت سود");
+    setText(paragraphs.item(0), "بازگشت به منابع صندوق");
     setText(paragraphs.item(2), `${faNumber(settings.returnShare)}٪`);
   }
   if (incomeCard) {
@@ -132,16 +132,16 @@ function updateProfitSplitPage(settings: SplitSettings) {
   setText(headerParagraphs.item(0), "تقسیم سود صندوق");
   setText(
     headerParagraphs.item(1),
-    `نسبت فعال ${ratioLabel(settings)} است و برای دوره‌های بعدی قابل تغییر است؛ دوره‌های نهایی‌شده دست‌نخورده می‌مانند.`,
+    `نسبت فعال ${ratioLabel(settings)} است؛ ${faNumber(settings.returnShare)}٪ به منابع صندوق بازمی‌گردد و ${faNumber(settings.incomeShare)}٪ درآمد ماه است.`,
   );
 
   const cards = root.querySelectorAll<HTMLElement>('[data-name="resources-kpi-row"] [data-name="kpi-card"]');
-  setText(cards.item(2)?.querySelector("p"), "بازگشت ثبت‌شده");
+  setText(cards.item(2)?.querySelector("p"), "بازگشت به منابع صندوق");
   setText(cards.item(3)?.querySelector("p"), "درآمد ثبت‌شده");
 
   const tableHeaders = root.querySelectorAll<HTMLElement>('[data-name="table-header"] > p');
-  setText(tableHeaders.item(2), "سهم بازگشت");
-  setText(tableHeaders.item(3), "سهم درآمد");
+  setText(tableHeaders.item(2), "سهم منابع صندوق");
+  setText(tableHeaders.item(3), "سهم درآمد ماه");
 
   ensureSettingsButton(root, settings);
 }
@@ -151,10 +151,23 @@ function updateProfitSplitDetail() {
   if (!root) return;
 
   const header = root.querySelector<HTMLElement>('[data-name="header"]');
-  const title = header?.querySelector<HTMLElement>(":scope > p");
+  const headerParagraphs = header?.querySelectorAll<HTMLElement>(":scope > p");
+  const title = headerParagraphs?.item(0);
+  const subtitle = headerParagraphs?.item(1);
   const back = header?.querySelector<HTMLElement>('[data-name="action"] p');
   setText(title, "جزئیات تقسیم سود");
+  setText(subtitle, "مشاهده مبنای تقسیم، بازگشت به منابع صندوق و سهم درآمد ماه برای یک دوره مالی");
   setText(back, "بازگشت به تقسیم سود");
+
+  root.querySelectorAll<HTMLElement>('[data-name="summary-field"], [data-name="detail-field"]').forEach((field) => {
+    const label = field.querySelectorAll<HTMLElement>("p").item(0);
+    const text = normalize(label?.textContent);
+    if (text === "بازگشت به چرخه") setText(label, "بازگشت به منابع صندوق");
+    if (text.startsWith("سهم بازگشت")) {
+      const ratio = text.match(/[۰-۹0-9]+٪/)?.[0];
+      setText(label, ratio ? `بازگشت به منابع صندوق ${ratio}` : "بازگشت به منابع صندوق");
+    }
+  });
 }
 
 function applyProfitSplitSettings() {
@@ -194,7 +207,7 @@ function openSettingsDialog() {
 
   const description = document.createElement("p");
   description.className = "fund-profit-split-dialog-description";
-  description.textContent = "این نسبت برای تقسیم‌های بعدی استفاده می‌شود. دوره‌های نهایی‌شده با نسبت ثبت‌شده خودشان باقی می‌مانند.";
+  description.textContent = "سهم بازگشتی به موجودی منابع صندوق اضافه می‌شود و برای سرمایه‌گذاری بعدی، مدیر صندوق باید درخواست پرداخت جداگانه ثبت کند. این نسبت فقط برای تقسیم‌های بعدی اعمال می‌شود.";
 
   const fields = document.createElement("div");
   fields.className = "fund-profit-split-fields";
@@ -202,14 +215,14 @@ function openSettingsDialog() {
   const returnField = document.createElement("label");
   returnField.className = "fund-profit-split-field";
   const returnLabel = document.createElement("span");
-  returnLabel.textContent = "بازگشت به چرخه";
+  returnLabel.textContent = "بازگشت به منابع صندوق";
   const returnInput = document.createElement("input");
   returnInput.type = "number";
   returnInput.min = "0";
   returnInput.max = "100";
   returnInput.step = "0.1";
   returnInput.value = String(current.returnShare);
-  returnInput.setAttribute("aria-label", "درصد بازگشت به چرخه");
+  returnInput.setAttribute("aria-label", "درصد بازگشت به منابع صندوق");
   const returnSuffix = document.createElement("span");
   returnSuffix.textContent = "٪";
   returnSuffix.className = "fund-profit-split-suffix";
