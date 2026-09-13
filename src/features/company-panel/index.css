@@ -20,6 +20,8 @@
   gap: 16px;
   background: #f5f8fb;
   overflow: hidden;
+  direction: rtl;
+  text-align: right;
 }
 
 .company-topbar {
@@ -29,6 +31,7 @@
   align-items: center;
   justify-content: space-between;
   flex: 0 0 auto;
+  direction: rtl;
 }
 
 .company-page-title {
@@ -41,6 +44,7 @@
   gap: 2px;
   background: #fff;
   text-align: right;
+  direction: rtl;
 }
 
 .company-page-title h1,
@@ -56,6 +60,7 @@
   line-height: 30px;
   font-weight: 700;
   color: #17324d;
+  text-align: right;
 }
 
 .company-page-title p {
@@ -64,6 +69,7 @@
   line-height: 18px;
   font-weight: 400;
   color: #60758a;
+  text-align: right;
 }
 
 .company-top-actions {
@@ -108,7 +114,7 @@
   display: grid;
   grid-template-columns: repeat(4, 281px);
   gap: 12px;
-  direction: ltr;
+  direction: rtl;
   flex: 0 0 auto;
 }
 
@@ -125,6 +131,7 @@
   flex-direction: column;
   gap: 4px;
   direction: rtl;
+  text-align: right;
   overflow: hidden;
 }
 
@@ -143,6 +150,7 @@
   align-items: center;
   justify-content: flex-start;
   gap: 6px;
+  direction: rtl;
 }
 
 .company-metric-value strong {
@@ -201,6 +209,8 @@
   box-shadow: 0 3px 5px rgba(23, 46, 71, 0.06);
   overflow: hidden;
   flex: 0 0 auto;
+  direction: rtl;
+  text-align: right;
 }
 
 .company-participations-card {
@@ -214,6 +224,7 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 20px;
+  direction: rtl;
 }
 
 .company-section-heading > div {
@@ -229,12 +240,14 @@
   line-height: 32px;
   font-weight: 500;
   color: #17324d;
+  text-align: right;
 }
 
 .company-section-heading p {
   font-size: 11px;
   line-height: 22px;
   color: #60758a;
+  text-align: right;
 }
 
 .company-account-chip,
@@ -313,6 +326,8 @@
   display: flex;
   flex-direction: column;
   gap: 11px;
+  direction: rtl;
+  text-align: right;
 }
 
 .company-project-row {
@@ -380,6 +395,7 @@
   gap: 10px;
   background: #17324d;
   direction: rtl;
+  text-align: right;
   flex: 0 0 auto;
 }
 
@@ -392,7 +408,7 @@
   background: #fff;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   overflow: hidden;
 }
 
@@ -416,6 +432,7 @@
   line-height: 20px;
   font-weight: 700;
   text-align: center;
+  direction: rtl;
 }
 
 .company-nav {
@@ -423,6 +440,7 @@
   display: flex;
   flex-direction: column;
   gap: 0;
+  direction: rtl;
 }
 
 .company-nav-item,
@@ -444,11 +462,14 @@
   font-size: 12px;
   line-height: 20px;
   cursor: pointer;
+  direction: rtl;
+  text-align: right;
 }
 
 .company-nav-item span,
 .company-logout span {
-  width: 142px;
+  flex: 1 1 auto;
+  width: auto;
   text-align: right;
 }
 
@@ -456,6 +477,7 @@
 .company-logout img {
   width: 18px;
   height: 18px;
+  flex: 0 0 18px;
   object-fit: contain;
   display: block;
 }
