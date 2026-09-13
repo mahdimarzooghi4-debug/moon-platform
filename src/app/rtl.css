@@ -245,3 +245,64 @@ input[type="tel"],
 .creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name^="startup-row-"] > * {
   direction: rtl !important;
 }
+
+/* Main dashboard KPI cards: align label, number, unit and icon consistently. */
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] > * {
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  gap: 0 !important;
+  padding: 11px 14px 10px !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] > * > p:first-child {
+  width: 100% !important;
+  min-height: 14px !important;
+  margin: 0 0 2px !important;
+  padding-left: 46px !important;
+  font-size: 10px !important;
+  line-height: 1.3 !important;
+  text-align: right !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] [data-name="value"] {
+  width: 100% !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  margin: 0 !important;
+  padding-left: 46px !important;
+  gap: 4px !important;
+  direction: rtl !important;
+  align-items: baseline !important;
+  justify-content: flex-start !important;
+  white-space: nowrap;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] [data-name="value"] > p {
+  width: auto !important;
+  margin: 0 !important;
+  flex: 0 0 auto;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] [data-name="value"] > p:last-child {
+  order: 1;
+  font-size: 22px !important;
+  line-height: 1.15 !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] [data-name="value"] > p:first-child {
+  order: 2;
+  font-size: 9px !important;
+  line-height: 1.3 !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] [data-name="kpi-icon-badge"] {
+  width: 32px !important;
+  height: 32px !important;
+  left: 14px !important;
+  top: 11px !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] [data-name="accent"] {
+  width: 100% !important;
+  margin-top: auto !important;
+}
