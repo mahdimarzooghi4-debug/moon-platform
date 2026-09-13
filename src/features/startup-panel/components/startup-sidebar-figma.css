@@ -46,10 +46,22 @@
 }
 
 .startup-sidebar .startup-logout {
-  direction: ltr;
+  position: relative;
+  direction: rtl;
+  justify-content: center !important;
+  gap: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  text-align: center !important;
 }
 
 .startup-sidebar .startup-logout > span:first-child {
+  width: 100% !important;
+  flex: 0 0 100%;
   direction: rtl;
-  text-align: right;
+  text-align: center !important;
+}
+
+.startup-sidebar .startup-logout-icon {
+  display: none !important;
 }
