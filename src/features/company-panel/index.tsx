@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { CompanySidebar } from "./components/CompanySidebar";
 import "./index.css";
 
 const ASSET_ROOT = "/assets/company-panel";
+const PROJECTS_PER_PAGE = 3;
 
 const metrics = [
   {
@@ -59,7 +61,16 @@ const projects = [
   },
 ] as const;
 
+function toPersianDigits(value: number) {
+  return String(value).replace(/\d/g, (digit) => "۰۱۲۳۴۵۶۷۸۹"[Number(digit)]);
+}
+
 export default function CompanyMainDashboard() {
+  const [projectPage, setProjectPage] = useState(1);
+  const totalProjectPages = Math.max(1, Math.ceil(projects.length / PROJECTS_PER_PAGE));
+  const projectStart = (projectPage - 1) * PROJECTS_PER_PAGE;
+  const visibleProjects = projects.slice(projectStart, projectStart + PROJECTS_PER_PAGE);
+
   return (
     <div className="company-panel-shell" data-node-id="1821:583">
       <main className="company-dashboard" dir="rtl">
@@ -118,7 +129,6 @@ export default function CompanyMainDashboard() {
               <h2>پروژه‌های قابل مشارکت</h2>
               <p>پروژه‌های فعال لندینگ ماه برای مشارکت سازمانی</p>
             </div>
-            <span className="company-active-count">۳ پروژه فعال</span>
           </div>
 
           <div className="company-project-table" role="table" aria-label="پروژه‌های قابل مشارکت">
@@ -129,7 +139,7 @@ export default function CompanyMainDashboard() {
               <span role="columnheader">هدف تأمین</span>
               <span role="columnheader">اقدام</span>
             </div>
-            {projects.map((project) => (
+            {visibleProjects.map((project) => (
               <div className="company-project-row" role="row" key={project.id}>
                 <strong role="cell">{project.title}</strong>
                 <span role="cell">{project.domain}</span>
@@ -140,6 +150,46 @@ export default function CompanyMainDashboard() {
                 </Link>
               </div>
             ))}
+          </div>
+
+          <div className="company-projects-footer">
+            <span className="company-active-count">
+              {toPersianDigits(projects.length)} پروژه فعال
+            </span>
+
+            {totalProjectPages > 1 && (
+              <nav className="company-project-pagination" aria-label="صفحه‌بندی پروژه‌های قابل مشارکت">
+                <button
+                  type="button"
+                  className="company-page-control"
+                  disabled={projectPage === 1}
+                  onClick={() => setProjectPage((page) => Math.max(1, page - 1))}
+                >
+                  قبلی
+                </button>
+
+                {Array.from({ length: totalProjectPages }, (_, index) => index + 1).map((page) => (
+                  <button
+                    key={page}
+                    type="button"
+                    className={`company-page-number${page === projectPage ? " is-active" : ""}`}
+                    aria-current={page === projectPage ? "page" : undefined}
+                    onClick={() => setProjectPage(page)}
+                  >
+                    {toPersianDigits(page)}
+                  </button>
+                ))}
+
+                <button
+                  type="button"
+                  className="company-page-control"
+                  disabled={projectPage === totalProjectPages}
+                  onClick={() => setProjectPage((page) => Math.min(totalProjectPages, page + 1))}
+                >
+                  بعدی
+                </button>
+              </nav>
+            )}
           </div>
         </section>
       </main>
