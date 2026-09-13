@@ -6,6 +6,7 @@ import "@fontsource/vazirmatn/600.css";
 import "@fontsource/vazirmatn/700.css";
 import "./app/rtl.css";
 import App from "./App";
+import "./app/creative-house-kpi.css";
 import "./landing/contact-details.css";
 import "./landing/interactions";
 import "./startups/interactions";
