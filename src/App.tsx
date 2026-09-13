@@ -7,6 +7,7 @@ import ProjectImpactDocumentsPage from "./project-impact-report/documents";
 import HowItWorksInteractions from "./how-it-works/HowItWorksInteractions";
 import NewsListInteractions from "./news-list/NewsListInteractions";
 import NewsDetailsInteractions from "./news-details/NewsDetailsInteractions";
+import FaqInteractions from "./faq/FaqInteractions";
 
 const STARTUP_TEAM_MEMBER_PATH = "/register/startup/states/step2/team-member/new";
 const PROJECT_IMPACT_DOCUMENTS_PATH = "/projects/impact-report/documents";
@@ -21,6 +22,7 @@ export default function App() {
         <HowItWorksInteractions />
         <NewsListInteractions />
         <NewsDetailsInteractions />
+        <FaqInteractions />
         {isStartupTeamMemberPage ? (
           <StartupTeamMemberAddPage />
         ) : isProjectImpactDocumentsPage ? (
