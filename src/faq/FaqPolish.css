@@ -1,0 +1,101 @@
+/* FAQ-only polish layered over the generated page styles. */
+
+.faq-page .faq-header {
+  height: 80px;
+  padding: 0 120px;
+  border-top: 1px solid #e4ebf1;
+  border-bottom: 1px solid #e4ebf1;
+}
+
+.faq-page .faq-header-actions {
+  width: 384px;
+  gap: 12px;
+  direction: rtl;
+}
+
+.faq-page .faq-header-actions .faq-btn {
+  width: 120px;
+  min-width: 120px;
+  min-height: 44px;
+  border-width: 1.5px;
+  border-color: #2094e3;
+}
+
+.faq-page .faq-header-actions .faq-login-btn,
+.faq-page .faq-header-actions a[href="/participation/track"] {
+  background: #fff;
+  color: #2094e3 !important;
+}
+
+.faq-page .faq-header-actions .faq-start-participation {
+  background: #2094e3;
+  color: #fff !important;
+  border-color: #2094e3;
+}
+
+.faq-page .faq-header-menu {
+  width: 630px;
+  gap: 40px;
+}
+
+.faq-page .faq-logo {
+  width: 137px;
+  height: 46px;
+  flex: 0 0 137px;
+  display: block;
+  background: url('/assets/codia/qreWA0b9ix.png') center / contain no-repeat;
+}
+
+.faq-page .faq-logo > * {
+  display: none !important;
+}
+
+/* Category cards: force physical right alignment inside each RTL card. */
+.faq-page .faq-category-grid {
+  align-items: stretch;
+}
+
+.faq-page .faq-category-card {
+  direction: rtl;
+  align-items: stretch;
+  justify-content: flex-start;
+  text-align: right;
+}
+
+.faq-page .faq-category-icon {
+  align-self: flex-start;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.faq-page .faq-category-card strong,
+.faq-page .faq-category-card p {
+  display: block;
+  width: 100%;
+  direction: rtl;
+  text-align: right;
+}
+
+/* Feedback controls were removed from the requested FAQ presentation. */
+.faq-page .faq-feedback {
+  display: none !important;
+}
+
+.faq-page .faq-row {
+  min-height: 0;
+}
+
+.faq-page .faq-answer {
+  margin-bottom: 0;
+}
+
+@media (max-width: 1100px) {
+  .faq-page .faq-header {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  .faq-page .faq-header-actions {
+    width: auto;
+  }
+}
