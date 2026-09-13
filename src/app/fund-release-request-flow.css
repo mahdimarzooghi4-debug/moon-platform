@@ -1,0 +1,300 @@
+.fund-release-request-button {
+  position: absolute;
+  left: 188px;
+  top: 10px;
+  width: 184px;
+  height: 34px;
+  border: 1px solid #2094e3;
+  border-radius: 8px;
+  background: #2094e3;
+  color: #fff;
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  direction: rtl;
+}
+
+.fund-release-request-button:hover {
+  background: #187fc3;
+}
+
+.fund-release-request-status {
+  position: absolute;
+  left: 150px;
+  top: 19px;
+  min-width: 190px;
+  height: 26px;
+  padding: 0 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  direction: rtl;
+}
+
+.fund-release-request-status[data-status="pending"] {
+  background: #fff7e8;
+  color: #c27a10;
+}
+
+.fund-release-request-status[data-status="released"] {
+  background: #e8faf0;
+  color: #149e57;
+}
+
+.fund-release-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(16, 38, 59, 0.46);
+  font-family: "Vazirmatn", sans-serif;
+}
+
+.fund-release-dialog {
+  width: 520px;
+  border: 1px solid #dbe5f0;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 18px 48px rgba(23, 50, 77, 0.2);
+  padding: 22px;
+  color: #17324d;
+  direction: rtl;
+}
+
+.fund-release-dialog h2 {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.fund-release-dialog-description {
+  margin: 0 0 18px;
+  color: #60758a;
+  font-size: 11px;
+  line-height: 1.9;
+}
+
+.fund-release-project-summary {
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  border-radius: 9px;
+  background: #f5f9fd;
+  color: #17324d;
+  font-size: 11px;
+  line-height: 1.8;
+}
+
+.fund-release-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.fund-release-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  color: #17324d;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.fund-release-field-wide {
+  grid-column: 1 / -1;
+}
+
+.fund-release-field input,
+.fund-release-field textarea {
+  width: 100%;
+  border: 1px solid #dbe5f0;
+  border-radius: 9px;
+  background: #f8fbfe;
+  color: #17324d;
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 12px;
+  outline: none;
+  direction: rtl;
+  text-align: right;
+}
+
+.fund-release-field input {
+  height: 42px;
+  padding: 0 12px;
+}
+
+.fund-release-field input[type="number"] {
+  direction: ltr;
+  text-align: center;
+}
+
+.fund-release-field textarea {
+  min-height: 78px;
+  resize: vertical;
+  padding: 10px 12px;
+}
+
+.fund-release-field input:focus,
+.fund-release-field textarea:focus {
+  border-color: #2094e3;
+  box-shadow: 0 0 0 3px rgba(32, 148, 227, 0.1);
+}
+
+.fund-release-error {
+  min-height: 20px;
+  margin-top: 10px;
+  color: #d9592e;
+  font-size: 10px;
+  text-align: right;
+}
+
+.fund-release-dialog-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.fund-release-dialog-actions button {
+  height: 40px;
+  border-radius: 9px;
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.fund-release-cancel {
+  flex: 0 0 110px;
+  border: 1px solid #dbe5f0;
+  background: #fff;
+  color: #60758a;
+}
+
+.fund-release-submit {
+  flex: 1 1 auto;
+  border: 1px solid #2094e3;
+  background: #2094e3;
+  color: #fff;
+}
+
+.moon-release-queue-list {
+  position: absolute;
+  left: 19px;
+  top: 143px;
+  width: 1120px;
+  height: 166px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.moon-release-queue-row {
+  min-height: 74px;
+  display: grid;
+  grid-template-columns: 200px 180px 170px 160px 170px 170px;
+  align-items: center;
+  gap: 4px;
+  padding: 0 10px;
+  border: 1px solid #e4ebf1;
+  border-radius: 10px;
+  background: #fff;
+  direction: rtl;
+  color: #17324d;
+  font-family: "Vazirmatn", sans-serif;
+}
+
+.moon-release-queue-cell {
+  min-width: 0;
+  text-align: center;
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.moon-release-queue-project {
+  text-align: right;
+  font-weight: 600;
+}
+
+.moon-release-queue-project small {
+  display: block;
+  margin-top: 4px;
+  color: #60758a;
+  font-size: 9px;
+  font-weight: 400;
+}
+
+.moon-release-queue-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 132px;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 15px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.moon-release-queue-status[data-status="pending"] {
+  background: #fff7e8;
+  color: #c27a10;
+}
+
+.moon-release-queue-status[data-status="released"] {
+  background: #e8faf0;
+  color: #149e57;
+}
+
+.moon-release-queue-action {
+  width: 150px;
+  height: 38px;
+  border: 1px solid #2094e3;
+  border-radius: 9px;
+  background: #2094e3;
+  color: #fff;
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.moon-release-queue-empty {
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed #dbe5f0;
+  border-radius: 10px;
+  color: #60758a;
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 11px;
+  direction: rtl;
+}
+
+[data-name="waiting-tab"][data-moon-active="true"],
+[data-name="released-tab"][data-moon-active="true"] {
+  border-color: #2094e3 !important;
+  background: #edf7fe !important;
+}
+
+[data-name="waiting-tab"][data-moon-active="true"] p,
+[data-name="released-tab"][data-moon-active="true"] p {
+  color: #2094e3 !important;
+}
+
+[data-name="approve-release-button"][data-moon-released="true"] {
+  pointer-events: none !important;
+  opacity: 0.7 !important;
+  background: #159455 !important;
+}
