@@ -23,3 +23,142 @@
 .startup-create-remove-row:hover {
   background: #fff1f1 !important;
 }
+
+/* Step 1 project cover image uploader. */
+.startup-create-step-one-media-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(300px, 0.85fr);
+  gap: 24px;
+  align-items: start;
+  margin-top: 17px;
+}
+
+.startup-create-step-one-media-row .startup-create-textarea {
+  margin-top: 0;
+}
+
+.startup-create-project-image {
+  min-width: 0;
+  text-align: right;
+}
+
+.startup-create-project-image-title {
+  min-height: 38px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.startup-create-project-image-title strong {
+  color: var(--startup-navy);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.startup-create-project-image-title small {
+  color: var(--startup-muted);
+  font-size: 10px;
+  line-height: 18px;
+}
+
+.startup-create-project-image-box {
+  position: relative;
+  width: 100%;
+  height: 110px;
+  overflow: hidden;
+  border: 1px dashed #b9d7ea;
+  border-radius: 9px;
+  background: #f8fbfd;
+}
+
+.startup-create-project-image-box.has-image {
+  border-style: solid;
+  background: #eef5fa;
+}
+
+.startup-create-project-image-box > img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.startup-create-project-image-placeholder {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding-bottom: 28px;
+  color: var(--startup-muted);
+}
+
+.startup-create-project-image-placeholder span {
+  color: var(--startup-blue);
+  font-size: 22px;
+  line-height: 24px;
+}
+
+.startup-create-project-image-placeholder strong {
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+.startup-create-project-image-actions {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  left: 8px;
+  display: flex;
+  justify-content: flex-start;
+  gap: 6px;
+}
+
+.startup-create-project-image-actions button {
+  height: 28px;
+  min-width: 88px;
+  padding: 0 10px;
+  border: 1px solid var(--startup-blue);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--startup-blue);
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.startup-create-project-image-actions button.is-remove {
+  min-width: 48px;
+  border-color: #e0b1b1;
+  color: #a94444;
+}
+
+.startup-create-project-image-feedback {
+  height: 18px;
+  overflow: hidden;
+  padding-top: 2px;
+}
+
+.startup-create-project-image-feedback small {
+  display: block;
+  overflow: hidden;
+  color: var(--startup-muted);
+  font-size: 9px;
+  line-height: 16px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.startup-create-project-image-feedback small.is-error {
+  color: #a94444;
+}
+
+@media (max-width: 1100px) {
+  .startup-create-step-one-media-row {
+    grid-template-columns: 1fr;
+  }
+}

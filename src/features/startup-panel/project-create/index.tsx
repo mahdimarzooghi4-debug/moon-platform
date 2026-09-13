@@ -1,3 +1,5 @@
+import { useRef, useState } from "react";
+import type { ChangeEvent } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { StartupSidebar } from "../components/StartupSidebar";
 import "../index.css";
@@ -58,6 +60,45 @@ function Field({ label, placeholder }: { label: string; placeholder: string }) {
 }
 
 function StepOne() {
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const [imagePreview, setImagePreview] = useState("");
+  const [imageName, setImageName] = useState("");
+  const [imageError, setImageError] = useState("");
+
+  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const allowedTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
+    if (!allowedTypes.has(file.type)) {
+      setImageError("فرمت تصویر باید JPG، PNG یا WebP باشد.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setImageError("حجم تصویر نباید بیشتر از ۵ مگابایت باشد.");
+      event.target.value = "";
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setImagePreview(typeof reader.result === "string" ? reader.result : "");
+      setImageName(file.name);
+      setImageError("");
+    };
+    reader.onerror = () => setImageError("خواندن تصویر انجام نشد. دوباره تلاش کنید.");
+    reader.readAsDataURL(file);
+  };
+
+  const removeImage = () => {
+    setImagePreview("");
+    setImageName("");
+    setImageError("");
+    if (imageInputRef.current) imageInputRef.current.value = "";
+  };
+
   return (
     <>
       <div className="startup-create-card-heading">
@@ -75,11 +116,46 @@ function StepOne() {
         <Field label="جامعه هدف" placeholder="ذی‌نفعان اصلی پروژه" />
       </div>
 
-      <label className="startup-create-textarea">
-        <strong>مسئله مشخص</strong>
-        <small>چالش اجتماعی واضح و ریشه‌دار در یک منطقه یا جامعه هدف مشخص را شرح دهید.</small>
-        <textarea placeholder="شرح مسئله اجتماعی، وضعیت موجود و نیازی که پروژه برای حل آن تعریف می‌شود…" />
-      </label>
+      <div className="startup-create-step-one-media-row">
+        <label className="startup-create-textarea startup-create-problem">
+          <strong>مسئله مشخص</strong>
+          <small>چالش اجتماعی واضح و ریشه‌دار در یک منطقه یا جامعه هدف مشخص را شرح دهید.</small>
+          <textarea placeholder="شرح مسئله اجتماعی، وضعیت موجود و نیازی که پروژه برای حل آن تعریف می‌شود…" />
+        </label>
+
+        <div className="startup-create-project-image" data-name="project-cover-image">
+          <div className="startup-create-project-image-title">
+            <strong>تصویر اصلی پروژه</strong>
+            <small>JPG، PNG یا WebP · حداکثر ۵ مگابایت</small>
+          </div>
+          <div className={`startup-create-project-image-box${imagePreview ? " has-image" : ""}`}>
+            {imagePreview ? (
+              <img src={imagePreview} alt={imageName || "پیش‌نمایش تصویر پروژه"} />
+            ) : (
+              <div className="startup-create-project-image-placeholder" aria-hidden="true">
+                <span>＋</span>
+                <strong>تصویر کاور پروژه</strong>
+              </div>
+            )}
+            <input
+              ref={imageInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              hidden
+              onChange={handleImageChange}
+            />
+            <div className="startup-create-project-image-actions">
+              <button type="button" onClick={() => imageInputRef.current?.click()}>
+                {imagePreview ? "تعویض تصویر" : "انتخاب تصویر"}
+              </button>
+              {imagePreview ? <button type="button" className="is-remove" onClick={removeImage}>حذف</button> : null}
+            </div>
+          </div>
+          <div className="startup-create-project-image-feedback" aria-live="polite">
+            {imageError ? <small className="is-error">{imageError}</small> : imageName ? <small>{imageName}</small> : null}
+          </div>
+        </div>
+      </div>
 
       <div className="startup-create-notice">
         <strong>پروژه قابل ارزیابی باید ۸ معیار اصلی را پوشش دهد.</strong>
