@@ -7,13 +7,19 @@
   margin: 0 auto !important;
   position: relative;
   flex: 0 0 1440px !important;
-  font-family: "Vazirmatn", sans-serif;
+  font-family: "Vazirmatn", sans-serif !important;
 }
 
+.emdad-panel,
 .emdad-panel *,
 .emdad-panel *::before,
-.emdad-panel *::after {
+.emdad-panel *::after,
+.emdad-panel button,
+.emdad-panel input,
+.emdad-panel textarea,
+.emdad-panel select {
   box-sizing: border-box;
+  font-family: "Vazirmatn", sans-serif !important;
 }
 
 .emdad-panel > [data-name="colored-sidebar"] {
