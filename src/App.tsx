@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { AppProviders } from "./app/AppProviders";
 import { AppRouter } from "./app/router";
 import { AuthGate } from "./auth/AuthGate";
@@ -22,7 +23,14 @@ const FUND_MANAGER_FINANCIAL_HISTORY_PATH = "/panel/fund-manager/financial-histo
 const FUND_MANAGER_FINANCIAL_HISTORY_DETAIL_PATH = "/panel/fund-manager/financial-history/detail";
 
 export default function App() {
-  const pathname = window.location.pathname;
+  const [pathname, setPathname] = useState(() => window.location.pathname);
+
+  useEffect(() => {
+    const syncPathname = () => setPathname(window.location.pathname);
+    window.addEventListener("popstate", syncPathname);
+    return () => window.removeEventListener("popstate", syncPathname);
+  }, []);
+
   const isStartupTeamMemberPage = pathname === STARTUP_TEAM_MEMBER_PATH;
   const isProjectImpactDocumentsPage = pathname === PROJECT_IMPACT_DOCUMENTS_PATH;
 
