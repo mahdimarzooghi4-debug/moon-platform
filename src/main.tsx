@@ -26,6 +26,7 @@ import "./panels/fund-manager/interactions";
 import "./panels/fund-manager/list-interactions";
 import "./panels/fund-manager/profit-split/settings-interaction";
 import "./panels/fund-manager/dashboard-shell-fix.css";
+import "./panels/fund-manager/sidebar-simplify.css";
 import "./app/fund-release-request-flow";
 import "./app/fund-project-payment-flow";
 import "./landing/contact-details.css";
