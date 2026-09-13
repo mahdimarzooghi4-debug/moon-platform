@@ -11,6 +11,7 @@ import "./app/creative-house-startup-evaluations-figma.css";
 import "./app/creative-house-startup-evaluation-detail.css";
 import "./app/creative-house-project-evaluation-detail.css";
 import "./app/creative-house-milestone-evaluations.css";
+import "./app/creative-house-reports.css";
 import "./panels/creative-house/dashboard-actions";
 import "./panels/creative-house/dashboard-startup-overview";
 import "./panels/creative-house/startup-evaluation-detail/interactions";
