@@ -11,7 +11,7 @@ const LIST_CONFIG: Record<string, FilterConfig> = {
   [`${PANEL_PREFIX}/profit-returns`]: { primaryIndex: 0, secondary: "chip" },
   [`${PANEL_PREFIX}/cycle-returns`]: { primaryIndex: 0, secondary: "chip" },
   [`${PANEL_PREFIX}/profit-split`]: { primaryIndex: 0, secondary: "chip" },
-  [`${PANEL_PREFIX}/reports`]: { primaryIndex: 0, secondary: "chip" },
+  [`${PANEL_PREFIX}/reports`]: { primaryIndex: 2, secondary: 0 },
   [`${PANEL_PREFIX}/financial-history`]: { primaryIndex: 2, secondary: 3 },
 };
 
