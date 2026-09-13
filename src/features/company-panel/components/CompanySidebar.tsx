@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
+import { clearSession } from "../../../auth/oidc";
 
 const ASSET_ROOT = "/assets/company-panel";
+const DEV_PANEL_PREVIEW_KEY = "moon.auth.dev-panel-preview";
 
 type CompanySidebarProps = {
   active: "dashboard" | "projects" | "participations" | "reports" | "certificates" | "account";
@@ -16,6 +18,12 @@ const sidebarItems = [
 ] as const;
 
 export function CompanySidebar({ active }: CompanySidebarProps) {
+  const handleLogout = () => {
+    clearSession();
+    sessionStorage.removeItem(DEV_PANEL_PREVIEW_KEY);
+    window.location.replace("/auth");
+  };
+
   return (
     <aside className="company-sidebar" aria-label="ناوبری پنل شرکت" dir="rtl">
       <div className="company-brand">
@@ -39,9 +47,18 @@ export function CompanySidebar({ active }: CompanySidebarProps) {
 
       <div className="company-sidebar-spacer" />
 
-      <button className="company-logout" type="button">
-        <img src={`${ASSET_ROOT}/nav-logout.svg`} alt="" />
-        <span>خروج از سیستم</span>
+      <button
+        className="company-logout"
+        type="button"
+        onClick={handleLogout}
+        style={{ position: "relative", justifyContent: "center" }}
+      >
+        <img
+          src={`${ASSET_ROOT}/nav-logout.svg`}
+          alt=""
+          style={{ position: "absolute", right: 12 }}
+        />
+        <span style={{ flex: "0 0 auto", width: "auto", textAlign: "center" }}>خروج از سیستم</span>
       </button>
     </aside>
   );
