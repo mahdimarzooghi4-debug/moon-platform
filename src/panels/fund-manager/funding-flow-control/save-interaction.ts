@@ -1,5 +1,6 @@
 const FUNDING_FLOW_PATH = "/panel/fund-manager/funding-flow-control";
 const REGISTERED_FLOWS_KEY = "mah.fundManager.registeredFlows.v1";
+const DEFAULT_BUTTON_LABEL = "ثبت جریان منابع";
 
 type RegisteredFlow = {
   type: string;
@@ -52,15 +53,21 @@ function setButtonLabel(button: HTMLButtonElement, label: string) {
   if (normalize(button.textContent) !== label) button.textContent = label;
 }
 
-function setStatus(page: HTMLElement, message: string, success: boolean) {
+function setStatus(page: HTMLElement, message: string, tone: "success" | "warning" | "neutral") {
   const statusBox = page.querySelector<HTMLElement>('[data-name="match-status"]');
   const statusText = statusBox?.querySelector<HTMLElement>("p");
   if (statusText && normalize(statusText.textContent) !== message) statusText.textContent = message;
   if (!statusBox) return;
 
-  statusBox.style.backgroundColor = success ? "#e8faf0" : "#fff5de";
-  statusBox.style.borderColor = success ? "#bfe8d0" : "#f0d8a8";
-  if (statusText) statusText.style.color = success ? "#149e57" : "#c77a0d";
+  const palette = {
+    success: { background: "#e8faf0", border: "#bfe8d0", text: "#149e57" },
+    warning: { background: "#fff5de", border: "#f0d8a8", text: "#c77a0d" },
+    neutral: { background: "#e8f4fc", border: "#bfdef5", text: "#2094e3" },
+  }[tone];
+
+  statusBox.style.backgroundColor = palette.background;
+  statusBox.style.borderColor = palette.border;
+  if (statusText) statusText.style.color = palette.text;
 }
 
 function updateTotalKpi(page: HTMLElement, records: RegisteredFlow[]) {
@@ -70,10 +77,24 @@ function updateTotalKpi(page: HTMLElement, records: RegisteredFlow[]) {
   if (normalize(totalLabel.textContent) !== next) totalLabel.textContent = next;
 }
 
+function setupEditableFields(page: HTMLElement) {
+  page.querySelectorAll<HTMLElement>('[data-name="register-flow-panel"] [data-name="field"] p').forEach((value) => {
+    if (value.dataset.flowEditable === "true") return;
+    value.dataset.flowEditable = "true";
+    value.contentEditable = "true";
+    value.spellcheck = false;
+    value.tabIndex = 0;
+    value.setAttribute("role", "textbox");
+    value.classList.add("fund-flow-editable-value");
+  });
+}
+
 function restoreSavedState() {
   if (window.location.pathname !== FUNDING_FLOW_PATH) return;
   const page = getPage();
   if (!page) return;
+
+  setupEditableFields(page);
   const saveButton = page.querySelector<HTMLButtonElement>('button[data-name="save-flow"]');
   if (!saveButton) return;
 
@@ -85,7 +106,11 @@ function restoreSavedState() {
     setButtonLabel(saveButton, "جریان ثبت شده ✓");
     saveButton.disabled = true;
     saveButton.dataset.flowSaved = "true";
-    setStatus(page, "این جریان با همین شناسه مرجع ثبت شده و در سوابق محلی پنل ذخیره است.", true);
+    setStatus(page, "این جریان با همین شناسه مرجع قبلاً ثبت شده است. برای ثبت جریان جدید، اطلاعات یا شناسه مرجع را تغییر دهید.", "success");
+  } else {
+    setButtonLabel(saveButton, DEFAULT_BUTTON_LABEL);
+    saveButton.disabled = false;
+    saveButton.dataset.flowSaved = "false";
   }
 }
 
@@ -95,7 +120,7 @@ function handleSave(button: HTMLButtonElement) {
 
   const form = getFormValues(page);
   if (!form.reference) {
-    setStatus(page, "برای ثبت جریان، شناسه مرجع الزامی است.", false);
+    setStatus(page, "برای ثبت جریان، شناسه مرجع الزامی است.", "warning");
     return;
   }
 
@@ -104,7 +129,7 @@ function handleSave(button: HTMLButtonElement) {
     setButtonLabel(button, "جریان ثبت شده ✓");
     button.disabled = true;
     button.dataset.flowSaved = "true";
-    setStatus(page, "این جریان قبلاً با همین شناسه مرجع ثبت شده است.", true);
+    setStatus(page, "این جریان قبلاً با همین شناسه مرجع ثبت شده است.", "success");
     updateTotalKpi(page, records);
     return;
   }
@@ -118,7 +143,7 @@ function handleSave(button: HTMLButtonElement) {
   try {
     writeRecords(nextRecords);
   } catch {
-    setStatus(page, "ثبت جریان در مرورگر انجام نشد. دوباره تلاش کنید.", false);
+    setStatus(page, "ثبت جریان در مرورگر انجام نشد. دوباره تلاش کنید.", "warning");
     return;
   }
 
@@ -128,7 +153,7 @@ function handleSave(button: HTMLButtonElement) {
   setStatus(
     page,
     `جریان «${form.project || "پروژه"}» با شناسه ${form.reference} با موفقیت ثبت شد.`,
-    true,
+    "success",
   );
   updateTotalKpi(page, nextRecords);
 }
@@ -149,6 +174,21 @@ document.addEventListener(
   },
   true,
 );
+
+document.addEventListener("input", (event) => {
+  if (window.location.pathname !== FUNDING_FLOW_PATH) return;
+  const target = event.target;
+  if (!(target instanceof HTMLElement) || target.dataset.flowEditable !== "true") return;
+
+  const page = getPage();
+  const saveButton = page?.querySelector<HTMLButtonElement>('button[data-name="save-flow"]');
+  if (!page || !saveButton) return;
+
+  saveButton.disabled = false;
+  saveButton.dataset.flowSaved = "false";
+  setButtonLabel(saveButton, DEFAULT_BUTTON_LABEL);
+  setStatus(page, "اطلاعات جریان ویرایش شد؛ برای ثبت نهایی دکمه پایین را بزنید.", "neutral");
+});
 
 restoreSavedState();
 
