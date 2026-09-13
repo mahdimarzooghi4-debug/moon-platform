@@ -35,7 +35,9 @@
   direction: rtl;
 }
 
-.fund-project-payment-status[data-status="pending"] { background: #fff7e8; color: #c27a10; }
+.fund-project-payment-status[data-status="pending_admin"] { background: #fff7e8; color: #c27a10; }
+.fund-project-payment-status[data-status="approved"] { background: #e8f5fc; color: #2094e3; }
+.fund-project-payment-status[data-status="rejected"] { background: #fff0ec; color: #c65332; }
 .fund-project-payment-status[data-status="paid"] { background: #e8faf0; color: #149e57; }
 
 .fund-project-payment-dialog-backdrop {
