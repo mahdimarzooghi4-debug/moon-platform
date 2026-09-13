@@ -6,11 +6,16 @@ const navRoutes: Record<string, string> = {
   "dashboard-nav": PANEL_PREFIX,
   "startup-evaluations-nav": `${PANEL_PREFIX}/resources`,
   "project-evaluations-nav": `${PANEL_PREFIX}/investments`,
-  "milestone-evaluations-nav": `${PANEL_PREFIX}/profit-returns`,
-  "reports-nav": `${PANEL_PREFIX}/cycle-returns`,
-  "revenues-nav": `${PANEL_PREFIX}/profit-split`,
+  "revenues-nav": `${PANEL_PREFIX}/financials`,
   "evaluation-history-nav": `${PANEL_PREFIX}/reports`,
-  "settings-nav": `${PANEL_PREFIX}/financial-history`,
+};
+
+const navLabels: Record<string, string> = {
+  "dashboard-nav": "داشبورد",
+  "startup-evaluations-nav": "منابع صندوق",
+  "project-evaluations-nav": "سرمایه‌گذاری‌ها",
+  "revenues-nav": "مالی صندوق",
+  "evaluation-history-nav": "گزارش‌ها",
 };
 
 const detailRoutes: Record<string, string> = {
@@ -26,6 +31,15 @@ const detailRoutes: Record<string, string> = {
 const navSelector = Object.keys(navRoutes)
   .map((name) => `[data-name="${name}"]`)
   .join(",");
+
+function normalize(value: string | null | undefined) {
+  return (value ?? "").replace(/\s+/g, " ").trim();
+}
+
+function setText(node: Element | null | undefined, text: string) {
+  if (!(node instanceof HTMLElement)) return;
+  if (normalize(node.textContent) !== text) node.textContent = text;
+}
 
 function isFundManagerPage() {
   return window.location.pathname.startsWith(PANEL_PREFIX);
@@ -45,6 +59,7 @@ function preloadPanelRoutes() {
     import("./resource-detail"),
     import("./investments"),
     import("./investment-detail"),
+    import("./financials"),
     import("./profit-returns"),
     import("./profit-return-detail"),
     import("./cycle-returns"),
@@ -68,6 +83,7 @@ function applyDestinations(root: ParentNode = document) {
         element.setAttribute("role", "link");
         element.tabIndex = 0;
       }
+      setText(element.querySelector(":scope > p, :scope > span:first-child"), navLabels[name]);
     });
   });
 
