@@ -1,6 +1,12 @@
 .fund-manager-panel {
-  min-width: 1200px;
-  min-height: 900px;
+  width: 1440px !important;
+  min-width: 1440px !important;
+  max-width: 1440px !important;
+  height: 900px !important;
+  min-height: 900px !important;
+  margin: 0 auto !important;
+  direction: ltr !important;
+  flex: 0 0 1440px !important;
   font-family: "Vazirmatn", sans-serif !important;
 }
 
@@ -12,38 +18,30 @@
   font-family: "Vazirmatn", sans-serif !important;
 }
 
+/* All fund-manager Figma screens use the same 1440×900 shell:
+   1216px main content followed by a 224px sidebar on the right. The app root
+   is globally RTL, so force only this generated shell back to LTR to preserve
+   the exact Figma child order while Persian copy keeps its own dir/text rules. */
+.fund-manager-panel > [data-name="Main Content"] {
+  width: 1216px !important;
+  min-width: 1216px !important;
+  max-width: 1216px !important;
+  flex: 0 0 1216px !important;
+}
+
+.fund-manager-panel > [data-name="colored-sidebar"] {
+  width: 224px !important;
+  min-width: 224px !important;
+  max-width: 224px !important;
+  flex: 0 0 224px !important;
+}
+
 /* Figma-generated screens still carry utility font classes such as font-sans.
    Force the actual dashboard tree to use Vazirmatn so those utilities cannot
    fall back to the browser/system sans font. */
 [data-name="fund-manager-main-dashboard"],
 [data-name="fund-manager-main-dashboard"] * {
   font-family: "Vazirmatn", sans-serif !important;
-}
-
-/* Figma 2284:3 — lock the fund-manager dashboard to its 1440×900 reference frame.
-   The generated DOM renders Main Content first and the sidebar second, so the
-   outer flex row must be LTR even though the copy itself is Persian/RTL. */
-[data-name="fund-manager-main-dashboard"] {
-  width: 1440px !important;
-  min-width: 1440px !important;
-  max-width: 1440px !important;
-  height: 900px !important;
-  min-height: 900px !important;
-  margin: 0 auto !important;
-  direction: ltr !important;
-  flex: 0 0 1440px !important;
-}
-
-[data-name="fund-manager-main-dashboard"] > [data-name="Main Content"] {
-  width: 1216px !important;
-  min-width: 1216px !important;
-  flex: 0 0 1216px !important;
-}
-
-[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] {
-  width: 224px !important;
-  min-width: 224px !important;
-  flex: 0 0 224px !important;
 }
 
 /* Dashboard polish requested after matching the Figma frame. */
@@ -76,7 +74,7 @@
 }
 
 @media (max-width: 1439px) {
-  [data-name="fund-manager-main-dashboard"] {
+  .fund-manager-panel {
     margin: 0 !important;
   }
 }
