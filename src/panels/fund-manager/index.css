@@ -1,7 +1,7 @@
 .fund-manager-panel {
   min-width: 1200px;
   min-height: 900px;
-  font-family: "Vazirmatn", sans-serif;
+  font-family: "Vazirmatn", sans-serif !important;
 }
 
 .fund-manager-panel,
@@ -9,6 +9,15 @@
 .fund-manager-panel *::before,
 .fund-manager-panel *::after {
   box-sizing: border-box;
+  font-family: "Vazirmatn", sans-serif !important;
+}
+
+/* Figma-generated screens still carry utility font classes such as font-sans.
+   Force the actual dashboard tree to use Vazirmatn so those utilities cannot
+   fall back to the browser/system sans font. */
+[data-name="fund-manager-main-dashboard"],
+[data-name="fund-manager-main-dashboard"] * {
+  font-family: "Vazirmatn", sans-serif !important;
 }
 
 /* Figma 2284:3 — lock the fund-manager dashboard to its 1440×900 reference frame.
