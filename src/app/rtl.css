@@ -306,3 +306,15 @@ input[type="tel"],
   width: 100% !important;
   margin-top: auto !important;
 }
+
+/* KPI cards: make the whole card content truly right-aligned. */
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] > * > p:first-child,
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] [data-name="value"] {
+  padding-left: 0 !important;
+  padding-right: 46px !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] [data-name="kpi-icon-badge"] {
+  left: auto !important;
+  right: 14px !important;
+}
