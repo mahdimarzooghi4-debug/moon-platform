@@ -313,3 +313,85 @@
   flex: none !important;
   align-self: auto;
 }
+
+/* Main dashboard polish: keep the sidebar content RTL and the KPI cards compact. */
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] > [data-name="colored-sidebar"] {
+  direction: rtl;
+  align-items: flex-end !important;
+  text-align: right;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] > [data-name="colored-sidebar"] [data-name$="-nav"] {
+  direction: rtl;
+  justify-content: flex-start !important;
+  text-align: right;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] > [data-name="colored-sidebar"] [data-name$="-nav"] > p {
+  order: 2;
+  flex: 1 1 auto;
+  width: auto !important;
+  text-align: right !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] > [data-name="colored-sidebar"] [data-name$="-nav"] > div {
+  order: 1;
+  flex: 0 0 18px;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] > [data-name="colored-sidebar"] [data-name="panel-identity"] {
+  align-items: flex-end !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] > [data-name="colored-sidebar"] [data-name="panel-identity"] > p {
+  width: 100% !important;
+  text-align: right !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] {
+  gap: 12px;
+  align-items: stretch;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] > * {
+  height: 96px !important;
+  min-height: 96px;
+  padding: 10px 14px !important;
+  justify-content: flex-start;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] > * > p:first-child {
+  min-height: 18px;
+  padding-left: 42px;
+  font-size: 10px !important;
+  line-height: 1.6 !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] [data-name="value"] {
+  height: 32px !important;
+  gap: 4px !important;
+  align-items: baseline !important;
+  justify-content: flex-end !important;
+  padding-left: 42px;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] [data-name="value"] > p:first-child {
+  font-size: 9px !important;
+  line-height: 1.4 !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] [data-name="value"] > p:last-child {
+  font-size: 21px !important;
+  line-height: 1.2 !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] [data-name="accent"] {
+  margin-top: auto;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] [data-name="kpi-icon-badge"] {
+  width: 34px !important;
+  height: 34px !important;
+  left: 14px !important;
+  top: 10px !important;
+}
