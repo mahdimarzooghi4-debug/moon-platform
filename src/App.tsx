@@ -14,14 +14,12 @@ import EmdadCertificateIssuerSettings from "./features/emdad-certificate-issuer-
 import FundManagerReportDetailPage from "./panels/fund-manager/report-detail";
 import FundManagerFinancialHistoryPage from "./panels/fund-manager/financial-history";
 import FundManagerFinancialHistoryDetailPage from "./panels/fund-manager/financial-history-detail";
-import FundManagerFundingFlowControlPage from "./panels/fund-manager/funding-flow-control";
 
 const STARTUP_TEAM_MEMBER_PATH = "/register/startup/states/step2/team-member/new";
 const PROJECT_IMPACT_DOCUMENTS_PATH = "/projects/impact-report/documents";
 const FUND_MANAGER_REPORT_DETAIL_PATH = "/panel/fund-manager/reports/detail";
 const FUND_MANAGER_FINANCIAL_HISTORY_PATH = "/panel/fund-manager/financial-history";
 const FUND_MANAGER_FINANCIAL_HISTORY_DETAIL_PATH = "/panel/fund-manager/financial-history/detail";
-const FUND_MANAGER_FUNDING_FLOW_CONTROL_PATH = "/panel/fund-manager/funding-flow-control";
 
 export default function App() {
   const pathname = window.location.pathname;
@@ -38,8 +36,6 @@ export default function App() {
     <FundManagerFinancialHistoryPage />
   ) : pathname === FUND_MANAGER_FINANCIAL_HISTORY_DETAIL_PATH ? (
     <FundManagerFinancialHistoryDetailPage />
-  ) : pathname === FUND_MANAGER_FUNDING_FLOW_CONTROL_PATH ? (
-    <FundManagerFundingFlowControlPage />
   ) : null;
 
   return (
