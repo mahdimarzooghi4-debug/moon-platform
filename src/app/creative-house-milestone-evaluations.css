@@ -67,13 +67,3 @@ body .creative-house-dashboard[data-name="ayeneh-milestone-evaluation-detail"] >
   height: 1900px !important;
   min-height: 1900px !important;
 }
-
-/* Keep the second action label consistent without relying on timing of DOM mutation. */
-body .creative-house-dashboard[data-name="ayeneh-milestone-evaluations"] [data-name="project-row-2"] [data-name="action-button"] p {
-  font-size: 0 !important;
-}
-
-body .creative-house-dashboard[data-name="ayeneh-milestone-evaluations"] [data-name="project-row-2"] [data-name="action-button"] p::after {
-  content: "مشاهده";
-  font-size: 12px;
-}
