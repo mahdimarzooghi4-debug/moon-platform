@@ -27,6 +27,7 @@ import "./panels/fund-manager/list-interactions";
 import "./panels/fund-manager/financials/settings-sync";
 import "./panels/fund-manager/dashboard-shell-fix.css";
 import "./panels/fund-manager/sidebar-simplify.css";
+import "./panels/fund-manager/financials/shell-fix.css";
 import "./app/fund-release-request-flow";
 import "./app/fund-project-payment-flow";
 import "./landing/contact-details.css";
