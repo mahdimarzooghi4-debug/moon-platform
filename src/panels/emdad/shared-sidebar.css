@@ -21,13 +21,13 @@ html.emdad-shared-sidebar-active [data-name="colored-sidebar"]:not(.emdad-shared
   background: #17324d;
   direction: rtl;
   text-align: right;
-  font-family: "Vazirmatn", sans-serif;
+  font-family: "Vazirmatn", sans-serif !important;
 }
 
 .emdad-shared-sidebar,
 .emdad-shared-sidebar * {
   box-sizing: border-box;
-  font-family: "Vazirmatn", sans-serif;
+  font-family: "Vazirmatn", sans-serif !important;
 }
 
 .emdad-shared-logo {
