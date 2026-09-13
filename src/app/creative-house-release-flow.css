@@ -1,0 +1,127 @@
+.creative-release-queue-list {
+  position: absolute;
+  left: 19px;
+  top: 143px;
+  width: 1120px;
+  max-height: 158px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  direction: rtl;
+}
+
+.creative-release-queue-row {
+  min-height: 72px;
+  padding: 8px 12px;
+  display: grid;
+  grid-template-columns: 1.35fr 1fr .95fr 1fr 1.1fr 1fr;
+  gap: 8px;
+  align-items: center;
+  border: 1px solid #e4ebf1;
+  border-radius: 10px;
+  background: #fff;
+  color: #17324d;
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 10px;
+  text-align: center;
+}
+
+.creative-release-queue-project {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: right;
+}
+
+.creative-release-queue-project strong {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.creative-release-queue-project small {
+  color: #60758a;
+  font-size: 9px;
+}
+
+.creative-release-queue-approved {
+  min-width: 108px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  border-radius: 14px;
+  background: #e9f8f1;
+  color: #159455;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.creative-release-queue-status {
+  min-width: 132px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  border-radius: 14px;
+  background: #fff7e8;
+  color: #c27a10;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.creative-release-queue-status[data-status="released"] {
+  background: #e9f8f1;
+  color: #159455;
+}
+
+.creative-release-queue-action {
+  height: 34px;
+  padding: 0 14px;
+  border: 1px solid #2094e3;
+  border-radius: 8px;
+  background: #2094e3;
+  color: #fff;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.creative-release-queue-empty {
+  height: 82px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed #dbe5f0;
+  border-radius: 10px;
+  color: #60758a;
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 11px;
+}
+
+[data-name="waiting-tab"][data-moon-active="true"],
+[data-name="released-tab"][data-moon-active="true"] {
+  background: #fff7e8 !important;
+  border-color: #f4d399 !important;
+}
+
+[data-name="released-tab"][data-moon-active="true"] {
+  background: #e9f8f1 !important;
+  border-color: #bee5cf !important;
+}
+
+[data-name="waiting-tab"][data-moon-active="true"] p {
+  color: #c27a10 !important;
+}
+
+[data-name="released-tab"][data-moon-active="true"] p {
+  color: #159455 !important;
+}
+
+[data-name="approve-release-button"][data-release-complete="true"] {
+  background: #159455 !important;
+  pointer-events: none !important;
+}
