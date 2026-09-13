@@ -1,23 +1,36 @@
-const ACTION_SELECTOR =
+const DASHBOARD_ACTION_SELECTOR =
   '.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Top Actions"] a';
+const STARTUP_EVALUATION_ACTION_SELECTOR =
+  '.creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name="action-button"]';
 
-const ACTION_ROUTES = new Map<string, string>([
+const DASHBOARD_ACTION_ROUTES = new Map<string, string>([
   ["گزارش‌های آماری", "/panel/creative-house/reports"],
   ["همه ارزیابی‌ها", "/panel/creative-house/startup-evaluations"],
 ]);
 
-function getActionRoute(anchor: HTMLAnchorElement) {
+const STARTUP_EVALUATION_DETAIL_ROUTE =
+  "/panel/creative-house/startup-evaluations/detail";
+
+function getDashboardActionRoute(anchor: HTMLAnchorElement) {
   const label = anchor.textContent?.replace(/\s+/g, " ").trim();
-  return label ? ACTION_ROUTES.get(label) : undefined;
+  return label ? DASHBOARD_ACTION_ROUTES.get(label) : undefined;
 }
 
 function applyActionHrefs(root: ParentNode = document) {
-  root.querySelectorAll<HTMLAnchorElement>(ACTION_SELECTOR).forEach((anchor) => {
-    const route = getActionRoute(anchor);
-    if (route) {
-      anchor.setAttribute("href", route);
-    }
-  });
+  root
+    .querySelectorAll<HTMLAnchorElement>(DASHBOARD_ACTION_SELECTOR)
+    .forEach((anchor) => {
+      const route = getDashboardActionRoute(anchor);
+      if (route) {
+        anchor.setAttribute("href", route);
+      }
+    });
+
+  root
+    .querySelectorAll<HTMLAnchorElement>(STARTUP_EVALUATION_ACTION_SELECTOR)
+    .forEach((anchor) => {
+      anchor.setAttribute("href", STARTUP_EVALUATION_DETAIL_ROUTE);
+    });
 }
 
 function navigateWithinApp(route: string) {
@@ -40,10 +53,20 @@ document.addEventListener("click", (event) => {
   const target = event.target;
   if (!(target instanceof Element)) return;
 
-  const anchor = target.closest<HTMLAnchorElement>(ACTION_SELECTOR);
-  if (!anchor) return;
+  const startupEvaluationAction =
+    target.closest<HTMLAnchorElement>(STARTUP_EVALUATION_ACTION_SELECTOR);
+  if (startupEvaluationAction) {
+    event.preventDefault();
+    navigateWithinApp(STARTUP_EVALUATION_DETAIL_ROUTE);
+    return;
+  }
 
-  const route = getActionRoute(anchor);
+  const dashboardAction = target.closest<HTMLAnchorElement>(
+    DASHBOARD_ACTION_SELECTOR,
+  );
+  if (!dashboardAction) return;
+
+  const route = getDashboardActionRoute(dashboardAction);
   if (!route) return;
 
   event.preventDefault();
