@@ -14,7 +14,7 @@ body {
   margin: 0;
   direction: rtl;
   font-family: var(--default-font-family);
-  background: #f7fafc;
+  background: #fcfbf8;
 }
 
 .main-container {
@@ -37,4 +37,38 @@ button {
 input,
 textarea {
   unicode-bidi: plaintext;
+}
+
+/* News details — Figma keeps the spatial composition LTR while Persian copy
+ * remains RTL. Scope this correction to the article screen only so no other
+ * generated page is affected. */
+.main-container:has(> :nth-child(2) [class*="w-[850px]"]) {
+  direction: ltr;
+  text-align: right;
+}
+
+.main-container:has(> :nth-child(2) [class*="w-[850px]"]) span,
+.main-container:has(> :nth-child(2) [class*="w-[850px]"]) p,
+.main-container:has(> :nth-child(2) [class*="w-[850px]"]) a,
+.main-container:has(> :nth-child(2) [class*="w-[850px]"]) button,
+.main-container:has(> :nth-child(2) [class*="w-[850px]"]) input,
+.main-container:has(> :nth-child(2) [class*="w-[850px]"]) textarea {
+  direction: rtl;
+  unicode-bidi: plaintext;
+}
+
+/* Header uses a bottom divider in the canonical Figma frame. */
+.main-container:has(> :nth-child(2) [class*="w-[850px]"]) > :first-child {
+  border-top: 0 !important;
+  border-bottom: 1px solid #e4ebf1 !important;
+}
+
+/* Keep the main article split exactly as Figma: sidebar on the left and the
+ * 818px article column on the right. */
+.main-container:has(> :nth-child(2) [class*="w-[850px]"]) > :nth-child(4) {
+  direction: ltr;
+}
+
+.main-container:has(> :nth-child(2) [class*="w-[850px]"]) > :nth-child(4) > * {
+  direction: rtl;
 }
