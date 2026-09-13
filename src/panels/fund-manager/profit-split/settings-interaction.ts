@@ -65,6 +65,7 @@ function writeSettings(next: SplitSettings, previous: SplitSettings) {
   } catch {
     // The active setting is already saved; audit history is best-effort in this frontend prototype.
   }
+  window.dispatchEvent(new CustomEvent("moon:profit-split-settings-changed"));
 }
 
 function faNumber(value: number) {
@@ -81,9 +82,9 @@ function setText(node: Element | null | undefined, text: string) {
 }
 
 function updateSidebarLabels() {
-  document.querySelectorAll<HTMLElement>('[data-name="revenues-nav"] > p').forEach((label) => {
-    setText(label, "تقسیم سود");
-  });
+  document
+    .querySelectorAll<HTMLElement>('[data-name="revenues-nav"] > p, [data-name="revenues-nav"] > span:first-child')
+    .forEach((label) => setText(label, "مالی صندوق"));
 }
 
 function updateDashboard(settings: SplitSettings) {
@@ -104,7 +105,7 @@ function updateDashboard(settings: SplitSettings) {
   }
 }
 
-function ensureSettingsButton(root: HTMLElement, settings: SplitSettings) {
+function ensureSettingsButton(root: HTMLElement) {
   const header = root.querySelector<HTMLElement>('[data-name="header"]');
   if (!header) return;
 
@@ -143,7 +144,7 @@ function updateProfitSplitPage(settings: SplitSettings) {
   setText(tableHeaders.item(2), "سهم منابع صندوق");
   setText(tableHeaders.item(3), "سهم درآمد ماه");
 
-  ensureSettingsButton(root, settings);
+  ensureSettingsButton(root);
 }
 
 function updateProfitSplitDetail() {
@@ -332,6 +333,8 @@ if (document.body) {
     });
   }).observe(document.body, { childList: true, subtree: true });
 }
+
+window.addEventListener("moon:profit-split-settings-changed", () => requestAnimationFrame(applyProfitSplitSettings));
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") closeSettingsDialog();
