@@ -153,3 +153,126 @@ input[type="tel"],
   direction: rtl;
   text-align: right !important;
 }
+
+/* Keep KPI labels visually attached to their values. */
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] > * {
+  gap: 0 !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] > * > p:first-child {
+  min-height: 0 !important;
+  margin: 0 0 1px !important;
+  line-height: 1.25 !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] [data-name="value"] {
+  height: 27px !important;
+  min-height: 27px !important;
+  margin: 0 !important;
+  gap: 5px !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] [data-name="value"] > p {
+  width: auto !important;
+  flex: 0 0 auto;
+  margin: 0 !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] [data-name="value"] > p:last-child {
+  order: 1;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] [data-name="value"] > p:first-child {
+  order: 2;
+}
+
+/* Middle cards: project name leads each row; funding progress follows it. */
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="impact-stat-row"] {
+  direction: rtl !important;
+  grid-template-columns: minmax(0, 1fr) minmax(72px, 90px) 80px !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="impact-stat-row"] > p:last-child {
+  grid-column: 1 !important;
+  justify-self: stretch;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="impact-stat-row"] > p:first-of-type {
+  grid-column: 2 !important;
+  justify-self: stretch;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="impact-stat-row"] > div:first-child {
+  grid-column: 3 !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="funding-row"] {
+  direction: rtl !important;
+  grid-template-columns: minmax(150px, 180px) minmax(120px, 1fr) minmax(84px, 120px) 48px !important;
+  gap: 10px !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="funding-row"] > p:last-child {
+  grid-column: 1 !important;
+  justify-self: stretch;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="funding-row"] > [data-name="progress-track"] {
+  grid-column: 2 !important;
+  justify-self: stretch;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="funding-row"] > p:nth-of-type(2) {
+  grid-column: 3 !important;
+  justify-self: stretch;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="funding-row"] > p:first-of-type {
+  grid-column: 4 !important;
+  justify-self: stretch;
+  text-align: center !important;
+}
+
+/* Startup table: enforce true RTL column order and right-aligned cells. */
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-table-head"],
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name^="startup-row-"] {
+  direction: rtl !important;
+  grid-template-columns: 58px minmax(160px, 3.8fr) minmax(112px, 2.4fr) minmax(130px, 2.8fr) minmax(108px, 1.7fr) !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-table-head"] > :nth-child(1),
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name^="startup-row-"] > [data-name="stage-cell"] {
+  grid-column: 5 !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-table-head"] > :nth-child(2),
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name^="startup-row-"] > [data-name="domain-cell"] {
+  grid-column: 4 !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-table-head"] > :nth-child(3),
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name^="startup-row-"] > [data-name="manager-cell"] {
+  grid-column: 3 !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-table-head"] > :nth-child(4),
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name^="startup-row-"] > [data-name="startup-cell"] {
+  grid-column: 2 !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-table-head"] > [data-name="number-header-cell"],
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name^="startup-row-"] > [data-name="row-number-cell"] {
+  grid-column: 1 !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-table-head"] > [data-name="header-cell"],
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name^="startup-row-"] > [data-name$="-cell"] {
+  justify-content: flex-start !important;
+  text-align: right !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name^="startup-row-"] > [data-name="stage-cell"] {
+  padding-right: 12px !important;
+}
