@@ -17,22 +17,22 @@ const sidebarItems = [
 
 export function CompanySidebar({ active }: CompanySidebarProps) {
   return (
-    <aside className="company-sidebar" aria-label="ناوبری پنل شرکت">
+    <aside className="company-sidebar" aria-label="ناوبری پنل شرکت" dir="rtl">
       <div className="company-brand">
         <img src={`${ASSET_ROOT}/logo.png`} alt="سامانه ماه" />
       </div>
 
       <div className="company-identity">پایدار پرداز خلاق آریا</div>
 
-      <nav className="company-nav">
+      <nav className="company-nav" dir="rtl">
         {sidebarItems.map((item) => (
           <Link
             key={item.key}
             to={item.to}
             className={`company-nav-item${item.key === active ? " is-active" : ""}`}
           >
-            <span>{item.label}</span>
             <img src={`${ASSET_ROOT}/${item.icon}`} alt="" />
+            <span>{item.label}</span>
           </Link>
         ))}
       </nav>
@@ -40,8 +40,8 @@ export function CompanySidebar({ active }: CompanySidebarProps) {
       <div className="company-sidebar-spacer" />
 
       <button className="company-logout" type="button">
-        <span>خروج از سیستم</span>
         <img src={`${ASSET_ROOT}/nav-logout.svg`} alt="" />
+        <span>خروج از سیستم</span>
       </button>
     </aside>
   );
