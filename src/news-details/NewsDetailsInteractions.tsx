@@ -5,9 +5,12 @@ function normalizedText(node: Element) {
 }
 
 function removeOnlineButtons(root: HTMLElement) {
-  root.querySelectorAll<HTMLElement>("span, p, div").forEach((node) => {
+  root.querySelectorAll<HTMLElement>("span, p").forEach((node) => {
     if (normalizedText(node) !== "مشاهده آنلاین") return;
 
+    // Hide only the button-like element that directly wraps the label.
+    // Do not hide the shared actions container because it also contains
+    // the adjacent "دریافت فایل" button.
     const target = node.closest<HTMLElement>("button") ?? node.parentElement;
     if (!target) return;
 
