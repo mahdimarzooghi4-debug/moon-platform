@@ -50,8 +50,9 @@
   display: none !important;
 }
 
-/* Category cards: force physical right alignment inside each RTL card. */
+/* Category cards: RTL order plus physical right alignment inside every card. */
 .faq-page .faq-category-grid {
+  direction: rtl;
   align-items: stretch;
 }
 
@@ -76,7 +77,7 @@
   text-align: right;
 }
 
-/* Feedback controls were removed from the requested FAQ presentation. */
+/* Feedback controls are removed by FaqInteractions; keep this as a no-flash guard. */
 .faq-page .faq-feedback {
   display: none !important;
 }
