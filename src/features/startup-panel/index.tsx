@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { StartupSidebar } from "./components/StartupSidebar";
 import "./index.css";
+import "./dashboard-frame.css";
 
 const ASSET_ROOT = "/assets/startup-panel";
 
