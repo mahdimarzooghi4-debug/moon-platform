@@ -40,8 +40,18 @@ body .creative-house-dashboard[data-name="ayeneh-milestone-evaluations"] [data-n
   display: none !important;
 }
 
-/* Milestone evaluation detail: override the shared 900px internal-screen clamp so the full 1900px design can scroll. */
+/* Milestone evaluation detail: allow the complete exported 1900px screen to create document scroll. */
+html:has(.creative-house-dashboard[data-name="ayeneh-milestone-evaluation-detail"]),
+body:has(.creative-house-dashboard[data-name="ayeneh-milestone-evaluation-detail"]),
+#app:has(.creative-house-dashboard[data-name="ayeneh-milestone-evaluation-detail"]) {
+  height: auto !important;
+  min-height: 1900px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
 body .creative-house-dashboard[data-name="ayeneh-milestone-evaluation-detail"] {
+  position: relative !important;
   height: 1900px !important;
   min-height: 1900px !important;
   overflow: visible !important;
@@ -56,4 +66,14 @@ body .creative-house-dashboard[data-name="ayeneh-milestone-evaluation-detail"] >
 body .creative-house-dashboard[data-name="ayeneh-milestone-evaluation-detail"] > [data-name="colored-sidebar"] {
   height: 1900px !important;
   min-height: 1900px !important;
+}
+
+/* Keep the second action label consistent without relying on timing of DOM mutation. */
+body .creative-house-dashboard[data-name="ayeneh-milestone-evaluations"] [data-name="project-row-2"] [data-name="action-button"] p {
+  font-size: 0 !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-milestone-evaluations"] [data-name="project-row-2"] [data-name="action-button"] p::after {
+  content: "مشاهده";
+  font-size: 12px;
 }
