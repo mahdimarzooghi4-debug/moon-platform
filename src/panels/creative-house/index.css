@@ -277,3 +277,39 @@
     grid-column: span 1;
   }
 }
+
+/* Internal creative-house screens are exported as fixed 1440px absolute layouts.
+   Keep the dashboard responsiveness from collapsing their absolute content. */
+.creative-house-dashboard:not([data-name="ayeneh-main-dashboard"]) {
+  position: relative;
+  width: 100%;
+  max-width: 1440px;
+  min-height: 900px;
+  height: 900px;
+  overflow: hidden;
+  margin-inline: auto;
+}
+
+.creative-house-dashboard:not([data-name="ayeneh-main-dashboard"]) > [data-name="Main Content"] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1216px !important;
+  height: 900px !important;
+  min-height: 900px !important;
+  flex: none !important;
+  align-items: initial !important;
+  padding: 0 !important;
+}
+
+.creative-house-dashboard:not([data-name="ayeneh-main-dashboard"]) > [data-name="colored-sidebar"] {
+  position: absolute;
+  left: 1216px;
+  right: auto;
+  top: 0;
+  width: 224px !important;
+  height: 900px !important;
+  min-height: 900px !important;
+  flex: none !important;
+  align-self: auto;
+}
