@@ -1,0 +1,28 @@
+.fund-manager-panel.fund-financials-page {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: flex-start !important;
+  overflow: hidden !important;
+  direction: ltr !important;
+}
+
+.fund-manager-panel.fund-financials-page > .fund-financials-main {
+  width: 1216px !important;
+  min-width: 1216px !important;
+  max-width: 1216px !important;
+  height: 900px !important;
+  flex: 0 0 1216px !important;
+  direction: rtl !important;
+}
+
+.fund-manager-panel.fund-financials-page > .fund-financials-sidebar {
+  width: 224px !important;
+  min-width: 224px !important;
+  max-width: 224px !important;
+  height: 900px !important;
+  flex: 0 0 224px !important;
+  direction: rtl !important;
+  display: flex !important;
+  visibility: visible !important;
+}
