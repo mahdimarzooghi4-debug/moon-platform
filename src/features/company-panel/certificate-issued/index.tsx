@@ -8,7 +8,7 @@ import {
 import "../index.css";
 import "./index.css";
 
-const OFFICIAL_LOGO = "/assets/company-panel/emdad-logo-official.png";
+const OFFICIAL_LOGO = "/assets/emdad/dashboard/logo.png";
 const STAMP = "/assets/company-panel/emdad-stamp.svg";
 
 export default function CompanyArticle172CertificateIssued() {
