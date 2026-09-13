@@ -1,0 +1,24 @@
+/* Startup sidebar alignment fixes to match Figma node 1951:206. */
+.startup-sidebar .startup-brand {
+  direction: ltr;
+}
+
+.startup-sidebar .startup-nav-item {
+  direction: ltr;
+  color: #fff !important;
+}
+
+.startup-sidebar .startup-nav-item > span {
+  direction: rtl;
+  color: inherit;
+  text-align: right;
+}
+
+.startup-sidebar .startup-logout {
+  direction: ltr;
+}
+
+.startup-sidebar .startup-logout > span:first-child {
+  direction: rtl;
+  text-align: right;
+}

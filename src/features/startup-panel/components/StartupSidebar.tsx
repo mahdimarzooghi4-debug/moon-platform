@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
+import "./startup-sidebar-figma.css";
 
 const ASSET_ROOT = "/assets/startup-panel";
+const SHARED_BRAND_LOGO = "/assets/creative-house/dashboard/logo.png";
 
 type StartupSidebarProps = {
   active: "dashboard" | "projects" | "stages" | "reports" | "profile" | "financing" | "settings";
@@ -20,7 +22,7 @@ export function StartupSidebar({ active }: StartupSidebarProps) {
   return (
     <aside className="startup-sidebar" aria-label="ناوبری پنل استارتاپ">
       <div className="startup-brand">
-        <img src={`${ASSET_ROOT}/logo.png`} alt="سامانه ماه" />
+        <img src={SHARED_BRAND_LOGO} alt="سامانه ماه" />
       </div>
 
       <div className="startup-identity">
