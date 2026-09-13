@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { StartupSidebar } from "../components/StartupSidebar";
 import "../index.css";
+import "../funding-transfer-status.css";
 import "./index.css";
 
 const projectFacts = [
@@ -79,6 +80,17 @@ export default function StartupProjectDetail() {
               <strong>۲۳۲ میلیون تومان</strong>
               <span>هدف: ۴۰۰ میلیون تومان</span>
               <span>باقی‌مانده: ۱۶۸ میلیون تومان</span>
+            </div>
+            <div className="startup-project-transfer-status" aria-label="وضعیت آخرین واریز کمیته امداد">
+              <div>
+                <span>آخرین واریز امداد</span>
+                <strong>۱۰۰ میلیون تومان</strong>
+              </div>
+              <div>
+                <span>مرحله ۲ · ۱۴۰۵/۰۷/۱۵</span>
+                <small>پیگیری ۸۴۲۱۹۶</small>
+              </div>
+              <b>واریز شد</b>
             </div>
           </div>
         </section>
