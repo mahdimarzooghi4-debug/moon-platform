@@ -14,6 +14,7 @@ import "./app/creative-house-milestone-evaluations.css";
 import "./app/creative-house-reports.css";
 import "./app/creative-house-sidebar-polish.css";
 import "./panels/creative-house/dashboard-actions";
+import "./panels/creative-house/audit-interactions";
 import "./panels/creative-house/dashboard-startup-overview";
 import "./panels/creative-house/startup-evaluation-detail/interactions";
 import "./panels/creative-house/project-evaluation-detail/interactions";

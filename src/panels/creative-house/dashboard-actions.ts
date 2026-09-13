@@ -19,6 +19,9 @@ const STARTUP_EVALUATION_DETAIL_ROUTE =
 const PROJECT_EVALUATION_DETAIL_ROUTE =
   "/panel/creative-house/project-evaluations/detail";
 const REPORT_DETAIL_ROUTE = "/panel/creative-house/reports/detail";
+const REPORTS_ROUTE = "/panel/creative-house/reports";
+const EVALUATION_HISTORY_ROUTE = "/panel/creative-house/evaluation-history";
+const REPORT_DETAIL_RETURN_KEY = "mah.creativeHouse.reportDetailReturnTo.v1";
 
 const PROJECT_EVALUATION_ICON_STYLE_ID =
   "creative-house-project-evaluation-icon-size";
@@ -107,6 +110,7 @@ document.addEventListener("click", (event) => {
     EVALUATION_HISTORY_ACTION_SELECTOR,
   );
   if (historyAction) {
+    sessionStorage.setItem(REPORT_DETAIL_RETURN_KEY, EVALUATION_HISTORY_ROUTE);
     event.preventDefault();
     navigateWithinApp(REPORT_DETAIL_ROUTE);
     return;
@@ -114,6 +118,7 @@ document.addEventListener("click", (event) => {
 
   const reportAction = target.closest<HTMLAnchorElement>(REPORT_ACTION_SELECTOR);
   if (reportAction) {
+    sessionStorage.setItem(REPORT_DETAIL_RETURN_KEY, REPORTS_ROUTE);
     event.preventDefault();
     navigateWithinApp(REPORT_DETAIL_ROUTE);
     return;
