@@ -1,0 +1,133 @@
+.fund-project-payment-button {
+  position: absolute;
+  left: 188px;
+  top: 10px;
+  width: 210px;
+  height: 34px;
+  border: 1px solid #2094e3;
+  border-radius: 8px;
+  background: #2094e3;
+  color: #fff;
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  direction: rtl;
+}
+
+.fund-project-payment-button:hover { background: #187fc3; }
+.fund-project-payment-button:disabled { cursor: default; opacity: .65; }
+
+.fund-project-payment-status {
+  position: absolute;
+  left: 150px;
+  top: 19px;
+  min-width: 190px;
+  height: 26px;
+  padding: 0 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  direction: rtl;
+}
+
+.fund-project-payment-status[data-status="pending"] { background: #fff7e8; color: #c27a10; }
+.fund-project-payment-status[data-status="paid"] { background: #e8faf0; color: #149e57; }
+
+.fund-project-payment-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(16, 38, 59, .46);
+  font-family: "Vazirmatn", sans-serif;
+}
+
+.fund-project-payment-dialog {
+  width: 560px;
+  border: 1px solid #dbe5f0;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 18px 48px rgba(23, 50, 77, .2);
+  padding: 22px;
+  color: #17324d;
+  direction: rtl;
+}
+
+.fund-project-payment-dialog h2 { margin: 0 0 6px; font-size: 18px; font-weight: 700; }
+.fund-project-payment-dialog-description { margin: 0 0 16px; color: #60758a; font-size: 11px; line-height: 1.9; }
+
+.fund-project-payment-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.fund-project-payment-summary > div {
+  padding: 9px 11px;
+  border-radius: 9px;
+  background: #f5f9fd;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.fund-project-payment-summary span { color: #60758a; font-size: 9px; }
+.fund-project-payment-summary strong { color: #17324d; font-size: 11px; font-weight: 600; }
+
+.fund-project-payment-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.fund-project-payment-field { display: flex; flex-direction: column; gap: 7px; color: #17324d; font-size: 11px; font-weight: 600; }
+.fund-project-payment-field-wide { grid-column: 1 / -1; }
+.fund-project-payment-field input,
+.fund-project-payment-field textarea {
+  width: 100%;
+  border: 1px solid #dbe5f0;
+  border-radius: 9px;
+  background: #f8fbfe;
+  color: #17324d;
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 12px;
+  outline: none;
+  direction: rtl;
+  text-align: right;
+}
+.fund-project-payment-field input { height: 42px; padding: 0 12px; }
+.fund-project-payment-field input[type="number"] { direction: ltr; text-align: center; }
+.fund-project-payment-field textarea { min-height: 72px; resize: vertical; padding: 10px 12px; }
+.fund-project-payment-field input:focus,
+.fund-project-payment-field textarea:focus { border-color: #2094e3; box-shadow: 0 0 0 3px rgba(32, 148, 227, .1); }
+
+.fund-project-payment-error { min-height: 20px; margin-top: 9px; color: #d9592e; font-size: 10px; text-align: right; }
+.fund-project-payment-actions { display: flex; gap: 10px; margin-top: 10px; }
+.fund-project-payment-actions button { height: 40px; border-radius: 9px; font-family: "Vazirmatn", sans-serif; font-size: 11px; font-weight: 600; cursor: pointer; }
+.fund-project-payment-cancel { flex: 0 0 110px; border: 1px solid #dbe5f0; background: #fff; color: #60758a; }
+.fund-project-payment-submit { flex: 1; border: 1px solid #2094e3; background: #2094e3; color: #fff; }
+
+.moon-emdad-fund-payments-nav {
+  width: 192px;
+  height: 38px;
+  flex: 0 0 38px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 0 12px;
+  border-radius: 10px;
+  color: #edf5fc;
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  direction: rtl;
+}
+.moon-emdad-fund-payments-nav:hover,
+.moon-emdad-fund-payments-nav[data-active="true"] { background: #2094e3; color: #fff; }
+.moon-emdad-fund-payments-nav .moon-nav-label { width: 142px; text-align: right; }
+.moon-emdad-fund-payments-nav .moon-nav-icon { width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; }
