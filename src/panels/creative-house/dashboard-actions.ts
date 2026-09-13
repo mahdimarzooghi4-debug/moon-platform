@@ -4,8 +4,6 @@ const STARTUP_EVALUATION_ACTION_SELECTOR =
   '.creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name="action-button"]';
 const PROJECT_EVALUATION_ACTION_SELECTOR =
   '.creative-house-dashboard[data-name="ayeneh-project-evaluations"] [data-name="action-button"]';
-const MILESTONE_EVALUATION_ACTION_SELECTOR =
-  '.creative-house-dashboard[data-name="ayeneh-milestone-evaluations"] [data-name="action-button"]';
 
 const DASHBOARD_ACTION_ROUTES = new Map<string, string>([
   ["گزارش‌های آماری", "/panel/creative-house/reports"],
@@ -16,8 +14,6 @@ const STARTUP_EVALUATION_DETAIL_ROUTE =
   "/panel/creative-house/startup-evaluations/detail";
 const PROJECT_EVALUATION_DETAIL_ROUTE =
   "/panel/creative-house/project-evaluations/detail";
-const MILESTONE_EVALUATION_DETAIL_ROUTE =
-  "/panel/creative-house/milestone-evaluations/detail";
 
 const PROJECT_EVALUATION_ICON_STYLE_ID =
   "creative-house-project-evaluation-icon-size";
@@ -68,12 +64,6 @@ function applyActionHrefs(root: ParentNode = document) {
     .forEach((anchor) => {
       setHrefIfNeeded(anchor, PROJECT_EVALUATION_DETAIL_ROUTE);
     });
-
-  root
-    .querySelectorAll<HTMLAnchorElement>(MILESTONE_EVALUATION_ACTION_SELECTOR)
-    .forEach((anchor) => {
-      setHrefIfNeeded(anchor, MILESTONE_EVALUATION_DETAIL_ROUTE);
-    });
 }
 
 function navigateWithinApp(route: string) {
@@ -95,14 +85,6 @@ document.addEventListener("click", (event) => {
 
   const target = event.target;
   if (!(target instanceof Element)) return;
-
-  const milestoneEvaluationAction =
-    target.closest<HTMLAnchorElement>(MILESTONE_EVALUATION_ACTION_SELECTOR);
-  if (milestoneEvaluationAction) {
-    event.preventDefault();
-    navigateWithinApp(MILESTONE_EVALUATION_DETAIL_ROUTE);
-    return;
-  }
 
   const projectEvaluationAction =
     target.closest<HTMLAnchorElement>(PROJECT_EVALUATION_ACTION_SELECTOR);
