@@ -141,6 +141,11 @@ export default function StartupFinancingFee() {
             </div>
           </div>
 
+          <div className="startup-financing-fee-gate-notice" role="note">
+            <strong>شرط فعال‌شدن تأمین مالی مرحله بعد</strong>
+            <span>تا کارمزد مرحله جاری به‌طور کامل تسویه نشود، تأمین مالی و آزادسازی وجه مرحله بعد پروژه انجام نخواهد شد.</span>
+          </div>
+
           <div className="startup-financing-fee-stage-table" role="table" aria-label="کارمزد مرحله‌ای پروژه">
             <div className="startup-financing-fee-stage-row is-head" role="row">
               <span role="columnheader">مرحله</span>
@@ -155,7 +160,7 @@ export default function StartupFinancingFee() {
             {stageFees.map((stage) => {
               const isPaid = paidStageIds.includes(stage.id);
               const isCurrent = stage.id === project.currentFundingStage;
-              const status = isPaid ? "پرداخت شده" : isCurrent ? "سررسید پرداخت" : "در انتظار مرحله";
+              const status = isPaid ? "پرداخت شده" : isCurrent ? "سررسید پرداخت" : "در انتظار تسویه قبلی";
 
               return (
                 <div className={`startup-financing-fee-stage-row${isCurrent ? " is-current" : ""}`} role="row" key={stage.id}>
@@ -174,7 +179,7 @@ export default function StartupFinancingFee() {
                     ) : isPaid ? (
                       <span className="is-complete">تسویه شد</span>
                     ) : (
-                      <span>پس از فعال‌شدن مرحله</span>
+                      <span>بعد از تسویه مرحله قبل</span>
                     )}
                   </div>
                 </div>
@@ -192,7 +197,7 @@ export default function StartupFinancingFee() {
         <section className="startup-financing-fee-card startup-financing-fee-policy" data-name="fee-policy">
           <div>
             <h2>قاعده پرداخت کارمزد</h2>
-            <p>کارمزد هر مرحله باید هم‌زمان با تأمین مالی همان مرحله تسویه شود. مراحل آینده تا زمان فعال‌شدن، سررسید پرداخت ندارند.</p>
+            <p>کارمزد هر مرحله باید در همان مرحله تسویه شود. تا تسویه کامل کارمزد مرحله جاری، تأمین مالی و آزادسازی وجه مرحله بعد فعال نخواهد شد.</p>
           </div>
           <div className="startup-financing-fee-bands" aria-label="نرخ‌های کارمزد">
             {feeBands.map((band) => (
