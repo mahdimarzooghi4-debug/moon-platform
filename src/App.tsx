@@ -6,6 +6,7 @@ import StartupTeamMemberAddPage from "./features/startup-registration/states/ste
 import ProjectImpactDocumentsPage from "./project-impact-report/documents";
 import HowItWorksInteractions from "./how-it-works/HowItWorksInteractions";
 import NewsListInteractions from "./news-list/NewsListInteractions";
+import NewsDetailsInteractions from "./news-details/NewsDetailsInteractions";
 
 const STARTUP_TEAM_MEMBER_PATH = "/register/startup/states/step2/team-member/new";
 const PROJECT_IMPACT_DOCUMENTS_PATH = "/projects/impact-report/documents";
@@ -19,6 +20,7 @@ export default function App() {
       <AuthGate>
         <HowItWorksInteractions />
         <NewsListInteractions />
+        <NewsDetailsInteractions />
         {isStartupTeamMemberPage ? (
           <StartupTeamMemberAddPage />
         ) : isProjectImpactDocumentsPage ? (
