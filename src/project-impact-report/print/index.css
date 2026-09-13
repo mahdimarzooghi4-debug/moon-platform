@@ -28,6 +28,41 @@ body {
   overflow: hidden;
 }
 
+.print-toolbar {
+  width: 794px;
+  margin: 16px auto 8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  font-family: "Vazirmatn Variable", "Vazirmatn", sans-serif;
+}
+
+.print-toolbar a,
+.print-toolbar button {
+  height: 36px;
+  box-sizing: border-box;
+  padding: 0 18px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 34px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.print-toolbar a {
+  border: 1px solid #2094e3;
+  background: #fff;
+  color: #2094e3;
+}
+
+.print-toolbar button {
+  border: 1px solid #2094e3;
+  background: #2094e3;
+  color: #fff;
+}
+
 .print-page { box-sizing: border-box; font-family: "Vazirmatn Variable", "Vazirmatn", sans-serif; }
 .print-page * { box-sizing: border-box; }
 .report-section { margin-top: 14px; font-size: 11px; }
@@ -40,6 +75,7 @@ body {
 @media print {
   @page { size: A4; margin: 0; }
   body { background: white; }
+  .print-toolbar { display: none !important; }
   .print-page { width: 210mm; height: 297mm; }
 }
 
