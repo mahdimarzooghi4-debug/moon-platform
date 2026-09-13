@@ -2,6 +2,19 @@
   min-width: 1200px;
   min-height: 900px;
   font-family: "Vazirmatn", sans-serif;
+  direction: rtl;
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+.creative-house-dashboard > [data-name="Main Content"] {
+  direction: rtl;
+  text-align: right;
+}
+
+.creative-house-dashboard [dir="auto"] {
+  direction: rtl;
+  unicode-bidi: plaintext;
 }
 
 .creative-house-dashboard *,
