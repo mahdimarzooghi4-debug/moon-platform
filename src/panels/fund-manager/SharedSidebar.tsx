@@ -1,11 +1,11 @@
 import { useEffect } from "react";
+import { clearSession } from "../../auth/oidc";
 import "./shared-sidebar.css";
 
 const logo = "/assets/fund-manager/investments/logo.png";
 const dashboardIcon = "/assets/fund-manager/investments/dashboard.svg";
 const resourcesIcon = "/assets/fund-manager/investments/resources.svg";
 const investmentsIcon = "/assets/fund-manager/investments/investments.svg";
-const reportsIcon = "/assets/fund-manager/investments/history.svg";
 const logoutIcon = "/assets/fund-manager/investments/logout.svg";
 
 type FundManagerSection = "dashboard" | "resources" | "investments" | "financials" | "reports";
@@ -37,6 +37,13 @@ export default function FundManagerSharedSidebar({ pathname }: Props) {
     document.documentElement.classList.add("fund-manager-shared-sidebar-active");
     return () => document.documentElement.classList.remove("fund-manager-shared-sidebar-active");
   }, []);
+
+  const logout = () => {
+    clearSession();
+    sessionStorage.removeItem("moon.auth.dev-panel-preview");
+    localStorage.removeItem("moon.auth.dev-panel-preview");
+    window.location.assign("/auth");
+  };
 
   return (
     <aside className="fund-manager-shared-sidebar" data-name="colored-sidebar" dir="rtl" aria-label="منوی مدیر صندوق">
@@ -70,12 +77,26 @@ export default function FundManagerSharedSidebar({ pathname }: Props) {
 
       <button type="button" data-name="evaluation-history-nav" className="fund-manager-shared-nav" data-active={active === "reports"}>
         <span>گزارش‌ها</span>
-        <span className="fund-manager-shared-icon"><img src={reportsIcon} alt="" /></span>
+        <span className="fund-manager-shared-icon fund-manager-shared-report-icon" aria-hidden="true">
+          <svg viewBox="0 0 18 18" focusable="false">
+            <path d="M3.5 14.5V4.5c0-.55.45-1 1-1h9c.55 0 1 .45 1 1v10H3.5Z" />
+            <path d="M6 11.5v-2M9 11.5v-4M12 11.5v-6" />
+            <path d="M2.5 14.5h13" />
+          </svg>
+        </span>
       </button>
 
       <div className="fund-manager-shared-spacer" />
 
-      <button type="button" data-name="logout-nav" className="fund-manager-shared-nav fund-manager-shared-logout">
+      <button
+        type="button"
+        data-name="logout-nav"
+        className="fund-manager-shared-nav fund-manager-shared-logout"
+        onClick={(event) => {
+          event.stopPropagation();
+          logout();
+        }}
+      >
         <span>خروج از سیستم</span>
         <span className="fund-manager-shared-icon"><img src={logoutIcon} alt="" /></span>
       </button>
