@@ -78,3 +78,57 @@ body .creative-house-dashboard.creative-house-dashboard[data-name="ayeneh-main-d
 body .creative-house-dashboard.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Overview Metrics"] [data-name="accent"] {
   display: none !important;
 }
+
+/* Keep the startup list useful, but reduce its visual weight on the dashboard. */
+body .creative-house-dashboard.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-list-section"],
+body .creative-house-dashboard.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-list"] {
+  height: 220px !important;
+  min-height: 220px !important;
+}
+
+body .creative-house-dashboard.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-list"] {
+  gap: 3px !important;
+  padding: 10px 16px !important;
+}
+
+body .creative-house-dashboard.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-list-header"] {
+  height: 24px !important;
+  min-height: 24px !important;
+}
+
+body .creative-house-dashboard.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-list-header"] > p {
+  font-size: 14px !important;
+}
+
+body .creative-house-dashboard.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="data-source-note"] {
+  width: 180px !important;
+  height: 22px !important;
+}
+
+body .creative-house-dashboard.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-table-head"] {
+  height: 26px !important;
+  min-height: 26px !important;
+}
+
+body .creative-house-dashboard.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-table-head"] > * {
+  height: 26px !important;
+}
+
+body .creative-house-dashboard.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name^="startup-row-"] {
+  height: 34px !important;
+  min-height: 34px !important;
+}
+
+body .creative-house-dashboard.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name^="startup-row-"] > * {
+  height: 34px !important;
+}
+
+body .creative-house-dashboard.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="stage-chip"] {
+  height: 22px !important;
+}
+
+body .creative-house-dashboard.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="startup-pagination-footer"] {
+  height: 26px !important;
+  min-height: 26px !important;
+  font-size: 10px !important;
+}
