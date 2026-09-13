@@ -175,10 +175,9 @@ function runAction(target: HTMLElement) {
 
 export default function PublicPageInteractions() {
   useEffect(() => {
-    const pathname = window.location.pathname;
-    if (!STATIC_PUBLIC_PATH.test(pathname)) return;
-
     const apply = () => {
+      const pathname = window.location.pathname;
+      if (!STATIC_PUBLIC_PATH.test(pathname)) return;
       const root = document.querySelector<HTMLElement>(".main-container");
       if (root) enhance(root, pathname);
     };
@@ -192,6 +191,7 @@ export default function PublicPageInteractions() {
       if (!target) return;
       event.preventDefault();
       runAction(target);
+      window.setTimeout(apply, 0);
     };
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -202,11 +202,16 @@ export default function PublicPageInteractions() {
       runAction(target);
     };
 
+    const onHistoryNavigation = () => window.setTimeout(apply, 0);
+    window.addEventListener("popstate", onHistoryNavigation);
+    window.addEventListener("hashchange", onHistoryNavigation);
     document.addEventListener("click", onClick);
     document.addEventListener("keydown", onKeyDown);
 
     return () => {
       observer.disconnect();
+      window.removeEventListener("popstate", onHistoryNavigation);
+      window.removeEventListener("hashchange", onHistoryNavigation);
       document.removeEventListener("click", onClick);
       document.removeEventListener("keydown", onKeyDown);
     };
