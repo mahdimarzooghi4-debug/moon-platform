@@ -110,20 +110,14 @@ textarea {
   align-self: stretch !important;
 }
 
-/* The middle project card must read exactly like the other RTL cards. */
+/* Every related-project card keeps the visual row order LTR, but its Persian
+ * content is fully RTL/right-aligned. */
 .main-container:has(> :nth-child(2) [class*="w-[850px]"])
   > :nth-child(4)
   > :nth-child(2)
   > :nth-child(13)
   > :nth-child(2)
-  > :nth-child(2),
-.main-container:has(> :nth-child(2) [class*="w-[850px]"])
-  > :nth-child(4)
-  > :nth-child(2)
-  > :nth-child(13)
-  > :nth-child(2)
-  > :nth-child(2)
-  > :first-child {
+  > * {
   direction: rtl !important;
   text-align: right !important;
   align-items: flex-end !important;
@@ -134,8 +128,17 @@ textarea {
   > :nth-child(2)
   > :nth-child(13)
   > :nth-child(2)
+  > * > * {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+.main-container:has(> :nth-child(2) [class*="w-[850px]"])
+  > :nth-child(4)
   > :nth-child(2)
-  span {
+  > :nth-child(13)
+  > :nth-child(2)
+  > * span {
   text-align: right !important;
 }
 
@@ -153,11 +156,16 @@ textarea {
   min-width: 0 !important;
   height: 100% !important;
   align-self: stretch !important;
-}
-
-.main-container:has(> :nth-child(2) [class*="w-[850px]"]) > :nth-child(5) > :nth-child(2) > :nth-child(2),
-.main-container:has(> :nth-child(2) [class*="w-[850px]"]) > :nth-child(5) > :nth-child(2) > :nth-child(2) > :nth-child(2) {
   direction: rtl !important;
   text-align: right !important;
   align-items: flex-end !important;
+}
+
+.main-container:has(> :nth-child(2) [class*="w-[850px]"]) > :nth-child(5) > :nth-child(2) > * > * {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+.main-container:has(> :nth-child(2) [class*="w-[850px]"]) > :nth-child(5) > :nth-child(2) > * span {
+  text-align: right !important;
 }
