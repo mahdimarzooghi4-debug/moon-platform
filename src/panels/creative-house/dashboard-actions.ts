@@ -2,6 +2,8 @@ const DASHBOARD_ACTION_SELECTOR =
   '.creative-house-dashboard[data-name="ayeneh-main-dashboard"] [data-name="Top Actions"] a';
 const STARTUP_EVALUATION_ACTION_SELECTOR =
   '.creative-house-dashboard[data-name="ayeneh-startup-evaluations"] [data-name="action-button"]';
+const PROJECT_EVALUATION_ACTION_SELECTOR =
+  '.creative-house-dashboard[data-name="ayeneh-project-evaluations"] [data-name="action-button"]';
 
 const DASHBOARD_ACTION_ROUTES = new Map<string, string>([
   ["گزارش‌های آماری", "/panel/creative-house/reports"],
@@ -10,10 +12,31 @@ const DASHBOARD_ACTION_ROUTES = new Map<string, string>([
 
 const STARTUP_EVALUATION_DETAIL_ROUTE =
   "/panel/creative-house/startup-evaluations/detail";
+const PROJECT_EVALUATION_DETAIL_ROUTE =
+  "/panel/creative-house/project-evaluations/detail";
+
+const PROJECT_EVALUATION_ICON_STYLE_ID =
+  "creative-house-project-evaluation-icon-size";
 
 function getDashboardActionRoute(anchor: HTMLAnchorElement) {
   const label = anchor.textContent?.replace(/\s+/g, " ").trim();
   return label ? DASHBOARD_ACTION_ROUTES.get(label) : undefined;
+}
+
+function ensureProjectEvaluationIconStyle() {
+  if (document.getElementById(PROJECT_EVALUATION_ICON_STYLE_ID)) return;
+
+  const style = document.createElement("style");
+  style.id = PROJECT_EVALUATION_ICON_STYLE_ID;
+  style.textContent = `
+    .creative-house-dashboard[data-name="ayeneh-project-evaluations"] [data-name^="project-stat-card-"] [data-name="stat-icon"] {
+      width: 34px !important;
+      height: 34px !important;
+      left: 20px !important;
+      top: 20px !important;
+    }
+  `;
+  document.head.appendChild(style);
 }
 
 function applyActionHrefs(root: ParentNode = document) {
@@ -30,6 +53,12 @@ function applyActionHrefs(root: ParentNode = document) {
     .querySelectorAll<HTMLAnchorElement>(STARTUP_EVALUATION_ACTION_SELECTOR)
     .forEach((anchor) => {
       anchor.setAttribute("href", STARTUP_EVALUATION_DETAIL_ROUTE);
+    });
+
+  root
+    .querySelectorAll<HTMLAnchorElement>(PROJECT_EVALUATION_ACTION_SELECTOR)
+    .forEach((anchor) => {
+      anchor.setAttribute("href", PROJECT_EVALUATION_DETAIL_ROUTE);
     });
 }
 
@@ -53,6 +82,14 @@ document.addEventListener("click", (event) => {
   const target = event.target;
   if (!(target instanceof Element)) return;
 
+  const projectEvaluationAction =
+    target.closest<HTMLAnchorElement>(PROJECT_EVALUATION_ACTION_SELECTOR);
+  if (projectEvaluationAction) {
+    event.preventDefault();
+    navigateWithinApp(PROJECT_EVALUATION_DETAIL_ROUTE);
+    return;
+  }
+
   const startupEvaluationAction =
     target.closest<HTMLAnchorElement>(STARTUP_EVALUATION_ACTION_SELECTOR);
   if (startupEvaluationAction) {
@@ -74,6 +111,7 @@ document.addEventListener("click", (event) => {
 });
 
 const start = () => {
+  ensureProjectEvaluationIconStyle();
   applyActionHrefs();
 
   const observer = new MutationObserver(() => applyActionHrefs());
