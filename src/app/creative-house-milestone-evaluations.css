@@ -67,3 +67,19 @@ body .creative-house-dashboard[data-name="ayeneh-milestone-evaluation-detail"] >
   height: 1900px !important;
   min-height: 1900px !important;
 }
+
+/* Keep section 5 anchored to the right edge of the report content. */
+body .creative-house-dashboard[data-name="ayeneh-milestone-evaluation-detail"] [data-node-id="1788:446"] {
+  left: auto !important;
+  right: 13px !important;
+  width: 732px !important;
+  transform: translateY(-50%) !important;
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-milestone-evaluation-detail"] [data-node-id="1788:446"] > p {
+  width: 100% !important;
+  text-align: right !important;
+  direction: rtl !important;
+}
