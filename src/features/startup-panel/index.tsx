@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { StartupSidebar } from "./components/StartupSidebar";
 import "./index.css";
 import "./dashboard-frame.css";
+import "./funding-transfer-status.css";
 
 const ASSET_ROOT = "/assets/startup-panel";
 
@@ -141,6 +142,18 @@ export default function StartupPanelDashboard() {
             </div>
             <span className="startup-project-count">۱ پروژه</span>
           </div>
+
+          <Link className="startup-funding-transfer-alert" to="/panel/startup/projects/1" aria-label="مشاهده واریز مرحله دوم پروژه اشتغال زنان روستایی">
+            <div className="startup-funding-transfer-alert-copy">
+              <strong>وجه مرحله ۲ توسط کمیته امداد واریز شد</strong>
+              <span>پروژه اشتغال زنان روستایی · آموزش مهارتی</span>
+            </div>
+            <div className="startup-funding-transfer-alert-meta">
+              <strong>۱۰۰ میلیون تومان</strong>
+              <span>۱۴۰۵/۰۷/۱۵ · پیگیری ۸۴۲۱۹۶</span>
+            </div>
+            <span className="startup-funding-transfer-alert-status">واریز شد</span>
+          </Link>
 
           <div className="startup-dashboard-project">
             <div className="startup-project-info">
