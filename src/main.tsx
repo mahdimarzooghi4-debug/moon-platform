@@ -8,6 +8,7 @@ import "./app/rtl.css";
 import App from "./App";
 import "./app/creative-house-kpi.css";
 import "./panels/creative-house/dashboard-actions";
+import "./panels/creative-house/dashboard-startup-overview";
 import "./landing/contact-details.css";
 import "./landing/interactions";
 import "./startups/interactions";
