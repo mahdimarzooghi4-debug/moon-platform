@@ -25,6 +25,7 @@ import "./panels/creative-house/milestone-evaluation-detail/interactions";
 import "./app/creative-house-release-flow";
 import "./panels/emdad/interactions";
 import "./panels/emdad/demo-data";
+import "./panels/emdad/fund-synergy/layout-fix.css";
 import "./panels/emdad/payment-history/registration";
 import "./panels/fund-manager/interactions";
 import "./panels/fund-manager/list-interactions";
