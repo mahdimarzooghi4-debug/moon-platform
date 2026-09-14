@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { AdminSidebar } from "../components/AdminSidebar";
+import AdminIndividualParticipations from "../individual-participations";
 import "../index.css";
 import "../users-flow.css";
 import "../list-flow.css";
@@ -14,6 +15,12 @@ const fields = [
 ] as const;
 
 export default function AdminReportDetail() {
+  const { reportId } = useParams();
+
+  if (reportId === "individual-participations") {
+    return <AdminIndividualParticipations />;
+  }
+
   return (
     <div className="admin-panel-shell" data-node-id="2273:562">
       <main className="admin-users-main" dir="rtl">
