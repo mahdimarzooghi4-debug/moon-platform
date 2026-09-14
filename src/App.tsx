@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { AppProviders } from "./app/AppProviders";
 import { AppRouter } from "./app/router";
 import { AuthGate } from "./auth/AuthGate";
+import ManagedPublicContent from "./shared/ManagedPublicContent";
 import PublicFooter from "./shared/PublicFooter";
 import PublicPageInteractions from "./shared/PublicPageInteractions";
 import StartupTeamMemberAddPage from "./features/startup-registration/states/step2/team-member";
@@ -63,6 +64,7 @@ export default function App() {
   return (
     <AppProviders>
       <AuthGate>
+        <ManagedPublicContent />
         <PublicPageInteractions />
         <HowItWorksInteractions />
         <NewsListInteractions />
