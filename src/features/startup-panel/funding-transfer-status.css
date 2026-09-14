@@ -1,0 +1,109 @@
+/* Shared funding-transfer status UI for startup dashboard and project detail. */
+.startup-projects-card {
+  height: 382px;
+}
+
+.startup-funding-transfer-alert {
+  min-height: 44px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) 220px 92px;
+  gap: 14px;
+  align-items: center;
+  margin-top: 8px;
+  padding: 6px 14px;
+  border: 1px solid #cce9d9;
+  border-radius: 10px;
+  background: #f1fbf6;
+  direction: rtl;
+}
+
+.startup-funding-transfer-alert-copy,
+.startup-funding-transfer-alert-meta {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.startup-funding-transfer-alert-copy strong,
+.startup-funding-transfer-alert-meta strong {
+  color: #17324d;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+.startup-funding-transfer-alert-copy span,
+.startup-funding-transfer-alert-meta span {
+  overflow: hidden;
+  color: #60758a;
+  font-size: 9px;
+  line-height: 16px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.startup-funding-transfer-alert-status {
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  background: #e3f7ec;
+  color: #159455;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.startup-projects-card .startup-dashboard-project {
+  margin-top: 8px;
+}
+
+.startup-project-transfer-status {
+  min-height: 58px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 118px 66px;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+  padding: 6px 8px;
+  border: 1px solid #cce9d9;
+  border-radius: 9px;
+  background: #f1fbf6;
+  direction: rtl;
+}
+
+.startup-project-transfer-status > div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.startup-project-transfer-status span,
+.startup-project-transfer-status small {
+  color: #60758a;
+  font-size: 8px;
+  line-height: 14px;
+  white-space: nowrap;
+}
+
+.startup-project-transfer-status strong {
+  color: #17324d;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 17px;
+  white-space: nowrap;
+}
+
+.startup-project-transfer-status b {
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  background: #e3f7ec;
+  color: #159455;
+  font-size: 9px;
+  font-weight: 500;
+}

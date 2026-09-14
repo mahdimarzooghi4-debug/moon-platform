@@ -34,3 +34,15 @@ textarea,
 button {
   outline: 0;
 }
+
+/* About page stakeholder cards: match the tallest Figma card so all five
+ * roles share one consistent footprint while preserving their own content. */
+.mah-about-stakeholder-card {
+  height: 353px !important;
+  min-height: 353px !important;
+  max-height: 353px !important;
+}
+
+.mah-about-stakeholder-cta {
+  margin-top: auto !important;
+}

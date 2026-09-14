@@ -14,7 +14,7 @@ body {
   margin: 0;
   direction: rtl;
   font-family: var(--default-font-family);
-  background: #f7fafc;
+  background: #fcfbf8;
 }
 
 .main-container {
@@ -37,4 +37,47 @@ button {
 input,
 textarea {
   unicode-bidi: plaintext;
+}
+
+/* News list page — Figma keeps the spatial composition LTR (header actions on
+ * the left, navigation on the right, featured image on the left, and card
+ * order left-to-right) while Persian copy itself remains RTL/right-aligned.
+ * Scope the correction to this generated screen so other pages are untouched. */
+.main-container:has(> :nth-child(2) [class*="w-[434px]"]) {
+  direction: ltr;
+  text-align: right;
+}
+
+.main-container:has(> :nth-child(2) [class*="w-[434px]"]) span,
+.main-container:has(> :nth-child(2) [class*="w-[434px]"]) p,
+.main-container:has(> :nth-child(2) [class*="w-[434px]"]) input,
+.main-container:has(> :nth-child(2) [class*="w-[434px]"]) textarea {
+  direction: rtl;
+  unicode-bidi: plaintext;
+}
+
+/* Header, internal hero and trust bar use bottom borders in Figma. */
+.main-container:has(> :nth-child(2) [class*="w-[434px]"]) > :nth-child(1),
+.main-container:has(> :nth-child(2) [class*="w-[434px]"]) > :nth-child(2),
+.main-container:has(> :nth-child(2) [class*="w-[434px]"]) > :nth-child(3) {
+  border-top: 0 !important;
+  border-bottom: 1px solid #e4ebf1 !important;
+}
+
+/* The generated source lost the three-column grid wrappers. Restore the exact
+ * 3-column / 24px layout used by Figma for all three news rows. */
+.main-container:has(> :nth-child(2) [class*="w-[434px]"]) > :nth-child(8) > :nth-child(1),
+.main-container:has(> :nth-child(2) [class*="w-[434px]"]) > :nth-child(8) > :nth-child(2),
+.main-container:has(> :nth-child(2) [class*="w-[434px]"]) > :nth-child(8) > :nth-child(4) {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  align-items: start;
+  width: 100%;
+}
+
+/* Footer base has a top divider in Figma, not a bottom divider. */
+.main-container:has(> :nth-child(2) [class*="w-[434px]"]) > :nth-child(10) > :nth-child(2) {
+  border-bottom: 0 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
 }

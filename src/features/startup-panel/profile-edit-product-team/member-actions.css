@@ -1,0 +1,50 @@
+.startup-profile-product-edit-card.has-extra-members {
+  height: auto;
+  min-height: 538px;
+  overflow: visible;
+}
+
+.startup-profile-product-edit-members > .startup-profile-product-edit-member-form {
+  min-height: 46px;
+  height: auto;
+  padding: 6px 8px;
+  display: grid;
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.4fr) 54px;
+  gap: 6px;
+  align-items: center;
+}
+
+.startup-profile-product-edit-member-form input {
+  width: 100%;
+  height: 34px;
+  min-width: 0;
+  padding: 0 9px;
+  border: 1px solid #dce6ee;
+  border-radius: 7px;
+  outline: 0;
+  background: #fff;
+  color: #17324d;
+  font: inherit;
+  font-size: 10px;
+  text-align: right;
+}
+
+.startup-profile-product-edit-member-form input:focus {
+  border-color: #2094e3;
+  box-shadow: 0 0 0 2px rgba(32, 148, 227, .08);
+}
+
+.startup-profile-product-edit-member-form button {
+  height: 34px;
+  border: 1px solid #edb4b4;
+  border-radius: 7px;
+  background: #fff8f8;
+  color: #a94444;
+  font: inherit;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.startup-profile-product-edit-add {
+  cursor: pointer;
+}

@@ -27,7 +27,7 @@ export default function AdminFundingDetail() {
         </section>
         <aside className="admin-info-note admin-detail-note">ثبت تخصیص ۱۰٪ منابع شرکت در پنل کمیته امداد و مدیریت منابع و سود صندوق در پنل مدیر صندوق انجام می‌شود.</aside>
         <section className="admin-form-actions admin-detail-actions">
-          <Link className="admin-users-button admin-users-button-primary" to="/panel/admin/projects/sample">مشاهده پروژه</Link>
+          <Link className="admin-users-button admin-users-button-primary" to="/panel/admin/projects">مشاهده پروژه‌ها</Link>
           <Link className="admin-users-button" to="/panel/admin/funding">بازگشت</Link>
           <p className="admin-form-actions-note">آخرین رویداد مالی: امروز، ۱۳:۲۰</p>
         </section>

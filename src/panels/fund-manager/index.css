@@ -1,7 +1,13 @@
 .fund-manager-panel {
-  min-width: 1200px;
-  min-height: 900px;
-  font-family: "Vazirmatn", sans-serif;
+  width: 1440px !important;
+  min-width: 1440px !important;
+  max-width: 1440px !important;
+  height: 900px !important;
+  min-height: 900px !important;
+  margin: 0 auto !important;
+  direction: ltr !important;
+  flex: 0 0 1440px !important;
+  font-family: "Vazirmatn", sans-serif !important;
 }
 
 .fund-manager-panel,
@@ -9,4 +15,365 @@
 .fund-manager-panel *::before,
 .fund-manager-panel *::after {
   box-sizing: border-box;
+  font-family: "Vazirmatn", sans-serif !important;
+}
+
+/* All fund-manager Figma screens use the same 1440×900 shell:
+   1216px main content followed by a 224px sidebar on the right. The app root
+   is globally RTL, so force only this generated shell back to LTR to preserve
+   the exact Figma child order while Persian copy keeps its own dir/text rules. */
+.fund-manager-panel > [data-name="Main Content"] {
+  width: 1216px !important;
+  min-width: 1216px !important;
+  max-width: 1216px !important;
+  flex: 0 0 1216px !important;
+}
+
+.fund-manager-panel > [data-name="colored-sidebar"] {
+  width: 224px !important;
+  min-width: 224px !important;
+  max-width: 224px !important;
+  flex: 0 0 224px !important;
+}
+
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name="brand-logo"] {
+  justify-content: center !important;
+}
+
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name="brand-logo"] > div {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Shared sidebar polish for the dashboard and all fund-manager tabs. */
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name="brand-logo"],
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name="brand-logo"] {
+  justify-content: center !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name="brand-logo"] > div,
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name="brand-logo"] > div {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name="brand-logo"] img,
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name="brand-logo"] img {
+  left: 0 !important;
+  top: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+}
+
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name$="-nav"] > p,
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name$="-nav"] > p {
+  flex: 1 1 auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+}
+
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name$="-icon"],
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name$="-icon"] {
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  flex: 0 0 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+}
+
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name$="-icon"] > [data-name="Frame"],
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name$="-icon"] > [data-name="Frame"] {
+  position: relative !important;
+  inset: auto !important;
+  left: auto !important;
+  top: auto !important;
+  width: 18px !important;
+  height: 18px !important;
+  flex: 0 0 18px !important;
+}
+
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name$="-icon"] img,
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name$="-icon"] img {
+  display: block !important;
+  max-width: 18px !important;
+  max-height: 18px !important;
+  object-fit: contain !important;
+}
+
+/* Profit split uses a clear percentage mark instead of the generated generic icon. */
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name="revenues-nav"] > div:last-child,
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name="revenues-nav"] > div:last-child {
+  position: relative !important;
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  flex: 0 0 18px !important;
+  overflow: visible !important;
+}
+
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name="revenues-nav"] > div:last-child > *,
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name="revenues-nav"] > div:last-child > * {
+  display: none !important;
+}
+
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name="revenues-nav"] > div:last-child::before,
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name="revenues-nav"] > div:last-child::before {
+  content: "٪";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-family: "Vazirmatn", sans-serif !important;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 18px;
+}
+
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name="logout-nav"],
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name="logout-nav"] {
+  position: relative !important;
+  justify-content: center !important;
+  gap: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  text-align: center !important;
+}
+
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name="logout-nav"] > p,
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name="logout-nav"] > p {
+  flex: 0 0 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
+  text-align: center !important;
+}
+
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name="logout-nav"] [data-name="logout-icon"],
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name="logout-nav"] [data-name="logout-icon"] {
+  position: absolute !important;
+  right: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
+
+/* The standalone funding-flow control was removed from the product flow. */
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name="funding-flow-control-nav"] {
+  display: none !important;
+}
+
+/* Figma-generated screens still carry utility font classes such as font-sans.
+   Force the actual dashboard tree to use Vazirmatn so those utilities cannot
+   fall back to the browser/system sans font. */
+[data-name="fund-manager-main-dashboard"],
+[data-name="fund-manager-main-dashboard"] * {
+  font-family: "Vazirmatn", sans-serif !important;
+}
+
+/* Dashboard polish requested after matching the Figma frame. */
+[data-name="fund-manager-main-dashboard"] [data-name="Top Bar"] {
+  direction: rtl !important;
+}
+
+[data-name="fund-manager-main-dashboard"] [data-name="Page Title"] {
+  align-items: flex-end !important;
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+[data-name="fund-manager-main-dashboard"] [data-name="Page Title"] > p {
+  width: 100% !important;
+  text-align: right !important;
+}
+
+[data-name="fund-manager-main-dashboard"] [data-name="Overview Metrics"] [data-name="kpi-icon-badge"] {
+  display: none !important;
+}
+
+/* Shared active controls for fund-manager list tabs. */
+.fund-manager-panel .fund-manager-filter-input {
+  cursor: text !important;
+  direction: rtl !important;
+  text-align: right !important;
+  padding: 0 16px !important;
+  color: #17324d !important;
+  outline: none !important;
+}
+
+.fund-manager-panel .fund-manager-filter-input::placeholder {
+  color: #60758a !important;
+  opacity: 1 !important;
+}
+
+.fund-manager-panel [data-name="filter-source"][data-filter-active="true"],
+.fund-manager-panel [data-name="filter-status"][data-filter-active="true"] {
+  border-color: #2094e3 !important;
+  background: #eef7fe !important;
+}
+
+/* Manager-controlled profit split ratio. */
+[data-name="fund-manager-profit-split"] [data-name="header"] {
+  overflow: visible !important;
+}
+
+.fund-profit-split-settings-button {
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 190px;
+  height: 40px;
+  border: 1px solid #2094e3;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #2094e3;
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  direction: rtl;
+}
+
+.fund-profit-split-settings-button:hover {
+  background: #eef7fe;
+}
+
+.fund-profit-split-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(16, 38, 59, 0.42);
+  font-family: "Vazirmatn", sans-serif;
+}
+
+.fund-profit-split-dialog {
+  width: 460px;
+  border: 1px solid #dbe5f0;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 18px 48px rgba(23, 50, 77, 0.18);
+  padding: 22px;
+  color: #17324d;
+  direction: rtl;
+}
+
+.fund-profit-split-dialog h2 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.fund-profit-split-dialog-description {
+  margin: 0 0 18px;
+  color: #60758a;
+  font-size: 11px;
+  line-height: 1.9;
+}
+
+.fund-profit-split-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.fund-profit-split-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  color: #17324d;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.fund-profit-split-input-wrap {
+  position: relative;
+}
+
+.fund-profit-split-input-wrap input {
+  width: 100%;
+  height: 42px;
+  border: 1px solid #dbe5f0;
+  border-radius: 9px;
+  background: #f8fbfe;
+  padding: 0 12px 0 34px;
+  color: #17324d;
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 13px;
+  outline: none;
+  direction: ltr;
+  text-align: center;
+}
+
+.fund-profit-split-input-wrap input:focus {
+  border-color: #2094e3;
+  box-shadow: 0 0 0 3px rgba(32, 148, 227, 0.1);
+}
+
+.fund-profit-split-suffix {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #60758a;
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.fund-profit-split-total {
+  margin-top: 14px;
+  border-radius: 9px;
+  padding: 9px 11px;
+  background: #e8faf0;
+  color: #149e57;
+  font-size: 11px;
+  text-align: center;
+}
+
+.fund-profit-split-total[data-valid="false"] {
+  background: #fff3ed;
+  color: #d9592e;
+}
+
+.fund-profit-split-dialog-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.fund-profit-split-dialog-actions button {
+  height: 40px;
+  border-radius: 9px;
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.fund-profit-split-cancel {
+  flex: 0 0 110px;
+  border: 1px solid #dbe5f0;
+  background: #ffffff;
+  color: #60758a;
+}
+
+.fund-profit-split-save {
+  flex: 1 1 auto;
+  border: 1px solid #2094e3;
+  background: #2094e3;
+  color: #ffffff;
+}
+
+@media (max-width: 1439px) {
+  .fund-manager-panel {
+    margin: 0 !important;
+  }
 }

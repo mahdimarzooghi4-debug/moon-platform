@@ -1,0 +1,52 @@
+/* Shared creative-house sidebar polish. */
+.creative-house-dashboard > [data-name="colored-sidebar"] [data-name="brand-logo"] {
+  direction: rtl !important;
+  justify-content: center !important;
+}
+
+.creative-house-dashboard > [data-name="colored-sidebar"] [data-name="panel-identity"] {
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+.creative-house-dashboard > [data-name="colored-sidebar"] [data-name="panel-identity"] > p {
+  width: 100% !important;
+  text-align: center !important;
+  direction: rtl !important;
+}
+
+.creative-house-dashboard > [data-name="colored-sidebar"] [data-name="logout-nav"] {
+  justify-content: center !important;
+}
+
+.creative-house-dashboard > [data-name="colored-sidebar"] [data-name="logout-icon"] {
+  display: none !important;
+}
+
+.creative-house-dashboard > [data-name="colored-sidebar"] [data-name="logout-nav"] > p {
+  width: auto !important;
+  text-align: center !important;
+}
+
+/* Dashboard landing: lock the logout label to the exact visual center. */
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] > [data-name="colored-sidebar"] [data-name="logout-nav"] {
+  position: relative !important;
+  gap: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+.creative-house-dashboard[data-name="ayeneh-main-dashboard"] > [data-name="colored-sidebar"] [data-name="logout-nav"] > p {
+  position: absolute !important;
+  left: 50% !important;
+  right: auto !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 100% !important;
+  margin: 0 !important;
+  text-align: center !important;
+  line-height: 38px !important;
+}

@@ -1,0 +1,26 @@
+/* Startup dashboard reference frame: Figma node 1951:206 is 1440x900. */
+.startup-panel-page[data-name="startup-main-dashboard"] {
+  width: 1440px;
+  min-width: 1440px;
+  height: 900px;
+  min-height: 900px;
+  margin: 0 auto;
+  overflow: hidden;
+  flex: 0 0 1440px;
+}
+
+.startup-panel-page[data-name="startup-main-dashboard"] .startup-sidebar {
+  width: 224px;
+  height: 900px;
+  min-height: 900px;
+  flex: 0 0 224px;
+}
+
+.startup-panel-page[data-name="startup-main-dashboard"] .startup-dashboard-content {
+  width: 1216px;
+  min-width: 1216px;
+  height: 900px;
+  min-height: 900px;
+  flex: 0 0 1216px;
+  overflow: hidden;
+}

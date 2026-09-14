@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
+import { clearSession } from "../../../auth/oidc";
+import "./startup-sidebar-figma.css";
 
 const ASSET_ROOT = "/assets/startup-panel";
+const SHARED_BRAND_LOGO = "/assets/creative-house/dashboard/logo.png";
+const DEV_PANEL_PREVIEW_KEY = "moon.auth.dev-panel-preview";
 
 type StartupSidebarProps = {
   active: "dashboard" | "projects" | "stages" | "reports" | "profile" | "financing" | "settings";
@@ -17,10 +21,16 @@ const sidebarItems = [
 ] as const;
 
 export function StartupSidebar({ active }: StartupSidebarProps) {
+  const handleLogout = () => {
+    clearSession();
+    sessionStorage.removeItem(DEV_PANEL_PREVIEW_KEY);
+    window.location.replace("/auth");
+  };
+
   return (
     <aside className="startup-sidebar" aria-label="ناوبری پنل استارتاپ">
       <div className="startup-brand">
-        <img src={`${ASSET_ROOT}/logo.png`} alt="سامانه ماه" />
+        <img src={SHARED_BRAND_LOGO} alt="سامانه ماه" />
       </div>
 
       <div className="startup-identity">
@@ -35,15 +45,21 @@ export function StartupSidebar({ active }: StartupSidebarProps) {
             to={item.to}
             className={`startup-nav-item${item.key === active ? " is-active" : ""}`}
           >
-            <span>{item.label}</span>
-            <img src={`${ASSET_ROOT}/${item.icon}`} alt="" />
+            <span className="startup-nav-label">{item.label}</span>
+            {item.key === "profile" ? (
+              <span className="startup-nav-glyph startup-nav-profile-icon" aria-hidden="true" />
+            ) : item.key === "financing" ? (
+              <span className="startup-nav-glyph startup-nav-percent-icon" aria-hidden="true">%</span>
+            ) : (
+              <img src={`${ASSET_ROOT}/${item.icon}`} alt="" />
+            )}
           </Link>
         ))}
       </nav>
 
       <div className="startup-sidebar-spacer" />
 
-      <button className="startup-logout" type="button">
+      <button className="startup-logout" type="button" onClick={handleLogout}>
         <span>خروج از سیستم</span>
         <span className="startup-logout-icon" aria-hidden="true" />
       </button>

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Moon.Platform.Api.Modules.AdminManagement;
 
 namespace Moon.Platform.Api.Modules.Execution;
 
@@ -11,6 +12,7 @@ public sealed class MoonExecutionModelCustomizer(ModelCustomizerDependencies dep
     {
         base.Customize(modelBuilder, context);
         ConfigureExecution(modelBuilder);
+        ConfigureAdminManagement(modelBuilder);
     }
 
     private static void ConfigureExecution(ModelBuilder modelBuilder)
@@ -25,6 +27,52 @@ public sealed class MoonExecutionModelCustomizer(ModelCustomizerDependencies dep
         ConfigureImpactMetric(modelBuilder.Entity<ExecutionImpactMetric>());
         ConfigureImpactFinancialSnapshot(modelBuilder.Entity<ExecutionImpactFinancialSnapshot>());
         ConfigureCloseout(modelBuilder.Entity<ExecutionCloseout>());
+    }
+
+    private static void ConfigureAdminManagement(ModelBuilder modelBuilder)
+    {
+        var organizationProfile = modelBuilder.Entity<AdminOrganizationProfile>();
+        organizationProfile.ToTable("admin_organization_profiles", "moon");
+        organizationProfile.HasKey(x => x.OrganizationId);
+        organizationProfile.Property(x => x.Name).HasMaxLength(200).IsRequired();
+        organizationProfile.Property(x => x.Manager).HasMaxLength(200).IsRequired();
+        organizationProfile.Property(x => x.Mobile).HasMaxLength(32).IsRequired();
+        organizationProfile.Property(x => x.ActivityArea).HasMaxLength(300).IsRequired();
+        organizationProfile.HasOne<Moon.Platform.Api.Modules.Identity.Organization>()
+            .WithMany()
+            .HasForeignKey(x => x.OrganizationId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        var project = modelBuilder.Entity<AdminManagedProject>();
+        project.ToTable("admin_managed_projects", "moon");
+        project.HasKey(x => x.Id);
+        project.Property(x => x.Id).HasMaxLength(120).IsRequired();
+        project.Property(x => x.Name).HasMaxLength(200).IsRequired();
+        project.Property(x => x.Province).HasMaxLength(120).IsRequired();
+        project.Property(x => x.Track).HasMaxLength(200).IsRequired();
+        project.Property(x => x.FundingTarget).HasMaxLength(120).IsRequired();
+        project.Property(x => x.Status).HasMaxLength(40).IsRequired();
+        project.Property(x => x.Stage).HasMaxLength(120).IsRequired();
+        project.HasIndex(x => new { x.Status, x.Province });
+
+        var news = modelBuilder.Entity<AdminNewsArticle>();
+        news.ToTable("admin_news_articles", "moon");
+        news.HasKey(x => x.Id);
+        news.Property(x => x.Id).HasMaxLength(120).IsRequired();
+        news.Property(x => x.Title).HasMaxLength(300).IsRequired();
+        news.Property(x => x.Summary).HasMaxLength(4000).IsRequired();
+        news.Property(x => x.Status).HasMaxLength(20).IsRequired();
+        news.Property(x => x.ImageFileName).HasMaxLength(240);
+        news.Property(x => x.ImageContentType).HasMaxLength(120);
+        news.HasIndex(x => new { x.Status, x.UpdatedAtUtc });
+
+        var hero = modelBuilder.Entity<AdminHeroVideo>();
+        hero.ToTable("admin_hero_video", "moon");
+        hero.HasKey(x => x.Id);
+        hero.Property(x => x.Id).ValueGeneratedNever();
+        hero.Property(x => x.FileName).HasMaxLength(240).IsRequired();
+        hero.Property(x => x.ContentType).HasMaxLength(120).IsRequired();
+        hero.Property(x => x.Data).IsRequired();
     }
 
     private static void ConfigureStage(EntityTypeBuilder<ExecutionStage> entity)

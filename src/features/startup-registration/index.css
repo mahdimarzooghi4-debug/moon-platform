@@ -19,11 +19,43 @@ body {
 
 .main-container {
   overflow: hidden;
+  direction: ltr;
 }
 
 .main-container,
 .main-container * {
   box-sizing: border-box;
+}
+
+.main-container span,
+.main-container p,
+.main-container label,
+.main-container input,
+.main-container select,
+.main-container textarea,
+.main-container button,
+.main-container a {
+  direction: rtl;
+}
+
+.main-container input[type="url"],
+.main-container input[type="email"] {
+  direction: ltr;
+  text-align: right;
+}
+
+.main-container [class*="fdy2TS149S.png"] {
+  background-image: url("/assets/codia/PHNkOFHS4y.png") !important;
+}
+
+.main-container div[class*="z-[161]"] {
+  display: none !important;
+}
+
+.main-container [data-mah-register-action],
+.main-container button,
+.main-container a {
+  cursor: pointer;
 }
 
 input,

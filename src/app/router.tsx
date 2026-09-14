@@ -105,6 +105,7 @@ const CompanyProjectsPage = lazy(() => import("../features/company-panel/project
 const CompanyProjectDetailPage = lazy(() => import("../features/company-panel/project-detail"));
 const CompanyProjectParticipationPage = lazy(() => import("../features/company-panel/project-participation"));
 const CompanyPaymentSuccessPage = lazy(() => import("../features/company-panel/payment-success"));
+const CompanyPaymentReceiptPage = lazy(() => import("../features/company-panel/payment-receipt"));
 const CompanyParticipationsPage = lazy(() => import("../features/company-panel/participations"));
 const CompanyParticipationDetailPage = lazy(() => import("../features/company-panel/participation-detail"));
 const CompanyReportsPage = lazy(() => import("../features/company-panel/reports"));
@@ -298,6 +299,7 @@ export function AppRouter() {
         <Route path="/panel/company/projects/:projectId" element={lazyElement(CompanyProjectDetailPage)} />
         <Route path="/panel/company/projects/:projectId/participate" element={lazyElement(CompanyProjectParticipationPage)} />
         <Route path="/panel/company/projects/:projectId/participate/success" element={lazyElement(CompanyPaymentSuccessPage)} />
+        <Route path="/panel/company/projects/:projectId/participate/success/receipt" element={lazyElement(CompanyPaymentReceiptPage)} />
         <Route path="/panel/company/participations" element={lazyElement(CompanyParticipationsPage)} />
         <Route path="/panel/company/participations/:participationId" element={lazyElement(CompanyParticipationDetailPage)} />
         <Route path="/panel/company/reports" element={lazyElement(CompanyReportsPage)} />

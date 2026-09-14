@@ -20,7 +20,7 @@ export default function CompanyOrganizationalParticipationDetail() {
         <header className="company-topbar">
           <div className="company-page-title"><h1>جزئیات مشارکت سازمانی</h1><p>پیگیری پرداخت، وضعیت پروژه، گزارش‌ها و گواهی ماده ۱۷۲</p></div>
           <div className="company-top-actions">
-            <button className="company-action company-action-primary company-receipt-button" type="button" title="دریافت رسید در محصول نهایی فعال می‌شود">دریافت رسید</button>
+            <Link className="company-action company-action-primary company-receipt-button" to="/panel/company/projects/family-health/participate/success/receipt">دریافت رسید</Link>
             <Link className="company-action company-action-secondary company-participation-back" to="/panel/company/participations">بازگشت به مشارکت‌ها</Link>
           </div>
         </header>

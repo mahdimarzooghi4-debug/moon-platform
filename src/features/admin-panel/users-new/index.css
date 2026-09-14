@@ -4,3 +4,102 @@
   flex-direction: column;
   gap: 16px;
 }
+
+.admin-access-assignment-card {
+  min-height: 570px;
+  overflow: visible;
+}
+
+.admin-provisioning-heading {
+  width: 1120px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.admin-provisioning-heading > div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.admin-provisioning-heading h2,
+.admin-provisioning-heading p {
+  margin: 0;
+}
+
+.admin-provisioning-heading h2 {
+  color: #17324d;
+  font-size: 16px;
+  line-height: 26px;
+}
+
+.admin-provisioning-heading p {
+  color: #60758a;
+  font-size: 11px;
+  line-height: 20px;
+}
+
+.admin-provisioning-heading > span {
+  min-width: 106px;
+  height: 28px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: #eaf6fe;
+  color: #2094e3;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.admin-provisioning-divider {
+  width: 1120px;
+  height: 1px;
+  margin: 2px 0;
+  background: #e4ebf1;
+}
+
+.admin-field-error {
+  display: block;
+  margin-top: 4px;
+  color: #be4040;
+  font-size: 10px;
+  line-height: 18px;
+}
+
+.admin-startup-direct-note {
+  width: 1120px;
+  min-height: 68px;
+  box-sizing: border-box;
+  margin-top: 4px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  border: 1px solid #cfe4f3;
+  border-radius: 12px;
+  background: #f3f9fd;
+  text-align: right;
+}
+
+.admin-startup-direct-note strong {
+  color: #17324d;
+  font-size: 12px;
+  line-height: 22px;
+}
+
+.admin-startup-direct-note span {
+  color: #60758a;
+  font-size: 10px;
+  line-height: 20px;
+}
+
+.admin-access-assignment-card .admin-form-grid {
+  margin-top: 4px;
+}

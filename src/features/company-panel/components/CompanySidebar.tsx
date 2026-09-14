@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
+import { clearSession } from "../../../auth/oidc";
 
 const ASSET_ROOT = "/assets/company-panel";
+const DEV_PANEL_PREVIEW_KEY = "moon.auth.dev-panel-preview";
 
 type CompanySidebarProps = {
   active: "dashboard" | "projects" | "participations" | "reports" | "certificates" | "account";
@@ -16,32 +18,47 @@ const sidebarItems = [
 ] as const;
 
 export function CompanySidebar({ active }: CompanySidebarProps) {
+  const handleLogout = () => {
+    clearSession();
+    sessionStorage.removeItem(DEV_PANEL_PREVIEW_KEY);
+    window.location.replace("/auth");
+  };
+
   return (
-    <aside className="company-sidebar" aria-label="ناوبری پنل شرکت">
+    <aside className="company-sidebar" aria-label="ناوبری پنل شرکت" dir="rtl">
       <div className="company-brand">
         <img src={`${ASSET_ROOT}/logo.png`} alt="سامانه ماه" />
       </div>
 
       <div className="company-identity">پایدار پرداز خلاق آریا</div>
 
-      <nav className="company-nav">
+      <nav className="company-nav" dir="rtl">
         {sidebarItems.map((item) => (
           <Link
             key={item.key}
             to={item.to}
             className={`company-nav-item${item.key === active ? " is-active" : ""}`}
           >
-            <span>{item.label}</span>
             <img src={`${ASSET_ROOT}/${item.icon}`} alt="" />
+            <span>{item.label}</span>
           </Link>
         ))}
       </nav>
 
       <div className="company-sidebar-spacer" />
 
-      <button className="company-logout" type="button">
-        <span>خروج از سیستم</span>
-        <img src={`${ASSET_ROOT}/nav-logout.svg`} alt="" />
+      <button
+        className="company-logout"
+        type="button"
+        onClick={handleLogout}
+        style={{ position: "relative", justifyContent: "center" }}
+      >
+        <img
+          src={`${ASSET_ROOT}/nav-logout.svg`}
+          alt=""
+          style={{ position: "absolute", right: 12 }}
+        />
+        <span style={{ flex: "0 0 auto", width: "auto", textAlign: "center" }}>خروج از سیستم</span>
       </button>
     </aside>
   );

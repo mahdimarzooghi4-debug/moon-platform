@@ -17,10 +17,11 @@ body,
 #app {
   margin: 0;
   min-height: 100%;
+  background: #fcfbf8;
 }
 
 body {
-  background: #f4f6f8;
+  background: #fcfbf8;
 }
 
 .main-container {
@@ -31,6 +32,12 @@ body {
 .main-container,
 .main-container * {
   box-sizing: border-box;
+}
+
+/* Let each Persian text run determine its own bidi direction so punctuation
+   stays at the visual end of the sentence instead of jumping to the start. */
+.main-container span {
+  unicode-bidi: plaintext;
 }
 
 input,
@@ -46,4 +53,216 @@ textarea,
 button {
   font: inherit;
   outline: 0;
+}
+
+/* Project details footer: keep the Figma column geometry, but use the real
+   contact information consistently with Landing and Projects. */
+.main-container > div:last-child > div:first-child > div:first-child {
+  direction: ltr;
+}
+
+.main-container > div:last-child > div:first-child > div:first-child > span:nth-child(1) {
+  order: 0;
+}
+
+.main-container > div:last-child > div:first-child > div:first-child > span:nth-child(2) {
+  order: 1;
+  width: auto;
+  height: auto;
+  font-size: 0;
+}
+
+.main-container > div:last-child > div:first-child > div:first-child > span:nth-child(2)::after {
+  content: "تلفن: \200E۰۲۱-۶۶۴۸۵۳۷۴\200E";
+  direction: rtl;
+  unicode-bidi: isolate;
+  font-family: "Vazirmatn Variable", "Vazirmatn", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+  color: #e4ebf1;
+  white-space: nowrap;
+}
+
+.main-container > div:last-child > div:first-child > div:first-child > span:nth-child(3) {
+  order: 2;
+  width: auto;
+  height: auto;
+  font-size: 0;
+}
+
+.main-container > div:last-child > div:first-child > div:first-child > span:nth-child(3)::after {
+  content: "ایمیل: info@mahcsr.ir";
+  direction: rtl;
+  unicode-bidi: plaintext;
+  font-family: "Vazirmatn Variable", "Vazirmatn", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+  color: #e4ebf1;
+  white-space: nowrap;
+}
+
+.main-container > div:last-child > div:first-child > div:first-child::after {
+  content: "آدرس: تهران، خیابان انقلاب، خیابان رازی، کوچه شهبازیان، پلاک ۲۲";
+  order: 3;
+  width: 220px;
+  direction: rtl;
+  unicode-bidi: isolate;
+  font-family: "Vazirmatn Variable", "Vazirmatn", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 19px;
+  color: #e4ebf1;
+  text-align: right;
+}
+
+.main-container > div:last-child > div:first-child > div:first-child > div:last-child {
+  order: 4;
+}
+
+/* Figma footer uses Telegram and Eitaa, not the legacy Instagram/LinkedIn glyphs. */
+.main-container > div:last-child > div:first-child > div:first-child > div:last-child > div:nth-child(1) > div {
+  background-image: url('/assets/codia/projects-telegram.svg') !important;
+  background-size: contain !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+.main-container > div:last-child > div:first-child > div:first-child > div:last-child > div:nth-child(2) > div {
+  background-image: url('/assets/codia/projects-eitaa.svg') !important;
+  background-size: contain !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+/* Gallery controls: left control points left; right control points right. */
+.main-container [class*="z-[32]"] {
+  transform: none !important;
+}
+
+/* Gallery counter must read naturally in Persian: ۱ از ۴. */
+.main-container [class*="z-[31]"] {
+  direction: rtl !important;
+  unicode-bidi: isolate;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+/* Project duration must read naturally in Persian: ۱۲ ماه. */
+.main-container [class*="z-[62]"] {
+  direction: rtl !important;
+  unicode-bidi: isolate;
+  justify-content: flex-end !important;
+  text-align: right !important;
+}
+
+/* Custom amount: remove the decorative ellipsis and let the interaction
+   script replace the generated text with a real input. */
+.main-container span[class*="z-[115]"] {
+  font-size: 0 !important;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  direction: rtl;
+}
+
+.main-container span[class*="z-[115]"]::before {
+  content: none !important;
+}
+
+.main-container span[class*="z-[115]"]::after {
+  content: "مبلغ مورد نظر را وارد کنید";
+  direction: rtl;
+  unicode-bidi: isolate;
+  font-family: "Vazirmatn Variable", "Vazirmatn", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: #17324d;
+  white-space: nowrap;
+}
+
+.main-container input[class*="z-[115]"] {
+  display: block !important;
+  font-size: 14px !important;
+  direction: rtl !important;
+  unicode-bidi: plaintext;
+  text-align: right !important;
+  color: #17324d !important;
+}
+
+/* Keep the custom-amount field visually balanced: currency on the left,
+   editable value on the right, both vertically centered like the Figma field. */
+.main-container [class*="z-[113]"] {
+  height: 46px !important;
+  min-height: 46px;
+  padding: 0 12px !important;
+  gap: 12px;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  direction: ltr;
+}
+
+.main-container [class*="z-[114]"] {
+  width: auto !important;
+  height: 22px !important;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start !important;
+  line-height: 22px !important;
+  direction: rtl;
+  text-align: left !important;
+}
+
+.main-container input[data-mah-amount-input="1"] {
+  flex: 1 1 auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+  height: 22px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  font-size: 14px !important;
+  line-height: 22px !important;
+  color: #17324d !important;
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+.main-container input[data-mah-amount-input="1"]::placeholder {
+  color: #60758a;
+  opacity: 1;
+}
+
+/* Organization participation is a separate authenticated company flow.
+   Hide individual-only amount controls and notes when that tab is active. */
+html[data-mah-participation-type="organization"] .main-container [class*="z-[100]"],
+html[data-mah-participation-type="organization"] .main-container [class*="z-[111]"],
+html[data-mah-participation-type="organization"] .main-container [class*="z-[121]"] {
+  display: none !important;
+}
+
+html[data-mah-participation-type="organization"] .main-container [class*="z-[75]"] {
+  height: auto !important;
+  min-height: 500px;
+}
+
+/* Similar-project cards: Figma places "هدف پروژه" on the right and amount on the left. */
+.main-container [class*="z-[418]"],
+.main-container [class*="z-[450]"],
+.main-container [class*="z-[482]"] {
+  flex-direction: row-reverse;
+}
+
+/* Keep Persian currency amounts in natural RTL reading order: ۳۵۰ میلیون تومان. */
+.main-container [class*="z-[420]"],
+.main-container [class*="z-[452]"],
+.main-container [class*="z-[484]"] {
+  direction: rtl !important;
+  unicode-bidi: isolate;
+  justify-content: flex-start !important;
+  text-align: left !important;
 }

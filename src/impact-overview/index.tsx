@@ -15,6 +15,13 @@ const dateFormatter = new Intl.DateTimeFormat("fa-IR", {
   timeStyle: "short",
 });
 
+const emptyOverview: PublicImpactOverview = {
+  projectCount: 0,
+  reportCount: 0,
+  lastPublishedAtUtc: null,
+  metrics: [],
+};
+
 function formatNumber(value: number) {
   return numberFormatter.format(value);
 }
@@ -41,6 +48,13 @@ export default function Main() {
       })
       .catch(() => {
         if (!active) return;
+
+        if (import.meta.env.DEV) {
+          setOverview(emptyOverview);
+          setError(false);
+          return;
+        }
+
         setError(true);
       })
       .finally(() => {

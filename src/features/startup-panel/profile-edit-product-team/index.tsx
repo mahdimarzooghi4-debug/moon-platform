@@ -1,8 +1,9 @@
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { StartupSidebar } from "../components/StartupSidebar";
 import "../index.css";
 import "./index.css";
+import "./member-actions.css";
 
 const productNarratives = [
   ["معرفی کوتاه استارتاپ", "سامانه ماه، اولین پلتفرم یکپارچه مدیریت شتابدهی است که چرخه حیات استارتاپ‌ها، فرآیند ارزیابی مربیان و مدیریت سرمایه‌گذاران را برای مراکز نوآوری و خانه‌های خلاق تسهیل و هوشمند می‌کند."],
@@ -18,17 +19,45 @@ const metrics = [
   ["درآمد میانگین ماهانه", "۸۰,۰۰۰,۰۰۰ تومان"],
 ] as const;
 
-const members = [
-  ["علی علوی", "هم‌بنیان‌گذار و مدیر فنی (CTO) · تمام‌وقت"],
-  ["سارا حسینی", "مدیر محصول و طراح تجربه کاربری · پاره‌وقت"],
-] as const;
+type TeamMember = {
+  id: number;
+  name: string;
+  role: string;
+  editable?: boolean;
+};
+
+const initialMembers: TeamMember[] = [
+  { id: 1, name: "علی علوی", role: "هم‌بنیان‌گذار و مدیر فنی (CTO) · تمام‌وقت" },
+  { id: 2, name: "سارا حسینی", role: "مدیر محصول و طراح تجربه کاربری · پاره‌وقت" },
+];
 
 export default function StartupProfileEditProductTeam() {
   const navigate = useNavigate();
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>(initialMembers);
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     navigate("/panel/startup/profile");
   };
+
+  const addMember = () => {
+    setTeamMembers((current) => [
+      ...current,
+      { id: Date.now(), name: "", role: "", editable: true },
+    ]);
+  };
+
+  const updateMember = (id: number, field: "name" | "role", value: string) => {
+    setTeamMembers((current) => current.map((member) => (
+      member.id === id ? { ...member, [field]: value } : member
+    )));
+  };
+
+  const removeMember = (id: number) => {
+    setTeamMembers((current) => current.filter((member) => member.id !== id));
+  };
+
+  const hasAddedMembers = teamMembers.some((member) => member.editable);
 
   return (
     <div className="startup-panel-page startup-profile-product-edit-page" data-node-id="2084:2" data-name="startup-profile-edit-product-team">
@@ -58,7 +87,7 @@ export default function StartupProfileEditProductTeam() {
               ))}
             </section>
 
-            <section className="startup-profile-product-edit-card" data-name="team-business-card">
+            <section className={`startup-profile-product-edit-card${hasAddedMembers ? " has-extra-members" : ""}`} data-name="team-business-card">
               <h2>وضعیت محصول، شاخص‌ها و تیم</h2>
               <span className="startup-profile-product-edit-label">وضعیت فعلی محصول</span>
               <div className="startup-profile-product-edit-chips">
@@ -71,9 +100,27 @@ export default function StartupProfileEditProductTeam() {
               </div>
               <h3>اعضای اصلی تیم استارتاپ</h3>
               <div className="startup-profile-product-edit-members">
-                {members.map(([name, role]) => <div key={name}><strong>{name}</strong><span>{role}</span></div>)}
+                {teamMembers.map((member) => member.editable ? (
+                  <div className="startup-profile-product-edit-member-form" key={member.id}>
+                    <input
+                      aria-label="نام عضو تیم"
+                      placeholder="نام و نام خانوادگی"
+                      value={member.name}
+                      onChange={(event) => updateMember(member.id, "name", event.target.value)}
+                    />
+                    <input
+                      aria-label="سمت و نقش عضو تیم"
+                      placeholder="سمت، نقش و میزان همکاری"
+                      value={member.role}
+                      onChange={(event) => updateMember(member.id, "role", event.target.value)}
+                    />
+                    <button type="button" onClick={() => removeMember(member.id)}>حذف</button>
+                  </div>
+                ) : (
+                  <div key={member.id}><strong>{member.name}</strong><span>{member.role}</span></div>
+                ))}
               </div>
-              <button className="startup-profile-product-edit-add" type="button" aria-disabled="true">+ افزودن عضو جدید به تیم</button>
+              <button className="startup-profile-product-edit-add" type="button" onClick={addMember}>+ افزودن عضو جدید به تیم</button>
             </section>
           </div>
 

@@ -1,0 +1,17 @@
+.fund-manager-panel > [data-name="colored-sidebar"],
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name="milestone-evaluations-nav"],
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name="reports-nav"],
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name="settings-nav"],
+.fund-manager-panel > [data-name="colored-sidebar"] [data-name="funding-flow-control-nav"],
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name="milestone-evaluations-nav"],
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name="reports-nav"],
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name="settings-nav"],
+[data-name="fund-manager-main-dashboard"] > [data-name="colored-sidebar"] [data-name="funding-flow-control-nav"] {
+  display: none !important;
+}

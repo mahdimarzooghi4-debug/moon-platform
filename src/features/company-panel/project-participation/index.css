@@ -173,6 +173,14 @@
   font-weight: 500;
 }
 
+.company-representative-box > div:last-child strong {
+  width: auto;
+  align-self: flex-start;
+  direction: ltr;
+  text-align: left;
+  unicode-bidi: isolate;
+}
+
 .company-payment-route-box {
   height: 86px;
   margin-top: 14px;

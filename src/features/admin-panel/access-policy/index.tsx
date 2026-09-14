@@ -43,9 +43,8 @@ export default function AdminAccessPolicy() {
         <aside className="admin-info-note admin-info-note-tall">اصل دسترسی حداقلی رعایت می‌شود؛ ادمین نباید جایگزین عملیات مالی کمیته امداد، تصمیم تخصصی خانه خلاق یا مدیریت سرمایه مدیر صندوق شود.</aside>
 
         <section className="admin-form-actions admin-access-actions">
-          <button className="admin-users-button admin-users-button-primary admin-action-disabled" type="button" aria-disabled="true">ذخیره سیاست</button>
           <Link className="admin-users-button" to="/panel/admin/settings">بازگشت تنظیمات</Link>
-          <p className="admin-form-actions-note">تمام تغییرات سیاست دسترسی در رویدادهای مدیریتی ثبت می‌شود.</p>
+          <p className="admin-form-actions-note">سیاست‌های دسترسی این صفحه فقط برای مرور مدیریتی نمایش داده می‌شوند و ویرایش policy در Backend انجام می‌شود.</p>
         </section>
       </main>
       <AdminSidebar active="settings" />

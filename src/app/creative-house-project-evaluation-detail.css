@@ -1,0 +1,77 @@
+/* Project evaluation detail: restore full-page scrolling and interactive decision states. */
+body .creative-house-dashboard[data-name="ayeneh-project-evaluation-detail"] {
+  height: 1780px !important;
+  min-height: 1780px !important;
+  overflow: visible !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-project-evaluation-detail"] > [data-name="Main Content"] {
+  height: 1780px !important;
+  min-height: 1780px !important;
+  overflow: visible !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-project-evaluation-detail"] > [data-name="colored-sidebar"] {
+  height: 1780px !important;
+  min-height: 1780px !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-project-evaluation-detail"] [data-name^="decision-option-"] {
+  transition: box-shadow 140ms ease, transform 140ms ease;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-project-evaluation-detail"] [data-name^="decision-option-"]:hover {
+  transform: translateY(-1px);
+}
+
+body .creative-house-dashboard[data-name="ayeneh-project-evaluation-detail"] [data-name^="decision-option-"] [data-name="radio"] {
+  border: 2px solid currentColor;
+  border-radius: 999px;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-project-evaluation-detail"] [data-name^="decision-option-"] [data-name="radio"] img {
+  display: none !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-project-evaluation-detail"] [data-name="decision-option-1"] [data-name="radio"] {
+  color: #159455;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-project-evaluation-detail"] [data-name="decision-option-2"] [data-name="radio"] {
+  color: #c27a10;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-project-evaluation-detail"] [data-name="decision-option-3"] [data-name="radio"] {
+  color: #c72929;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-project-evaluation-detail"] [data-name^="decision-option-"][data-selected="true"] [data-name="radio"]::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-project-evaluation-detail"] [data-name="decision-option-1"][data-selected="true"] {
+  box-shadow: inset 0 0 0 2px rgba(21, 148, 85, 0.35);
+}
+
+body .creative-house-dashboard[data-name="ayeneh-project-evaluation-detail"] [data-name="decision-option-2"][data-selected="true"] {
+  box-shadow: inset 0 0 0 2px rgba(194, 122, 16, 0.35);
+}
+
+body .creative-house-dashboard[data-name="ayeneh-project-evaluation-detail"] [data-name="decision-option-3"][data-selected="true"] {
+  box-shadow: inset 0 0 0 2px rgba(199, 41, 41, 0.35);
+}
+
+body .creative-house-dashboard[data-name="ayeneh-project-evaluation-detail"] [data-name="save-decision"] {
+  transition: filter 140ms ease, transform 140ms ease;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-project-evaluation-detail"] [data-name="save-decision"]:hover {
+  filter: brightness(0.96);
+  transform: translateY(-1px);
+}

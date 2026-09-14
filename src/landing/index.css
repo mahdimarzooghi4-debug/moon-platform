@@ -9,22 +9,6 @@
     "Source Han Sans CN", sans-serif;
 }
 
-.main-container {
-  overflow: hidden;
-}
-
-.main-container,
-.main-container * {
-  box-sizing: border-box;
-}
-
-input,
-select,
-textarea,
-button {
-  outline: 0;
-}
-
 html,
 body,
 #app {
@@ -36,4 +20,402 @@ body {
   font-family: "Vazirmatn Variable", "Vazirmatn", sans-serif;
   direction: rtl;
   background: #fcfbf8;
+}
+
+input,
+select,
+textarea,
+button {
+  outline: 0;
+}
+
+.main-container {
+  width: 100%;
+  max-width: 1440px;
+  overflow: hidden;
+}
+
+.main-container,
+.main-container * {
+  box-sizing: border-box;
+}
+
+/*
+ * The Codia export was authored on a physical 1440px LTR canvas while its
+ * copy is Persian. Keep the Persian text RTL, but preserve Figma's physical
+ * left/right placement explicitly for rows whose order matters.
+ */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) {
+  direction: rtl;
+  text-align: right;
+}
+
+/* In an RTL flex-column, flex-start is the visual right edge. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) .items-end {
+  align-items: flex-start !important;
+}
+
+/* Generated justify-end rows were intended to sit on the visual right. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) .justify-end {
+  justify-content: flex-start !important;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="text-left"]:not([dir="ltr"]) {
+  text-align: right !important;
+}
+
+/* Header: actions on the left, menu + logo on the right, exactly as Figma. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) > div:first-child {
+  direction: ltr;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) > div:first-child span {
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
+/* Hero: media left, copy right. CTA order remains the physical Figma order. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[18]"] {
+  direction: ltr;
+  flex-direction: row !important;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[25]"] {
+  direction: rtl;
+  align-items: flex-start !important;
+  text-align: right;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[28]"] {
+  direction: ltr;
+}
+
+/* Current Figma export for the hero play-circle. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[24]"] {
+  background-image: url("/assets/codia/Nn6705XhfS.svg") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+}
+
+/* Impact cards: Figma order is resources -> projects -> jobs -> people -> startups. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[38]"] {
+  direction: ltr;
+  justify-content: flex-end !important;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[39]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[46]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[53]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[60]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[67]"] {
+  direction: rtl;
+  align-items: flex-start !important;
+  text-align: right;
+}
+
+/* Keep number/unit placement identical to the Figma canvas. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[42]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[49]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[56]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[63]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[70]"] {
+  direction: ltr;
+}
+
+/* Exact Figma vectors. The original export gave these SVG files a .png suffix,
+ * which can be served with the wrong MIME type; use real .svg copies instead. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[41]"] {
+  background-image: url("/assets/codia/cxdojLhODQ.svg") !important;
+}
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[48]"] {
+  background-image: url("/assets/codia/m3qsgpUX3g.svg") !important;
+}
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[55]"] {
+  background-image: url("/assets/codia/i7rWP6OzWu.svg") !important;
+}
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[62]"] {
+  background-image: url("/assets/codia/N1ctvrtnG3.svg") !important;
+}
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[69]"] {
+  background-image: url("/assets/codia/ZuP4QiPSK8.svg") !important;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[41]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[48]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[55]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[62]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[69]"] {
+  opacity: 1 !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+}
+
+/* Participation cards: Figma physical order is Startup | Corporate | Individual. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[78]"] {
+  direction: ltr;
+  justify-content: flex-end !important;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[78]"] > div {
+  direction: rtl;
+  text-align: right;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[79]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[94]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[109]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[80]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[95]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[110]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[86]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[101]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[116]"] {
+  align-items: flex-start !important;
+  text-align: right;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[83]"] {
+  background-image: url("/assets/codia/MtRTcVQGjH.svg") !important;
+}
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[98]"] {
+  background-image: url("/assets/codia/HfESrrAcfV.svg") !important;
+}
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[113]"] {
+  background-image: url("/assets/codia/hEyKrXaGAW.svg") !important;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[83]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[98]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[113]"] {
+  opacity: 1 !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+}
+
+/* Figma uses a blue -> teal CTA gradient on all three paths. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[92]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[107]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[122]"] {
+  background: linear-gradient(to right, #2094e3, #15b2c1) !important;
+  cursor: pointer;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[93]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[108]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[123]"] {
+  text-align: center !important;
+}
+
+/* Project cards are also authored left-to-right on the Figma canvas, with RTL content. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[128]"] {
+  direction: ltr;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[128]"] > div {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Exact Figma arrow-left used by the projects view-all control. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[233]"] {
+  background-image: url("/assets/codia/E97ur6XkVG.svg") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+}
+
+/* Trusted companies: preserve the physical Figma order while keeping each Persian
+ * logo block visually RTL (label on the left, icon on the right). */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[239]"] {
+  direction: ltr;
+  justify-content: space-between !important;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[240]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[244]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[248]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[252]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[256]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[260]"] {
+  direction: ltr;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[241]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[245]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[249]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[253]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[257]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[261]"] {
+  color: #616e7d !important;
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[243]"] {
+  background-image: url("/assets/codia/ziERz1A9aZ.svg") !important;
+}
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[247]"] {
+  background-image: url("/assets/codia/uVmpYvWQi7.svg") !important;
+}
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[251]"] {
+  background-image: url("/assets/codia/v3XUKgbb2i.svg") !important;
+}
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[255]"] {
+  background-image: url("/assets/codia/SEnyEKiAqo.svg") !important;
+}
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[259]"] {
+  background-image: url("/assets/codia/PeD9PMAuMz.svg") !important;
+}
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[263]"] {
+  background-image: url("/assets/codia/xFsiBGoAsW.svg") !important;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[243]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[247]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[251]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[255]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[259]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[263]"] {
+  width: 14px !important;
+  height: 14px !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+}
+
+/* News: keep Figma's physical card order, but make each card's copy truly RTL. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[269]"] {
+  direction: ltr;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[270]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[282]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[294]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[272]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[284]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[296]"] {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Figma has date at the physical left and badge at the physical right. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[273]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[285]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[297]"] {
+  direction: ltr;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[273]"] > *,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[285]"] > *,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[297]"] > * {
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
+/* View-all arrow/text/empty-slot arrangement is authored physically LTR in Figma. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[306]"] {
+  direction: ltr;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[307]"] {
+  background-image: url("/assets/codia/6mrr4HWzfu.svg") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[308]"] {
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
+/* Footer core follows the physical Figma canvas left-to-right; each Persian column remains RTL. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[316]"] {
+  direction: ltr;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[317]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[326]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[330]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[335]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[342]"] {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Replace design placeholders with production contact details while preserving the Figma typography. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[319]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[320]"] {
+  width: auto !important;
+  font-size: 0 !important;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[319]"]::after {
+  content: "تلفن: ۰۲۱-۶۶۴۸۵۳۷۴";
+  font-size: 13px;
+  line-height: 20px;
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[320]"]::after {
+  content: "ایمیل: \200e info@mahcsr.ir";
+  font-size: 13px;
+  line-height: 20px;
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
+/* The supplied production address is an additional contact line; it fits the original 182px column. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[317]"]::after {
+  content: "آدرس: تهران، خیابان انقلاب، خیابان رازی، کوچه شهبازیان، پلاک ۲۲";
+  display: block;
+  width: 220px;
+  order: 1;
+  flex: 0 0 auto;
+  color: #e4ebf1;
+  font-family: "Vazirmatn Variable", "Vazirmatn", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 20px;
+  text-align: right;
+  white-space: normal;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[321]"] {
+  order: 2;
+}
+
+/* Use the exact exported Figma vectors with an SVG MIME-safe extension. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[323]"] {
+  background-image: url("/assets/codia/NQaXAcuYaN.svg") !important;
+}
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[325]"] {
+  background-image: url("/assets/codia/0ryT0zMK7e.svg") !important;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[323]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[325]"] {
+  width: 18px !important;
+  height: 18px !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+}
+
+/* Figma's footer divider is above the base copy, not below it. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[345]"] {
+  border-bottom: 0 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+/* Latin identifiers stay readable without changing the row's Persian layout. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [dir="ltr"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) a[href^="mailto:"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) a[href^="tel:"] {
+  direction: ltr;
+  unicode-bidi: isolate;
 }

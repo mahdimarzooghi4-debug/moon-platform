@@ -1,124 +1,181 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { AdminSidebar } from "../components/AdminSidebar";
-import {
-  listAdminOrganizations,
-  setAdminOrganizationStatus,
-  type AdminOrganization,
-} from "../api";
+import { listAdminOrganizations, setAdminOrganizationStatus, type AdminOrganization } from "../api";
+import { getAdminOrganizationProfile, saveAdminOrganizationProfile } from "../management-api";
+import { getOrganizationOverride, saveOrganizationOverride } from "../organization-overrides";
 import "../index.css";
 import "../users-flow.css";
 import "../list-flow.css";
 
-const typeLabel: Record<string, string> = {
-  company: "شرکت",
-  startup: "استارتاپ",
-  creative_house: "خانه خلاق",
-  fund_manager: "مدیریت صندوق",
-  supervisor: "نهاد ناظر",
-  platform: "سامانه ماه",
+const typeLabel: Record<string, string> = { company: "شرکت", startup: "استارتاپ" };
+const isDevelopment = Boolean(import.meta.env.DEV);
+const guidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+const demoDetails: Record<string, { manager: string; extraLabel: string; extraValue: string }> = {
+  "org-company-a": { manager: "نماینده شرکت آفتاب", extraLabel: "شناسه ملی", extraValue: "نمونه توسعه" },
+  "org-company-b": { manager: "نماینده شرکت فردا", extraLabel: "شناسه ملی", extraValue: "نمونه توسعه" },
+  "org-startup-a": { manager: "مدیر استارتاپ نمونه", extraLabel: "حوزه فعالیت", extraValue: "فناوری سبز و اشتغال" },
 };
 
 export default function AdminOrganizationDetail() {
-  const { id } = useParams();
+  const { organizationId } = useParams();
   const [organization, setOrganization] = useState<AdminOrganization | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [saved, setSaved] = useState(false);
+  const [startupName, setStartupName] = useState("");
+  const [manager, setManager] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [activityArea, setActivityArea] = useState("");
+
+  const applyOrganization = (found: AdminOrganization) => {
+    setOrganization(found);
+    const details = demoDetails[found.organizationId];
+    const override = getOrganizationOverride(found.organizationId);
+    setStartupName(override?.name ?? found.name);
+    setManager(override?.manager ?? details?.manager ?? "");
+    setMobile(override?.mobile ?? "");
+    setActivityArea(override?.activityArea ?? details?.extraValue ?? "");
+  };
+
+  const applyServerProfile = (profile: Awaited<ReturnType<typeof getAdminOrganizationProfile>>) => {
+    setStartupName(profile.name);
+    setManager(profile.manager);
+    setMobile(profile.mobile);
+    setActivityArea(profile.activityArea);
+  };
 
   const load = async () => {
-    if (!id) return;
+    if (!organizationId) return;
     const items = await listAdminOrganizations();
-    const found = items.find((item) => item.organizationId === id) ?? null;
+    const found = items.find((item) => item.organizationId === organizationId) ?? null;
     if (!found) throw new Error("organization_not_found");
-    setOrganization(found);
+    applyOrganization(found);
+    if (found.type === "startup" && guidPattern.test(found.organizationId)) {
+      try { applyServerProfile(await getAdminOrganizationProfile(found.organizationId)); } catch { /* profile is optional before first edit */ }
+    }
   };
 
   useEffect(() => {
     let active = true;
-    if (!id) {
+    if (!organizationId) {
       setError("شناسه سازمان معتبر نیست.");
       setLoading(false);
-      return () => {
-        active = false;
-      };
+      return () => { active = false; };
     }
 
     listAdminOrganizations()
-      .then((items) => {
+      .then(async (items) => {
         if (!active) return;
-        const found = items.find((item) => item.organizationId === id) ?? null;
-        if (!found) {
-          setError("سازمان موردنظر پیدا نشد.");
-          return;
+        const found = items.find((item) => item.organizationId === organizationId) ?? null;
+        if (!found) { setError("شرکت یا استارتاپ موردنظر پیدا نشد."); return; }
+        applyOrganization(found);
+        if (found.type === "startup" && guidPattern.test(found.organizationId)) {
+          try {
+            const profile = await getAdminOrganizationProfile(found.organizationId);
+            if (active) applyServerProfile(profile);
+          } catch { /* keep base data when profile does not exist */ }
         }
-        setOrganization(found);
       })
-      .catch(() => {
-        if (active) setError("دریافت اطلاعات سازمان از سرور ناموفق بود.");
-      })
-      .finally(() => {
-        if (active) setLoading(false);
-      });
+      .catch(() => { if (active) setError("دریافت اطلاعات حساب ناموفق بود."); })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [organizationId]);
 
-    return () => {
-      active = false;
-    };
-  }, [id]);
+  const details = organization ? demoDetails[organization.organizationId] : undefined;
+  const isCompany = organization?.type === "company";
+  const isStartup = organization?.type === "startup";
 
-  const fields = useMemo(() => {
-    if (!organization) return [];
+  const companyFields = useMemo(() => {
+    if (!organization || !isCompany) return [];
     return [
       ["نام مجموعه", organization.name],
       ["شناسه سازمان", organization.organizationId],
       ["نوع حساب", typeLabel[organization.type] ?? organization.type],
+      ["مسئول حساب", details?.manager ?? "ثبت نشده"],
+      [details?.extraLabel ?? "اطلاعات تکمیلی", details?.extraValue ?? "ثبت نشده"],
       ["اعضای فعال", String(organization.activeMemberCount)],
       ["تاریخ ایجاد", new Date(organization.createdAtUtc).toLocaleDateString("fa-IR")],
-      ["وضعیت حساب", organization.status === "active" ? "فعال" : "غیرفعال"],
+      ["وضعیت حساب", "فعال؛ بدون نیاز به فعال‌سازی"],
     ] as const;
-  }, [organization]);
+  }, [details, isCompany, organization]);
 
-  const toggleStatus = async () => {
-    if (!organization || saving) return;
+  const saveStartup = async () => {
+    if (!organization || !isStartup || saving) return;
+    const input = { name: startupName.trim(), manager: manager.trim(), mobile: mobile.trim(), activityArea: activityArea.trim() };
+    if (!input.name) { setError("نام استارتاپ الزامی است."); return; }
+
     setSaving(true);
+    setSaved(false);
     setError("");
     try {
-      await setAdminOrganizationStatus(
-        organization.organizationId,
-        organization.status === "active" ? "inactive" : "active",
-      );
-      await load();
+      if (guidPattern.test(organization.organizationId)) {
+        applyServerProfile(await saveAdminOrganizationProfile(organization.organizationId, input));
+      } else if (!isDevelopment) {
+        throw new Error("invalid_organization_id");
+      }
+      saveOrganizationOverride({ organizationId: organization.organizationId, ...input });
+      setOrganization((current) => current ? { ...current, name: input.name } : current);
+      setSaved(true);
     } catch {
-      setError("تغییر وضعیت سازمان انجام نشد.");
-    } finally {
-      setSaving(false);
-    }
+      if (isDevelopment) {
+        saveOrganizationOverride({ organizationId: organization.organizationId, ...input });
+        setOrganization((current) => current ? { ...current, name: input.name } : current);
+        setSaved(true);
+        setError("Backend در دسترس نبود؛ تغییر فقط در fallback توسعه ثبت شد.");
+      } else {
+        setError("ذخیره تغییرات استارتاپ در سرور انجام نشد.");
+      }
+    } finally { setSaving(false); }
+  };
+
+  const toggleStatus = async () => {
+    if (!organization || saving || isCompany) return;
+    setSaving(true); setError("");
+    try {
+      await setAdminOrganizationStatus(organization.organizationId, organization.status === "active" ? "inactive" : "active");
+      await load();
+    } catch { setError("تغییر وضعیت استارتاپ انجام نشد."); }
+    finally { setSaving(false); }
   };
 
   return (
     <div className="admin-panel-shell" data-node-id="2273:226">
       <main className="admin-users-main" dir="rtl">
         <header className="admin-users-header">
-          <div className="admin-users-heading"><h1>جزئیات شرکت / استارتاپ</h1><p>نمای مدیریتی حساب و وضعیت فعالیت سازمان</p></div>
+          <div className="admin-users-heading"><h1>جزئیات شرکت / استارتاپ</h1><p>شرکت قابل مشاهده است و اطلاعات استارتاپ توسط مدیر قابل ویرایش است.</p></div>
           <div className="admin-users-actions"><Link className="admin-users-button admin-users-button-wide" to="/panel/admin/organizations">بازگشت به فهرست</Link></div>
         </header>
 
         <section className="admin-form-card">
-          <h2>اطلاعات مجموعه</h2>
-          <p>مشخصات و وضعیت این حساب مستقیماً از Backend خوانده می‌شود.</p>
+          <h2>{isStartup ? "ویرایش اطلاعات استارتاپ" : "اطلاعات شرکت"}</h2>
+          <p>{isStartup ? "مشخصات مدیریتی استارتاپ در Backend ذخیره می‌شود." : "اطلاعات شرکت فقط برای مشاهده مدیریتی است و فعال‌سازی جداگانه ندارد."}</p>
           {loading ? <p className="admin-form-actions-note">در حال دریافت اطلاعات…</p> : null}
           {error ? <p className="admin-form-actions-note">{error}</p> : null}
-          <div className="admin-form-grid">
-            {fields.map(([label, value]) => <div className="admin-form-field" key={label}><label>{label}</label><div className="admin-detail-value">{value}</div></div>)}
-          </div>
+
+          {isStartup && organization ? (
+            <div className="admin-form-grid">
+              <div className="admin-form-field"><label>نام استارتاپ</label><input className="admin-form-input" value={startupName} onChange={(event) => { setStartupName(event.target.value); setSaved(false); }} /></div>
+              <div className="admin-form-field"><label>مسئول حساب</label><input className="admin-form-input" value={manager} onChange={(event) => { setManager(event.target.value); setSaved(false); }} /></div>
+              <div className="admin-form-field"><label>شماره تماس</label><input className="admin-form-input" dir="ltr" value={mobile} onChange={(event) => { setMobile(event.target.value); setSaved(false); }} /></div>
+              <div className="admin-form-field"><label>حوزه فعالیت</label><input className="admin-form-input" value={activityArea} onChange={(event) => { setActivityArea(event.target.value); setSaved(false); }} /></div>
+              <div className="admin-form-field"><label>شناسه سازمان</label><div className="admin-detail-value">{organization.organizationId}</div></div>
+              <div className="admin-form-field"><label>اعضای فعال</label><div className="admin-detail-value">{organization.activeMemberCount}</div></div>
+            </div>
+          ) : (
+            <div className="admin-form-grid">{companyFields.map(([label, value]) => <div className="admin-form-field" key={label}><label>{label}</label><div className="admin-detail-value">{value}</div></div>)}</div>
+          )}
         </section>
 
-        <aside className="admin-info-note admin-detail-note">غیرفعال‌کردن سازمان باعث می‌شود عضویت‌های آن سازمان در `/api/v1/me` به‌عنوان دسترسی فعال برگردانده نشوند. تغییر وضعیت در Audit ثبت می‌شود.</aside>
+        <aside className="admin-info-note admin-detail-note">{isCompany ? "شرکت پس از ثبت مستقیم قابل استفاده است و مرحله فعال‌سازی جداگانه ندارد." : "پروفایل استارتاپ و وضعیت دسترسی از API مدیریتی سامانه کنترل می‌شود."}</aside>
 
         <section className="admin-form-actions admin-detail-actions">
-          <button className="admin-users-button admin-users-button-primary" type="button" disabled={!organization || saving} onClick={toggleStatus}>{saving ? "در حال ثبت…" : organization?.status === "active" ? "غیرفعال کردن" : "فعال کردن"}</button>
+          {isStartup ? <button className="admin-users-button admin-users-button-primary" type="button" onClick={saveStartup} disabled={saving}>{saving ? "در حال ذخیره…" : "ذخیره مشخصات"}</button> : null}
+          {isStartup ? <button className="admin-users-button" type="button" disabled={!organization || saving} onClick={toggleStatus}>{saving ? "در حال ثبت…" : organization?.status === "active" ? "غیرفعال کردن" : "فعال کردن"}</button> : null}
           <Link className="admin-users-button" to="/panel/admin/users/new">تخصیص دسترسی</Link>
-          <p className="admin-form-actions-note">اعضای فعال: {organization?.activeMemberCount ?? "—"}</p>
+          <p className="admin-form-actions-note">{saved ? "تغییرات استارتاپ ثبت شد." : `اعضای فعال: ${organization?.activeMemberCount ?? "—"}`}</p>
         </section>
       </main>
       <AdminSidebar active="organizations" />

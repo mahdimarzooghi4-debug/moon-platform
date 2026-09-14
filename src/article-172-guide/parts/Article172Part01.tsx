@@ -113,28 +113,6 @@ export function Article172Part01() {
           </div>
         </div>
       </div>
-      <div className="flex pt-[20px] pr-[120px] pb-[20px] pl-[120px] items-start self-stretch shrink-0 flex-nowrap relative z-[46]">
-        <div className="flex pt-[24px] pr-[24px] pb-[24px] pl-[24px] gap-[16px] items-center grow shrink-0 basis-0 flex-nowrap bg-[#fff9e5] rounded-[16px] border-solid border border-[#c27a10] relative z-[47]">
-          <div className="flex flex-col gap-[6px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[48]">
-            <span className="flex w-[183px] h-[25px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[16px] font-bold leading-[25px] text-[#17324d] relative text-right whitespace-nowrap z-[49]">
-              پیش از ثبت درخواست بدانید
-            </span>
-            <span className="h-[24px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[24px] text-[#60758a] relative text-right whitespace-nowrap z-50">
-              برخورداری از آثار مالیاتی ماده ۱۷۲ به قوانین و ضوابط جاری، ماهیت
-              مشارکت، نحوه پرداخت، مدارک قابل‌قبول و نظر مرجع مالیاتی وابسته
-              است. سامانه ماه صدور یا پذیرش نهایی را تضمین نمی‌کند.
-            </span>
-            <span className="flex w-[134px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#2094e3] relative text-right underline whitespace-nowrap z-[51]">
-              مشاهده منابع رسمی ←
-            </span>
-          </div>
-          <div className="flex w-[48px] pt-[12px] pr-[12px] pb-[12px] pl-[12px] items-start shrink-0 flex-nowrap bg-[#fff2cc] rounded-[99px] relative z-[52]">
-            <div className="flex w-[24px] h-[24px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[53]">
-              <div className="w-[24px] h-[24px] shrink-0 bg-[url('/assets/codia/T4OS0ttuhK.png')] bg-cover bg-no-repeat relative overflow-hidden z-[54]" />
-            </div>
-          </div>
-        </div>
-      </div>
     </>
   );
 }

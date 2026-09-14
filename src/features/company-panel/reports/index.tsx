@@ -14,6 +14,9 @@ type Report = {
   status: string;
 };
 
+const REPORTS_PER_PAGE = 2;
+const UPDATES_PER_PAGE = 3;
+
 const reports: Report[] = [
   { id: "MAH-R-1405-0018", title: "گزارش مرحله اول", project: "سلامت خانواده", type: "میان‌دوره‌ای", period: "شهریور تا آبان ۱۴۰۵", displayId: "MAH-R-۱۴۰۵-۰۰۱۸", status: "منتشرشده" },
   { id: "MAH-R-1405-0021", title: "گزارش مرحله دوم", project: "سلامت خانواده", type: "میان‌دوره‌ای", period: "مرداد تا شهریور ۱۴۰۵", displayId: "MAH-R-۱۴۰۵-۰۰۲۱", status: "تأیید و منتشرشده" },
@@ -30,6 +33,8 @@ export default function CompanyFinancialImpactReports() {
   const [project, setProject] = useState("همه پروژه‌ها");
   const [type, setType] = useState("همه انواع");
   const [status, setStatus] = useState("همه وضعیت‌ها");
+  const [reportPage, setReportPage] = useState(1);
+  const [updatePage, setUpdatePage] = useState(1);
 
   const filtered = useMemo(() => reports.filter((item) => {
     const q = query.trim();
@@ -38,6 +43,11 @@ export default function CompanyFinancialImpactReports() {
       && (type === "همه انواع" || item.type === type)
       && (status === "همه وضعیت‌ها" || item.status === status);
   }), [query, project, type, status]);
+
+  const reportTotalPages = Math.max(1, Math.ceil(filtered.length / REPORTS_PER_PAGE));
+  const updateTotalPages = Math.max(1, Math.ceil(updates.length / UPDATES_PER_PAGE));
+  const visibleReports = filtered.slice((reportPage - 1) * REPORTS_PER_PAGE, reportPage * REPORTS_PER_PAGE);
+  const visibleUpdates = updates.slice((updatePage - 1) * UPDATES_PER_PAGE, updatePage * UPDATES_PER_PAGE);
 
   return (
     <div className="company-panel-shell" data-node-id="1905:2">
@@ -53,18 +63,18 @@ export default function CompanyFinancialImpactReports() {
         <section className="company-report-filters">
           <strong>جست‌وجو و فیلتر</strong>
           <div>
-            <input aria-label="جست‌وجوی گزارش" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="جست‌وجوی نام پروژه یا شماره گزارش..." />
-            <select aria-label="پروژه" value={project} onChange={(e) => setProject(e.target.value)}><option>همه پروژه‌ها</option><option>سلامت خانواده</option></select>
-            <select aria-label="نوع گزارش" value={type} onChange={(e) => setType(e.target.value)}><option>همه انواع</option><option>میان‌دوره‌ای</option></select>
-            <select aria-label="وضعیت انتشار" value={status} onChange={(e) => setStatus(e.target.value)}><option>همه وضعیت‌ها</option><option>منتشرشده</option><option>تأیید و منتشرشده</option></select>
+            <input aria-label="جست‌وجوی گزارش" value={query} onChange={(e) => { setQuery(e.target.value); setReportPage(1); }} placeholder="جست‌وجوی نام پروژه یا شماره گزارش..." />
+            <select aria-label="پروژه" value={project} onChange={(e) => { setProject(e.target.value); setReportPage(1); }}><option>همه پروژه‌ها</option><option>سلامت خانواده</option></select>
+            <select aria-label="نوع گزارش" value={type} onChange={(e) => { setType(e.target.value); setReportPage(1); }}><option>همه انواع</option><option>میان‌دوره‌ای</option></select>
+            <select aria-label="وضعیت انتشار" value={status} onChange={(e) => { setStatus(e.target.value); setReportPage(1); }}><option>همه وضعیت‌ها</option><option>منتشرشده</option><option>تأیید و منتشرشده</option></select>
           </div>
         </section>
 
         <section className="company-report-list">
-          <div className="company-report-heading"><div><h2>گزارش‌های منتشرشده</h2><p>گزارش‌های تأییدشده پروژه‌های مشارکت‌شده</p></div><span>{filtered.length.toLocaleString("fa-IR")} گزارش منتشرشده</span></div>
+          <div className="company-report-heading"><div><h2>گزارش‌های منتشرشده</h2><p>گزارش‌های تأییدشده پروژه‌های مشارکت‌شده</p></div></div>
           <div className="company-report-table-head"><span>گزارش</span><span>پروژه</span><span>نوع گزارش</span><span>دوره گزارش</span><span>شماره گزارش</span><span>وضعیت</span><span>اقدام</span></div>
           <div className="company-report-table-body">
-            {filtered.map((item) => (
+            {visibleReports.map((item) => (
               <article className="company-report-row" key={item.id}>
                 <strong>{item.title}</strong><span>{item.project}</span><span>{item.type}</span><span>{item.period}</span><span dir="ltr">{item.displayId}</span><b>{item.status}</b><Link to={`/panel/company/reports/${item.id}`}>مشاهده گزارش</Link>
               </article>
@@ -72,11 +82,27 @@ export default function CompanyFinancialImpactReports() {
             {!filtered.length && <div className="company-report-empty">گزارشی با فیلترهای فعلی پیدا نشد.</div>}
           </div>
           <aside className="company-report-review-note">گزارش‌های در حال بررسی پس از تأیید نهایی خانه خلاق و نوآوری آینه در این بخش قابل مشاهده خواهند بود.</aside>
+          <footer className="company-report-count-footer">
+            <span>{filtered.length.toLocaleString("fa-IR")} گزارش منتشرشده</span>
+            {reportTotalPages > 1 && <div className="company-report-pagination">
+              <button type="button" disabled={reportPage === 1} onClick={() => setReportPage((page) => Math.max(1, page - 1))}>قبلی</button>
+              {Array.from({ length: reportTotalPages }, (_, index) => index + 1).map((page) => <button type="button" className={page === reportPage ? "is-active" : ""} key={page} onClick={() => setReportPage(page)}>{page.toLocaleString("fa-IR")}</button>)}
+              <button type="button" disabled={reportPage === reportTotalPages} onClick={() => setReportPage((page) => Math.min(reportTotalPages, page + 1))}>بعدی</button>
+            </div>}
+          </footer>
         </section>
 
         <section className="company-report-updates">
           <h2>آخرین به‌روزرسانی‌های اثر اجتماعی</h2><p>رویدادهای منتشرشده پروژه سلامت خانواده</p>
-          <div>{updates.map(([date, text]) => <article key={date}><time>{date}</time><strong>{text}</strong><span>منتشرشده</span></article>)}</div>
+          <div>{visibleUpdates.map(([date, text]) => <article key={date}><time>{date}</time><strong>{text}</strong><span>منتشرشده</span></article>)}</div>
+          <footer className="company-update-count-footer">
+            <span>{updates.length.toLocaleString("fa-IR")} به‌روزرسانی</span>
+            {updateTotalPages > 1 && <div className="company-report-pagination">
+              <button type="button" disabled={updatePage === 1} onClick={() => setUpdatePage((page) => Math.max(1, page - 1))}>قبلی</button>
+              {Array.from({ length: updateTotalPages }, (_, index) => index + 1).map((page) => <button type="button" className={page === updatePage ? "is-active" : ""} key={page} onClick={() => setUpdatePage(page)}>{page.toLocaleString("fa-IR")}</button>)}
+              <button type="button" disabled={updatePage === updateTotalPages} onClick={() => setUpdatePage((page) => Math.min(updateTotalPages, page + 1))}>بعدی</button>
+            </div>}
+          </footer>
         </section>
       </main>
       <CompanySidebar active="reports" />

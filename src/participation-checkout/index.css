@@ -24,7 +24,7 @@ body {
 }
 
 .main-container {
-  direction: ltr;
+  direction: rtl;
   overflow: hidden;
 }
 
@@ -39,4 +39,11 @@ textarea,
 button {
   font: inherit;
   outline: 0;
+}
+
+input[aria-label^="رقم "] {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  text-align: center !important;
+  text-indent: 0 !important;
 }

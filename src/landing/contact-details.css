@@ -1,0 +1,182 @@
+/* Landing visual corrections layered after the generated landing stylesheet.
+ * Scope with the landing-only logo asset so generated z-index class names on
+ * other screens are never affected.
+ */
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) > div:first-child {
+  direction: ltr;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) > div:first-child [class~="z-[1]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) > div:first-child [class~="z-[8]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) > div:first-child [class~="z-[9]"] {
+  flex-direction: row !important;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) > div:first-child span {
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
+/* Restore exact Codia/Figma-exported icons hidden by the approximation pass. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[40]"] > *,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[47]"] > *,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[54]"] > *,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[61]"] > *,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[68]"] > *,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[81]"] > *,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[96]"] > *,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[111]"] > * {
+  opacity: 1 !important;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[40]"]::after,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[47]"]::after,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[54]"]::after,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[61]"]::after,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[68]"]::after,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[81]"]::after,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[96]"]::after,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[111]"]::after,
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[306]"]::before {
+  content: none !important;
+  background-image: none !important;
+}
+
+/* Figma: goal is physically on the left and raised amount is on the right. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[153]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[187]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[221]"] {
+  direction: ltr;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[154]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[155]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[188]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[189]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[222]"],
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[223]"] {
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
+/* Figma places the arrow on the physical left of “مشاهده همه پروژه‌ها”. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[231]"] {
+  direction: ltr;
+  flex-direction: row !important;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[234]"] {
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
+/* Footer core follows the physical Figma canvas: contact on the left, brand on the right. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[316]"] {
+  direction: ltr;
+  flex-direction: row !important;
+}
+
+/* Contact column mirrors Figma's 220px column. Its rows share one physical
+ * right edge; Persian content itself remains RTL. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[317]"] {
+  width: 220px !important;
+  height: 182px !important;
+  direction: ltr;
+  align-items: flex-end !important;
+  text-align: right;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[318]"] {
+  order: 1;
+  align-self: flex-end;
+  direction: rtl;
+  text-align: right;
+}
+
+/* Replace only the two placeholder strings. No decorative phone/address glyphs:
+ * the Figma footer uses plain text rows here. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[319]"] {
+  order: 2;
+  width: auto !important;
+  min-width: 126px;
+  height: 20px !important;
+  min-height: 20px;
+  padding: 0 !important;
+  background: none !important;
+  font-size: 0 !important;
+  color: transparent !important;
+  direction: rtl;
+  text-align: right;
+  white-space: nowrap !important;
+  align-self: flex-end;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[319]"]::before {
+  content: "تلفن: ۶۶۴۸۵۳۷۴-۰۲۱" !important;
+  display: block;
+  color: #e4ebf1;
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+  direction: rtl;
+  unicode-bidi: isolate;
+  text-align: right;
+  white-space: nowrap;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[320]"] {
+  order: 3;
+  width: auto !important;
+  min-width: 151px;
+  height: 20px !important;
+  min-height: 20px !important;
+  padding: 0 !important;
+  background: none !important;
+  font-size: 0 !important;
+  color: transparent !important;
+  direction: rtl;
+  text-align: right;
+  white-space: nowrap !important;
+  align-self: flex-end;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[320]"]::before {
+  content: "ایمیل: info@mahcsr.ir" !important;
+  display: block;
+  color: #e4ebf1;
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+  direction: rtl;
+  unicode-bidi: plaintext;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Address is one dedicated row, rather than being injected into the email row.
+ * This removes the duplicated address and keeps the contact hierarchy intact. */
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[317]"]::after {
+  content: "آدرس: تهران، خیابان انقلاب، خیابان رازی، کوچه شهبازیان، پلاک ۲۲";
+  order: 4;
+  display: block;
+  width: 220px;
+  color: #e4ebf1;
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+  direction: rtl;
+  unicode-bidi: plaintext;
+  text-align: right;
+  white-space: normal;
+  align-self: flex-end;
+}
+
+html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[315]"] [class~="z-[321]"] {
+  order: 5;
+  align-self: flex-end;
+  direction: ltr;
+}

@@ -38,3 +38,66 @@ input,
 textarea {
   unicode-bidi: plaintext;
 }
+
+.receipt-actions {
+  width: 595px;
+  margin: 24px auto 16px;
+  display: flex;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.receipt-action {
+  min-height: 42px;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  border: 1px solid #e4ebf1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.receipt-action-primary {
+  background: #2094e3;
+  border-color: #2094e3;
+  color: #fff;
+}
+
+.receipt-action-secondary {
+  background: #fff;
+  color: #17324d;
+}
+
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+@media print {
+  html,
+  body {
+    width: 210mm;
+    min-height: 297mm;
+    background: #fff !important;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .receipt-actions,
+  footer {
+    display: none !important;
+  }
+
+  .main-container {
+    margin: 0 auto !important;
+    box-shadow: none !important;
+  }
+}

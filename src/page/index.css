@@ -33,3 +33,32 @@ textarea,
 button {
   outline: 0;
 }
+
+/* Auth entry content is Persian-first and aligned to the right. */
+.main-container main > div {
+  direction: rtl;
+  text-align: right;
+}
+
+.main-container main input,
+.main-container main input::placeholder {
+  direction: rtl;
+  text-align: right;
+}
+
+.main-container main h1,
+.main-container main label[for="moon-login-mobile"] {
+  width: 100%;
+  text-align: right;
+}
+
+/* OTP is intentionally centered in Figma; keep it isolated from entry-form RTL overrides. */
+.main-container main section h1 {
+  text-align: center;
+}
+
+.main-container main section input,
+.main-container main section input::placeholder {
+  direction: ltr;
+  text-align: center;
+}

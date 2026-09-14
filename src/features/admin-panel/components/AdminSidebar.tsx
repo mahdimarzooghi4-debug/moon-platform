@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { clearSession } from "../../../auth/oidc";
 
 const ASSET_ROOT = "/assets/admin-panel";
 
@@ -9,6 +10,7 @@ type AdminSidebarProps = {
     | "organizations"
     | "projects"
     | "funding"
+    | "individual-participations"
     | "revenues"
     | "reports"
     | "content"
@@ -21,20 +23,30 @@ const sidebarItems = [
   { key: "organizations", label: "شرکت‌ها و استارتاپ‌ها", to: "/panel/admin/organizations", icon: "nav-organizations.svg" },
   { key: "projects", label: "پروژه‌ها", to: "/panel/admin/projects", icon: "nav-projects.svg" },
   { key: "funding", label: "تأمین مالی", to: "/panel/admin/funding", icon: "nav-funding.svg" },
-  { key: "revenues", label: "درآمدها", to: "/panel/admin/revenues", icon: "nav-history.svg" },
-  { key: "reports", label: "گزارش‌ها", to: "/panel/admin/reports", icon: "nav-history.svg" },
+  { key: "individual-participations", label: "مشارکت افراد حقیقی", to: "/panel/admin/reports/individual-participations", icon: "nav-participations.svg" },
+  { key: "revenues", label: "درآمدها", to: "/panel/admin/revenues", icon: "nav-revenues.svg" },
+  { key: "reports", label: "گزارش‌ها", to: "/panel/admin/reports", icon: "nav-reports.svg" },
   { key: "content", label: "مدیریت محتوا", to: "/panel/admin/content", icon: null },
   { key: "settings", label: "تنظیمات", to: "/panel/admin/settings", icon: "nav-settings.svg" },
 ] as const;
 
 export function AdminSidebar({ active }: AdminSidebarProps) {
+  const handleLogout = () => {
+    clearSession();
+    window.location.assign("/auth");
+  };
+
   return (
-    <aside className="admin-sidebar" aria-label="ناوبری پنل ادمین">
+    <aside
+      className="admin-sidebar"
+      aria-label="ناوبری پنل ادمین"
+      style={{ order: 2, flex: "0 0 224px", direction: "ltr" }}
+    >
       <div className="admin-brand">
         <img src={`${ASSET_ROOT}/logo.png`} alt="سامانه ماه" />
       </div>
 
-      <div className="admin-identity">ادمین سامانه ماه</div>
+      <div className="admin-identity" dir="rtl">ادمین سامانه ماه</div>
 
       <nav className="admin-nav">
         {sidebarItems.map((item) => (
@@ -42,8 +54,9 @@ export function AdminSidebar({ active }: AdminSidebarProps) {
             key={item.key}
             to={item.to}
             className={`admin-nav-item${item.key === active ? " is-active" : ""}`}
+            style={{ justifyContent: "flex-end", direction: "ltr" }}
           >
-            <span>{item.label}</span>
+            <span style={{ direction: "rtl", textAlign: "right" }}>{item.label}</span>
             {item.icon ? (
               <img src={`${ASSET_ROOT}/${item.icon}`} alt="" />
             ) : (
@@ -58,9 +71,14 @@ export function AdminSidebar({ active }: AdminSidebarProps) {
 
       <div className="admin-sidebar-spacer" />
 
-      <button className="admin-logout" type="button" aria-label="خروج از سیستم">
-        <span>خروج از سیستم</span>
-        <img src={`${ASSET_ROOT}/nav-logout.svg`} alt="" />
+      <button
+        className="admin-logout"
+        type="button"
+        aria-label="خروج از سیستم"
+        onClick={handleLogout}
+        style={{ justifyContent: "center", direction: "rtl" }}
+      >
+        <span style={{ direction: "rtl", textAlign: "center", width: "auto" }}>خروج از سیستم</span>
       </button>
     </aside>
   );

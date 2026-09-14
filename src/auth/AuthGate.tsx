@@ -15,6 +15,8 @@ import {
   setSessionPanelRoles,
 } from "./oidc";
 
+const DEV_PANEL_PREVIEW_KEY = "moon.auth.dev-panel-preview";
+
 function rolesForAccountType(roles: string[], accountType: AccountType) {
   if (accountType === "company") {
     return roles.filter((role) => role === "company");
@@ -25,6 +27,27 @@ function rolesForAccountType(roles: string[], accountType: AccountType) {
   }
 
   return roles.filter((role) => role !== "company" && role !== "startup");
+}
+
+function canUseDevPanelPreview(pathname: string) {
+  if (!import.meta.env.DEV) return false;
+
+  const accountType = sessionStorage.getItem(DEV_PANEL_PREVIEW_KEY) as AccountType | null;
+  if (accountType === "company") {
+    return pathname === "/panel/company" || pathname.startsWith("/panel/company/");
+  }
+  if (accountType === "startup") {
+    return pathname === "/panel/startup" || pathname.startsWith("/panel/startup/");
+  }
+  if (accountType === "internal") {
+    return [
+      "/panel/admin",
+      "/panel/creative-house",
+      "/panel/fund-manager",
+      "/panel/emdad",
+    ].some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+  }
+  return false;
 }
 
 function LoadingScreen({ failed = false }: { failed?: boolean }) {
@@ -135,6 +158,10 @@ export function AuthGate({ children }: { children: ReactNode }) {
   }
 
   if (!pathname.startsWith("/panel/")) {
+    return <>{children}</>;
+  }
+
+  if (canUseDevPanelPreview(pathname)) {
     return <>{children}</>;
   }
 

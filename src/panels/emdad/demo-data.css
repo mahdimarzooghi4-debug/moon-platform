@@ -1,0 +1,84 @@
+.emdad-demo-synergy-list {
+  position: absolute;
+  left: 19px;
+  top: 123px;
+  width: 1120px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  direction: rtl;
+  font-family: "Vazirmatn", sans-serif !important;
+}
+
+.emdad-demo-synergy-row {
+  height: 48px;
+  display: grid;
+  grid-template-columns: 74px 300px 210px 160px 155px 1fr;
+  align-items: center;
+  border: 1px solid #e4ebf1;
+  border-radius: 8px;
+  background: #f8fafc;
+  overflow: hidden;
+  color: #17324d;
+  font-size: 11px;
+}
+
+.emdad-demo-synergy-cell {
+  min-width: 0;
+  padding: 0 10px;
+  text-align: right;
+}
+
+.emdad-demo-synergy-project {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-weight: 500;
+}
+
+.emdad-demo-synergy-project small {
+  color: #60758a;
+  font-size: 9px;
+  font-weight: 400;
+}
+
+.emdad-demo-synergy-status {
+  display: inline-flex;
+  min-width: 118px;
+  height: 28px;
+  padding: 0 10px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.emdad-demo-synergy-status[data-status="pending"] {
+  background: #fff7e8;
+  color: #c27a10;
+}
+
+.emdad-demo-synergy-status[data-status="allocated"] {
+  background: #e8f7ef;
+  color: #159455;
+}
+
+.emdad-demo-synergy-action {
+  width: 148px;
+  height: 34px;
+  border: 1px solid #2094e3;
+  border-radius: 8px;
+  background: #2094e3;
+  color: #fff;
+  font-family: "Vazirmatn", sans-serif !important;
+  font-size: 10px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.emdad-demo-synergy-action[data-kind="history"] {
+  border-color: #d5e0e8;
+  background: #fff;
+  color: #17324d;
+}

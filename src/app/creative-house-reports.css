@@ -1,0 +1,82 @@
+/* Creative-house reports/history: align KPI counters and remove decorative source badges. */
+body .creative-house-dashboard[data-name="ayeneh-reports"] [data-name="project-evaluations-topbar"] > [data-name="status-chip"],
+body .creative-house-dashboard[data-name="ayeneh-evaluation-history"] [data-name="project-evaluations-topbar"] > [data-name="status-chip"] {
+  display: none !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-reports"] [data-name^="milestone-stat-"] {
+  border-radius: 12px !important;
+  box-shadow: none !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-reports"] [data-name^="milestone-stat-"] > [data-name="stat-icon"] {
+  width: 34px !important;
+  height: 34px !important;
+  left: 20px !important;
+  top: 20px !important;
+  border-radius: 10px !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-reports"] [data-name^="milestone-stat-"] > [data-name="stat-icon"] > div {
+  width: 20px !important;
+  height: 20px !important;
+  left: 7px !important;
+  top: 7px !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-reports"] [data-name^="milestone-stat-"] > div:nth-child(2),
+body .creative-house-dashboard[data-name="ayeneh-evaluation-history"] [data-name^="milestone-stat-"] > div:nth-child(2) {
+  top: 29px !important;
+  height: 24px !important;
+  font-size: 13px !important;
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-reports"] [data-name^="milestone-stat-"] > div:nth-child(3),
+body .creative-house-dashboard[data-name="ayeneh-evaluation-history"] [data-name^="milestone-stat-"] > div:nth-child(3) {
+  top: 65px !important;
+  height: 36px !important;
+  font-size: 28px !important;
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-reports"] [data-name^="milestone-stat-"] > div:nth-child(2) > p,
+body .creative-house-dashboard[data-name="ayeneh-reports"] [data-name^="milestone-stat-"] > div:nth-child(3) > p,
+body .creative-house-dashboard[data-name="ayeneh-evaluation-history"] [data-name^="milestone-stat-"] > div:nth-child(2) > p,
+body .creative-house-dashboard[data-name="ayeneh-evaluation-history"] [data-name^="milestone-stat-"] > div:nth-child(3) > p {
+  width: 100% !important;
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-reports"] [data-name^="milestone-stat-"] > div:nth-child(4),
+body .creative-house-dashboard[data-name="ayeneh-reports"] [data-name^="milestone-stat-"] > [data-name="status-accent"] {
+  display: none !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-evaluation-history"] [data-node-id="1801:132"] {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-evaluation-history"] [data-node-id="1801:132"] > p {
+  width: 100% !important;
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+/* Evaluation-history pagination: RTL visual order and arrow direction. */
+body .creative-house-dashboard[data-name="ayeneh-evaluation-history"] [data-node-id="1801:133"] {
+  left: 475px !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-evaluation-history"] [data-node-id="1801:135"] {
+  left: 513px !important;
+}
+
+body .creative-house-dashboard[data-name="ayeneh-evaluation-history"] [data-node-id="1801:138"],
+body .creative-house-dashboard[data-name="ayeneh-evaluation-history"] [data-node-id="1801:140"] {
+  transform: translate(-50%, -50%) scaleX(-1) !important;
+}
