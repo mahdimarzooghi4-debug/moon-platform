@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { AdminSidebar } from "../components/AdminSidebar";
 import "../index.css";
 import "../final-flow.css";
@@ -65,7 +64,6 @@ export default function AdminSettings() {
                 </div>
               ))}
             </div>
-            <Link className="admin-policy-link" to="/panel/admin/settings/access-policy">مشاهده سیاست سطح دسترسی</Link>
           </article>
 
           <article className="admin-settings-card admin-settings-notifications">
