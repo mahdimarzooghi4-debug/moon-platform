@@ -27,7 +27,7 @@ export default function AdminRevenueDetail() {
         </section>
         <aside className="admin-info-note admin-detail-note">درآمد ماه از دو مسیر ثبت می‌شود: کارمزد پلکانی تأمین مالی استارتاپ‌ها و ۳۰٪ از سود صندوق.</aside>
         <section className="admin-form-actions admin-detail-actions">
-          <Link className="admin-users-button admin-users-button-primary" to="/panel/admin/projects/sample">مشاهده پروژه</Link>
+          <Link className="admin-users-button admin-users-button-primary" to="/panel/admin/projects">مشاهده پروژه‌ها</Link>
           <Link className="admin-users-button" to="/panel/admin/revenues">بازگشت</Link>
           <p className="admin-form-actions-note">آخرین رویداد مالی: امروز، ۱۳:۲۰</p>
         </section>
