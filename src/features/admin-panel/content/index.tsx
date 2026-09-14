@@ -3,21 +3,27 @@ import { AdminSidebar } from "../components/AdminSidebar";
 import {
   deleteAdminHeroVideo,
   deleteAdminManagedNews,
+  deleteAdminNewsImage,
   getAdminHeroVideoMeta,
   listAdminManagedNews,
+  loadAdminNewsImage,
   loadPublicHeroVideo,
   saveAdminHeroVideo,
   saveAdminManagedNews,
+  saveAdminNewsImage,
 } from "../management-api";
 import {
   ADMIN_NEWS_CHANGED,
   deleteAdminNews,
   loadHeroVideo,
+  loadNewsImage,
   readAdminNews,
   readHeroVideoMeta,
   removeHeroVideo,
+  removeNewsImage,
   saveAdminNews,
   saveHeroVideo,
+  saveNewsImage,
   type AdminNewsItem,
   type HeroVideoMeta,
 } from "../../../shared/admin-content-store";
@@ -29,6 +35,7 @@ import "./content.css";
 const ASSET_ROOT = "/assets/admin-panel";
 const numberFa = new Intl.NumberFormat("fa-IR");
 const isDevelopment = Boolean(import.meta.env.DEV);
+const allowedNewsImageTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
 
 type ContentTab = "news" | "hero";
 
@@ -62,6 +69,9 @@ export default function AdminContentManagement() {
   const [summary, setSummary] = useState(() => localInitial[0]?.summary ?? "");
   const [status, setStatus] = useState<AdminNewsItem["status"]>(() => localInitial[0]?.status ?? "draft");
   const [creatingNews, setCreatingNews] = useState(false);
+  const [newsImageFile, setNewsImageFile] = useState<File | null>(null);
+  const [newsImageUrl, setNewsImageUrl] = useState("");
+  const [newsImageExists, setNewsImageExists] = useState(false);
   const [heroMeta, setHeroMeta] = useState<HeroVideoMeta | null>(() => readHeroVideoMeta());
   const [heroFile, setHeroFile] = useState<File | null>(null);
   const [heroUrl, setHeroUrl] = useState("");
@@ -127,6 +137,59 @@ export default function AdminContentManagement() {
   }, []);
 
   useEffect(() => {
+    let active = true;
+    let objectUrl = "";
+
+    if (newsImageFile) {
+      objectUrl = URL.createObjectURL(newsImageFile);
+      setNewsImageUrl(objectUrl);
+      setNewsImageExists(true);
+      return () => URL.revokeObjectURL(objectUrl);
+    }
+
+    if (creatingNews || !selectedId) {
+      setNewsImageUrl("");
+      setNewsImageExists(false);
+      return;
+    }
+
+    const applyBlob = (blob: Blob | null) => {
+      if (!active) return false;
+      if (!blob) return false;
+      objectUrl = URL.createObjectURL(blob);
+      setNewsImageUrl(objectUrl);
+      setNewsImageExists(true);
+      return true;
+    };
+
+    const loadPreview = async () => {
+      try {
+        if (applyBlob(await loadAdminNewsImage(selectedId))) return;
+      } catch {
+        // Fall through to local development storage.
+      }
+
+      if (isDevelopment) {
+        try {
+          if (applyBlob(await loadNewsImage(selectedId))) return;
+        } catch {
+          // Keep an empty preview.
+        }
+      }
+      if (active) {
+        setNewsImageUrl("");
+        setNewsImageExists(false);
+      }
+    };
+
+    void loadPreview();
+    return () => {
+      active = false;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [creatingNews, newsImageFile, selectedId]);
+
+  useEffect(() => {
     if (heroFile) {
       const url = URL.createObjectURL(heroFile);
       setHeroUrl(url);
@@ -183,6 +246,7 @@ export default function AdminContentManagement() {
 
   const selectNews = (item: AdminNewsItem) => {
     setCreatingNews(false);
+    setNewsImageFile(null);
     setSelectedId(item.id);
     setTitle(item.title);
     setSummary(item.summary);
@@ -197,7 +261,10 @@ export default function AdminContentManagement() {
     setTitle("");
     setSummary("");
     setStatus("draft");
-    setMessage("خبر جدید؛ عنوان و خلاصه را وارد کنید.");
+    setNewsImageFile(null);
+    setNewsImageUrl("");
+    setNewsImageExists(false);
+    setMessage("خبر جدید؛ عنوان، خلاصه و در صورت نیاز عکس خبر را وارد کنید.");
     window.requestAnimationFrame(() => titleInputRef.current?.focus());
   };
 
@@ -206,28 +273,77 @@ export default function AdminContentManagement() {
       if (!title.trim() || !summary.trim()) setMessage("عنوان و خلاصه خبر الزامی است.");
       return;
     }
+    if (newsImageFile && !allowedNewsImageTypes.has(newsImageFile.type)) {
+      setMessage("عکس خبر باید JPEG، PNG یا WebP باشد.");
+      return;
+    }
+    if (newsImageFile && newsImageFile.size > 8 * 1024 * 1024) {
+      setMessage("حجم عکس خبر باید حداکثر ۸ مگابایت باشد.");
+      return;
+    }
 
     const input = { id: selectedId || `news-${Date.now()}`, title: title.trim(), summary: summary.trim(), status };
     setBusy(true);
     setMessage("");
     try {
       const saved = await saveAdminManagedNews(input);
+      if (newsImageFile) await saveAdminNewsImage(saved.id, newsImageFile);
       setBackendReady(true);
       saveAdminNews({ id: saved.id, title: saved.title, summary: saved.summary, status: saved.status });
       setSelectedId(saved.id);
       setCreatingNews(false);
+      setNewsImageFile(null);
+      if (newsImageFile) setNewsImageExists(true);
       await refreshServerNews();
-      setMessage("خبر در Backend ذخیره شد و محتوای عمومی به‌روزرسانی شد.");
+      setMessage(newsImageFile ? "خبر و عکس آن در Backend ذخیره و محتوای عمومی به‌روزرسانی شد." : "خبر در Backend ذخیره شد و محتوای عمومی به‌روزرسانی شد.");
     } catch {
       if (isDevelopment) {
         const saved = saveAdminNews(input);
+        if (newsImageFile) await saveNewsImage(saved.id, newsImageFile);
         setSelectedId(saved.id);
         setCreatingNews(false);
+        setNewsImageFile(null);
+        if (newsImageFile) setNewsImageExists(true);
         setNews(readAdminNews());
         setBackendReady(false);
-        setMessage("Backend در دسترس نبود؛ خبر فقط در fallback توسعه ذخیره شد.");
+        setMessage(newsImageFile ? "Backend در دسترس نبود؛ خبر و عکس فقط در fallback توسعه ذخیره شدند." : "Backend در دسترس نبود؛ خبر فقط در fallback توسعه ذخیره شد.");
       } else {
         setMessage("ذخیره خبر در سرور انجام نشد.");
+      }
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const clearNewsImage = async () => {
+    if (creatingNews) {
+      setNewsImageFile(null);
+      setNewsImageUrl("");
+      setNewsImageExists(false);
+      return;
+    }
+    if (!selectedId || busy) return;
+
+    setBusy(true);
+    setMessage("");
+    try {
+      await deleteAdminNewsImage(selectedId);
+      if (isDevelopment) await removeNewsImage(selectedId).catch(() => undefined);
+      setNewsImageFile(null);
+      setNewsImageUrl("");
+      setNewsImageExists(false);
+      setBackendReady(true);
+      setMessage("عکس خبر حذف شد.");
+    } catch {
+      if (isDevelopment) {
+        await removeNewsImage(selectedId);
+        setNewsImageFile(null);
+        setNewsImageUrl("");
+        setNewsImageExists(false);
+        setBackendReady(false);
+        setMessage("Backend در دسترس نبود؛ عکس از fallback توسعه حذف شد.");
+      } else {
+        setMessage("حذف عکس خبر در سرور انجام نشد.");
       }
     } finally {
       setBusy(false);
@@ -241,6 +357,10 @@ export default function AdminContentManagement() {
     try {
       await deleteAdminManagedNews(selectedId);
       deleteAdminNews(selectedId);
+      if (isDevelopment) await removeNewsImage(selectedId).catch(() => undefined);
+      setNewsImageFile(null);
+      setNewsImageUrl("");
+      setNewsImageExists(false);
       setBackendReady(true);
       const next = await refreshServerNews();
       const first = next[0];
@@ -249,6 +369,10 @@ export default function AdminContentManagement() {
     } catch {
       if (isDevelopment) {
         deleteAdminNews(selectedId);
+        await removeNewsImage(selectedId).catch(() => undefined);
+        setNewsImageFile(null);
+        setNewsImageUrl("");
+        setNewsImageExists(false);
         applyNews(readAdminNews());
         setBackendReady(false);
         setMessage("Backend در دسترس نبود؛ حذف فقط در fallback توسعه اعمال شد.");
@@ -355,10 +479,11 @@ export default function AdminContentManagement() {
         {tab === "news" ? (
           <section className="admin-content-row">
             <article className="admin-content-editor admin-final-card">
-              <h2>{creatingNews ? "خبر جدید" : "ویرایش خبر"}</h2><p>{creatingNews ? "عنوان، خلاصه و وضعیت انتشار خبر جدید را وارد کنید." : "عنوان، خلاصه و وضعیت انتشار را تغییر دهید."}</p>
+              <h2>{creatingNews ? "خبر جدید" : "ویرایش خبر"}</h2><p>{creatingNews ? "عنوان، خلاصه، عکس و وضعیت انتشار خبر جدید را وارد کنید." : "عنوان، خلاصه، عکس و وضعیت انتشار را تغییر دهید."}</p>
               <div className="admin-mini-field"><label>عنوان خبر</label><input ref={titleInputRef} className="admin-content-input" value={title} onChange={(event) => setTitle(event.target.value)} placeholder="عنوان خبر" /></div>
               <div className="admin-mini-field"><label>وضعیت</label><select className="admin-content-input" value={status} onChange={(event) => setStatus(event.target.value as AdminNewsItem["status"])}><option value="published">منتشرشده</option><option value="draft">پیش‌نویس</option></select></div>
               <div className="admin-mini-field"><label>خلاصه</label><textarea className="admin-content-input admin-content-textarea" value={summary} onChange={(event) => setSummary(event.target.value)} placeholder="خلاصه خبر برای نمایش عمومی" /></div>
+              <div className="admin-mini-field"><label>عکس خبر</label><div className="admin-news-image-editor"><div className="admin-news-image-preview">{newsImageUrl ? <img src={newsImageUrl} alt="پیش‌نمایش عکس خبر" /> : <span>بدون عکس</span>}</div><div className="admin-news-image-controls"><input className="admin-content-file admin-news-image-file" type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => setNewsImageFile(event.target.files?.[0] ?? null)} /><button type="button" onClick={clearNewsImage} disabled={busy || (!newsImageFile && !newsImageExists)}>حذف عکس</button></div></div></div>
               <div className="admin-content-editor-actions"><button className="primary" type="button" onClick={persistNews} disabled={busy}>{busy ? "در حال ذخیره…" : creatingNews ? "ثبت خبر" : "ذخیره تغییرات"}</button><button type="button" onClick={removeNewsItem} disabled={creatingNews || !selectedId || busy}>حذف خبر</button></div>
               {message ? <div className="admin-content-message">{message}</div> : null}
             </article>
@@ -386,7 +511,7 @@ export default function AdminContentManagement() {
           </section>
         )}
 
-        <aside className="admin-content-note"><strong>مدیریت محتوا در یک صفحه</strong><span>اخبار منتشرشده و ویدئوی هیرو در Backend ذخیره می‌شوند و endpoint عمومی برای مصرف سایت دارند؛ store مرورگر فقط fallback محیط توسعه است.</span></aside>
+        <aside className="admin-content-note"><strong>مدیریت محتوا در یک صفحه</strong><span>اخبار، عکس خبر و ویدئوی هیرو در Backend ذخیره می‌شوند و endpoint عمومی برای مصرف سایت دارند؛ store مرورگر فقط fallback محیط توسعه است.</span></aside>
       </main>
       <AdminSidebar active="content" />
     </div>
