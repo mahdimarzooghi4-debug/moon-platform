@@ -1,13 +1,27 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { checkoutAssets, toFaDigits, toLatinDigits } from "./checkout-utils";
 
-export default function ParticipantInfoCard() {
+export type ParticipantIdentity = {
+  mobile: string;
+  name: string;
+  verified: boolean;
+};
+
+export default function ParticipantInfoCard({
+  onChange,
+}: {
+  onChange?: (identity: ParticipantIdentity) => void;
+}) {
   const [phone, setPhone] = useState("09123456789");
   const [otp, setOtp] = useState(["5", "2", "", "", "", ""]);
   const [verified, setVerified] = useState(true);
   const [name, setName] = useState("");
   const otpRefs = useRef<Array<HTMLInputElement | null>>([]);
   const phoneRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    onChange?.({ mobile: phone, name, verified });
+  }, [name, onChange, phone, verified]);
 
   const phoneFa = toFaDigits(phone);
   const maskedPhone = `${phoneFa.slice(0, 4)}•••${phoneFa.slice(-4)}`;
