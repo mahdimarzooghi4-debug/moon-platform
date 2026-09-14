@@ -117,6 +117,7 @@ export default function AdminUsersRoles() {
         <section className="admin-users-table-card">
           <h2>فهرست کاربران سامانه</h2>
           <p>دسترسی سازمانی و نقش هر کاربر از Backend و PostgreSQL خوانده می‌شود.</p>
+          <span className="admin-users-table-count">{loading ? "…" : `${numberFa.format(filteredUsers.length)} کاربر`}</span>
           {failed ? <p className="admin-form-actions-note">دریافت کاربران از سرور ناموفق بود.</p> : null}
           <div className="admin-users-table" role="table" aria-label="فهرست کاربران سامانه">
             <div className="admin-users-row admin-users-table-head" role="row">
@@ -128,7 +129,7 @@ export default function AdminUsersRoles() {
               return (
                 <div className="admin-users-row" role="row" key={user.userId}>
                   <span className="admin-user-cell"><strong>{user.displayName || "کاربر بدون نام"}</strong><small>{membership?.organizationName ?? "بدون سازمان"}</small></span>
-                  <span>{membership?.roleName ?? "بدون نقش"}</span>
+                  <span title={membership?.roleName ?? "بدون نقش"}>{membership?.roleName ?? "بدون نقش"}</span>
                   <span className={`admin-status-pill ${user.isActive ? "admin-status-active" : "admin-status-review"}`}>{user.isActive ? "فعال" : "غیرفعال"}</span>
                   <span title={user.externalSubject}>{user.externalSubject.slice(0, 12)}…</span>
                   <span className={`admin-access-pill ${hasAccess ? "admin-access-full" : "admin-access-limited"}`}>{hasAccess ? "فعال" : "بدون عضویت"}</span>
