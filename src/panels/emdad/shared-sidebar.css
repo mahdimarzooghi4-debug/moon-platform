@@ -1,3 +1,7 @@
+html.emdad-shared-sidebar-active {
+  --emdad-content-gutter: max(0px, calc((100vw - 1440px) / 2));
+}
+
 html.emdad-shared-sidebar-active body {
   min-width: 1440px !important;
 }
@@ -6,8 +10,8 @@ html.emdad-shared-sidebar-active .emdad-panel {
   width: 1216px !important;
   min-width: 1216px !important;
   max-width: 1216px !important;
-  margin-left: auto !important;
-  margin-right: 224px !important;
+  margin-left: var(--emdad-content-gutter) !important;
+  margin-right: calc(224px + var(--emdad-content-gutter)) !important;
   flex: 0 0 1216px !important;
 }
 
