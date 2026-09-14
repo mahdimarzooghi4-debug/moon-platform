@@ -47,8 +47,23 @@ export default function EmdadSharedSidebar({ pathname }: Props) {
 
   useEffect(() => {
     document.documentElement.classList.add("emdad-shared-sidebar-active");
-    return () => document.documentElement.classList.remove("emdad-shared-sidebar-active");
+    return () => {
+      window.setTimeout(() => {
+        if (!document.querySelector(".emdad-shared-sidebar")) {
+          document.documentElement.classList.remove("emdad-shared-sidebar-active");
+        }
+      }, 0);
+    };
   }, []);
+
+  const openCertificateIssuer = () => {
+    const trigger = document.querySelector<HTMLButtonElement>(".emdad-certificate-issuer-trigger");
+    if (trigger) {
+      trigger.click();
+      return;
+    }
+    navigate("/panel/emdad/article172-approvals");
+  };
 
   const logout = () => {
     clearSession();
@@ -91,6 +106,11 @@ export default function EmdadSharedSidebar({ pathname }: Props) {
 
       <button type="button" data-name="article-172-approvals-nav" className="emdad-shared-nav" data-active={active === "article172"} onClick={() => navigate("/panel/emdad/article172-approvals")}>
         <span>گواهی ماده ۱۷۲</span>
+        <span className="emdad-shared-icon"><img src={certificateIcon} alt="" /></span>
+      </button>
+
+      <button type="button" data-name="certificate-issuer-nav" className="emdad-shared-nav emdad-shared-issuer" onClick={openCertificateIssuer}>
+        <span>تنظیم مسئول و امضای گواهی</span>
         <span className="emdad-shared-icon"><img src={certificateIcon} alt="" /></span>
       </button>
 
