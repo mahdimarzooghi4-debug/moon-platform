@@ -52,15 +52,29 @@ function selectedById(key: string, selectedKey: string) {
   return readArray(key).find((item) => item.id === selectedId) ?? null;
 }
 
-function openPayment(draft: PaymentDraft, event: MouseEvent) {
+function stopAction(event: MouseEvent) {
   event.preventDefault();
   event.stopImmediatePropagation();
+}
+
+function openPayment(draft: PaymentDraft, event: MouseEvent) {
+  stopAction(event);
   window.dispatchEvent(new CustomEvent("moon:emdad-open-payment-registration", { detail: draft }));
 }
 
-function releaseDraft(): PaymentDraft | null {
-  const request = selectedById(RELEASE_REQUESTS_KEY, RELEASE_SELECTED_KEY);
-  if (!request || request.status !== "pending" || typeof request.id !== "string") return null;
+function markApproved(key: string, id: string, changedEvent: string) {
+  const updated = readArray(key).map((item) =>
+    item.id === id ? { ...item, emdadApprovedAt: new Date().toISOString() } : item,
+  );
+  writeArray(key, updated, changedEvent);
+  requestAnimationFrame(decorateContextActions);
+}
+
+function releasePaymentDraft(request: Record<string, unknown>): PaymentDraft | null {
+  if (typeof request.id !== "string") return null;
+  const approved = typeof request.emdadApprovedAt === "string";
+  const awaitingPayment = (request.status === "pending" && approved) || (request.status === "released" && !request.receipt);
+  if (!awaitingPayment) return null;
   return {
     source: "company",
     project: normalize(String(request.project ?? "")),
@@ -68,7 +82,7 @@ function releaseDraft(): PaymentDraft | null {
     amount: numberValue(request.amount),
     note: "آزادسازی مرحله تأییدشده توسط خانه خلاق",
     title: "ثبت پرداخت آزادسازی وجه",
-    description: "پس از تأیید آزادسازی، مشخصات پرداخت امداد و شماره رسید را ثبت کنید.",
+    description: "آزادسازی تأیید شده است؛ مشخصات پرداخت امداد و شماره رسید را ثبت کنید.",
     contextType: "release",
     contextId: request.id,
   };
@@ -94,9 +108,11 @@ function fundPaymentDraft(modal: HTMLElement): PaymentDraft | null {
   };
 }
 
-function synergyDraft(): PaymentDraft | null {
-  const request = selectedById(SYNERGY_REQUESTS_KEY, SYNERGY_SELECTED_KEY);
-  if (!request || request.status !== "pending" || typeof request.id !== "string") return null;
+function synergyPaymentDraft(request: Record<string, unknown>): PaymentDraft | null {
+  if (typeof request.id !== "string") return null;
+  const approved = typeof request.emdadApprovedAt === "string";
+  const awaitingPayment = (request.status === "pending" && approved) || (request.status === "allocated" && !request.receipt);
+  if (!awaitingPayment) return null;
   return {
     source: "company",
     project: normalize(String(request.project ?? "")),
@@ -104,10 +120,56 @@ function synergyDraft(): PaymentDraft | null {
     amount: numberValue(request.fundShare),
     note: `شرکت: ${normalize(String(request.company ?? ""))}`,
     title: "ثبت پرداخت سهم هم‌افزایی صندوق",
-    description: "پس از تأیید تخصیص، واریز سهم ۱۰٪ به صندوق و شماره رسید را در همین مرحله ثبت کنید.",
+    description: "تخصیص تأیید شده است؛ واریز سهم ۱۰٪ به صندوق و شماره رسید را در همین مرحله ثبت کنید.",
     contextType: "synergy",
     contextId: request.id,
   };
+}
+
+function setButtonText(button: HTMLElement, text: string) {
+  const paragraph = button.querySelector<HTMLElement>("p");
+  if (paragraph) paragraph.textContent = text;
+  else button.textContent = text;
+}
+
+function decorateContextActions() {
+  if (window.location.pathname === "/panel/emdad/release-requests/detail") {
+    const request = selectedById(RELEASE_REQUESTS_KEY, RELEASE_SELECTED_KEY);
+    const button = document.querySelector<HTMLElement>(
+      '[data-name="emdad-release-request-detail"] [data-name="approve-release-button"]',
+    );
+    if (request && button) {
+      const approved = typeof request.emdadApprovedAt === "string";
+      if ((request.status === "pending" && approved) || (request.status === "released" && !request.receipt)) {
+        button.dataset.releaseComplete = "false";
+        button.style.setProperty("pointer-events", "auto", "important");
+        button.style.removeProperty("opacity");
+        setButtonText(button, "ثبت پرداخت و رسید");
+      } else if (request.status === "released" && request.receipt) {
+        button.dataset.releaseComplete = "true";
+        setButtonText(button, "پرداخت ثبت شد");
+      }
+    }
+  }
+
+  if (window.location.pathname === "/panel/emdad/fund-synergy/allocation") {
+    const request = selectedById(SYNERGY_REQUESTS_KEY, SYNERGY_SELECTED_KEY);
+    const button = document.querySelector<HTMLElement>(
+      '[data-name="emdad-fund-synergy-allocation"] [data-name="approve-final"]',
+    );
+    if (request && button) {
+      const approved = typeof request.emdadApprovedAt === "string";
+      if ((request.status === "pending" && approved) || (request.status === "allocated" && !request.receipt)) {
+        button.removeAttribute("data-moon-allocated");
+        button.style.setProperty("pointer-events", "auto", "important");
+        button.style.removeProperty("opacity");
+        setButtonText(button, "ثبت پرداخت و رسید");
+      } else if (request.status === "allocated" && request.receipt) {
+        button.dataset.moonAllocated = "true";
+        setButtonText(button, "پرداخت ثبت شد");
+      }
+    }
+  }
 }
 
 window.addEventListener(
@@ -121,7 +183,14 @@ window.addEventListener(
       '[data-name="emdad-release-request-detail"] [data-name="approve-release-button"]',
     );
     if (releaseApprove) {
-      const draft = releaseDraft();
+      const request = selectedById(RELEASE_REQUESTS_KEY, RELEASE_SELECTED_KEY);
+      if (!request || typeof request.id !== "string") return;
+      if (request.status === "pending" && typeof request.emdadApprovedAt !== "string") {
+        stopAction(event);
+        markApproved(RELEASE_REQUESTS_KEY, request.id, "moon:creative-house-release-requests-changed");
+        return;
+      }
+      const draft = releasePaymentDraft(request);
       if (draft) openPayment(draft, event);
       return;
     }
@@ -138,7 +207,14 @@ window.addEventListener(
       '[data-name="emdad-fund-synergy-allocation"] [data-name="approve-final"]',
     );
     if (synergyApprove) {
-      const draft = synergyDraft();
+      const request = selectedById(SYNERGY_REQUESTS_KEY, SYNERGY_SELECTED_KEY);
+      if (!request || typeof request.id !== "string") return;
+      if (request.status === "pending" && typeof request.emdadApprovedAt !== "string") {
+        stopAction(event);
+        markApproved(SYNERGY_REQUESTS_KEY, request.id, "moon:fund-synergy-requests-changed");
+        return;
+      }
+      const draft = synergyPaymentDraft(request);
       if (draft) openPayment(draft, event);
     }
   },
@@ -168,6 +244,7 @@ window.addEventListener("moon:emdad-payment-recorded", (event) => {
         : item,
     );
     writeArray(RELEASE_REQUESTS_KEY, updated, "moon:creative-house-release-requests-changed");
+    requestAnimationFrame(decorateContextActions);
     return;
   }
 
@@ -197,4 +274,39 @@ window.addEventListener("moon:emdad-payment-recorded", (event) => {
       : item,
   );
   writeArray(SYNERGY_REQUESTS_KEY, updated, "moon:fund-synergy-requests-changed");
+  requestAnimationFrame(decorateContextActions);
 });
+
+window.addEventListener("popstate", () => requestAnimationFrame(decorateContextActions));
+window.addEventListener("moon:creative-house-release-requests-changed", () =>
+  requestAnimationFrame(decorateContextActions),
+);
+window.addEventListener("moon:fund-synergy-requests-changed", () => requestAnimationFrame(decorateContextActions));
+
+const start = () => {
+  decorateContextActions();
+  if (!document.body) return;
+  let scheduled = false;
+  new MutationObserver((mutations) => {
+    const relevant = mutations.some((mutation) =>
+      Array.from(mutation.addedNodes).some((node) => {
+        if (!(node instanceof Element)) return false;
+        return (
+          node.matches('[data-name="emdad-release-request-detail"]') ||
+          node.matches('[data-name="emdad-fund-synergy-allocation"]') ||
+          Boolean(node.querySelector('[data-name="emdad-release-request-detail"]')) ||
+          Boolean(node.querySelector('[data-name="emdad-fund-synergy-allocation"]'))
+        );
+      }),
+    );
+    if (!relevant || scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(() => {
+      scheduled = false;
+      decorateContextActions();
+    });
+  }).observe(document.body, { childList: true, subtree: true });
+};
+
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, { once: true });
+else start();
