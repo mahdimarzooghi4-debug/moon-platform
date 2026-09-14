@@ -18,6 +18,10 @@ import {
 const DEV_PANEL_PREVIEW_KEY = "moon.auth.dev-panel-preview";
 const env = import.meta.env as Record<string, string | undefined>;
 const DEMO_MODE = env.VITE_DEMO_MODE === "true";
+const demoPathname = () =>
+  env.VITE_GITHUB_PAGES === "true"
+    ? window.location.hash.slice(1).split("?")[0] || "/"
+    : window.location.pathname;
 
 function rolesForAccountType(roles: string[], accountType: AccountType) {
   if (accountType === "company") {
@@ -157,7 +161,7 @@ function ProtectedPanelGate({ children, pathname }: { children: ReactNode; pathn
 }
 
 export function AuthGate({ children }: { children: ReactNode }) {
-  const pathname = window.location.pathname;
+  const pathname = demoPathname();
 
   if (pathname === "/auth/callback") {
     return <CallbackScreen />;
