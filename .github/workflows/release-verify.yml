@@ -1,0 +1,67 @@
+name: Release Verify
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run build
+
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_DB: moon
+          POSTGRES_USER: moon
+          POSTGRES_PASSWORD: moon-ci-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U moon -d moon"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+      rabbitmq:
+        image: rabbitmq:4-management
+        env:
+          RABBITMQ_DEFAULT_USER: moon
+          RABBITMQ_DEFAULT_PASS: moon-ci-only
+        ports:
+          - 5672:5672
+        options: >-
+          --health-cmd "rabbitmq-diagnostics -q ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      TEST_POSTGRES: Host=localhost;Port=5432;Database=moon;Username=moon;Password=moon-ci-only
+      TEST_RABBITMQ_HOST: localhost
+      TEST_RABBITMQ_USER: moon
+      TEST_RABBITMQ_PASSWORD: moon-ci-only
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - run: dotnet tool install --global dotnet-ef --version 10.0.12
+      - working-directory: backend
+        run: dotnet restore Moon.Platform.slnx
+      - working-directory: backend
+        run: dotnet build Moon.Platform.slnx -c Release --no-restore -warnaserror
+      - working-directory: backend
+        run: dotnet ef migrations has-pending-model-changes --project src/Moon.Platform.Api/Moon.Platform.Api.csproj --startup-project src/Moon.Platform.Api/Moon.Platform.Api.csproj
+      - working-directory: backend
+        run: dotnet test Moon.Platform.slnx -c Release --no-build --no-restore --logger "console;verbosity=normal"
