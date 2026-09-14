@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { AdminSidebar } from "../components/AdminSidebar";
 import { listAdminOrganizations, type AdminOrganization } from "../api";
 import { downloadCsv } from "../export-csv";
+import { listAdminOrganizationProfiles, type AdminOrganizationProfile } from "../management-api";
 import {
   ADMIN_ORGANIZATION_OVERRIDES_CHANGED,
   ADMIN_ORGANIZATION_OVERRIDES_KEY,
@@ -48,6 +49,7 @@ function organizationStatusMatches(item: AdminOrganization, statusFilter: string
 
 export default function AdminOrganizations() {
   const [organizations, setOrganizations] = useState<AdminOrganization[]>([]);
+  const [serverProfiles, setServerProfiles] = useState<AdminOrganizationProfile[]>([]);
   const [overrides, setOverrides] = useState<AdminOrganizationOverride[]>(() => readOrganizationOverrides());
   const [provisioned, setProvisioned] = useState<AdminProvisioningRecord[]>([]);
   const [approvedStartups, setApprovedStartups] = useState<ApprovedStartupAccessQueueItem[]>([]);
@@ -67,15 +69,28 @@ export default function AdminOrganizations() {
       if (event.key === APPROVED_STARTUP_ACCESS_QUEUE_KEY) refreshApprovedStartups();
       if (event.key === ADMIN_ORGANIZATION_OVERRIDES_KEY) refreshOverrides();
     };
-    refreshProvisioned(); refreshApprovedStartups(); refreshOverrides();
+
+    refreshProvisioned();
+    refreshApprovedStartups();
+    refreshOverrides();
     window.addEventListener(ADMIN_PROVISIONING_CHANGED, refreshProvisioned);
     window.addEventListener(APPROVED_STARTUP_ACCESS_QUEUE_CHANGED, refreshApprovedStartups);
     window.addEventListener(ADMIN_ORGANIZATION_OVERRIDES_CHANGED, refreshOverrides);
     window.addEventListener("storage", handleStorage);
-    listAdminOrganizations()
-      .then((items) => { if (!active) return; setOrganizations(items); setFailed(false); })
-      .catch(() => { if (active) setFailed(true); })
+
+    Promise.allSettled([listAdminOrganizations(), listAdminOrganizationProfiles()])
+      .then(([organizationsResult, profilesResult]) => {
+        if (!active) return;
+        if (organizationsResult.status === "fulfilled") {
+          setOrganizations(organizationsResult.value);
+          setFailed(false);
+        } else {
+          setFailed(true);
+        }
+        if (profilesResult.status === "fulfilled") setServerProfiles(profilesResult.value);
+      })
       .finally(() => { if (active) setLoading(false); });
+
     return () => {
       active = false;
       window.removeEventListener(ADMIN_PROVISIONING_CHANGED, refreshProvisioned);
@@ -85,12 +100,21 @@ export default function AdminOrganizations() {
     };
   }, []);
 
-  const overrideMap = useMemo(() => new Map(overrides.map((item) => [item.organizationId, item])), [overrides]);
+  const profileMap = useMemo(() => {
+    const map = new Map<string, { name?: string; manager?: string; mobile?: string; activityArea?: string }>();
+    overrides.forEach((item) => map.set(item.organizationId, item));
+    serverProfiles.forEach((item) => map.set(item.organizationId, item));
+    return map;
+  }, [overrides, serverProfiles]);
+
   const visibleOrganizations = useMemo(
-    () => organizations.filter((item) => item.type === "company" || item.type === "startup").map((item) => ({ ...item, name: overrideMap.get(item.organizationId)?.name || item.name })),
-    [organizations, overrideMap],
+    () => organizations
+      .filter((item) => item.type === "company" || item.type === "startup")
+      .map((item) => ({ ...item, name: profileMap.get(item.organizationId)?.name || item.name })),
+    [organizations, profileMap],
   );
   const pendingStartups = useMemo(() => uniquePendingStartups(provisioned), [provisioned]);
+
   const awaitingAccessStartups = useMemo(() => {
     const knownStartupNames = new Set<string>();
     visibleOrganizations.filter((organization) => organization.type === "startup").forEach((organization) => knownStartupNames.add(normalize(organization.name)));
@@ -101,11 +125,11 @@ export default function AdminOrganizations() {
   const filtered = useMemo(() => {
     const normalized = normalize(query);
     return visibleOrganizations.filter((item) => {
-      const override = overrideMap.get(item.organizationId);
-      const matchesQuery = !normalized || normalize(item.name).includes(normalized) || item.organizationId.includes(normalized) || normalize(override?.manager ?? "").includes(normalized);
+      const profile = profileMap.get(item.organizationId);
+      const matchesQuery = !normalized || normalize(item.name).includes(normalized) || item.organizationId.includes(normalized) || normalize(profile?.manager ?? "").includes(normalized) || normalize(profile?.activityArea ?? "").includes(normalized);
       return matchesQuery && (!typeFilter || item.type === typeFilter) && organizationStatusMatches(item, statusFilter);
     });
-  }, [overrideMap, query, statusFilter, typeFilter, visibleOrganizations]);
+  }, [profileMap, query, statusFilter, typeFilter, visibleOrganizations]);
 
   const filteredPendingStartups = useMemo(() => {
     const normalized = normalize(query);
@@ -123,12 +147,16 @@ export default function AdminOrganizations() {
 
   const exportOrganizations = () => {
     const rows = [
-      ...filtered.map((item) => ({ name: item.name, type: typeLabel[item.type] ?? item.type, status: item.type === "company" ? "فعال" : item.status === "active" ? "فعال" : "غیرفعال", manager: overrideMap.get(item.organizationId)?.manager ?? "", id: item.organizationId })),
+      ...filtered.map((item) => ({ name: item.name, type: typeLabel[item.type] ?? item.type, status: item.type === "company" ? "فعال" : item.status === "active" ? "فعال" : "غیرفعال", manager: profileMap.get(item.organizationId)?.manager ?? "", id: item.organizationId })),
       ...filteredPendingStartups.map((item) => ({ name: item.startupName, type: "استارتاپ", status: "در انتظار فعال‌سازی", manager: item.displayName, id: item.id })),
       ...filteredAwaitingAccess.map((item) => ({ name: item.startupName, type: "استارتاپ", status: "منتظر ایجاد دسترسی", manager: item.managerName, id: item.id })),
     ];
     downloadCsv("admin-organizations", [
-      { label: "نام", value: (item) => item.name }, { label: "نوع", value: (item) => item.type }, { label: "وضعیت", value: (item) => item.status }, { label: "مسئول", value: (item) => item.manager }, { label: "شناسه", value: (item) => item.id },
+      { label: "نام", value: (item) => item.name },
+      { label: "نوع", value: (item) => item.type },
+      { label: "وضعیت", value: (item) => item.status },
+      { label: "مسئول", value: (item) => item.manager },
+      { label: "شناسه", value: (item) => item.id },
     ], rows);
   };
 
@@ -162,13 +190,15 @@ export default function AdminOrganizations() {
             {filteredAwaitingAccess.map((item) => <div className="admin-users-row" key={`approved-${item.id}`}><div className="admin-user-cell"><strong>{item.startupName}</strong><small>{item.activityArea || "حوزه فعالیت ثبت نشده"}</small></div><span>استارتاپ</span><span className="admin-status-pill admin-status-review">تأیید خانه خلاق؛ منتظر دسترسی</span><span>۰</span><span className="admin-access-pill admin-access-limited">{item.managerName || "مدیر تعیین نشده"}</span><Link className="admin-user-action" to={`/panel/admin/users/new?approvedStartupId=${encodeURIComponent(item.id)}`}>ایجاد دسترسی</Link></div>)}
             {filteredPendingStartups.map((record) => <div className="admin-users-row" key={record.id}><div className="admin-user-cell"><strong>{record.startupName}</strong><small>{record.activityArea || "حوزه فعالیت ثبت نشده"}</small></div><span>استارتاپ</span><span className="admin-status-pill admin-status-review">در انتظار فعال‌سازی</span><span>۰</span><span className="admin-access-pill admin-access-limited">{record.displayName}</span><Link className="admin-user-action" to="/panel/admin/users">مشاهده دعوت</Link></div>)}
             {!loading && filtered.map((item) => {
-              const isCompany = item.type === "company"; const isActive = isCompany || item.status === "active"; const override = overrideMap.get(item.organizationId);
-              return <div className="admin-users-row" key={item.organizationId}><div className="admin-user-cell"><strong>{item.name}</strong><small>{override?.activityArea || item.organizationId}</small></div><span>{typeLabel[item.type] ?? item.type}</span><span className={`admin-status-pill ${isActive ? "admin-status-active" : "admin-status-review"}`}>{isCompany ? "فعال؛ بدون نیاز به فعال‌سازی" : item.status === "active" ? "فعال" : "غیرفعال"}</span><span>{numberFa.format(item.activeMemberCount)}</span><span className="admin-access-pill admin-access-full">{override?.manager || `${item.organizationId.slice(0, 8)}…`}</span><Link className="admin-user-action" to={`/panel/admin/organizations/${item.organizationId}`}>{isCompany ? "مشاهده" : "مشاهده / ویرایش"}</Link></div>;
+              const isCompany = item.type === "company";
+              const isActive = isCompany || item.status === "active";
+              const profile = profileMap.get(item.organizationId);
+              return <div className="admin-users-row" key={item.organizationId}><div className="admin-user-cell"><strong>{item.name}</strong><small>{profile?.activityArea || item.organizationId}</small></div><span>{typeLabel[item.type] ?? item.type}</span><span className={`admin-status-pill ${isActive ? "admin-status-active" : "admin-status-review"}`}>{isCompany ? "فعال؛ بدون نیاز به فعال‌سازی" : item.status === "active" ? "فعال" : "غیرفعال"}</span><span>{numberFa.format(item.activeMemberCount)}</span><span className="admin-access-pill admin-access-full">{profile?.manager || `${item.organizationId.slice(0, 8)}…`}</span><Link className="admin-user-action" to={`/panel/admin/organizations/${item.organizationId}`}>{isCompany ? "مشاهده" : "مشاهده / ویرایش"}</Link></div>;
             })}
             <div className="admin-pagination"><span>{loading ? "در حال دریافت…" : `نمایش ${numberFa.format(totalFiltered)} حساب`}</span><div className="admin-pagination-controls"><button className="admin-page-control" type="button" disabled>‹</button><span className="admin-page-number">۱</span><button className="admin-page-control" type="button" disabled>›</button></div></div>
           </div>
         </section>
-        <aside className="admin-info-note">شرکت‌ها فقط برای مشاهده مدیریتی هستند و فعال‌سازی جداگانه ندارند. استارتاپ‌ها قابل ویرایش‌اند و تغییراتشان در فهرست و جزئیات یکسان نمایش داده می‌شود.</aside>
+        <aside className="admin-info-note">شرکت‌ها فقط برای مشاهده مدیریتی هستند. استارتاپ‌ها علاوه بر وضعیت و دسترسی، پروفایل مدیریتی قابل ویرایش دارند و اطلاعات ذخیره‌شده Backend در همین فهرست نمایش داده می‌شود.</aside>
       </main>
       <AdminSidebar active="organizations" />
     </div>
