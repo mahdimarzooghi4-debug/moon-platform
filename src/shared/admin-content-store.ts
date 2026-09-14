@@ -57,11 +57,10 @@ function validNews(value: unknown): value is AdminNewsItem {
 export function readAdminNews(): AdminNewsItem[] {
   try {
     const raw = localStorage.getItem(ADMIN_NEWS_KEY);
-    if (!raw) return defaultNews;
+    if (raw === null) return defaultNews;
     const parsed = JSON.parse(raw) as unknown;
     if (!Array.isArray(parsed)) return defaultNews;
-    const valid = parsed.filter(validNews);
-    return valid.length ? valid : defaultNews;
+    return parsed.filter(validNews);
   } catch {
     return defaultNews;
   }
