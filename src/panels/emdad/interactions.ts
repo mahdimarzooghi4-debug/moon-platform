@@ -4,6 +4,13 @@ const EMDAD_ROOT = "/panel/emdad";
 const DEV_PANEL_PREVIEW_KEY = "moon.auth.dev-panel-preview";
 const SIDEBAR_SELECTOR = '.emdad-panel [data-name="colored-sidebar"]';
 const NAV_ITEM_SELECTOR = '[data-name$="-nav"], a, button';
+const DASHBOARD_SELECTOR = '[data-name="emdad-main-dashboard"]';
+const DASHBOARD_ACTION_SELECTOR = [
+  '[data-name="action-button"]',
+  '[data-name="detail-button"]',
+  '[data-name="view-all-fund-synergy"]',
+  '[data-name="fund-synergy-kpi"] [data-name="kpi-top"]',
+].join(", ");
 
 const NAV_ROUTES: Record<string, string> = {
   "dashboard-nav": EMDAD_ROOT,
@@ -32,6 +39,16 @@ const LABEL_ROUTES = new Map<string, string>([
   ["بازگشت‌های صندوق", `${EMDAD_ROOT}/fund-returns`],
 ]);
 
+const DASHBOARD_ACTION_ROUTES = new Map<string, string>([
+  ["مشاهده همه درخواست‌های آزادسازی", `${EMDAD_ROOT}/release-requests`],
+  ["بررسی درخواست", `${EMDAD_ROOT}/release-requests/detail`],
+  ["مشاهده همه درخواست‌های ماده ۱۷۲", `${EMDAD_ROOT}/article172-approvals`],
+  ["بررسی پرونده", `${EMDAD_ROOT}/article172-approvals/detail`],
+  ["ثبت تخصیص", `${EMDAD_ROOT}/fund-synergy/allocation`],
+  ["مشاهده همه هم‌افزایی‌ها", `${EMDAD_ROOT}/fund-synergy`],
+  ["هم‌افزایی صندوق", `${EMDAD_ROOT}/fund-synergy`],
+]);
+
 function normalize(value: string | null | undefined) {
   return (value ?? "").replace(/\s+/g, " ").trim();
 }
@@ -40,6 +57,10 @@ function routeForNav(nav: HTMLElement) {
   const name = nav.dataset.name ?? "";
   if (NAV_ROUTES[name]) return NAV_ROUTES[name];
   return LABEL_ROUTES.get(normalize(nav.textContent)) ?? null;
+}
+
+function routeForDashboardAction(action: HTMLElement) {
+  return DASHBOARD_ACTION_ROUTES.get(normalize(action.textContent)) ?? null;
 }
 
 function isActiveRoute(pathname: string, route: string) {
@@ -87,6 +108,25 @@ function decorateSidebar(root: ParentNode = document) {
   });
 }
 
+function decorateDashboard(root: ParentNode = document) {
+  if (window.location.pathname !== EMDAD_ROOT && window.location.pathname !== `${EMDAD_ROOT}/`) return;
+
+  root.querySelectorAll<HTMLElement>(`${DASHBOARD_SELECTOR} ${DASHBOARD_ACTION_SELECTOR}`).forEach((action) => {
+    const route = routeForDashboardAction(action);
+    if (!route) return;
+
+    action.style.cursor = "pointer";
+    action.setAttribute("aria-label", normalize(action.textContent));
+
+    if (action instanceof HTMLAnchorElement) {
+      action.href = route;
+    } else {
+      action.setAttribute("role", "link");
+      action.tabIndex = 0;
+    }
+  });
+}
+
 function activateNav(nav: HTMLElement, event?: Event) {
   if (nav.dataset.name === "logout-nav" || normalize(nav.textContent) === "خروج از سیستم") {
     event?.preventDefault();
@@ -103,10 +143,24 @@ function activateNav(nav: HTMLElement, event?: Event) {
   return true;
 }
 
+function activateDashboardAction(action: HTMLElement, event?: Event) {
+  const route = routeForDashboardAction(action);
+  if (!route) return false;
+  event?.preventDefault();
+  navigate(route);
+  return true;
+}
+
 function findSidebarNav(target: Element) {
   const nav = target.closest<HTMLElement>(NAV_ITEM_SELECTOR);
   if (!nav) return null;
   return nav.closest(SIDEBAR_SELECTOR) ? nav : null;
+}
+
+function findDashboardAction(target: Element) {
+  const action = target.closest<HTMLElement>(DASHBOARD_ACTION_SELECTOR);
+  if (!action) return null;
+  return action.closest(DASHBOARD_SELECTOR) ? action : null;
 }
 
 document.addEventListener(
@@ -125,9 +179,15 @@ document.addEventListener(
 
     const target = event.target;
     if (!(target instanceof Element)) return;
+
     const nav = findSidebarNav(target);
-    if (!nav) return;
-    if (activateNav(nav, event)) event.stopPropagation();
+    if (nav) {
+      if (activateNav(nav, event)) event.stopPropagation();
+      return;
+    }
+
+    const dashboardAction = findDashboardAction(target);
+    if (dashboardAction && activateDashboardAction(dashboardAction, event)) event.stopPropagation();
   },
   true,
 );
@@ -138,38 +198,55 @@ document.addEventListener(
     if (event.key !== "Enter" && event.key !== " ") return;
     const target = event.target;
     if (!(target instanceof Element)) return;
+
     const nav = findSidebarNav(target);
-    if (!nav || nav instanceof HTMLAnchorElement) return;
-    if (activateNav(nav, event)) event.stopPropagation();
+    if (nav && !(nav instanceof HTMLAnchorElement)) {
+      if (activateNav(nav, event)) event.stopPropagation();
+      return;
+    }
+
+    const dashboardAction = findDashboardAction(target);
+    if (dashboardAction && !(dashboardAction instanceof HTMLAnchorElement)) {
+      if (activateDashboardAction(dashboardAction, event)) event.stopPropagation();
+    }
   },
   true,
 );
 
-window.addEventListener("popstate", () => requestAnimationFrame(() => decorateSidebar()));
+window.addEventListener("popstate", () =>
+  requestAnimationFrame(() => {
+    decorateSidebar();
+    decorateDashboard();
+  }),
+);
 
 const start = () => {
   decorateSidebar();
+  decorateDashboard();
 
   if (!document.body) return;
   let scheduled = false;
   new MutationObserver((mutations) => {
-    const sidebarAdded = mutations.some((mutation) =>
+    const relevantNodeAdded = mutations.some((mutation) =>
       Array.from(mutation.addedNodes).some((node) => {
         if (!(node instanceof Element)) return false;
         return (
           node.matches(".emdad-panel") ||
           node.matches('[data-name="colored-sidebar"]') ||
+          node.matches(DASHBOARD_SELECTOR) ||
           Boolean(node.querySelector(".emdad-panel")) ||
-          Boolean(node.querySelector('[data-name="colored-sidebar"]'))
+          Boolean(node.querySelector('[data-name="colored-sidebar"]')) ||
+          Boolean(node.querySelector(DASHBOARD_SELECTOR))
         );
       }),
     );
 
-    if (!sidebarAdded || scheduled) return;
+    if (!relevantNodeAdded || scheduled) return;
     scheduled = true;
     requestAnimationFrame(() => {
       scheduled = false;
       decorateSidebar();
+      decorateDashboard();
     });
   }).observe(document.body, { childList: true, subtree: true });
 };
