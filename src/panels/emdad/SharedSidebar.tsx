@@ -21,20 +21,17 @@ type Section =
   | "fund-payments"
   | "article172"
   | "synergy"
-  | "synergy-history"
   | "payment-history"
-  | "reports"
-  | "fund-returns";
+  | "reports";
 
 function activeSection(pathname: string): Section {
   if (pathname.startsWith("/panel/emdad/release-requests")) return "release";
   if (pathname.startsWith("/panel/emdad/fund-payments")) return "fund-payments";
   if (pathname.startsWith("/panel/emdad/article172-approvals")) return "article172";
-  if (pathname.startsWith("/panel/emdad/fund-synergy/history")) return "synergy-history";
   if (pathname.startsWith("/panel/emdad/fund-synergy")) return "synergy";
+  if (pathname.startsWith("/panel/emdad/fund-returns")) return "synergy";
   if (pathname.startsWith("/panel/emdad/payment-history")) return "payment-history";
   if (pathname.startsWith("/panel/emdad/financial-reports")) return "reports";
-  if (pathname.startsWith("/panel/emdad/fund-returns")) return "fund-returns";
   return "dashboard";
 }
 
@@ -77,12 +74,12 @@ export default function EmdadSharedSidebar({ pathname }: Props) {
       </button>
 
       <button type="button" data-name="release-requests-nav" className="emdad-shared-nav" data-active={active === "release"} onClick={() => navigate("/panel/emdad/release-requests")}>
-        <span>درخواست‌های آزادسازی</span>
+        <span>آزادسازی وجه</span>
         <span className="emdad-shared-icon"><img src={releaseIcon} alt="" /></span>
       </button>
 
       <button type="button" data-name="fund-payments-nav" className="emdad-shared-nav" data-active={active === "fund-payments"} onClick={() => navigate("/panel/emdad/fund-payments")}>
-        <span>پرداخت‌های تأییدشده صندوق</span>
+        <span>پرداخت از محل صندوق</span>
         <span className="emdad-shared-icon emdad-shared-inline-icon" aria-hidden="true">
           <svg viewBox="0 0 18 18" focusable="false">
             <path d="M3 9h10" />
@@ -93,18 +90,13 @@ export default function EmdadSharedSidebar({ pathname }: Props) {
       </button>
 
       <button type="button" data-name="article-172-approvals-nav" className="emdad-shared-nav" data-active={active === "article172"} onClick={() => navigate("/panel/emdad/article172-approvals")}>
-        <span>تأیید گواهی ماده ۱۷۲</span>
+        <span>گواهی ماده ۱۷۲</span>
         <span className="emdad-shared-icon"><img src={certificateIcon} alt="" /></span>
       </button>
 
       <button type="button" data-name="fund-synergy-nav" className="emdad-shared-nav" data-active={active === "synergy"} onClick={() => navigate("/panel/emdad/fund-synergy")}>
         <span>هم‌افزایی صندوق</span>
         <span className="emdad-shared-icon"><img src={synergyIcon} alt="" /></span>
-      </button>
-
-      <button type="button" data-name="fund-synergy-history-nav" className="emdad-shared-nav" data-active={active === "synergy-history"} onClick={() => navigate("/panel/emdad/fund-synergy/history")}>
-        <span>سوابق هم‌افزایی صندوق</span>
-        <span className="emdad-shared-icon"><img src={historyIcon} alt="" /></span>
       </button>
 
       <button type="button" data-name="payment-history-nav" className="emdad-shared-nav" data-active={active === "payment-history"} onClick={() => navigate("/panel/emdad/payment-history")}>
@@ -115,16 +107,6 @@ export default function EmdadSharedSidebar({ pathname }: Props) {
       <button type="button" data-name="financial-reports-nav" className="emdad-shared-nav" data-active={active === "reports"} onClick={() => navigate("/panel/emdad/financial-reports")}>
         <span>گزارش‌های مالی</span>
         <span className="emdad-shared-icon"><img src={reportsIcon} alt="" /></span>
-      </button>
-
-      <button type="button" data-name="fund-returns-nav" className="emdad-shared-nav" data-active={active === "fund-returns"} onClick={() => navigate("/panel/emdad/fund-returns")}>
-        <span>بازگشت‌های صندوق</span>
-        <span className="emdad-shared-icon emdad-shared-inline-icon" aria-hidden="true">
-          <svg viewBox="0 0 18 18" focusable="false">
-            <path d="M6 5 3 8l3 3" />
-            <path d="M3.5 8H11a4 4 0 0 1 0 8H8" />
-          </svg>
-        </span>
       </button>
 
       <div className="emdad-shared-spacer" />
