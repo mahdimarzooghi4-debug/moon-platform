@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { AdminSidebar } from "../components/AdminSidebar";
 import { downloadCsv } from "../export-csv";
+import { listAdminManagedProjects } from "../management-api";
 import {
   ADMIN_PROJECT_STORE_CHANGED,
   readAdminProjects,
@@ -13,20 +14,57 @@ import "../list-flow.css";
 
 const ASSET_ROOT = "/assets/admin-panel";
 const numberFa = new Intl.NumberFormat("fa-IR");
+const isDevelopment = Boolean(import.meta.env.DEV);
+
+function toProjectRecord(item: Awaited<ReturnType<typeof listAdminManagedProjects>>[number]): AdminProjectRecord {
+  return {
+    id: item.id,
+    name: item.name,
+    province: item.province,
+    track: item.track,
+    fundingPercent: item.fundingPercent,
+    fundingTarget: item.fundingTarget,
+    status: item.status,
+    stage: item.stage,
+  };
+}
 
 export default function AdminProjects() {
   const [projects, setProjects] = useState<AdminProjectRecord[]>(() => readAdminProjects());
   const [query, setQuery] = useState("");
   const [province, setProvince] = useState("");
   const [status, setStatus] = useState("");
+  const [sourceMessage, setSourceMessage] = useState("");
 
   useEffect(() => {
-    const refresh = () => setProjects(readAdminProjects());
-    window.addEventListener(ADMIN_PROJECT_STORE_CHANGED, refresh);
-    window.addEventListener("storage", refresh);
+    let active = true;
+    const refreshFallback = () => {
+      if (active && isDevelopment) setProjects(readAdminProjects());
+    };
+
+    listAdminManagedProjects()
+      .then((items) => {
+        if (!active) return;
+        setProjects(items.map(toProjectRecord));
+        setSourceMessage("");
+      })
+      .catch(() => {
+        if (!active) return;
+        if (isDevelopment) {
+          setProjects(readAdminProjects());
+          setSourceMessage("Backend در دسترس نیست؛ داده نمونه توسعه نمایش داده می‌شود.");
+        } else {
+          setProjects([]);
+          setSourceMessage("دریافت پروژه‌ها از سرور انجام نشد.");
+        }
+      });
+
+    window.addEventListener(ADMIN_PROJECT_STORE_CHANGED, refreshFallback);
+    window.addEventListener("storage", refreshFallback);
     return () => {
-      window.removeEventListener(ADMIN_PROJECT_STORE_CHANGED, refresh);
-      window.removeEventListener("storage", refresh);
+      active = false;
+      window.removeEventListener(ADMIN_PROJECT_STORE_CHANGED, refreshFallback);
+      window.removeEventListener("storage", refreshFallback);
     };
   }, []);
 
@@ -80,6 +118,7 @@ export default function AdminProjects() {
 
         <section className="admin-users-table-card admin-list-table-compact">
           <h2>فهرست پروژه‌ها</h2><p>مدیر می‌تواند پروژه را باز کند، اطلاعات مدیریتی را تغییر دهد و از نتیجه فیلترشده خروجی بگیرد.</p>
+          {sourceMessage ? <p className="admin-form-actions-note">{sourceMessage}</p> : null}
           <div className="admin-users-table">
             <div className="admin-users-row admin-users-table-head"><span>پروژه / حوزه</span><span>استان</span><span>وضعیت</span><span>تأمین مالی</span><span>مرحله</span><span>اقدام</span></div>
             {filtered.map((project) => (
@@ -95,7 +134,7 @@ export default function AdminProjects() {
             <div className="admin-pagination"><span>نمایش {numberFa.format(filtered.length)} پروژه</span><div className="admin-pagination-controls"><button className="admin-page-control" type="button" disabled>‹</button><span className="admin-page-number">۱</span><button className="admin-page-control" type="button" disabled>›</button></div></div>
           </div>
         </section>
-        <aside className="admin-info-note">مدیر سامانه اطلاعات مدیریتی پروژه را ویرایش می‌کند؛ ارزیابی تخصصی و تصمیم فنی همچنان در نقش خانه خلاق انجام می‌شود.</aside>
+        <aside className="admin-info-note">اطلاعات مدیریتی پروژه از API پنل مدیر خوانده و ذخیره می‌شود؛ ارزیابی تخصصی و تصمیم فنی همچنان در نقش خانه خلاق انجام می‌شود.</aside>
       </main>
       <AdminSidebar active="projects" />
     </div>
