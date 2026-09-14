@@ -13,6 +13,7 @@ import {
 } from "../../../shared/admin-content-store";
 import "../index.css";
 import "../final-flow.css";
+import "./content.css";
 
 const numberFa = new Intl.NumberFormat("fa-IR");
 
