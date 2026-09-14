@@ -1,8 +1,5 @@
-import "./demo-data.css";
-
 const FUND_REQUESTS_KEY = "mah.fundProjectPaymentRequests.v1";
-const FUND_SYNERGY_PATH = "/panel/emdad/fund-synergy";
-const FUND_SYNERGY_ROOT = '[data-name="emdad-fund-synergy"]';
+const FUND_SYNERGY_REQUESTS_KEY = "mah.fundSynergyRequests.v2";
 
 type DemoFundPaymentRequest = {
   id: string;
@@ -16,6 +13,19 @@ type DemoFundPaymentRequest = {
   createdAt: string;
   approvedAt: string;
   paidAt?: string;
+  receipt?: string;
+};
+
+type DemoSynergyRequest = {
+  id: string;
+  company: string;
+  project: string;
+  companyPayment: number;
+  fundShare: number;
+  note: string;
+  status: "pending" | "allocated";
+  createdAt: string;
+  allocatedAt?: string;
   receipt?: string;
 };
 
@@ -60,194 +70,70 @@ const demoFundPayments: DemoFundPaymentRequest[] = [
   },
 ];
 
-const demoSynergyRows = [
+const demoSynergyRequests: DemoSynergyRequest[] = [
   {
-    project: "سلامت خانواده",
-    company: "پایدار پرداز خلاق آریا",
-    payment: "۲۰۰ میلیون تومان",
-    fundShare: "۲۰ میلیون تومان",
-    status: "pending" as const,
+    id: "demo-synergy-1",
+    project: "پروژه ساخت مدرسه امید",
+    company: "شرکت توسعه آینده",
+    companyPayment: 200_000_000,
+    fundShare: 20_000_000,
+    note: "سهم ۱۰٪ پرداخت نقدی شرکت برای صندوق در انتظار تخصیص است.",
+    status: "pending",
+    createdAt: "2026-09-12T08:30:00.000Z",
   },
   {
-    project: "اشتغال زنان روستایی",
-    company: "شرکت توسعه کارآفرینی گلستان",
-    payment: "۱۵۰ میلیون تومان",
-    fundShare: "۱۵ میلیون تومان",
-    status: "allocated" as const,
+    id: "demo-synergy-2",
+    project: "تهیه تجهیزات درمانی",
+    company: "شرکت سلامت گستر",
+    companyPayment: 150_000_000,
+    fundShare: 15_000_000,
+    note: "سهم ۱۰٪ این پرداخت به صندوق تخصیص و ثبت شده است.",
+    status: "allocated",
+    createdAt: "2026-09-08T09:00:00.000Z",
+    allocatedAt: "2026-09-10T10:20:00.000Z",
+    receipt: "FSR-14050619-01",
   },
   {
-    project: "مهارت برای نوجوانان",
-    company: "آینده‌سازان سپهر",
-    payment: "۹۰ میلیون تومان",
-    fundShare: "۹ میلیون تومان",
-    status: "pending" as const,
+    id: "demo-synergy-3",
+    project: "احداث مرکز توانبخشی",
+    company: "شرکت نیک‌اندیشان",
+    companyPayment: 90_000_000,
+    fundShare: 9_000_000,
+    note: "سهم ۱۰٪ پرداخت نقدی شرکت برای صندوق در انتظار تخصیص است.",
+    status: "pending",
+    createdAt: "2026-09-13T07:15:00.000Z",
   },
 ];
 
-function normalize(value: string | null | undefined) {
-  return (value ?? "").replace(/\s+/g, " ").trim();
-}
-
-function setText(node: Element | null | undefined, text: string) {
-  if (!(node instanceof HTMLElement)) return;
-  if (normalize(node.textContent) !== text) node.textContent = text;
-}
-
-function navigate(path: string) {
-  if (window.location.pathname === path) return;
-  window.history.pushState({}, "", path);
-  window.dispatchEvent(new PopStateEvent("popstate"));
-  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-}
-
-function seedFundPaymentData() {
+function seedCollection<T extends { id: string }>(key: string, demoItems: T[]) {
   try {
-    const raw = localStorage.getItem(FUND_REQUESTS_KEY);
+    const raw = localStorage.getItem(key);
     const parsed = raw ? JSON.parse(raw) : [];
     const current = Array.isArray(parsed) ? parsed : [];
-    const hasEligible = current.some(
-      (item) => item && typeof item === "object" && (item.status === "approved" || item.status === "paid"),
-    );
-    if (hasEligible) return;
+    if (current.length > 0) return false;
 
-    const knownIds = new Set(
-      current
-        .filter((item) => item && typeof item === "object" && typeof item.id === "string")
-        .map((item) => item.id as string),
-    );
-    const additions = demoFundPayments.filter((item) => !knownIds.has(item.id));
-    if (!additions.length) return;
-
-    localStorage.setItem(FUND_REQUESTS_KEY, JSON.stringify([...additions, ...current]));
-    window.dispatchEvent(new CustomEvent("moon:fund-project-payments-changed"));
+    localStorage.setItem(key, JSON.stringify(demoItems));
+    return true;
   } catch {
-    localStorage.setItem(FUND_REQUESTS_KEY, JSON.stringify(demoFundPayments));
+    localStorage.setItem(key, JSON.stringify(demoItems));
+    return true;
   }
 }
 
-function makeCell(text: string, extraClass?: string) {
-  const cell = document.createElement("div");
-  cell.className = `emdad-demo-synergy-cell${extraClass ? ` ${extraClass}` : ""}`;
-  cell.textContent = text;
-  return cell;
+function seedDemoData() {
+  const fundPaymentsSeeded = seedCollection(FUND_REQUESTS_KEY, demoFundPayments);
+  const synergySeeded = seedCollection(FUND_SYNERGY_REQUESTS_KEY, demoSynergyRequests);
+
+  if (fundPaymentsSeeded) {
+    window.dispatchEvent(new CustomEvent("moon:fund-project-payments-changed"));
+  }
+  if (synergySeeded) {
+    window.dispatchEvent(new CustomEvent("moon:fund-synergy-requests-changed"));
+  }
 }
 
-function decorateFundSynergy() {
-  if (window.location.pathname !== FUND_SYNERGY_PATH) return;
-  const root = document.querySelector<HTMLElement>(FUND_SYNERGY_ROOT);
-  if (!root) return;
-
-  const summaryCards = root.querySelectorAll<HTMLElement>('[data-name="summary-card"]');
-  const summaryValues = [
-    ["پرداخت‌های مشمول", "۳", "پرداخت نقدی با منبع شرکت"],
-    ["مبلغ منابع شرکت", "۴۴۰ میلیون تومان", "مبلغ نقدی ثبت‌شده"],
-    ["سهم هم‌افزایی صندوق", "۴۴ میلیون تومان", "۱۰٪ منابع نقدی شرکت"],
-  ];
-  summaryCards.forEach((card, index) => {
-    const paragraphs = card.querySelectorAll("p");
-    const values = summaryValues[index];
-    if (!values) return;
-    setText(paragraphs.item(0), values[0]);
-    setText(paragraphs.item(1), values[1]);
-    setText(paragraphs.item(2), values[2]);
-  });
-
-  setText(root.querySelector('[data-name="count-pill"] p'), "۳ مورد");
-
-  root
-    .querySelectorAll<HTMLElement>(
-      '[data-name="fund-synergy-row"], [data-name="table-note"], [data-name="pagination-footer"]',
-    )
-    .forEach((element) => {
-      element.style.display = "none";
-    });
-
-  const table = root.querySelector<HTMLElement>('[data-name="fund-synergy-table"]');
-  if (!table) return;
-  table.querySelector<HTMLElement>('[data-emdad-demo-synergy="true"]')?.remove();
-
-  const list = document.createElement("div");
-  list.className = "emdad-demo-synergy-list";
-  list.dataset.emdadDemoSynergy = "true";
-
-  demoSynergyRows.forEach((item, index) => {
-    const row = document.createElement("div");
-    row.className = "emdad-demo-synergy-row";
-
-    row.appendChild(makeCell(String(index + 1)));
-
-    const project = document.createElement("div");
-    project.className = "emdad-demo-synergy-cell emdad-demo-synergy-project";
-    const projectName = document.createElement("span");
-    projectName.textContent = item.project;
-    const company = document.createElement("small");
-    company.textContent = `${item.company} · منبع: شرکت`;
-    project.append(projectName, company);
-    row.appendChild(project);
-
-    row.appendChild(makeCell(item.payment));
-    row.appendChild(makeCell(item.fundShare));
-
-    const statusCell = document.createElement("div");
-    statusCell.className = "emdad-demo-synergy-cell";
-    const status = document.createElement("span");
-    status.className = "emdad-demo-synergy-status";
-    status.dataset.status = item.status;
-    status.textContent = item.status === "pending" ? "در انتظار تخصیص" : "تخصیص ثبت‌شده";
-    statusCell.appendChild(status);
-    row.appendChild(statusCell);
-
-    const actionCell = document.createElement("div");
-    actionCell.className = "emdad-demo-synergy-cell";
-    const action = document.createElement("button");
-    action.type = "button";
-    action.className = "emdad-demo-synergy-action";
-    action.dataset.kind = item.status === "allocated" ? "history" : "allocation";
-    action.textContent = item.status === "allocated" ? "مشاهده سابقه" : "ثبت تخصیص";
-    action.addEventListener("click", () =>
-      navigate(
-        item.status === "allocated"
-          ? "/panel/emdad/fund-synergy/history"
-          : "/panel/emdad/fund-synergy/allocation",
-      ),
-    );
-    actionCell.appendChild(action);
-    row.appendChild(actionCell);
-
-    list.appendChild(row);
-  });
-
-  table.appendChild(list);
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", seedDemoData, { once: true });
+} else {
+  seedDemoData();
 }
-
-function apply() {
-  seedFundPaymentData();
-  decorateFundSynergy();
-}
-
-window.addEventListener("popstate", () => requestAnimationFrame(apply));
-window.addEventListener("storage", () => requestAnimationFrame(apply));
-
-const start = () => {
-  apply();
-  if (!document.body) return;
-
-  let scheduled = false;
-  new MutationObserver((mutations) => {
-    const panelAdded = mutations.some((mutation) =>
-      Array.from(mutation.addedNodes).some((node) => {
-        if (!(node instanceof Element)) return false;
-        return node.matches(FUND_SYNERGY_ROOT) || Boolean(node.querySelector(FUND_SYNERGY_ROOT));
-      }),
-    );
-    if (!panelAdded || scheduled) return;
-    scheduled = true;
-    requestAnimationFrame(() => {
-      scheduled = false;
-      decorateFundSynergy();
-    });
-  }).observe(document.body, { childList: true, subtree: true });
-};
-
-if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, { once: true });
-else start();
