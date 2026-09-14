@@ -133,7 +133,11 @@ html.emdad-shared-sidebar-active .emdad-certificate-issuer-trigger {
   cursor: pointer;
 }
 
-.emdad-shared-nav:hover,
+.emdad-shared-nav:hover:not([data-active="true"]) {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
 .emdad-shared-nav[data-active="true"] {
   background: #2094e3;
   color: #fff;
@@ -198,7 +202,7 @@ html.emdad-shared-sidebar-active .emdad-certificate-issuer-trigger {
 }
 
 .emdad-shared-logout:hover {
-  background: #fff;
+  background: #fff !important;
   color: #17324d;
 }
 
