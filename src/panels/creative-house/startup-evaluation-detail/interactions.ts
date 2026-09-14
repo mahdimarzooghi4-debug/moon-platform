@@ -2,6 +2,10 @@ import {
   enqueueApprovedStartupAccess,
   removeApprovedStartupAccess,
 } from "../../../shared/approved-startup-access-queue";
+import {
+  clearStartupEvaluationSelection,
+  readStartupEvaluationSelection,
+} from "../startup-evaluation-selection";
 
 const DETAIL_ROOT_SELECTOR =
   '.creative-house-dashboard[data-name="ayeneh-startup-evaluation-detail"]';
@@ -115,9 +119,10 @@ document.addEventListener("click", (event) => {
     const decisionName = selected.getAttribute("data-name") ?? "";
     const decision = DECISION_BY_NAME[decisionName] ?? decisionName;
     const savedAt = new Date().toISOString();
-    const startupName = readText(screen, STARTUP_NAME_SELECTOR);
-    const managerName = readText(screen, STARTUP_MANAGER_SELECTOR);
-    const activityArea = readText(screen, STARTUP_ACTIVITY_SELECTOR);
+    const evaluationSelection = readStartupEvaluationSelection();
+    const startupName = evaluationSelection?.startupName || readText(screen, STARTUP_NAME_SELECTOR);
+    const managerName = evaluationSelection?.managerName || readText(screen, STARTUP_MANAGER_SELECTOR);
+    const activityArea = evaluationSelection?.activityArea || readText(screen, STARTUP_ACTIVITY_SELECTOR);
 
     localStorage.setItem(
       DECISION_STORAGE_KEY,
@@ -142,6 +147,7 @@ document.addEventListener("click", (event) => {
       removeApprovedStartupAccess(startupName, managerName);
     }
 
+    clearStartupEvaluationSelection();
     event.preventDefault();
     navigateWithinApp(DECISION_LIST_ROUTE);
   }
