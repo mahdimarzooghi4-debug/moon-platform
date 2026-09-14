@@ -32,6 +32,14 @@ export type AdminManagedNews = {
   updatedAtUtc: string;
 };
 
+export type AdminNewsImageMeta = {
+  newsId: string;
+  fileName: string;
+  contentType: string;
+  size: number;
+  updatedAtUtc: string;
+};
+
 export type AdminHeroVideoMeta = {
   fileName: string;
   contentType: string;
@@ -67,6 +75,21 @@ async function authorizedRequest<T>(path: string, init?: RequestInit): Promise<T
 
   if (response.status === 204) return null as T;
   return (await response.json()) as T;
+}
+
+async function authorizedBlobRequest(path: string): Promise<Blob | null> {
+  const session = getSession();
+  if (!session) throw new Error("missing_session");
+
+  const response = await fetch(`${apiBaseUrl}${path}`, {
+    headers: {
+      Accept: "image/*",
+      Authorization: `Bearer ${session.accessToken}`,
+    },
+  });
+  if (response.status === 404 || response.status === 204) return null;
+  if (!response.ok) throw new Error(`admin_management_blob_${response.status}`);
+  return response.blob();
 }
 
 export function listAdminOrganizationProfiles() {
@@ -118,6 +141,27 @@ export function saveAdminManagedNews(input: Omit<AdminManagedNews, "updatedAtUtc
 
 export function deleteAdminManagedNews(id: string) {
   return authorizedRequest<void>(`/api/v1/admin/management/content/news/${encodeURIComponent(id)}`, { method: "DELETE" });
+}
+
+export function loadAdminNewsImage(id: string) {
+  return authorizedBlobRequest(`/api/v1/admin/management/content/news/${encodeURIComponent(id)}/image`);
+}
+
+export function saveAdminNewsImage(id: string, file: File) {
+  const body = new FormData();
+  body.append("file", file, file.name);
+  return authorizedRequest<AdminNewsImageMeta>(`/api/v1/admin/management/content/news/${encodeURIComponent(id)}/image`, {
+    method: "PUT",
+    body,
+  });
+}
+
+export function deleteAdminNewsImage(id: string) {
+  return authorizedRequest<void>(`/api/v1/admin/management/content/news/${encodeURIComponent(id)}/image`, { method: "DELETE" });
+}
+
+export function publicNewsImageUrl(id: string) {
+  return `${apiBaseUrl}/api/v1/public/content/news/${encodeURIComponent(id)}/image`;
 }
 
 export function getAdminHeroVideoMeta() {
