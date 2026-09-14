@@ -109,11 +109,6 @@ export default function EmdadSharedSidebar({ pathname }: Props) {
         <span className="emdad-shared-icon"><img src={certificateIcon} alt="" /></span>
       </button>
 
-      <button type="button" data-name="certificate-issuer-nav" className="emdad-shared-nav emdad-shared-issuer" onClick={openCertificateIssuer}>
-        <span>تنظیم مسئول و امضای گواهی</span>
-        <span className="emdad-shared-icon"><img src={certificateIcon} alt="" /></span>
-      </button>
-
       <button type="button" data-name="fund-synergy-nav" className="emdad-shared-nav" data-active={active === "synergy"} onClick={() => navigate("/panel/emdad/fund-synergy")}>
         <span>هم‌افزایی صندوق</span>
         <span className="emdad-shared-icon"><img src={synergyIcon} alt="" /></span>
@@ -127,6 +122,11 @@ export default function EmdadSharedSidebar({ pathname }: Props) {
       <button type="button" data-name="financial-reports-nav" className="emdad-shared-nav" data-active={active === "reports"} onClick={() => navigate("/panel/emdad/financial-reports")}>
         <span>گزارش‌های مالی</span>
         <span className="emdad-shared-icon"><img src={reportsIcon} alt="" /></span>
+      </button>
+
+      <button type="button" data-name="certificate-issuer-nav" className="emdad-shared-nav emdad-shared-issuer" onClick={openCertificateIssuer}>
+        <span>تنظیم مسئول و امضای گواهی</span>
+        <span className="emdad-shared-icon"><img src={certificateIcon} alt="" /></span>
       </button>
 
       <div className="emdad-shared-spacer" />
