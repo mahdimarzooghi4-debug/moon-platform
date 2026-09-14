@@ -7,6 +7,8 @@ const LOGO = "/assets/codia/qreWA0b9ix.png";
 const BACK_ICON = "/assets/image_cd1430e5-409a-40f6-a742-c82761e81fa7.png";
 const PERSIAN_DIGITS = "۰۱۲۳۴۵۶۷۸۹";
 const DEV_PANEL_PREVIEW_KEY = "moon.auth.dev-panel-preview";
+const env = import.meta.env as Record<string, string | undefined>;
+const DEMO_MODE = env.VITE_DEMO_MODE === "true";
 
 const DEV_PANEL_DESTINATIONS: Record<AccountType, string> = {
   company: "/panel/company",
@@ -122,7 +124,7 @@ export default function OtpStep({ accountType, mobile, returnTo }: Props) {
     if (!completed || busy) return;
     setBusy(true);
 
-    if (import.meta.env.DEV) {
+    if (import.meta.env.DEV || DEMO_MODE) {
       sessionStorage.setItem(DEV_PANEL_PREVIEW_KEY, accountType);
       const destination = returnTo?.startsWith("/panel/")
         ? returnTo
@@ -167,7 +169,7 @@ export default function OtpStep({ accountType, mobile, returnTo }: Props) {
               کد تأیید را وارد کنید
             </h1>
             <p className="m-0 text-center text-[14px] font-normal text-[#718096]">
-              کد پنج‌رقمی ارسال‌شده به شماره زیر را وارد کنید.
+              {DEMO_MODE ? "نسخه نمایشی: هر کد پنج‌رقمی قابل استفاده است." : "کد پنج‌رقمی ارسال‌شده به شماره زیر را وارد کنید."}
             </p>
             <button
               type="button"
