@@ -164,6 +164,13 @@ export function publicNewsImageUrl(id: string) {
   return `${apiBaseUrl}/api/v1/public/content/news/${encodeURIComponent(id)}/image`;
 }
 
+export async function loadPublicNewsImage(id: string): Promise<Blob | null> {
+  const response = await fetch(publicNewsImageUrl(id), { headers: { Accept: "image/*" } });
+  if (response.status === 404 || response.status === 204) return null;
+  if (!response.ok) throw new Error(`public_news_image_${response.status}`);
+  return response.blob();
+}
+
 export function getAdminHeroVideoMeta() {
   return authorizedRequest<AdminHeroVideoMeta | null>("/api/v1/admin/management/content/hero/meta");
 }
