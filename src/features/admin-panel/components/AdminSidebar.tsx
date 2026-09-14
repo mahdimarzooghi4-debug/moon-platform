@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { clearSession } from "../../../auth/oidc";
 
 const ASSET_ROOT = "/assets/admin-panel";
 
@@ -30,6 +31,11 @@ const sidebarItems = [
 ] as const;
 
 export function AdminSidebar({ active }: AdminSidebarProps) {
+  const handleLogout = () => {
+    clearSession();
+    window.location.assign("/auth");
+  };
+
   return (
     <aside
       className="admin-sidebar"
@@ -69,10 +75,10 @@ export function AdminSidebar({ active }: AdminSidebarProps) {
         className="admin-logout"
         type="button"
         aria-label="خروج از سیستم"
-        style={{ justifyContent: "flex-end", direction: "ltr" }}
+        onClick={handleLogout}
+        style={{ justifyContent: "center", direction: "rtl" }}
       >
-        <span style={{ direction: "rtl", textAlign: "right" }}>خروج از سیستم</span>
-        <img src={`${ASSET_ROOT}/nav-logout.svg`} alt="" />
+        <span style={{ direction: "rtl", textAlign: "center", width: "auto" }}>خروج از سیستم</span>
       </button>
     </aside>
   );
