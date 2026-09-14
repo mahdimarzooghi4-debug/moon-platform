@@ -1,0 +1,40 @@
+name: Sync EF Snapshot
+
+on:
+  push:
+    branches:
+      - feat/ui-ux-polish
+    paths:
+      - .github/workflows/snapshot-sync.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/ui-ux-polish
+          fetch-depth: 0
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - run: dotnet tool install --global dotnet-ef --version 10.0.12
+      - working-directory: backend
+        run: dotnet restore Moon.Platform.slnx
+      - name: Regenerate snapshot from current model
+        working-directory: backend
+        run: |
+          dotnet ef migrations add SnapshotSyncTemp --project src/Moon.Platform.Api/Moon.Platform.Api.csproj --startup-project src/Moon.Platform.Api/Moon.Platform.Api.csproj --output-dir Infrastructure/Persistence/Migrations
+          rm src/Moon.Platform.Api/Infrastructure/Persistence/Migrations/*SnapshotSyncTemp.cs
+          rm src/Moon.Platform.Api/Infrastructure/Persistence/Migrations/*SnapshotSyncTemp.Designer.cs
+      - name: Commit snapshot only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add backend/src/Moon.Platform.Api/Infrastructure/Persistence/Migrations/MoonDbContextModelSnapshot.cs
+          git diff --cached --quiet && exit 0
+          git commit -m "fix(backend): sync EF model snapshot"
+          git push origin HEAD:feat/ui-ux-polish
