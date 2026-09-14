@@ -30,10 +30,10 @@ function normalizeMobile(value: string) {
 
 function organizationMatchesRole(organization: AdminOrganization, roleCode: string) {
   if (!roleCode) return true;
-  if (roleCode === "company_manager") return organization.type === "company";
-  if (roleCode === "creative_house") return organization.type === "creative_house";
-  if (roleCode === "emdad") return organization.type === "emdad" || organization.type === "supervisor";
-  if (roleCode === "fund_manager") return organization.type === "fund" || organization.type === "fund_manager";
+  if (roleCode === "company") return organization.type === "company";
+  if (roleCode === "product_owner") return organization.type === "creative_house";
+  if (roleCode === "supervisor") return organization.type === "emdad" || organization.type === "supervisor";
+  if (roleCode === "finance") return organization.type === "fund" || organization.type === "fund_manager";
   if (roleCode === "system_admin") return organization.type === "platform";
   return true;
 }
@@ -64,7 +64,7 @@ export default function AdminAddUser() {
       if (queueItem) {
         setApprovedStartup(queueItem);
         setDisplayName(queueItem.managerName);
-        setRoleCode("startup_manager");
+        setRoleCode("startup");
         setStartupName(queueItem.startupName);
         setActivityArea(queueItem.activityArea);
       } else {
@@ -98,7 +98,7 @@ export default function AdminAddUser() {
     () => roles.find((role) => role.code === roleCode),
     [roleCode, roles],
   );
-  const isStartupRole = roleCode === "startup_manager";
+  const isStartupRole = roleCode === "startup";
   const organizationOptions = useMemo(
     () => organizations.filter((organization) => organizationMatchesRole(organization, roleCode)),
     [organizations, roleCode],
@@ -214,7 +214,7 @@ export default function AdminAddUser() {
                     const nextRole = event.target.value;
                     setRoleCode(nextRole);
                     setOrganizationId("");
-                    if (nextRole !== "startup_manager") {
+                    if (nextRole !== "startup") {
                       setStartupName("");
                       setActivityArea("");
                       setApprovedStartup(null);
