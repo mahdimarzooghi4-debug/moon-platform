@@ -29,12 +29,16 @@ const sidebarItems = [
 
 export function AdminSidebar({ active }: AdminSidebarProps) {
   return (
-    <aside className="admin-sidebar" aria-label="ناوبری پنل ادمین">
+    <aside
+      className="admin-sidebar"
+      aria-label="ناوبری پنل ادمین"
+      style={{ order: 2, flex: "0 0 224px", direction: "ltr" }}
+    >
       <div className="admin-brand">
         <img src={`${ASSET_ROOT}/logo.png`} alt="سامانه ماه" />
       </div>
 
-      <div className="admin-identity">ادمین سامانه ماه</div>
+      <div className="admin-identity" dir="rtl">ادمین سامانه ماه</div>
 
       <nav className="admin-nav">
         {sidebarItems.map((item) => (
@@ -42,8 +46,9 @@ export function AdminSidebar({ active }: AdminSidebarProps) {
             key={item.key}
             to={item.to}
             className={`admin-nav-item${item.key === active ? " is-active" : ""}`}
+            style={{ justifyContent: "flex-end", direction: "ltr" }}
           >
-            <span>{item.label}</span>
+            <span style={{ direction: "rtl", textAlign: "right" }}>{item.label}</span>
             {item.icon ? (
               <img src={`${ASSET_ROOT}/${item.icon}`} alt="" />
             ) : (
@@ -58,8 +63,13 @@ export function AdminSidebar({ active }: AdminSidebarProps) {
 
       <div className="admin-sidebar-spacer" />
 
-      <button className="admin-logout" type="button" aria-label="خروج از سیستم">
-        <span>خروج از سیستم</span>
+      <button
+        className="admin-logout"
+        type="button"
+        aria-label="خروج از سیستم"
+        style={{ justifyContent: "flex-end", direction: "ltr" }}
+      >
+        <span style={{ direction: "rtl", textAlign: "right" }}>خروج از سیستم</span>
         <img src={`${ASSET_ROOT}/nav-logout.svg`} alt="" />
       </button>
     </aside>
