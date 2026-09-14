@@ -32,12 +32,20 @@ const FUND_MANAGER_FINANCIALS_PATH = "/panel/fund-manager/financials";
 const EMDAD_FUND_PAYMENTS_PATH = "/panel/emdad/fund-payments";
 
 export default function App() {
-  const [pathname, setPathname] = useState(() => window.location.pathname);
+  const demoPathname = () =>
+    import.meta.env.VITE_GITHUB_PAGES === "true"
+      ? window.location.hash.slice(1).split("?")[0] || "/"
+      : window.location.pathname;
+  const [pathname, setPathname] = useState(demoPathname);
 
   useEffect(() => {
-    const syncPathname = () => setPathname(window.location.pathname);
+    const syncPathname = () => setPathname(demoPathname());
     window.addEventListener("popstate", syncPathname);
-    return () => window.removeEventListener("popstate", syncPathname);
+    window.addEventListener("hashchange", syncPathname);
+    return () => {
+      window.removeEventListener("popstate", syncPathname);
+      window.removeEventListener("hashchange", syncPathname);
+    };
   }, []);
 
   const isStartupTeamMemberPage = pathname === STARTUP_TEAM_MEMBER_PATH;
