@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { AdminSidebar } from "../components/AdminSidebar";
 import AdminIndividualParticipations from "../individual-participations";
+import { downloadCsv } from "../export-csv";
 import "../index.css";
 import "../users-flow.css";
 import "../list-flow.css";
@@ -20,6 +21,17 @@ export default function AdminReportDetail() {
   if (reportId === "individual-participations") {
     return <AdminIndividualParticipations />;
   }
+
+  const exportReport = () => {
+    downloadCsv(
+      `admin-report-${reportId || "detail"}`,
+      [
+        { label: "فیلد", value: (item) => item.label },
+        { label: "مقدار", value: (item) => item.value },
+      ],
+      fields.map(([label, value]) => ({ label, value })),
+    );
+  };
 
   return (
     <div className="admin-panel-shell" data-node-id="2273:562">
@@ -41,9 +53,9 @@ export default function AdminReportDetail() {
         </section>
         <aside className="admin-info-note admin-detail-note">گزارش‌های ادمین تجمیعی هستند و عملیات اجرایی یا تصمیم‌گیری تخصصی هر حوزه در پنل همان نقش انجام می‌شود.</aside>
         <section className="admin-form-actions admin-detail-actions">
-          <button className="admin-users-button admin-users-button-primary admin-list-static-control" type="button" aria-disabled="true">دریافت خروجی</button>
+          <button className="admin-users-button admin-users-button-primary" type="button" onClick={exportReport}>دریافت خروجی</button>
           <Link className="admin-users-button" to="/panel/admin/reports">بازگشت</Link>
-          <p className="admin-form-actions-note">فرمت خروجی: گزارش مدیریتی</p>
+          <p className="admin-form-actions-note">فرمت خروجی: CSV مدیریتی</p>
         </section>
       </main>
       <AdminSidebar active="reports" />
