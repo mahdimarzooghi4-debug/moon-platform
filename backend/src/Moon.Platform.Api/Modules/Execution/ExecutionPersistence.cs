@@ -62,11 +62,14 @@ public sealed class MoonExecutionModelCustomizer(ModelCustomizerDependencies dep
         news.Property(x => x.Title).HasMaxLength(300).IsRequired();
         news.Property(x => x.Summary).HasMaxLength(4000).IsRequired();
         news.Property(x => x.Status).HasMaxLength(20).IsRequired();
+        news.Property(x => x.ImageFileName).HasMaxLength(240);
+        news.Property(x => x.ImageContentType).HasMaxLength(120);
         news.HasIndex(x => new { x.Status, x.UpdatedAtUtc });
 
         var hero = modelBuilder.Entity<AdminHeroVideo>();
         hero.ToTable("admin_hero_video", "moon");
         hero.HasKey(x => x.Id);
+        hero.Property(x => x.Id).ValueGeneratedNever();
         hero.Property(x => x.FileName).HasMaxLength(240).IsRequired();
         hero.Property(x => x.ContentType).HasMaxLength(120).IsRequired();
         hero.Property(x => x.Data).IsRequired();
