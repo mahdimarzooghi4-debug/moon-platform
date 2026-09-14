@@ -1,3 +1,8 @@
+import {
+  enqueueApprovedStartupAccess,
+  removeApprovedStartupAccess,
+} from "../../../shared/approved-startup-access-queue";
+
 const DETAIL_ROOT_SELECTOR =
   '.creative-house-dashboard[data-name="ayeneh-startup-evaluation-detail"]';
 const DECISION_OPTION_SELECTOR = '[data-name^="decision-option-"]';
@@ -5,6 +10,9 @@ const SAVE_DECISION_SELECTOR = '[data-name="save-decision"]';
 const BACK_TO_LIST_SELECTOR = '[data-name="back-to-list"]';
 const DECISION_LIST_ROUTE = "/panel/creative-house/startup-evaluations";
 const DECISION_STORAGE_KEY = "mah.creativeHouse.startupEvaluationDecision.v1";
+const STARTUP_NAME_SELECTOR = '[data-node-id="1743:18"]';
+const STARTUP_MANAGER_SELECTOR = '[data-node-id="1743:16"]';
+const STARTUP_ACTIVITY_SELECTOR = '[data-node-id="1743:14"]';
 
 const DECISION_BY_NAME: Record<string, string> = {
   "decision-option-1": "approve",
@@ -15,6 +23,10 @@ const DECISION_BY_NAME: Record<string, string> = {
 function navigateWithinApp(route: string) {
   window.history.pushState({}, "", route);
   window.dispatchEvent(new PopStateEvent("popstate"));
+}
+
+function readText(screen: HTMLElement, selector: string) {
+  return screen.querySelector<HTMLElement>(selector)?.textContent?.replace(/\s+/g, " ").trim() ?? "";
 }
 
 function applyDetailInteractions(root: ParentNode = document) {
@@ -102,15 +114,33 @@ document.addEventListener("click", (event) => {
 
     const decisionName = selected.getAttribute("data-name") ?? "";
     const decision = DECISION_BY_NAME[decisionName] ?? decisionName;
+    const savedAt = new Date().toISOString();
+    const startupName = readText(screen, STARTUP_NAME_SELECTOR);
+    const managerName = readText(screen, STARTUP_MANAGER_SELECTOR);
+    const activityArea = readText(screen, STARTUP_ACTIVITY_SELECTOR);
 
     localStorage.setItem(
       DECISION_STORAGE_KEY,
       JSON.stringify({
         decision,
         label: selected.textContent?.replace(/\s+/g, " ").trim() ?? "",
-        savedAt: new Date().toISOString(),
+        savedAt,
+        startupName,
+        managerName,
+        activityArea,
       }),
     );
+
+    if (decision === "approve") {
+      enqueueApprovedStartupAccess({
+        startupName,
+        managerName,
+        activityArea,
+        approvedAt: savedAt,
+      });
+    } else if (startupName) {
+      removeApprovedStartupAccess(startupName, managerName);
+    }
 
     event.preventDefault();
     navigateWithinApp(DECISION_LIST_ROUTE);
