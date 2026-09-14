@@ -56,6 +56,17 @@ import "./features/startup-panel/audit-interactions";
 document.documentElement.lang = "fa";
 document.documentElement.dir = "rtl";
 
+if (import.meta.env.VITE_GITHUB_PAGES === "true") {
+  document.addEventListener("click", (event) => {
+    const target = event.target as Element | null;
+    const anchor = target?.closest("a");
+    const href = anchor?.getAttribute("href");
+    if (!href || !href.startsWith("/") || href.startsWith("//")) return;
+    event.preventDefault();
+    window.location.hash = href;
+  });
+}
+
 const container = document.getElementById("app");
 
 if (!container) {
