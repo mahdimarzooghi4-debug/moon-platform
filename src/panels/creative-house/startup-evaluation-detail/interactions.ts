@@ -17,6 +17,8 @@ const DECISION_STORAGE_KEY = "mah.creativeHouse.startupEvaluationDecision.v1";
 const STARTUP_NAME_SELECTOR = '[data-node-id="1743:18"]';
 const STARTUP_MANAGER_SELECTOR = '[data-node-id="1743:16"]';
 const STARTUP_ACTIVITY_SELECTOR = '[data-node-id="1743:14"]';
+const STARTUP_IDENTITY_NAME_SELECTOR = '[data-node-id="1749:9"]';
+const STARTUP_BASE_NAME_SELECTOR = '[data-node-id="1749:17"]';
 
 const DECISION_BY_NAME: Record<string, string> = {
   "decision-option-1": "approve",
@@ -33,8 +35,23 @@ function readText(screen: HTMLElement, selector: string) {
   return screen.querySelector<HTMLElement>(selector)?.textContent?.replace(/\s+/g, " ").trim() ?? "";
 }
 
+function setText(screen: HTMLElement, selector: string, value: string) {
+  if (!value) return;
+  const element = screen.querySelector<HTMLElement>(selector);
+  if (element && element.textContent !== value) element.textContent = value;
+}
+
 function applyDetailInteractions(root: ParentNode = document) {
   root.querySelectorAll<HTMLElement>(DETAIL_ROOT_SELECTOR).forEach((screen) => {
+    const evaluationSelection = readStartupEvaluationSelection();
+    if (evaluationSelection) {
+      setText(screen, STARTUP_NAME_SELECTOR, evaluationSelection.startupName);
+      setText(screen, STARTUP_MANAGER_SELECTOR, evaluationSelection.managerName);
+      setText(screen, STARTUP_ACTIVITY_SELECTOR, evaluationSelection.activityArea);
+      setText(screen, STARTUP_IDENTITY_NAME_SELECTOR, evaluationSelection.startupName);
+      setText(screen, STARTUP_BASE_NAME_SELECTOR, evaluationSelection.startupName);
+    }
+
     const group = screen.querySelector<HTMLElement>(
       '[data-name="evaluation-decision-panel"]',
     );
