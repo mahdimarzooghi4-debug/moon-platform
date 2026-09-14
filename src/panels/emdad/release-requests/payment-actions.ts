@@ -1,6 +1,10 @@
 const RELEASE_QUEUE_PATH = "/panel/emdad/release-requests";
+const RELEASE_SUCCESS_PATH = "/panel/emdad/release-requests/success";
 const RELEASE_REQUESTS_KEY = "mah.creativeHouse.releaseRequests.v1";
+const RELEASE_SELECTED_KEY = "mah.creativeHouse.releaseRequests.selected.v1";
+const RECORDED_PAYMENTS_KEY = "mah.emdad.recordedPayments.v1";
 const QUEUE_ROOT = '[data-name="emdad-release-requests"]';
+const SUCCESS_ROOT = '[data-name="emdad-release-success"]';
 
 type ReleaseRequest = {
   id: string;
@@ -8,8 +12,15 @@ type ReleaseRequest = {
   stage?: string;
   amount?: number;
   status?: string;
+  createdAt?: string;
+  releasedAt?: string;
   emdadApprovedAt?: string;
   receipt?: string;
+};
+
+type RecordedPayment = {
+  contextType?: string;
+  contextId?: string;
 };
 
 function normalize(value: string | null | undefined) {
@@ -28,6 +39,37 @@ function readRequests(): ReleaseRequest[] {
   }
 }
 
+function readRecordedPayments(): RecordedPayment[] {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(RECORDED_PAYMENTS_KEY) ?? "[]");
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((item): item is RecordedPayment => Boolean(item && typeof item === "object"));
+  } catch {
+    return [];
+  }
+}
+
+function hasRealPayment(requestId: string) {
+  return readRecordedPayments().some(
+    (payment) => payment.contextType === "release" && payment.contextId === requestId,
+  );
+}
+
+function selectedOrLatestRequest() {
+  const requests = readRequests();
+  const selectedId = localStorage.getItem(RELEASE_SELECTED_KEY);
+  if (selectedId) {
+    const selected = requests.find((request) => request.id === selectedId);
+    if (selected) return selected;
+  }
+
+  return [...requests]
+    .filter((request) => request.status === "released" || Boolean(request.emdadApprovedAt))
+    .sort((a, b) =>
+      String(b.releasedAt ?? b.createdAt ?? "").localeCompare(String(a.releasedAt ?? a.createdAt ?? "")),
+    )[0] ?? null;
+}
+
 function paymentDraft(request: ReleaseRequest) {
   return {
     source: "company" as const,
@@ -40,6 +82,14 @@ function paymentDraft(request: ReleaseRequest) {
     contextType: "release" as const,
     contextId: request.id,
   };
+}
+
+function openPayment(request: ReleaseRequest) {
+  window.dispatchEvent(
+    new CustomEvent("moon:emdad-open-payment-registration", {
+      detail: paymentDraft(request),
+    }),
+  );
 }
 
 function styleActionStack(wrapper: HTMLElement) {
@@ -123,8 +173,10 @@ function decorateQueue() {
       wrapper.appendChild(paymentButton);
     }
 
-    const approved = typeof request.emdadApprovedAt === "string" && request.emdadApprovedAt.length > 0;
-    const complete = typeof request.receipt === "string" && normalize(request.receipt).length > 0;
+    const approved =
+      (typeof request.emdadApprovedAt === "string" && request.emdadApprovedAt.length > 0) ||
+      request.status === "released";
+    const complete = hasRealPayment(request.id);
     const enabled = approved && !complete;
 
     paymentButton.disabled = !enabled;
@@ -143,23 +195,75 @@ function decorateQueue() {
         const currentId = reviewButton.dataset.releaseRequestId;
         if (!currentId) return;
         const current = readRequests().find((item) => item.id === currentId);
-        if (!current || !current.emdadApprovedAt || current.receipt) return;
-        window.dispatchEvent(
-          new CustomEvent("moon:emdad-open-payment-registration", {
-            detail: paymentDraft(current),
-          }),
-        );
+        if (!current || hasRealPayment(current.id)) return;
+        const isApproved = Boolean(current.emdadApprovedAt) || current.status === "released";
+        if (!isApproved) return;
+        openPayment(current);
       });
     }
   });
 }
 
-window.addEventListener("popstate", () => requestAnimationFrame(decorateQueue));
-window.addEventListener("moon:creative-house-release-requests-changed", () => requestAnimationFrame(decorateQueue));
-window.addEventListener("moon:emdad-payment-recorded", () => requestAnimationFrame(decorateQueue));
+function decorateSuccess() {
+  if (window.location.pathname !== RELEASE_SUCCESS_PATH) return;
+  const root = document.querySelector<HTMLElement>(SUCCESS_ROOT);
+  const actions = root?.querySelector<HTMLElement>('[data-name="success-actions"]');
+  const request = selectedOrLatestRequest();
+  if (!root || !actions || !request) return;
+
+  let paymentButton = actions.querySelector<HTMLButtonElement>('[data-emdad-release-success-payment="true"]');
+  if (!paymentButton) {
+    paymentButton = document.createElement("button");
+    paymentButton.type = "button";
+    paymentButton.dataset.emdadReleaseSuccessPayment = "true";
+    paymentButton.style.position = "absolute";
+    paymentButton.style.left = "423px";
+    paymentButton.style.top = "85px";
+    paymentButton.style.width = "210px";
+    paymentButton.style.height = "42px";
+    paymentButton.style.borderRadius = "9px";
+    paymentButton.style.fontFamily = '"Vazirmatn", sans-serif';
+    paymentButton.style.fontSize = "11px";
+    paymentButton.style.fontWeight = "600";
+    paymentButton.style.zIndex = "5";
+    actions.appendChild(paymentButton);
+  }
+
+  const complete = hasRealPayment(request.id);
+  paymentButton.disabled = complete;
+  paymentButton.textContent = complete ? "پرداخت ثبت شد" : "ثبت پرداخت و رسید";
+  paymentButton.style.border = complete ? "1px solid #bfe8d2" : "1px solid #2094e3";
+  paymentButton.style.background = complete ? "#e8faf0" : "#2094e3";
+  paymentButton.style.color = complete ? "#149e57" : "#fff";
+  paymentButton.style.cursor = complete ? "default" : "pointer";
+
+  const badge = root.querySelector<HTMLElement>('[data-name="status-badge"] p');
+  if (badge) badge.textContent = complete ? "تکمیل‌شده" : "در انتظار ثبت پرداخت";
+
+  if (paymentButton.dataset.bound !== "true") {
+    paymentButton.dataset.bound = "true";
+    paymentButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const current = selectedOrLatestRequest();
+      if (!current || hasRealPayment(current.id)) return;
+      openPayment(current);
+    });
+  }
+}
+
+function decorateCurrentPage() {
+  decorateQueue();
+  decorateSuccess();
+}
+
+window.addEventListener("popstate", () => requestAnimationFrame(decorateCurrentPage));
+window.addEventListener("moon:creative-house-release-requests-changed", () => requestAnimationFrame(decorateCurrentPage));
+window.addEventListener("moon:emdad-payment-recorded", () => requestAnimationFrame(decorateCurrentPage));
+window.addEventListener("moon:emdad-payments-changed", () => requestAnimationFrame(decorateCurrentPage));
 
 const start = () => {
-  decorateQueue();
+  decorateCurrentPage();
   if (!document.body) return;
 
   let scheduled = false;
@@ -169,8 +273,10 @@ const start = () => {
         if (!(node instanceof Element)) return false;
         return (
           node.matches(QUEUE_ROOT) ||
+          node.matches(SUCCESS_ROOT) ||
           node.matches("[data-release-request-id]") ||
           Boolean(node.querySelector(QUEUE_ROOT)) ||
+          Boolean(node.querySelector(SUCCESS_ROOT)) ||
           Boolean(node.querySelector("[data-release-request-id]"))
         );
       }),
@@ -179,7 +285,7 @@ const start = () => {
     scheduled = true;
     requestAnimationFrame(() => {
       scheduled = false;
-      decorateQueue();
+      decorateCurrentPage();
     });
   }).observe(document.body, { childList: true, subtree: true });
 };
