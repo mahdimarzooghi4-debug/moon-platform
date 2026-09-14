@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, HashRouter, Route, Routes } from "react-router-dom";
 import CompanyRegistrationPage from "../features/company-registration";
 import StartupRegistrationPage from "../features/startup-registration";
 import AuthEntryPage from "../page";
@@ -187,8 +187,9 @@ function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
 }
 
 export function AppRouter() {
+  const Router = import.meta.env.VITE_GITHUB_PAGES === "true" ? HashRouter : BrowserRouter;
   return (
-    <BrowserRouter>
+    <Router>
       <Routes>
         <Route path="/" element={lazyElement(LandingPage)} />
         <Route path="/about" element={lazyElement(AboutPage)} />
@@ -389,6 +390,6 @@ export function AppRouter() {
         <Route path="/projects/:projectId" element={lazyElement(ProjectDetailsPage)} />
         <Route path="*" element={lazyElement(NotFoundPage)} />
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
 }
