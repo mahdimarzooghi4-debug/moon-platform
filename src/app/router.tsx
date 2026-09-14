@@ -154,6 +154,9 @@ const FundManagerResourcesPage = lazy(() => import("../panels/fund-manager/resou
 const FundManagerResourceDetailPage = lazy(() => import("../panels/fund-manager/resource-detail"));
 const FundManagerInvestmentsPage = lazy(() => import("../panels/fund-manager/investments"));
 const FundManagerInvestmentDetailPage = lazy(() => import("../panels/fund-manager/investment-detail"));
+const FundManagerFinancialsPage = lazy(() => import("../panels/fund-manager/financials"));
+const FundManagerFinancialHistoryPage = lazy(() => import("../panels/fund-manager/financial-history"));
+const FundManagerFinancialHistoryDetailPage = lazy(() => import("../panels/fund-manager/financial-history-detail"));
 const FundManagerProfitReturnsPage = lazy(() => import("../panels/fund-manager/profit-returns"));
 const FundManagerProfitReturnDetailPage = lazy(() => import("../panels/fund-manager/profit-return-detail"));
 const FundManagerCycleReturnsPage = lazy(() => import("../panels/fund-manager/cycle-returns"));
@@ -161,11 +164,13 @@ const FundManagerCycleReturnDetailPage = lazy(() => import("../panels/fund-manag
 const FundManagerProfitSplitPage = lazy(() => import("../panels/fund-manager/profit-split"));
 const FundManagerProfitSplitDetailPage = lazy(() => import("../panels/fund-manager/profit-split-detail"));
 const FundManagerReportsPage = lazy(() => import("../panels/fund-manager/reports"));
+const FundManagerReportDetailPage = lazy(() => import("../panels/fund-manager/report-detail"));
 
 const EmdadDashboardPage = lazy(() => import("../panels/emdad"));
 const EmdadReleaseRequestsPage = lazy(() => import("../panels/emdad/release-requests"));
 const EmdadReleaseRequestDetailPage = lazy(() => import("../panels/emdad/release-requests/detail"));
 const EmdadReleaseSuccessPage = lazy(() => import("../panels/emdad/release-requests/success"));
+const EmdadFundPaymentsPage = lazy(() => import("../panels/emdad/fund-payments"));
 const EmdadArticle172ApprovalsPage = lazy(() => import("../panels/emdad/article172-approvals"));
 const EmdadArticle172RequestDetailPage = lazy(() => import("../panels/emdad/article172-approvals/detail"));
 const EmdadArticle172SuccessPage = lazy(() => import("../panels/emdad/article172-approvals/success"));
@@ -348,6 +353,9 @@ export function AppRouter() {
         <Route path="/panel/fund-manager/resources/detail" element={lazyElement(FundManagerResourceDetailPage)} />
         <Route path="/panel/fund-manager/investments" element={lazyElement(FundManagerInvestmentsPage)} />
         <Route path="/panel/fund-manager/investments/detail" element={lazyElement(FundManagerInvestmentDetailPage)} />
+        <Route path="/panel/fund-manager/financials" element={lazyElement(FundManagerFinancialsPage)} />
+        <Route path="/panel/fund-manager/financial-history" element={lazyElement(FundManagerFinancialHistoryPage)} />
+        <Route path="/panel/fund-manager/financial-history/detail" element={lazyElement(FundManagerFinancialHistoryDetailPage)} />
         <Route path="/panel/fund-manager/profit-returns" element={lazyElement(FundManagerProfitReturnsPage)} />
         <Route path="/panel/fund-manager/profit-returns/detail" element={lazyElement(FundManagerProfitReturnDetailPage)} />
         <Route path="/panel/fund-manager/cycle-returns" element={lazyElement(FundManagerCycleReturnsPage)} />
@@ -355,11 +363,13 @@ export function AppRouter() {
         <Route path="/panel/fund-manager/profit-split" element={lazyElement(FundManagerProfitSplitPage)} />
         <Route path="/panel/fund-manager/profit-split/detail" element={lazyElement(FundManagerProfitSplitDetailPage)} />
         <Route path="/panel/fund-manager/reports" element={lazyElement(FundManagerReportsPage)} />
+        <Route path="/panel/fund-manager/reports/detail" element={lazyElement(FundManagerReportDetailPage)} />
 
         <Route path="/panel/emdad" element={lazyElement(EmdadDashboardPage)} />
         <Route path="/panel/emdad/release-requests" element={lazyElement(EmdadReleaseRequestsPage)} />
         <Route path="/panel/emdad/release-requests/detail" element={lazyElement(EmdadReleaseRequestDetailPage)} />
         <Route path="/panel/emdad/release-requests/success" element={lazyElement(EmdadReleaseSuccessPage)} />
+        <Route path="/panel/emdad/fund-payments" element={lazyElement(EmdadFundPaymentsPage)} />
         <Route path="/panel/emdad/article172-approvals" element={lazyElement(EmdadArticle172ApprovalsPage)} />
         <Route path="/panel/emdad/article172-approvals/detail" element={lazyElement(EmdadArticle172RequestDetailPage)} />
         <Route path="/panel/emdad/article172-approvals/success" element={lazyElement(EmdadArticle172SuccessPage)} />
