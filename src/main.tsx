@@ -36,6 +36,7 @@ import "./panels/fund-manager/sidebar-simplify.css";
 import "./panels/fund-manager/financials/shell-fix.css";
 import "./app/fund-release-request-flow";
 import "./app/fund-project-payment-flow";
+import "./panels/emdad/payment-history/context-registration";
 import "./landing/contact-details.css";
 import "./landing/interactions";
 import "./startups/interactions";
