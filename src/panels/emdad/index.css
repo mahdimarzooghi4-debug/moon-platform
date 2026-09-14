@@ -22,30 +22,80 @@
   font-family: "Vazirmatn", sans-serif !important;
 }
 
+/* Keep every Emdad sidebar on the exact same 224×900 frame. */
 .emdad-panel > [data-name="colored-sidebar"] {
+  position: absolute !important;
+  top: 0 !important;
+  left: 1216px !important;
+  right: auto !important;
+  width: 224px !important;
+  min-width: 224px !important;
+  max-width: 224px !important;
+  height: 900px !important;
+  min-height: 900px !important;
+  max-height: 900px !important;
+  padding: 20px 16px 18px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-end !important;
+  gap: 8px !important;
+  background: #17324d !important;
   direction: rtl !important;
   text-align: right !important;
-  align-items: flex-end !important;
+  overflow: hidden !important;
 }
 
+.emdad-panel > [data-name="colored-sidebar"] > [data-name="brand-logo"] {
+  width: 192px !important;
+  min-width: 192px !important;
+  max-width: 192px !important;
+  height: 56px !important;
+  min-height: 56px !important;
+  max-height: 56px !important;
+  flex: 0 0 56px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Identity text below the logo is centered on every sidebar implementation. */
 .emdad-panel > [data-name="colored-sidebar"] > [data-name="panel-identity"] {
+  width: 192px !important;
+  min-width: 192px !important;
+  max-width: 192px !important;
+  height: 64px !important;
+  min-height: 64px !important;
+  max-height: 64px !important;
+  flex: 0 0 64px !important;
+  padding: 7px 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 2px !important;
   direction: rtl !important;
-  align-items: flex-end !important;
-  text-align: right !important;
+  text-align: center !important;
 }
 
 .emdad-panel > [data-name="colored-sidebar"] > [data-name="panel-identity"] > p,
+.emdad-panel > [data-name="colored-sidebar"] > [data-name="panel-identity"] > span,
 .emdad-panel > [data-name="colored-sidebar"] > [data-name="panel-identity"] > div,
 .emdad-panel > [data-name="colored-sidebar"] > [data-name="panel-identity"] > div > p {
-  width: 176px !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
   direction: rtl !important;
-  text-align: right !important;
+  text-align: center !important;
 }
 
 .emdad-panel > [data-name="colored-sidebar"] > [data-name$="-nav"] {
   width: 192px !important;
+  min-width: 192px !important;
+  max-width: 192px !important;
   height: 38px !important;
   min-height: 38px !important;
+  max-height: 38px !important;
+  flex: 0 0 38px !important;
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
@@ -80,4 +130,26 @@
   height: 18px !important;
   flex: 0 0 18px !important;
   transform: none !important;
+}
+
+/* Logout must stay readable on hover in both legacy and shared sidebars. */
+.emdad-panel > [data-name="colored-sidebar"] > [data-name="logout-nav"] {
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: #17324d !important;
+  opacity: 1 !important;
+}
+
+.emdad-panel > [data-name="colored-sidebar"] > [data-name="logout-nav"]:hover,
+.emdad-panel > [data-name="colored-sidebar"] > [data-name="logout-nav"]:focus-visible {
+  background: #ffffff !important;
+  color: #17324d !important;
+  opacity: 1 !important;
+}
+
+.emdad-panel > [data-name="colored-sidebar"] > [data-name="logout-nav"] > p,
+.emdad-panel > [data-name="colored-sidebar"] > [data-name="logout-nav"] > span:first-child,
+.emdad-panel > [data-name="colored-sidebar"] > [data-name="logout-nav"]:hover > p,
+.emdad-panel > [data-name="colored-sidebar"] > [data-name="logout-nav"]:hover > span:first-child {
+  color: #17324d !important;
+  opacity: 1 !important;
 }
