@@ -1,10 +1,14 @@
 using System;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Moon.Platform.Api.Infrastructure.Persistence;
 
 #nullable disable
 
 namespace Moon.Platform.Api.Infrastructure.Persistence.Migrations
 {
+    [DbContext(typeof(MoonDbContext))]
+    [Migration("20260914165000_AdminManagementPersistence")]
     public partial class AdminManagementPersistence : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
