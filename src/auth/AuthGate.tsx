@@ -16,6 +16,8 @@ import {
 } from "./oidc";
 
 const DEV_PANEL_PREVIEW_KEY = "moon.auth.dev-panel-preview";
+const env = import.meta.env as Record<string, string | undefined>;
+const DEMO_MODE = env.VITE_DEMO_MODE === "true";
 
 function rolesForAccountType(roles: string[], accountType: AccountType) {
   if (accountType === "company") {
@@ -30,6 +32,10 @@ function rolesForAccountType(roles: string[], accountType: AccountType) {
 }
 
 function canUseDevPanelPreview(pathname: string) {
+  if (DEMO_MODE) {
+    return pathname === "/panel" || pathname.startsWith("/panel/");
+  }
+
   if (!import.meta.env.DEV) return false;
 
   const accountType = sessionStorage.getItem(DEV_PANEL_PREVIEW_KEY) as AccountType | null;
