@@ -140,7 +140,11 @@ export default function AdminUsersRoles() {
           </div>
           <div className="admin-pagination">
             <span>{loading ? "در حال دریافت…" : `نمایش ${numberFa.format(filteredUsers.length)} کاربر`}</span>
-            <div className="admin-pagination-controls"><span className="admin-page-number">۱</span></div>
+            <div className="admin-pagination-controls" aria-label="صفحه‌بندی کاربران">
+              <button className="admin-page-control" type="button" aria-label="صفحه قبل" disabled>‹</button>
+              <span className="admin-page-number">۱</span>
+              <button className="admin-page-control" type="button" aria-label="صفحه بعد" disabled>›</button>
+            </div>
           </div>
         </section>
 
