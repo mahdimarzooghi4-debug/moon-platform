@@ -24,6 +24,11 @@ public interface IAdminManagementService
 
 public sealed class AdminManagementService(MoonDbContext dbContext, IAuditWriter auditWriter) : IAdminManagementService
 {
+    private DbSet<AdminOrganizationProfile> OrganizationProfiles => dbContext.Set<AdminOrganizationProfile>();
+    private DbSet<AdminManagedProject> ManagedProjects => dbContext.Set<AdminManagedProject>();
+    private DbSet<AdminNewsArticle> NewsArticles => dbContext.Set<AdminNewsArticle>();
+    private DbSet<AdminHeroVideo> HeroVideos => dbContext.Set<AdminHeroVideo>();
+
     private static readonly AdminManagedProject[] ProjectSeed =
     [
         new() { Id = "1", Name = "سلامت خانواده", Province = "سیستان و بلوچستان", Track = "سلامت و خدمات اجتماعی", FundingPercent = 51, FundingTarget = "۳۵۰ میلیون تومان", Status = "فعال", Stage = "در حال تأمین" },
@@ -39,14 +44,14 @@ public sealed class AdminManagementService(MoonDbContext dbContext, IAuditWriter
     ];
 
     public async Task<IReadOnlyList<AdminOrganizationProfileView>> ListOrganizationProfilesAsync(CancellationToken cancellationToken = default) =>
-        await dbContext.AdminOrganizationProfiles.AsNoTracking()
+        await OrganizationProfiles.AsNoTracking()
             .OrderByDescending(x => x.UpdatedAtUtc)
             .Select(x => ToView(x))
             .ToListAsync(cancellationToken);
 
     public async Task<AdminOrganizationProfileView?> GetOrganizationProfileAsync(Guid organizationId, CancellationToken cancellationToken = default)
     {
-        var item = await dbContext.AdminOrganizationProfiles.AsNoTracking().SingleOrDefaultAsync(x => x.OrganizationId == organizationId, cancellationToken);
+        var item = await OrganizationProfiles.AsNoTracking().SingleOrDefaultAsync(x => x.OrganizationId == organizationId, cancellationToken);
         return item is null ? null : ToView(item);
     }
 
@@ -55,12 +60,12 @@ public sealed class AdminManagementService(MoonDbContext dbContext, IAuditWriter
         var organization = await dbContext.Organizations.SingleOrDefaultAsync(x => x.Id == organizationId, cancellationToken);
         if (organization is null || organization.Type != "startup") return null;
 
-        var item = await dbContext.AdminOrganizationProfiles.SingleOrDefaultAsync(x => x.OrganizationId == organizationId, cancellationToken);
+        var item = await OrganizationProfiles.SingleOrDefaultAsync(x => x.OrganizationId == organizationId, cancellationToken);
         var before = item is null ? null : JsonSerializer.Serialize(ToView(item));
         if (item is null)
         {
             item = new AdminOrganizationProfile { OrganizationId = organizationId };
-            dbContext.AdminOrganizationProfiles.Add(item);
+            OrganizationProfiles.Add(item);
         }
 
         item.Name = Required(request.Name, 200, nameof(request.Name));
@@ -79,20 +84,20 @@ public sealed class AdminManagementService(MoonDbContext dbContext, IAuditWriter
     public async Task<IReadOnlyList<AdminManagedProjectView>> ListProjectsAsync(CancellationToken cancellationToken = default)
     {
         await EnsureProjectSeedAsync(cancellationToken);
-        return await dbContext.AdminManagedProjects.AsNoTracking().OrderBy(x => x.Id).Select(x => ToView(x)).ToListAsync(cancellationToken);
+        return await ManagedProjects.AsNoTracking().OrderBy(x => x.Id).Select(x => ToView(x)).ToListAsync(cancellationToken);
     }
 
     public async Task<AdminManagedProjectView?> GetProjectAsync(string id, CancellationToken cancellationToken = default)
     {
         await EnsureProjectSeedAsync(cancellationToken);
-        var item = await dbContext.AdminManagedProjects.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+        var item = await ManagedProjects.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
         return item is null ? null : ToView(item);
     }
 
     public async Task<AdminManagedProjectView?> SaveProjectAsync(string id, SaveAdminManagedProjectRequest request, string actorSubject, string correlationId, string? ipAddress, CancellationToken cancellationToken = default)
     {
         await EnsureProjectSeedAsync(cancellationToken);
-        var item = await dbContext.AdminManagedProjects.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+        var item = await ManagedProjects.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
         if (item is null) return null;
         var before = JsonSerializer.Serialize(ToView(item));
 
@@ -114,7 +119,7 @@ public sealed class AdminManagementService(MoonDbContext dbContext, IAuditWriter
     public async Task<IReadOnlyList<AdminNewsArticleView>> ListNewsAsync(bool publishedOnly, CancellationToken cancellationToken = default)
     {
         await EnsureNewsSeedAsync(cancellationToken);
-        var query = dbContext.AdminNewsArticles.AsNoTracking().AsQueryable();
+        var query = NewsArticles.AsNoTracking().AsQueryable();
         if (publishedOnly) query = query.Where(x => x.Status == "published");
         return await query.OrderByDescending(x => x.UpdatedAtUtc).Select(x => ToView(x)).ToListAsync(cancellationToken);
     }
@@ -122,12 +127,12 @@ public sealed class AdminManagementService(MoonDbContext dbContext, IAuditWriter
     public async Task<AdminNewsArticleView> SaveNewsAsync(SaveAdminNewsRequest request, string actorSubject, string correlationId, string? ipAddress, CancellationToken cancellationToken = default)
     {
         var id = Required(request.Id, 120, nameof(request.Id));
-        var item = await dbContext.AdminNewsArticles.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+        var item = await NewsArticles.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
         var before = item is null ? null : JsonSerializer.Serialize(ToView(item));
         if (item is null)
         {
             item = new AdminNewsArticle { Id = id };
-            dbContext.AdminNewsArticles.Add(item);
+            NewsArticles.Add(item);
         }
 
         item.Title = Required(request.Title, 300, nameof(request.Title));
@@ -143,10 +148,10 @@ public sealed class AdminManagementService(MoonDbContext dbContext, IAuditWriter
 
     public async Task<bool> DeleteNewsAsync(string id, string actorSubject, string correlationId, string? ipAddress, CancellationToken cancellationToken = default)
     {
-        var item = await dbContext.AdminNewsArticles.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+        var item = await NewsArticles.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
         if (item is null) return false;
         var before = JsonSerializer.Serialize(ToView(item));
-        dbContext.AdminNewsArticles.Remove(item);
+        NewsArticles.Remove(item);
         await dbContext.SaveChangesAsync(cancellationToken);
         await AuditAsync("admin.content.news.delete", "news", id, actorSubject, correlationId, ipAddress, before, null, null, null, cancellationToken);
         return true;
@@ -154,21 +159,21 @@ public sealed class AdminManagementService(MoonDbContext dbContext, IAuditWriter
 
     public async Task<AdminHeroVideoMetaView?> GetHeroMetaAsync(CancellationToken cancellationToken = default)
     {
-        var item = await dbContext.AdminHeroVideos.AsNoTracking().SingleOrDefaultAsync(x => x.Id == 1, cancellationToken);
+        var item = await HeroVideos.AsNoTracking().SingleOrDefaultAsync(x => x.Id == 1, cancellationToken);
         return item is null ? null : ToMeta(item);
     }
 
     public Task<AdminHeroVideo?> GetHeroAsync(CancellationToken cancellationToken = default) =>
-        dbContext.AdminHeroVideos.AsNoTracking().SingleOrDefaultAsync(x => x.Id == 1, cancellationToken);
+        HeroVideos.AsNoTracking().SingleOrDefaultAsync(x => x.Id == 1, cancellationToken);
 
     public async Task<AdminHeroVideoMetaView> SaveHeroAsync(string fileName, string contentType, byte[] data, string actorSubject, string correlationId, string? ipAddress, CancellationToken cancellationToken = default)
     {
-        var item = await dbContext.AdminHeroVideos.SingleOrDefaultAsync(x => x.Id == 1, cancellationToken);
+        var item = await HeroVideos.SingleOrDefaultAsync(x => x.Id == 1, cancellationToken);
         var before = item is null ? null : JsonSerializer.Serialize(ToMeta(item));
         if (item is null)
         {
             item = new AdminHeroVideo { Id = 1 };
-            dbContext.AdminHeroVideos.Add(item);
+            HeroVideos.Add(item);
         }
 
         item.FileName = Required(fileName, 240, nameof(fileName));
@@ -185,10 +190,10 @@ public sealed class AdminManagementService(MoonDbContext dbContext, IAuditWriter
 
     public async Task<bool> DeleteHeroAsync(string actorSubject, string correlationId, string? ipAddress, CancellationToken cancellationToken = default)
     {
-        var item = await dbContext.AdminHeroVideos.SingleOrDefaultAsync(x => x.Id == 1, cancellationToken);
+        var item = await HeroVideos.SingleOrDefaultAsync(x => x.Id == 1, cancellationToken);
         if (item is null) return false;
         var before = JsonSerializer.Serialize(ToMeta(item));
-        dbContext.AdminHeroVideos.Remove(item);
+        HeroVideos.Remove(item);
         await dbContext.SaveChangesAsync(cancellationToken);
         await AuditAsync("admin.content.hero.delete", "hero_video", "1", actorSubject, correlationId, ipAddress, before, null, null, null, cancellationToken);
         return true;
@@ -196,8 +201,8 @@ public sealed class AdminManagementService(MoonDbContext dbContext, IAuditWriter
 
     private async Task EnsureProjectSeedAsync(CancellationToken cancellationToken)
     {
-        if (await dbContext.AdminManagedProjects.AnyAsync(cancellationToken)) return;
-        dbContext.AdminManagedProjects.AddRange(ProjectSeed.Select(x => new AdminManagedProject
+        if (await ManagedProjects.AnyAsync(cancellationToken)) return;
+        ManagedProjects.AddRange(ProjectSeed.Select(x => new AdminManagedProject
         {
             Id = x.Id, Name = x.Name, Province = x.Province, Track = x.Track, FundingPercent = x.FundingPercent,
             FundingTarget = x.FundingTarget, Status = x.Status, Stage = x.Stage, UpdatedAtUtc = DateTimeOffset.UtcNow
@@ -207,8 +212,8 @@ public sealed class AdminManagementService(MoonDbContext dbContext, IAuditWriter
 
     private async Task EnsureNewsSeedAsync(CancellationToken cancellationToken)
     {
-        if (await dbContext.AdminNewsArticles.AnyAsync(cancellationToken)) return;
-        dbContext.AdminNewsArticles.AddRange(NewsSeed.Select(x => new AdminNewsArticle
+        if (await NewsArticles.AnyAsync(cancellationToken)) return;
+        NewsArticles.AddRange(NewsSeed.Select(x => new AdminNewsArticle
         {
             Id = x.Id, Title = x.Title, Summary = x.Summary, Status = x.Status, UpdatedAtUtc = x.UpdatedAtUtc
         }));
