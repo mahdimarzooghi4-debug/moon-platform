@@ -8,13 +8,6 @@ import {
   type AdminOrganization,
   type AdminRole,
 } from "../api";
-import {
-  APPROVED_STARTUP_ACCESS_QUEUE_CHANGED,
-  APPROVED_STARTUP_ACCESS_QUEUE_KEY,
-  readApprovedStartupAccessQueue,
-  removeApprovedStartupAccess,
-  type ApprovedStartupAccessQueueItem,
-} from "../../../shared/approved-startup-access-queue";
 import { createAdminProvisioningRecord } from "../provisioning-store";
 import "../index.css";
 import "../users-flow.css";
@@ -30,12 +23,20 @@ function normalizeMobile(value: string) {
   return toLatinDigits(value).replace(/\D/g, "").slice(0, 11);
 }
 
+function organizationMatchesRole(organization: AdminOrganization, roleCode: string) {
+  if (!roleCode) return true;
+  if (roleCode === "company_manager") return organization.type === "company";
+  if (roleCode === "creative_house") return organization.type === "creative_house";
+  if (roleCode === "emdad") return organization.type === "emdad" || organization.type === "supervisor";
+  if (roleCode === "fund_manager") return organization.type === "fund" || organization.type === "fund_manager";
+  if (roleCode === "system_admin") return organization.type === "platform";
+  return true;
+}
+
 export default function AdminAddUser() {
   const navigate = useNavigate();
   const [organizations, setOrganizations] = useState<AdminOrganization[]>([]);
   const [roles, setRoles] = useState<AdminRole[]>([]);
-  const [approvedStartups, setApprovedStartups] = useState<ApprovedStartupAccessQueueItem[]>([]);
-  const [selectedQueueId, setSelectedQueueId] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
@@ -49,19 +50,6 @@ export default function AdminAddUser() {
 
   useEffect(() => {
     let active = true;
-
-    const refreshQueue = () => {
-      if (active) setApprovedStartups(readApprovedStartupAccessQueue());
-    };
-
-    const handleStorage = (event: StorageEvent) => {
-      if (event.key === APPROVED_STARTUP_ACCESS_QUEUE_KEY) refreshQueue();
-    };
-
-    refreshQueue();
-    window.addEventListener(APPROVED_STARTUP_ACCESS_QUEUE_CHANGED, refreshQueue);
-    window.addEventListener("storage", handleStorage);
-
     Promise.allSettled([listAdminOrganizations(), listAdminRoles()])
       .then(([organizationsResult, rolesResult]) => {
         if (!active) return;
@@ -81,8 +69,6 @@ export default function AdminAddUser() {
 
     return () => {
       active = false;
-      window.removeEventListener(APPROVED_STARTUP_ACCESS_QUEUE_CHANGED, refreshQueue);
-      window.removeEventListener("storage", handleStorage);
     };
   }, []);
 
@@ -91,13 +77,13 @@ export default function AdminAddUser() {
     [roleCode, roles],
   );
   const isStartupRole = roleCode === "startup_manager";
-  const selectedQueueItem = useMemo(
-    () => approvedStartups.find((item) => item.id === selectedQueueId),
-    [approvedStartups, selectedQueueId],
+  const organizationOptions = useMemo(
+    () => organizations.filter((organization) => organizationMatchesRole(organization, roleCode)),
+    [organizations, roleCode],
   );
   const selectedOrganization = useMemo(
-    () => organizations.find((organization) => organization.organizationId === organizationId),
-    [organizationId, organizations],
+    () => organizationOptions.find((organization) => organization.organizationId === organizationId),
+    [organizationId, organizationOptions],
   );
   const mobileIsValid = /^09\d{9}$/.test(mobile);
   const formIsValid = Boolean(
@@ -106,16 +92,6 @@ export default function AdminAddUser() {
       selectedRole &&
       (isStartupRole ? startupName.trim() : selectedOrganization),
   );
-
-  const chooseApprovedStartup = (item: ApprovedStartupAccessQueueItem) => {
-    setSelectedQueueId(item.id);
-    setStartupName(item.startupName);
-    setDisplayName(item.managerName);
-    setActivityArea(item.activityArea);
-    setRoleCode("startup_manager");
-    setOrganizationId("");
-    setError("");
-  };
 
   const submitUser = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -143,10 +119,6 @@ export default function AdminAddUser() {
       activityArea: isStartupRole ? activityArea.trim() : "",
     });
 
-    if (selectedQueueItem) {
-      removeApprovedStartupAccess(selectedQueueItem.startupName, selectedQueueItem.managerName);
-    }
-
     navigate("/panel/admin/users?provisioned=1");
   };
 
@@ -168,7 +140,7 @@ export default function AdminAddUser() {
             <div className="admin-provisioning-heading">
               <div>
                 <h2>۱. مشخصات شخص</h2>
-                <p>برای نقش‌های سامانه نیازی نیست شخص از قبل Login کرده باشد؛ مدیر مشخصات اولیه را ثبت می‌کند.</p>
+                <p>شخص قبل از تخصیص نقش همین‌جا تعریف می‌شود و لازم نیست از قبل وارد سامانه شده باشد.</p>
               </div>
               <span>تعریف هویت اولیه</span>
             </div>
@@ -198,7 +170,7 @@ export default function AdminAddUser() {
             <div className="admin-provisioning-heading">
               <div>
                 <h2>۲. نقش و مجموعه</h2>
-                <p>شرکت نیاز به تأیید مدیر سامانه ندارد؛ فقط نماینده و نقش او به شرکت موجود متصل می‌شود.</p>
+                <p>شرکت نیاز به تأیید جداگانه ندارد؛ نماینده مستقیماً به شرکت موجود متصل می‌شود.</p>
               </div>
               <span>تخصیص دسترسی</span>
             </div>
@@ -206,11 +178,21 @@ export default function AdminAddUser() {
             <div className="admin-form-grid">
               <div className="admin-form-field">
                 <label htmlFor="admin-user-role">نقش کاربری</label>
-                <select id="admin-user-role" className="admin-form-input" value={roleCode} onChange={(event) => {
-                  setRoleCode(event.target.value);
-                  setOrganizationId("");
-                  if (event.target.value !== "startup_manager") setSelectedQueueId("");
-                }} disabled={loading || saving || roles.length === 0} required>
+                <select
+                  id="admin-user-role"
+                  className="admin-form-input"
+                  value={roleCode}
+                  onChange={(event) => {
+                    setRoleCode(event.target.value);
+                    setOrganizationId("");
+                    if (event.target.value !== "startup_manager") {
+                      setStartupName("");
+                      setActivityArea("");
+                    }
+                  }}
+                  disabled={loading || saving || roles.length === 0}
+                  required
+                >
                   <option value="">انتخاب نقش</option>
                   {roles.map((role) => <option value={role.code} key={role.roleId}>{role.name}</option>)}
                 </select>
@@ -221,7 +203,7 @@ export default function AdminAddUser() {
                   <label htmlFor="admin-user-org">سازمان / مجموعه</label>
                   <select id="admin-user-org" className="admin-form-input" value={organizationId} onChange={(event) => setOrganizationId(event.target.value)} disabled={loading || saving} required>
                     <option value="">انتخاب سازمان فعال</option>
-                    {organizations.map((organization) => (
+                    {organizationOptions.map((organization) => (
                       <option value={organization.organizationId} key={organization.organizationId}>{organization.name}</option>
                     ))}
                   </select>
@@ -230,10 +212,7 @@ export default function AdminAddUser() {
                 <>
                   <div className="admin-form-field">
                     <label htmlFor="admin-startup-name">نام استارتاپ</label>
-                    <input id="admin-startup-name" className="admin-form-input" value={startupName} onChange={(event) => {
-                      setStartupName(event.target.value);
-                      setSelectedQueueId("");
-                    }} placeholder="نام استارتاپ" disabled={saving} required />
+                    <input id="admin-startup-name" className="admin-form-input" value={startupName} onChange={(event) => setStartupName(event.target.value)} placeholder="نام استارتاپ" disabled={saving} required />
                   </div>
                   <div className="admin-form-field">
                     <label htmlFor="admin-startup-area">حوزه فعالیت</label>
@@ -244,44 +223,21 @@ export default function AdminAddUser() {
             </div>
 
             {isStartupRole ? (
-              <div className="admin-approved-startup-queue" aria-label="استارتاپ‌های تأییدشده خانه خلاق">
-                <div className="admin-approved-startup-queue-head">
-                  <div>
-                    <strong>استارتاپ‌های تأییدشده خانه خلاق</strong>
-                    <span>انتخاب از این فهرست فقط مشخصات استارتاپ و مدیر را پر می‌کند؛ مدیر سامانه همچنان می‌تواند اطلاعات را دستی وارد کند.</span>
-                  </div>
-                  <span className="admin-approved-startup-count">{approvedStartups.length.toLocaleString("fa-IR")} مورد</span>
-                </div>
-                {approvedStartups.length ? (
-                  <div className="admin-approved-startup-list">
-                    {approvedStartups.map((item) => (
-                      <div className={`admin-approved-startup-row admin-approved-startup-row-simple${selectedQueueId === item.id ? " is-selected" : ""}`} key={item.id}>
-                        <div className="admin-approved-startup-name">
-                          <strong>{item.startupName}</strong>
-                          <span>{item.managerName || "مدیر ثبت نشده"}{item.activityArea ? ` · ${item.activityArea}` : ""}</span>
-                        </div>
-                        <span className="admin-approved-startup-state is-ready">تأیید خانه خلاق</span>
-                        <button className="admin-approved-startup-select" type="button" disabled={saving} onClick={() => chooseApprovedStartup(item)}>
-                          {selectedQueueId === item.id ? "انتخاب‌شده" : "استفاده از مشخصات"}
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="admin-approved-startup-empty">موردی در صف تأیید خانه خلاق نیست؛ مشخصات استارتاپ را می‌توانی مستقیم وارد کنی.</div>
-                )}
+              <div className="admin-startup-direct-note">
+                <strong>ساخت استارتاپ از همین صفحه</strong>
+                <span>مدیر سامانه مشخصات شخص و استارتاپ را وارد می‌کند؛ رکورد دعوت و دسترسی اولیه ساخته می‌شود و اعلان ورود برای شخص در صف ارسال قرار می‌گیرد.</span>
               </div>
             ) : null}
 
             {error ? <p className="admin-form-actions-note">{error}</p> : null}
           </section>
 
-          <aside className="admin-info-note admin-info-note-tall">ثبت این فرم، شخص را در فهرست کاربران به حالت «دعوت‌شده» اضافه می‌کند. Backend فعلی فقط کاربران Sync‌شده با Keycloak را می‌شناسد و سرویس SMS هنوز provider واقعی ندارد؛ بنابراین ارسال واقعی دعوت پس از اتصال سرویس هویت/پیامک فعال می‌شود.</aside>
+          <aside className="admin-info-note admin-info-note-tall">Backend فعلی ایجاد هویت جدید در Keycloak و ارسال واقعی SMS را هنوز پیاده نکرده است؛ بنابراین این فرم رکورد دعوت را ثبت می‌کند و تا اتصال سرویس هویت/پیامک، وضعیت اعلان به‌صورت «در انتظار اتصال سرویس» نمایش داده می‌شود.</aside>
 
           <section className="admin-form-actions">
             <button className="admin-users-button admin-users-button-primary" type="submit" disabled={loading || saving || !formIsValid}>{saving ? "در حال ثبت…" : "ساخت حساب و ثبت نقش"}</button>
             <Link className="admin-users-button" to="/panel/admin/users">انصراف</Link>
-            <p className="admin-form-actions-note">برای استارتاپ، نام استارتاپ و مدیر آن همین‌جا ثبت می‌شود؛ برای شرکت، سازمان موجود مستقیماً انتخاب می‌شود و مرحله تأیید جداگانه ندارد.</p>
+            <p className="admin-form-actions-note">برای استارتاپ، مشخصات مجموعه همین‌جا ثبت می‌شود؛ برای شرکت، سازمان موجود بدون مرحله تأیید جداگانه انتخاب می‌شود.</p>
           </section>
         </form>
       </main>
