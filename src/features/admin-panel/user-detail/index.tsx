@@ -11,21 +11,21 @@ import "../index.css";
 import "../users-flow.css";
 
 export default function AdminUserDetail() {
-  const { id } = useParams();
+  const { userId } = useParams();
   const [user, setUser] = useState<AdminUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
   const refresh = async () => {
-    if (!id) return;
-    const next = await getAdminUser(id);
+    if (!userId) return;
+    const next = await getAdminUser(userId);
     setUser(next);
   };
 
   useEffect(() => {
     let active = true;
-    if (!id) {
+    if (!userId) {
       setError("شناسه کاربر معتبر نیست.");
       setLoading(false);
       return () => {
@@ -33,7 +33,7 @@ export default function AdminUserDetail() {
       };
     }
 
-    getAdminUser(id)
+    getAdminUser(userId)
       .then((next) => {
         if (active) setUser(next);
       })
@@ -47,7 +47,7 @@ export default function AdminUserDetail() {
     return () => {
       active = false;
     };
-  }, [id]);
+  }, [userId]);
 
   const fields = useMemo(() => {
     if (!user) return [];
