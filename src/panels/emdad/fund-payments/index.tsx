@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import EmdadSharedSidebar from "../SharedSidebar";
 import "../index.css";
 import "./index.css";
 
@@ -23,12 +24,10 @@ type FundProjectPaymentRequest = {
   receipt?: string;
 };
 
-const logo = "/assets/emdad/dashboard/logo.png";
-
 function normalizeRequest(item: unknown): FundProjectPaymentRequest | null {
   if (!item || typeof item !== "object") return null;
   const value = item as Record<string, unknown>;
-  const status = value.status === "pending" ? "pending_admin" : value.status;
+  const rawStatus = value.status === "pending" ? "pending_admin" : value.status;
   if (
     typeof value.id !== "string" ||
     typeof value.project !== "string" ||
@@ -38,8 +37,12 @@ function normalizeRequest(item: unknown): FundProjectPaymentRequest | null {
     typeof value.requestedAmount !== "number" ||
     typeof value.note !== "string" ||
     typeof value.createdAt !== "string" ||
-    !["pending_admin", "approved", "rejected", "paid"].includes(String(status))
+    !["pending_admin", "approved", "rejected", "paid"].includes(String(rawStatus))
   ) return null;
+
+  const legacySyntheticPayment =
+    rawStatus === "paid" && typeof value.receipt === "string" && value.receipt.startsWith("FP-");
+  const status = legacySyntheticPayment ? "approved" : rawStatus;
 
   return {
     id: value.id,
@@ -53,8 +56,8 @@ function normalizeRequest(item: unknown): FundProjectPaymentRequest | null {
     createdAt: value.createdAt,
     approvedAt: typeof value.approvedAt === "string" ? value.approvedAt : undefined,
     rejectedAt: typeof value.rejectedAt === "string" ? value.rejectedAt : undefined,
-    paidAt: typeof value.paidAt === "string" ? value.paidAt : undefined,
-    receipt: typeof value.receipt === "string" ? value.receipt : undefined,
+    paidAt: !legacySyntheticPayment && typeof value.paidAt === "string" ? value.paidAt : undefined,
+    receipt: !legacySyntheticPayment && typeof value.receipt === "string" ? value.receipt : undefined,
   };
 }
 
@@ -65,9 +68,15 @@ function readRequests(): FundProjectPaymentRequest[] {
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
     const requests = parsed.map(normalizeRequest).filter((item): item is FundProjectPaymentRequest => Boolean(item));
-    if (parsed.some((item) => item && typeof item === "object" && (item as { status?: unknown }).status === "pending")) {
-      localStorage.setItem(REQUESTS_KEY, JSON.stringify(requests));
-    }
+    const needsMigration = parsed.some((item) => {
+      if (!item || typeof item !== "object") return false;
+      const value = item as Record<string, unknown>;
+      return (
+        value.status === "pending" ||
+        (value.status === "paid" && typeof value.receipt === "string" && value.receipt.startsWith("FP-"))
+      );
+    });
+    if (needsMigration) localStorage.setItem(REQUESTS_KEY, JSON.stringify(requests));
     return requests;
   } catch {
     return [];
@@ -97,35 +106,38 @@ function formatDate(value?: string) {
   }
 }
 
-function navigate(path: string) {
-  if (window.location.pathname === path) return;
-  window.history.pushState({}, "", path);
-  window.dispatchEvent(new PopStateEvent("popstate"));
+function openPaymentRegistration(request: FundProjectPaymentRequest) {
+  window.dispatchEvent(
+    new CustomEvent("moon:emdad-open-payment-registration", {
+      detail: {
+        source: "fund",
+        project: request.project,
+        stage: request.stage,
+        amount: request.requestedAmount,
+        note: request.note,
+        title: "ثبت پرداخت از محل صندوق",
+        description:
+          "وجه صندوق ماه وارد حساب امداد شده است؛ پرداخت انجام‌شده از حساب امداد به پروژه و شماره رسید بانکی را ثبت کنید.",
+        contextType: "fund-payment",
+        contextId: request.id,
+      },
+    }),
+  );
 }
-
-const navItems = [
-  ["داشبورد", "/panel/emdad", "⌂"],
-  ["درخواست‌های آزادسازی", "/panel/emdad/release-requests", "⇩"],
-  ["پرداخت‌های تأییدشده صندوق", "/panel/emdad/fund-payments", "↗"],
-  ["تأیید گواهی ماده ۱۷۲", "/panel/emdad/article-172-approvals", "✓"],
-  ["هم‌افزایی صندوق", "/panel/emdad/fund-synergy", "%"],
-  ["سوابق هم‌افزایی صندوق", "/panel/emdad/fund-synergy/history", "↺"],
-  ["سوابق پرداخت", "/panel/emdad/payment-history", "₮"],
-  ["گزارش‌های مالی", "/panel/emdad/financial-reports", "▤"],
-  ["بازگشت‌های صندوق", "/panel/emdad/fund-returns", "↩"],
-] as const;
 
 export default function EmdadFundPaymentsPage() {
   const [requests, setRequests] = useState<FundProjectPaymentRequest[]>(() => readRequests());
   const [view, setView] = useState<ExecutionView>("approved");
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedReceiptId, setSelectedReceiptId] = useState<string | null>(null);
 
   useEffect(() => {
     const sync = () => setRequests(readRequests());
     window.addEventListener("moon:fund-project-payments-changed", sync);
+    window.addEventListener("moon:emdad-payment-recorded", sync);
     window.addEventListener("storage", sync);
     return () => {
       window.removeEventListener("moon:fund-project-payments-changed", sync);
+      window.removeEventListener("moon:emdad-payment-recorded", sync);
       window.removeEventListener("storage", sync);
     };
   }, []);
@@ -138,36 +150,23 @@ export default function EmdadFundPaymentsPage() {
     [requests, view],
   );
   const selected = requests.find(
-    (request) => request.id === selectedId && (request.status === "approved" || request.status === "paid"),
+    (request) => request.id === selectedReceiptId && request.status === "paid",
   ) ?? null;
-
-  const approvePayment = () => {
-    if (!selected || selected.status !== "approved") return;
-    const paidAt = new Date().toISOString();
-    const receipt = `FP-${Date.now().toString().slice(-8)}`;
-    const updated = requests.map((request) =>
-      request.id === selected.id ? { ...request, status: "paid" as const, paidAt, receipt } : request,
-    );
-    localStorage.setItem(REQUESTS_KEY, JSON.stringify(updated));
-    setRequests(updated);
-    setSelectedId(selected.id);
-    window.dispatchEvent(new CustomEvent("moon:fund-project-payments-changed"));
-  };
 
   return (
     <div className="emdad-panel emdad-fund-payments-panel" data-name="emdad-fund-payments">
       <main className="emdad-fund-payments-main" data-name="Main Content">
         <header className="emdad-fund-payments-header">
           <div>
-            <h1>پرداخت‌های تأییدشده صندوق</h1>
-            <p>فقط درخواست‌هایی که مدیر صندوق ثبت و مدیر ماه تأیید کرده است برای اجرای پرداخت در این بخش نمایش داده می‌شوند.</p>
+            <h1>پرداخت از محل صندوق</h1>
+            <p>مسیر وجه: صندوق ماه → حساب کمیته امداد → پروژه. این بخش فقط اجرای پرداخت تأییدشده و ثبت رسید واقعی را انجام می‌دهد.</p>
           </div>
           <div className="emdad-fund-payments-count">{faNumber(eligibleCount)} درخواست</div>
         </header>
 
         <div className="emdad-fund-payments-tabs">
           <button className="emdad-fund-payments-tab" data-active={view === "approved"} onClick={() => setView("approved")}>
-            در انتظار اجرای پرداخت {faNumber(approvedCount)}
+            در انتظار ثبت پرداخت {faNumber(approvedCount)}
           </button>
           <button className="emdad-fund-payments-tab" data-active={view === "paid"} onClick={() => setView("paid")}>
             پرداخت‌شده {faNumber(paidCount)}
@@ -177,8 +176,8 @@ export default function EmdadFundPaymentsPage() {
         <section className="emdad-fund-payments-card">
           <div className="emdad-fund-payments-title">
             <div>
-              <h2>{view === "approved" ? "درخواست‌های تأییدشده مدیر ماه" : "پرداخت‌های انجام‌شده"}</h2>
-              <p>منبع وجه «صندوق» و دریافت‌کننده «پروژه / استارتاپ» است؛ تأیید تصمیم پرداخت با مدیر ماه انجام شده است.</p>
+              <h2>{view === "approved" ? "پرداخت‌های تأییدشده آماده اجرا" : "پرداخت‌های ثبت‌شده"}</h2>
+              <p>منبع تأمین «صندوق ماه» است و پرداخت واقعی از «حساب کمیته امداد» به پروژه انجام و با رسید بانکی ثبت می‌شود.</p>
             </div>
           </div>
 
@@ -194,7 +193,7 @@ export default function EmdadFundPaymentsPage() {
           <div className="emdad-fund-payments-list">
             {visible.length === 0 ? (
               <div className="emdad-fund-payments-empty">
-                {view === "approved" ? "درخواست تأییدشده‌ای برای اجرای پرداخت وجود ندارد." : "هنوز پرداختی از منابع صندوق ثبت نشده است."}
+                {view === "approved" ? "درخواست تأییدشده‌ای برای ثبت پرداخت وجود ندارد." : "هنوز پرداخت واقعی از محل صندوق ثبت نشده است."}
               </div>
             ) : (
               visible.map((request) => (
@@ -208,12 +207,19 @@ export default function EmdadFundPaymentsPage() {
                   <div>{formatDate(request.approvedAt ?? request.createdAt)}</div>
                   <div>
                     <span className="emdad-fund-payments-status" data-status={request.status}>
-                      {request.status === "approved" ? "تأیید مدیر ماه" : "پرداخت‌شده"}
+                      {request.status === "approved" ? "تأییدشده؛ در انتظار پرداخت" : "پرداخت واقعی ثبت شد"}
                     </span>
                   </div>
                   <div>
-                    <button className="emdad-fund-payments-review" type="button" onClick={() => setSelectedId(request.id)}>
-                      {request.status === "approved" ? "اجرای پرداخت" : "مشاهده رسید"}
+                    <button
+                      className="emdad-fund-payments-review"
+                      type="button"
+                      onClick={() => {
+                        if (request.status === "approved") openPaymentRegistration(request);
+                        else setSelectedReceiptId(request.id);
+                      }}
+                    >
+                      {request.status === "approved" ? "ثبت پرداخت و رسید" : "مشاهده رسید"}
                     </button>
                   </div>
                 </div>
@@ -223,48 +229,26 @@ export default function EmdadFundPaymentsPage() {
         </section>
       </main>
 
-      <aside className="emdad-fund-payments-sidebar" data-name="colored-sidebar">
-        <div className="emdad-fund-payments-logo" data-name="brand-logo"><img src={logo} alt="ماه" /></div>
-        <div className="emdad-fund-payments-identity"><span>سامانه ماه</span><small>پنل کمیته امداد</small></div>
-        {navItems.map(([label, path, icon]) => (
-          <button
-            key={path}
-            type="button"
-            className="emdad-fund-payments-nav"
-            data-name={path === "/panel/emdad/fund-payments" ? "fund-payments-nav" : undefined}
-            data-active={path === "/panel/emdad/fund-payments"}
-            onClick={() => navigate(path)}
-          >
-            <span>{label}</span><span className="emdad-fund-payments-nav-icon">{icon}</span>
-          </button>
-        ))}
-      </aside>
+      <EmdadSharedSidebar pathname={window.location.pathname} />
 
       {selected ? (
-        <div className="emdad-fund-payment-modal-backdrop" onMouseDown={(event) => event.target === event.currentTarget && setSelectedId(null)}>
-          <div className="emdad-fund-payment-modal" role="dialog" aria-modal="true">
-            <h2>{selected.status === "approved" ? "اجرای پرداخت تأییدشده صندوق" : "رسید پرداخت صندوق"}</h2>
-            <p>این درخواست توسط مدیر صندوق ثبت و توسط مدیر ماه تأیید شده است. کمیته امداد در این مرحله فقط اجرای پرداخت و رسید آن را ثبت می‌کند.</p>
+        <div className="emdad-fund-payment-modal-backdrop" onMouseDown={(event) => event.target === event.currentTarget && setSelectedReceiptId(null)}>
+          <div className="emdad-fund-payment-modal" role="dialog" aria-modal="true" aria-label="رسید پرداخت از محل صندوق">
+            <h2>رسید پرداخت از محل صندوق</h2>
+            <p>این پرداخت از منابع صندوق ماه، پس از ورود وجه به حساب کمیته امداد، از حساب امداد به پروژه انجام شده است.</p>
             <div className="emdad-fund-payment-detail-grid">
               <div className="emdad-fund-payment-detail"><span>پروژه</span><strong>{selected.project}</strong></div>
               <div className="emdad-fund-payment-detail"><span>دریافت‌کننده</span><strong>{selected.executor}</strong></div>
               <div className="emdad-fund-payment-detail"><span>مرحله / شرح</span><strong>{selected.stage}</strong></div>
-              <div className="emdad-fund-payment-detail"><span>منبع وجه</span><strong>منابع صندوق</strong></div>
-              <div className="emdad-fund-payment-detail"><span>مبلغ تأییدشده</span><strong>{formatAmount(selected.requestedAmount)}</strong></div>
-              <div className="emdad-fund-payment-detail"><span>تأیید مدیر ماه</span><strong>{formatDate(selected.approvedAt)}</strong></div>
-              {selected.status === "paid" ? (
-                <>
-                  <div className="emdad-fund-payment-detail"><span>تاریخ پرداخت</span><strong>{formatDate(selected.paidAt)}</strong></div>
-                  <div className="emdad-fund-payment-detail"><span>شماره رسید</span><strong>{selected.receipt ?? "—"}</strong></div>
-                </>
-              ) : null}
+              <div className="emdad-fund-payment-detail"><span>منبع تأمین</span><strong>صندوق ماه</strong></div>
+              <div className="emdad-fund-payment-detail"><span>پرداخت‌کننده</span><strong>حساب کمیته امداد</strong></div>
+              <div className="emdad-fund-payment-detail"><span>مبلغ پرداخت</span><strong>{formatAmount(selected.requestedAmount)}</strong></div>
+              <div className="emdad-fund-payment-detail"><span>تاریخ پرداخت</span><strong>{formatDate(selected.paidAt)}</strong></div>
+              <div className="emdad-fund-payment-detail"><span>شماره رسید / پیگیری</span><strong>{selected.receipt ?? "—"}</strong></div>
             </div>
-            <div className="emdad-fund-payment-note">{selected.note ? `توضیح مدیر صندوق: ${selected.note}` : "توضیح تکمیلی برای این درخواست ثبت نشده است."}</div>
+            <div className="emdad-fund-payment-note">{selected.note ? `توضیح درخواست: ${selected.note}` : "توضیح تکمیلی برای این درخواست ثبت نشده است."}</div>
             <div className="emdad-fund-payment-actions">
-              <button type="button" className="emdad-fund-payment-close" onClick={() => setSelectedId(null)}>بستن</button>
-              <button type="button" className="emdad-fund-payment-approve" disabled={selected.status === "paid"} onClick={approvePayment}>
-                {selected.status === "approved" ? "ثبت پرداخت به پروژه" : "پرداخت انجام شده"}
-              </button>
+              <button type="button" className="emdad-fund-payment-close" onClick={() => setSelectedReceiptId(null)}>بستن</button>
             </div>
           </div>
         </div>
