@@ -61,25 +61,7 @@ jobs:
         run: dotnet restore Moon.Platform.slnx
       - working-directory: backend
         run: dotnet build Moon.Platform.slnx -c Release --no-restore -warnaserror
-      - name: Check EF model drift
-        id: migration-check
-        continue-on-error: true
-        working-directory: backend
+      - working-directory: backend
         run: dotnet ef migrations has-pending-model-changes --project src/Moon.Platform.Api/Moon.Platform.Api.csproj --startup-project src/Moon.Platform.Api/Moon.Platform.Api.csproj
-      - name: Generate EF sync migration
-        if: steps.migration-check.outcome == 'failure'
-        working-directory: backend
-        run: dotnet ef migrations add ReleaseModelSync --project src/Moon.Platform.Api/Moon.Platform.Api.csproj --startup-project src/Moon.Platform.Api/Moon.Platform.Api.csproj --output-dir Infrastructure/Persistence/Migrations
-      - name: Upload EF sync artifact
-        if: steps.migration-check.outcome == 'failure'
-        uses: actions/upload-artifact@v4
-        with:
-          name: ef-model-sync
-          path: |
-            backend/src/Moon.Platform.Api/Infrastructure/Persistence/Migrations/*ReleaseModelSync*
-            backend/src/Moon.Platform.Api/Infrastructure/Persistence/Migrations/MoonDbContextModelSnapshot.cs
-      - name: Fail on EF model drift
-        if: steps.migration-check.outcome == 'failure'
-        run: exit 1
       - working-directory: backend
         run: dotnet test Moon.Platform.slnx -c Release --no-build --no-restore --logger "console;verbosity=normal"
