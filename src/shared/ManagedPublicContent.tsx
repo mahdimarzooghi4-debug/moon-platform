@@ -1,7 +1,9 @@
 import { useEffect } from "react";
-import { listPublicNews, loadPublicHeroVideo } from "../features/admin-panel/management-api";
+import { listPublicNews, loadPublicHeroVideo, loadPublicNewsImage } from "../features/admin-panel/management-api";
+import { loadNewsImage, readAdminNews } from "./admin-content-store";
 
 const numberFa = new Intl.NumberFormat("fa-IR");
+const isDevelopment = Boolean(import.meta.env.DEV);
 
 function normalize(value: string | null | undefined) {
   return (value ?? "").replace(/\s+/g, " ").trim();
@@ -11,6 +13,15 @@ function findLandingHero(root: HTMLElement) {
   return Array.from(root.querySelectorAll<HTMLElement>("div")).find((node) => {
     const className = typeof node.className === "string" ? node.className : "";
     return className.includes("h-[380px]") && className.includes("rounded-[24px]") && className.includes("overflow-hidden");
+  }) ?? null;
+}
+
+function findManagedNewsImage(root: HTMLElement, pathname: string) {
+  const widthToken = pathname === "/news" ? "w-[520px]" : "w-[1200px]";
+  const heightToken = pathname === "/news" ? "h-[320px]" : "h-[500px]";
+  return Array.from(root.querySelectorAll<HTMLElement>("div")).find((node) => {
+    const className = typeof node.className === "string" ? node.className : "";
+    return className.includes(widthToken) && className.includes(heightToken) && className.includes("rounded-[16px]");
   }) ?? null;
 }
 
@@ -42,6 +53,17 @@ function mountHero(root: HTMLElement, sourceUrl: string) {
   return true;
 }
 
+function mountNewsImage(root: HTMLElement, pathname: string, sourceUrl: string) {
+  const target = findManagedNewsImage(root, pathname);
+  if (!target) return false;
+  target.dataset.mahManagedNewsImage = "true";
+  target.style.backgroundImage = `url("${sourceUrl}")`;
+  target.style.backgroundSize = "cover";
+  target.style.backgroundPosition = "center";
+  target.style.backgroundRepeat = "no-repeat";
+  return true;
+}
+
 function updatePublishedCount(root: HTMLElement, count: number) {
   const label = Array.from(root.querySelectorAll<HTMLElement>("span")).find(
     (node) => normalize(node.textContent) === "اخبار منتشرشده",
@@ -52,7 +74,9 @@ function updatePublishedCount(root: HTMLElement, count: number) {
   if (value) value.textContent = numberFa.format(count);
 }
 
-function applyManagedNews(root: HTMLElement, items: Awaited<ReturnType<typeof listPublicNews>>) {
+type PublicNewsLike = { id: string; title: string; summary: string };
+
+function applyManagedNews(root: HTMLElement, items: PublicNewsLike[]) {
   updatePublishedCount(root, items.length);
   const first = items[0];
   if (!first) return;
@@ -114,21 +138,43 @@ export default function ManagedPublicContent() {
         })
         .catch(() => undefined);
     } else {
+      const applyNewsAndImage = async (items: PublicNewsLike[], imageLoader: (id: string) => Promise<Blob | null>) => {
+        if (disposed) return;
+        waitForRoot((root) => {
+          applyManagedNews(root, items);
+          return true;
+        });
+        const first = items[0];
+        if (!first) return;
+        const blob = await imageLoader(first.id).catch(() => null);
+        if (disposed || !blob) return;
+        objectUrl = URL.createObjectURL(blob);
+        waitForRoot((root) => mountNewsImage(root, pathname, objectUrl));
+      };
+
       listPublicNews()
-        .then((items) => {
-          if (disposed) return;
-          waitForRoot((root) => {
-            applyManagedNews(root, items);
-            return true;
-          });
-        })
-        .catch(() => undefined);
+        .then((items) => applyNewsAndImage(items, loadPublicNewsImage))
+        .catch(() => {
+          if (!isDevelopment) return;
+          const items = readAdminNews()
+            .filter((item) => item.status === "published")
+            .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+          return applyNewsAndImage(items, loadNewsImage);
+        });
     }
 
     return () => {
       disposed = true;
       observer?.disconnect();
       document.querySelector("[data-mah-managed-hero]")?.remove();
+      const managedNewsImage = document.querySelector<HTMLElement>("[data-mah-managed-news-image]");
+      if (managedNewsImage) {
+        managedNewsImage.style.removeProperty("background-image");
+        managedNewsImage.style.removeProperty("background-size");
+        managedNewsImage.style.removeProperty("background-position");
+        managedNewsImage.style.removeProperty("background-repeat");
+        delete managedNewsImage.dataset.mahManagedNewsImage;
+      }
       if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
   }, []);
