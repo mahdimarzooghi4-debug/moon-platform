@@ -7,7 +7,7 @@ html.emdad-shared-sidebar-active .emdad-panel {
   min-width: 1440px !important;
   max-width: 1440px !important;
   margin-left: auto !important;
-  margin-right: auto !important;
+  margin-right: 0 !important;
   flex: 0 0 1440px !important;
 }
 
