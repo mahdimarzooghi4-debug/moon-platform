@@ -90,6 +90,7 @@ const DB_NAME = "mah-admin-content";
 const DB_VERSION = 1;
 const STORE_NAME = "assets";
 const HERO_KEY = "hero-video";
+const newsImageKey = (id: string) => `news-image:${id}`;
 
 function openDb(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -103,6 +104,52 @@ function openDb(): Promise<IDBDatabase> {
   });
 }
 
+async function putAsset(key: string, value: Blob) {
+  const db = await openDb();
+  await new Promise<void>((resolve, reject) => {
+    const transaction = db.transaction(STORE_NAME, "readwrite");
+    transaction.objectStore(STORE_NAME).put(value, key);
+    transaction.oncomplete = () => resolve();
+    transaction.onerror = () => reject(transaction.error);
+  });
+  db.close();
+}
+
+async function readAsset(key: string): Promise<Blob | null> {
+  const db = await openDb();
+  const result = await new Promise<Blob | null>((resolve, reject) => {
+    const transaction = db.transaction(STORE_NAME, "readonly");
+    const request = transaction.objectStore(STORE_NAME).get(key);
+    request.onsuccess = () => resolve(request.result instanceof Blob ? request.result : null);
+    request.onerror = () => reject(request.error);
+  });
+  db.close();
+  return result;
+}
+
+async function deleteAsset(key: string) {
+  const db = await openDb();
+  await new Promise<void>((resolve, reject) => {
+    const transaction = db.transaction(STORE_NAME, "readwrite");
+    transaction.objectStore(STORE_NAME).delete(key);
+    transaction.oncomplete = () => resolve();
+    transaction.onerror = () => reject(transaction.error);
+  });
+  db.close();
+}
+
+export function saveNewsImage(id: string, file: File) {
+  return putAsset(newsImageKey(id), file);
+}
+
+export function loadNewsImage(id: string) {
+  return readAsset(newsImageKey(id));
+}
+
+export function removeNewsImage(id: string) {
+  return deleteAsset(newsImageKey(id));
+}
+
 export function readHeroVideoMeta(): HeroVideoMeta | null {
   try {
     const raw = localStorage.getItem(HERO_VIDEO_META_KEY);
@@ -113,41 +160,19 @@ export function readHeroVideoMeta(): HeroVideoMeta | null {
 }
 
 export async function saveHeroVideo(file: File) {
-  const db = await openDb();
-  await new Promise<void>((resolve, reject) => {
-    const transaction = db.transaction(STORE_NAME, "readwrite");
-    transaction.objectStore(STORE_NAME).put(file, HERO_KEY);
-    transaction.oncomplete = () => resolve();
-    transaction.onerror = () => reject(transaction.error);
-  });
-  db.close();
+  await putAsset(HERO_KEY, file);
   const meta: HeroVideoMeta = { name: file.name, type: file.type, size: file.size, updatedAt: new Date().toISOString() };
   localStorage.setItem(HERO_VIDEO_META_KEY, JSON.stringify(meta));
   window.dispatchEvent(new CustomEvent(HERO_VIDEO_CHANGED));
   return meta;
 }
 
-export async function loadHeroVideo(): Promise<Blob | null> {
-  const db = await openDb();
-  const result = await new Promise<Blob | null>((resolve, reject) => {
-    const transaction = db.transaction(STORE_NAME, "readonly");
-    const request = transaction.objectStore(STORE_NAME).get(HERO_KEY);
-    request.onsuccess = () => resolve(request.result instanceof Blob ? request.result : null);
-    request.onerror = () => reject(request.error);
-  });
-  db.close();
-  return result;
+export function loadHeroVideo(): Promise<Blob | null> {
+  return readAsset(HERO_KEY);
 }
 
 export async function removeHeroVideo() {
-  const db = await openDb();
-  await new Promise<void>((resolve, reject) => {
-    const transaction = db.transaction(STORE_NAME, "readwrite");
-    transaction.objectStore(STORE_NAME).delete(HERO_KEY);
-    transaction.oncomplete = () => resolve();
-    transaction.onerror = () => reject(transaction.error);
-  });
-  db.close();
+  await deleteAsset(HERO_KEY);
   localStorage.removeItem(HERO_VIDEO_META_KEY);
   window.dispatchEvent(new CustomEvent(HERO_VIDEO_CHANGED));
 }
