@@ -8,6 +8,12 @@ import "../list-flow.css";
 
 const ASSET_ROOT = "/assets/admin-panel";
 const REQUESTS_KEY = "mah.fundProjectPaymentRequests.v1";
+const DEV_DEMO_REQUEST_MIGRATION_KEY = "mah.admin.fundProjectPaymentRequests.pendingDemoMigration.v1";
+const DEV_DEMO_REQUEST_PROJECTS = new Set([
+  "اشتغال زنان روستایی",
+  "توسعه زنجیره ارزش محصولات روستایی",
+  "مهارت برای نوجوانان",
+]);
 
 type FundPaymentStatus = "pending_admin" | "approved" | "rejected" | "paid";
 
@@ -52,6 +58,22 @@ function normalizeRequest(item: unknown): FundPaymentRequest | null {
   };
 }
 
+function migrateLegacyDemoRequests(requests: FundPaymentRequest[]) {
+  if (!import.meta.env.DEV || localStorage.getItem(DEV_DEMO_REQUEST_MIGRATION_KEY) === "1") return requests;
+
+  let changed = false;
+  const next = requests.map((request) => {
+    if (request.status !== "approved" || request.paidAt || !DEV_DEMO_REQUEST_PROJECTS.has(request.project)) return request;
+    changed = true;
+    const { approvedAt: _approvedAt, ...rest } = request;
+    return { ...rest, status: "pending_admin" as const };
+  });
+
+  localStorage.setItem(DEV_DEMO_REQUEST_MIGRATION_KEY, "1");
+  if (changed) localStorage.setItem(REQUESTS_KEY, JSON.stringify(next));
+  return next;
+}
+
 function readRequests() {
   try {
     const raw = localStorage.getItem(REQUESTS_KEY);
@@ -60,7 +82,7 @@ function readRequests() {
     if (!Array.isArray(parsed)) return [] as FundPaymentRequest[];
     const requests = parsed.map(normalizeRequest).filter((item): item is FundPaymentRequest => Boolean(item));
     if (parsed.some((item) => item && typeof item === "object" && (item as { status?: unknown }).status === "pending")) localStorage.setItem(REQUESTS_KEY, JSON.stringify(requests));
-    return requests;
+    return migrateLegacyDemoRequests(requests);
   } catch { return [] as FundPaymentRequest[]; }
 }
 
