@@ -55,6 +55,34 @@ function hasRealPayment(requestId: string) {
   );
 }
 
+function successFallbackRequest(): ReleaseRequest | null {
+  if (window.location.pathname !== RELEASE_SUCCESS_PATH) return null;
+  const root = document.querySelector<HTMLElement>(SUCCESS_ROOT);
+  if (!root) return null;
+
+  let project = "";
+  let stage = "";
+  root.querySelectorAll<HTMLElement>('[data-name="summary-item"]').forEach((item) => {
+    const paragraphs = item.querySelectorAll<HTMLElement>("p");
+    const label = normalize(paragraphs.item(0)?.textContent);
+    const value = normalize(paragraphs.item(1)?.textContent);
+    if (label === "پروژه") project = value;
+    if (label === "مرحله") stage = value;
+  });
+
+  project = project || "پروژه آزادسازی‌شده";
+  stage = stage || "مرحله تأییدشده";
+  const stableId = `release-success:${encodeURIComponent(project)}:${encodeURIComponent(stage)}`;
+
+  return {
+    id: stableId,
+    project,
+    stage,
+    amount: 0,
+    status: "released",
+  };
+}
+
 function selectedOrLatestRequest() {
   const requests = readRequests();
   const selectedId = localStorage.getItem(RELEASE_SELECTED_KEY);
@@ -63,11 +91,13 @@ function selectedOrLatestRequest() {
     if (selected) return selected;
   }
 
-  return [...requests]
+  const latest = [...requests]
     .filter((request) => request.status === "released" || Boolean(request.emdadApprovedAt))
     .sort((a, b) =>
       String(b.releasedAt ?? b.createdAt ?? "").localeCompare(String(a.releasedAt ?? a.createdAt ?? "")),
-    )[0] ?? null;
+    )[0];
+
+  return latest ?? successFallbackRequest();
 }
 
 function paymentDraft(request: ReleaseRequest) {
