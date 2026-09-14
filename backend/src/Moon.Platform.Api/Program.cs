@@ -13,6 +13,7 @@ using Moon.Platform.Api.Common.Messaging;
 using Moon.Platform.Api.Infrastructure.Persistence;
 using Moon.Platform.Api.Integrations.Payments;
 using Moon.Platform.Api.Integrations.Sms;
+using Moon.Platform.Api.Modules.AdminManagement;
 using Moon.Platform.Api.Modules.Evaluations;
 using Moon.Platform.Api.Modules.Execution;
 using Moon.Platform.Api.Modules.Funding;
@@ -100,6 +101,7 @@ builder.Services.AddScoped<IAuditWriter, AuditWriter>();
 builder.Services.AddScoped<IOutboxWriter, OutboxWriter>();
 builder.Services.AddScoped<IIdentitySyncService, IdentitySyncService>();
 builder.Services.AddScoped<IAdminAccessService, AdminAccessService>();
+builder.Services.AddScoped<IAdminManagementService, AdminManagementService>();
 builder.Services.AddScoped<IOrganizationAccessService, OrganizationAccessService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IEvaluationService, EvaluationService>();
@@ -224,7 +226,7 @@ app.MapGet("/health/ready", async Task<IResult> (MoonDbContext db, CancellationT
 app.MapGet("/api/v1/system", (HttpContext context) => Results.Ok(new
 {
     service = "moon-platform-api",
-    version = "0.14.0-phase3-impact-closeout",
+    version = "0.15.0-admin-management",
     correlationId = context.TraceIdentifier
 }));
 
@@ -253,6 +255,7 @@ app.MapGet("/api/v1/organizations/{organizationId:guid}/access", (Guid organizat
 })).RequireAuthorization(OrganizationPolicies.Member);
 
 app.MapAdminAccessEndpoints();
+app.MapAdminManagementEndpoints();
 app.MapProjectEndpoints();
 app.MapEvaluationEndpoints();
 app.MapFundingEndpoints();
