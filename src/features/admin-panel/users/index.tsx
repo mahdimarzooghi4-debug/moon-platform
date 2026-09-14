@@ -159,7 +159,7 @@ export default function AdminUsersRoles() {
                 <span className="admin-status-pill admin-status-review">دعوت‌شده</span>
                 <span dir="ltr">{record.mobile}</span>
                 <span className="admin-access-pill admin-access-limited">در انتظار ورود</span>
-                <span className="admin-user-action">اعلان در صف</span>
+                <span className="admin-user-action">{record.notificationStatus === "queued" ? "اعلان در صف" : "پیامک متصل نیست"}</span>
               </div>
             ))}
             {!loading && filteredUsers.map((user) => {
