@@ -1,6 +1,6 @@
 import type { FormEvent } from "react";
 import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { AdminSidebar } from "../components/AdminSidebar";
 import {
   listAdminOrganizations,
@@ -9,6 +9,11 @@ import {
   type AdminRole,
 } from "../api";
 import { createAdminProvisioningRecord } from "../provisioning-store";
+import {
+  readApprovedStartupAccessQueue,
+  removeApprovedStartupAccess,
+  type ApprovedStartupAccessQueueItem,
+} from "../../../shared/approved-startup-access-queue";
 import "../index.css";
 import "../users-flow.css";
 import "./index.css";
@@ -35,8 +40,11 @@ function organizationMatchesRole(organization: AdminOrganization, roleCode: stri
 
 export default function AdminAddUser() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const approvedStartupId = searchParams.get("approvedStartupId") ?? "";
   const [organizations, setOrganizations] = useState<AdminOrganization[]>([]);
   const [roles, setRoles] = useState<AdminRole[]>([]);
+  const [approvedStartup, setApprovedStartup] = useState<ApprovedStartupAccessQueueItem | null>(null);
   const [displayName, setDisplayName] = useState("");
   const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
@@ -50,6 +58,20 @@ export default function AdminAddUser() {
 
   useEffect(() => {
     let active = true;
+
+    if (approvedStartupId) {
+      const queueItem = readApprovedStartupAccessQueue().find((item) => item.id === approvedStartupId) ?? null;
+      if (queueItem) {
+        setApprovedStartup(queueItem);
+        setDisplayName(queueItem.managerName);
+        setRoleCode("startup_manager");
+        setStartupName(queueItem.startupName);
+        setActivityArea(queueItem.activityArea);
+      } else {
+        setError("این استارتاپ دیگر در صف تأییدهای خانه خلاق نیست.");
+      }
+    }
+
     Promise.allSettled([listAdminOrganizations(), listAdminRoles()])
       .then(([organizationsResult, rolesResult]) => {
         if (!active) return;
@@ -70,7 +92,7 @@ export default function AdminAddUser() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [approvedStartupId]);
 
   const selectedRole = useMemo(
     () => roles.find((role) => role.code === roleCode),
@@ -118,6 +140,12 @@ export default function AdminAddUser() {
       startupName: isStartupRole ? startupName.trim() : "",
       activityArea: isStartupRole ? activityArea.trim() : "",
     });
+
+    if (approvedStartup && isStartupRole) {
+      removeApprovedStartupAccess(approvedStartup.startupName, approvedStartup.managerName);
+      navigate("/panel/admin/organizations?accessCreated=1");
+      return;
+    }
 
     navigate("/panel/admin/users?provisioned=1");
   };
@@ -183,11 +211,13 @@ export default function AdminAddUser() {
                   className="admin-form-input"
                   value={roleCode}
                   onChange={(event) => {
-                    setRoleCode(event.target.value);
+                    const nextRole = event.target.value;
+                    setRoleCode(nextRole);
                     setOrganizationId("");
-                    if (event.target.value !== "startup_manager") {
+                    if (nextRole !== "startup_manager") {
                       setStartupName("");
                       setActivityArea("");
+                      setApprovedStartup(null);
                     }
                   }}
                   disabled={loading || saving || roles.length === 0}
@@ -224,8 +254,8 @@ export default function AdminAddUser() {
 
             {isStartupRole ? (
               <div className="admin-startup-direct-note">
-                <strong>ساخت استارتاپ از همین صفحه</strong>
-                <span>مدیر سامانه مشخصات شخص و استارتاپ را وارد می‌کند؛ رکورد دعوت و دسترسی اولیه ساخته می‌شود و اعلان ورود برای شخص در صف ارسال قرار می‌گیرد.</span>
+                <strong>{approvedStartup ? "استارتاپ تأییدشده خانه خلاق" : "ساخت استارتاپ از همین صفحه"}</strong>
+                <span>{approvedStartup ? "مشخصات استارتاپ از صف خانه خلاق وارد شده است. مدیر سامانه مشخصات شخص و شماره موبایل را تکمیل می‌کند و با ثبت فرم، این مورد از صف ایجاد دسترسی خارج می‌شود." : "مدیر سامانه مشخصات شخص و استارتاپ را وارد می‌کند؛ رکورد دعوت و دسترسی اولیه ساخته می‌شود و اعلان ورود برای شخص آماده خواهد شد."}</span>
               </div>
             ) : null}
 
@@ -235,9 +265,9 @@ export default function AdminAddUser() {
           <aside className="admin-info-note admin-info-note-tall">Backend فعلی ایجاد هویت جدید در Keycloak و ارسال واقعی SMS را هنوز پیاده نکرده است؛ بنابراین این فرم رکورد دعوت را ثبت می‌کند و تا اتصال سرویس هویت/پیامک، وضعیت اعلان به‌صورت «در انتظار اتصال سرویس» نمایش داده می‌شود.</aside>
 
           <section className="admin-form-actions">
-            <button className="admin-users-button admin-users-button-primary" type="submit" disabled={loading || saving || !formIsValid}>{saving ? "در حال ثبت…" : "ساخت حساب و ثبت نقش"}</button>
-            <Link className="admin-users-button" to="/panel/admin/users">انصراف</Link>
-            <p className="admin-form-actions-note">برای استارتاپ، مشخصات مجموعه همین‌جا ثبت می‌شود؛ برای شرکت، سازمان موجود بدون مرحله تأیید جداگانه انتخاب می‌شود.</p>
+            <button className="admin-users-button admin-users-button-primary" type="submit" disabled={loading || saving || !formIsValid}>{saving ? "در حال ثبت…" : approvedStartup ? "ایجاد دسترسی استارتاپ" : "ساخت حساب و ثبت نقش"}</button>
+            <Link className="admin-users-button" to={approvedStartup ? "/panel/admin/organizations" : "/panel/admin/users"}>انصراف</Link>
+            <p className="admin-form-actions-note">برای استارتاپ تأییدشده، پس از ثبت شخص و نقش وضعیت آن در «شرکت‌ها و استارتاپ‌ها» به «در انتظار فعال‌سازی» تغییر می‌کند.</p>
           </section>
         </form>
       </main>
