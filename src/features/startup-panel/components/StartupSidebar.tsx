@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
+import { clearSession } from "../../../auth/oidc";
 import "./startup-sidebar-figma.css";
 
 const ASSET_ROOT = "/assets/startup-panel";
 const SHARED_BRAND_LOGO = "/assets/creative-house/dashboard/logo.png";
+const DEV_PANEL_PREVIEW_KEY = "moon.auth.dev-panel-preview";
 
 type StartupSidebarProps = {
   active: "dashboard" | "projects" | "stages" | "reports" | "profile" | "financing" | "settings";
@@ -11,7 +13,7 @@ type StartupSidebarProps = {
 const sidebarItems = [
   { key: "dashboard", label: "داشبورد", to: "/panel/startup", icon: "nav-dashboard.svg" },
   { key: "projects", label: "پروژه‌های من", to: "/panel/startup/projects", icon: "nav-projects.svg" },
-  { key: "stages", label: "مراحل پروژه", to: "/panel/startup/stages", icon: "nav-stages.svg" },
+  { key: "stages", label: "مراحل پروژه", to: "/panel/startup/projects", icon: "nav-stages.svg" },
   { key: "reports", label: "گزارش‌ها و مستندات", to: "/panel/startup/reports", icon: "nav-reports.svg" },
   { key: "profile", label: "پروفایل استارتاپ", to: "/panel/startup/profile", icon: "nav-profile.svg" },
   { key: "financing", label: "کارمزد تأمین مالی", to: "/panel/startup/financing-fee", icon: "nav-profile.svg" },
@@ -19,6 +21,12 @@ const sidebarItems = [
 ] as const;
 
 export function StartupSidebar({ active }: StartupSidebarProps) {
+  const handleLogout = () => {
+    clearSession();
+    sessionStorage.removeItem(DEV_PANEL_PREVIEW_KEY);
+    window.location.replace("/auth");
+  };
+
   return (
     <aside className="startup-sidebar" aria-label="ناوبری پنل استارتاپ">
       <div className="startup-brand">
@@ -51,7 +59,7 @@ export function StartupSidebar({ active }: StartupSidebarProps) {
 
       <div className="startup-sidebar-spacer" />
 
-      <button className="startup-logout" type="button">
+      <button className="startup-logout" type="button" onClick={handleLogout}>
         <span>خروج از سیستم</span>
         <span className="startup-logout-icon" aria-hidden="true" />
       </button>
