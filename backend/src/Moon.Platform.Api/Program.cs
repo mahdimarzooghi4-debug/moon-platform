@@ -256,6 +256,7 @@ app.MapGet("/api/v1/organizations/{organizationId:guid}/access", (Guid organizat
 
 app.MapAdminAccessEndpoints();
 app.MapAdminManagementEndpoints();
+app.MapAdminNewsImageEndpoints();
 app.MapProjectEndpoints();
 app.MapEvaluationEndpoints();
 app.MapFundingEndpoints();
