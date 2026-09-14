@@ -18,12 +18,15 @@ html.emdad-shared-sidebar-active .emdad-panel > [data-name="Main Content"] {
   flex: 0 0 1216px !important;
 }
 
-html.emdad-shared-sidebar-active [data-name="colored-sidebar"]:not(.emdad-shared-sidebar) {
+html.emdad-shared-sidebar-active [data-name="colored-sidebar"]:not(.emdad-shared-sidebar),
+html:has(.emdad-shared-sidebar) [data-name="colored-sidebar"]:not(.emdad-shared-sidebar) {
+  display: none !important;
   visibility: hidden !important;
   pointer-events: none !important;
 }
 
-html.emdad-shared-sidebar-active .emdad-certificate-issuer-trigger {
+html.emdad-shared-sidebar-active .emdad-certificate-issuer-trigger,
+html:has(.emdad-shared-sidebar) .emdad-certificate-issuer-trigger {
   display: none !important;
 }
 
@@ -165,6 +168,14 @@ html.emdad-shared-sidebar-active .emdad-certificate-issuer-trigger {
   direction: rtl;
   text-align: right;
   white-space: nowrap;
+}
+
+.emdad-shared-issuer {
+  font-size: 10px;
+}
+
+.emdad-shared-issuer > span:first-child {
+  letter-spacing: -0.1px;
 }
 
 .emdad-shared-icon {
