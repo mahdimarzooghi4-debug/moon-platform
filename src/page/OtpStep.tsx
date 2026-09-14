@@ -129,7 +129,11 @@ export default function OtpStep({ accountType, mobile, returnTo }: Props) {
       const destination = returnTo?.startsWith("/panel/")
         ? returnTo
         : DEV_PANEL_DESTINATIONS[accountType];
-      window.location.assign(destination);
+      if (env.VITE_GITHUB_PAGES === "true") {
+        window.location.hash = destination;
+      } else {
+        window.location.assign(destination);
+      }
       return;
     }
 
