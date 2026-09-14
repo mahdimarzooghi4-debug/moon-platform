@@ -4,6 +4,20 @@ const ROOT_SELECTOR = '[data-name="emdad-payment-history"]';
 const PAYMENTS_KEY = "mah.emdad.recordedPayments.v1";
 
 type PaymentSource = "company" | "fund";
+type PaymentContextType = "release" | "fund-payment" | "synergy";
+
+type PaymentDraft = {
+  source?: PaymentSource;
+  project?: string;
+  stage?: string;
+  amount?: number;
+  paidAt?: string;
+  note?: string;
+  title?: string;
+  description?: string;
+  contextType?: PaymentContextType;
+  contextId?: string;
+};
 
 type EmdadPayment = {
   id: string;
@@ -15,6 +29,8 @@ type EmdadPayment = {
   trackingCode: string;
   note?: string;
   createdAt: string;
+  contextType?: PaymentContextType;
+  contextId?: string;
 };
 
 function normalize(value: string | null | undefined) {
@@ -78,7 +94,7 @@ function closeModal() {
   document.querySelector<HTMLElement>(".emdad-payment-modal-backdrop")?.remove();
 }
 
-function openModal() {
+function openModal(draft: PaymentDraft = {}) {
   closeModal();
 
   const backdrop = createElement("div", "emdad-payment-modal-backdrop");
@@ -91,8 +107,8 @@ function openModal() {
   modal.innerHTML = `
     <header class="emdad-payment-modal-header">
       <div>
-        <h2 id="emdad-payment-modal-title">ثبت پرداخت انجام‌شده</h2>
-        <p>پرداختی که کمیته امداد به پروژه انجام داده است ثبت و اعلام می‌شود.</p>
+        <h2 id="emdad-payment-modal-title">${draft.title ?? "ثبت پرداخت انجام‌شده"}</h2>
+        <p>${draft.description ?? "پرداختی که کمیته امداد انجام داده است ثبت و اعلام می‌شود."}</p>
       </div>
       <button type="button" class="emdad-payment-modal-close" aria-label="بستن">×</button>
     </header>
@@ -142,8 +158,19 @@ function openModal() {
   document.body.appendChild(backdrop);
 
   const today = new Date().toISOString().slice(0, 10);
+  const sourceInput = modal.querySelector<HTMLSelectElement>('select[name="source"]');
+  const projectInput = modal.querySelector<HTMLInputElement>('input[name="project"]');
+  const stageInput = modal.querySelector<HTMLInputElement>('input[name="stage"]');
+  const amountInput = modal.querySelector<HTMLInputElement>('input[name="amount"]');
   const dateInput = modal.querySelector<HTMLInputElement>('input[name="paidAt"]');
-  if (dateInput) dateInput.value = today;
+  const noteInput = modal.querySelector<HTMLTextAreaElement>('textarea[name="note"]');
+
+  if (sourceInput) sourceInput.value = draft.source ?? "company";
+  if (projectInput) projectInput.value = draft.project ?? "";
+  if (stageInput) stageInput.value = draft.stage ?? "";
+  if (amountInput && draft.amount && draft.amount > 0) amountInput.value = String(draft.amount);
+  if (dateInput) dateInput.value = draft.paidAt ?? today;
+  if (noteInput) noteInput.value = draft.note ?? "";
 
   modal.querySelector<HTMLButtonElement>(".emdad-payment-modal-close")?.addEventListener("click", closeModal);
   modal.querySelector<HTMLButtonElement>(".emdad-payment-secondary")?.addEventListener("click", closeModal);
@@ -179,26 +206,29 @@ function openModal() {
       trackingCode,
       note: note || undefined,
       createdAt: new Date().toISOString(),
+      contextType: draft.contextType,
+      contextId: draft.contextId,
     };
 
     writePayments([payment, ...readPayments()]);
+    window.dispatchEvent(
+      new CustomEvent("moon:emdad-payment-recorded", {
+        detail: {
+          payment,
+          contextType: draft.contextType,
+          contextId: draft.contextId,
+        },
+      }),
+    );
     closeModal();
     applyPaymentHistory();
   });
 
-  modal.querySelector<HTMLInputElement>('input[name="project"]')?.focus();
-}
-
-function ensureRegisterButton(root: HTMLElement) {
-  const toolbar = root.querySelector<HTMLElement>('[data-name="toolbar"]');
-  if (!toolbar || toolbar.querySelector('[data-emdad-register-payment="true"]')) return;
-
-  const button = createElement("button", "emdad-register-payment-button");
-  button.type = "button";
-  button.dataset.emdadRegisterPayment = "true";
-  button.textContent = "ثبت پرداخت جدید";
-  button.addEventListener("click", openModal);
-  toolbar.appendChild(button);
+  if (draft.project) {
+    modal.querySelector<HTMLInputElement>('input[name="trackingCode"]')?.focus();
+  } else {
+    projectInput?.focus();
+  }
 }
 
 function renderPayments(root: HTMLElement) {
@@ -261,12 +291,16 @@ function applyPaymentHistory() {
   if (window.location.pathname !== "/panel/emdad/payment-history") return;
   const root = document.querySelector<HTMLElement>(ROOT_SELECTOR);
   if (!root) return;
-  ensureRegisterButton(root);
+  root.querySelector<HTMLElement>('[data-emdad-register-payment="true"]')?.remove();
   renderPayments(root);
 }
 
 window.addEventListener("popstate", () => requestAnimationFrame(applyPaymentHistory));
 window.addEventListener("moon:emdad-payments-changed", () => requestAnimationFrame(applyPaymentHistory));
+window.addEventListener("moon:emdad-open-payment-registration", (event) => {
+  const detail = (event as CustomEvent<PaymentDraft>).detail ?? {};
+  openModal(detail);
+});
 
 const start = () => {
   applyPaymentHistory();
