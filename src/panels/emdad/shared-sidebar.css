@@ -1,3 +1,23 @@
+html.emdad-shared-sidebar-active body {
+  min-width: 1440px !important;
+}
+
+html.emdad-shared-sidebar-active .emdad-panel {
+  width: 1440px !important;
+  min-width: 1440px !important;
+  max-width: 1440px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  flex: 0 0 1440px !important;
+}
+
+html.emdad-shared-sidebar-active .emdad-panel > [data-name="Main Content"] {
+  width: 1216px !important;
+  min-width: 1216px !important;
+  max-width: 1216px !important;
+  flex: 0 0 1216px !important;
+}
+
 html.emdad-shared-sidebar-active [data-name="colored-sidebar"]:not(.emdad-shared-sidebar) {
   visibility: hidden !important;
   pointer-events: none !important;
