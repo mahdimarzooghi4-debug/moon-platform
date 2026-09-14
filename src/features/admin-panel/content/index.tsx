@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AdminSidebar } from "../components/AdminSidebar";
 import {
   deleteAdminHeroVideo,
@@ -22,9 +22,11 @@ import {
   type HeroVideoMeta,
 } from "../../../shared/admin-content-store";
 import "../index.css";
+import "../users-flow.css";
 import "../final-flow.css";
 import "./content.css";
 
+const ASSET_ROOT = "/assets/admin-panel";
 const numberFa = new Intl.NumberFormat("fa-IR");
 const isDevelopment = Boolean(import.meta.env.DEV);
 
@@ -52,12 +54,14 @@ function toHeroMeta(item: Awaited<ReturnType<typeof getAdminHeroVideoMeta>>): He
 
 export default function AdminContentManagement() {
   const localInitial = readAdminNews();
+  const titleInputRef = useRef<HTMLInputElement>(null);
   const [tab, setTab] = useState<ContentTab>("news");
   const [news, setNews] = useState<AdminNewsItem[]>(localInitial);
   const [selectedId, setSelectedId] = useState(() => localInitial[0]?.id ?? "");
   const [title, setTitle] = useState(() => localInitial[0]?.title ?? "");
   const [summary, setSummary] = useState(() => localInitial[0]?.summary ?? "");
   const [status, setStatus] = useState<AdminNewsItem["status"]>(() => localInitial[0]?.status ?? "draft");
+  const [creatingNews, setCreatingNews] = useState(false);
   const [heroMeta, setHeroMeta] = useState<HeroVideoMeta | null>(() => readHeroVideoMeta());
   const [heroFile, setHeroFile] = useState<File | null>(null);
   const [heroUrl, setHeroUrl] = useState("");
@@ -67,6 +71,7 @@ export default function AdminContentManagement() {
 
   const applyNews = (items: AdminNewsItem[]) => {
     setNews(items);
+    setCreatingNews(false);
     const selected = items.find((item) => item.id === selectedId) ?? items[0];
     if (!selected) {
       setSelectedId("");
@@ -170,13 +175,14 @@ export default function AdminContentManagement() {
   const publishedCount = news.filter((item) => item.status === "published").length;
   const draftCount = news.filter((item) => item.status === "draft").length;
   const summaryCards = useMemo(() => [
-    ["اخبار منتشرشده", numberFa.format(publishedCount)],
-    ["پیش‌نویس خبر", numberFa.format(draftCount)],
-    ["ویدئوی هیرو", heroMeta ? "ثبت‌شده" : "بدون ویدئو"],
-    ["کل اخبار", numberFa.format(news.length)],
+    { label: "اخبار منتشرشده", value: numberFa.format(publishedCount), detail: "خبر فعال در سایت", icon: "users-active.svg" },
+    { label: "پیش‌نویس خبر", value: numberFa.format(draftCount), detail: "در انتظار تکمیل و انتشار", icon: "users-review.svg" },
+    { label: "ویدئوی هیرو", value: heroMeta ? "ثبت‌شده" : "بدون ویدئو", detail: "وضعیت ویدئوی صفحه اصلی", icon: "users-roles.svg" },
+    { label: "کل اخبار", value: numberFa.format(news.length), detail: "تعداد کل آیتم‌های خبری", icon: "users-blocked.svg" },
   ] as const, [draftCount, heroMeta, news.length, publishedCount]);
 
   const selectNews = (item: AdminNewsItem) => {
+    setCreatingNews(false);
     setSelectedId(item.id);
     setTitle(item.title);
     setSummary(item.summary);
@@ -185,11 +191,14 @@ export default function AdminContentManagement() {
   };
 
   const newNews = () => {
+    setTab("news");
+    setCreatingNews(true);
     setSelectedId(`news-${Date.now()}`);
     setTitle("");
     setSummary("");
     setStatus("draft");
     setMessage("خبر جدید؛ عنوان و خلاصه را وارد کنید.");
+    window.requestAnimationFrame(() => titleInputRef.current?.focus());
   };
 
   const persistNews = async () => {
@@ -206,12 +215,14 @@ export default function AdminContentManagement() {
       setBackendReady(true);
       saveAdminNews({ id: saved.id, title: saved.title, summary: saved.summary, status: saved.status });
       setSelectedId(saved.id);
+      setCreatingNews(false);
       await refreshServerNews();
       setMessage("خبر در Backend ذخیره شد و محتوای عمومی به‌روزرسانی شد.");
     } catch {
       if (isDevelopment) {
         const saved = saveAdminNews(input);
         setSelectedId(saved.id);
+        setCreatingNews(false);
         setNews(readAdminNews());
         setBackendReady(false);
         setMessage("Backend در دسترس نبود؛ خبر فقط در fallback توسعه ذخیره شد.");
@@ -224,7 +235,7 @@ export default function AdminContentManagement() {
   };
 
   const removeNewsItem = async () => {
-    if (!selectedId || busy) return;
+    if (creatingNews || !selectedId || busy) return;
     setBusy(true);
     setMessage("");
     try {
@@ -324,8 +335,15 @@ export default function AdminContentManagement() {
           </div>
         </header>
 
-        <section className="admin-content-summary">
-          {summaryCards.map(([label, value]) => <article className="admin-final-card" key={label}><span>{label}</span><strong>{value}</strong></article>)}
+        <section className="admin-users-kpis" aria-label="شاخص‌های مدیریت محتوا">
+          {summaryCards.map((card) => (
+            <article className="admin-users-kpi" key={card.label}>
+              <img src={`${ASSET_ROOT}/${card.icon}`} alt="" />
+              <span>{card.label}</span>
+              <strong>{card.value}</strong>
+              <small>{card.detail}</small>
+            </article>
+          ))}
         </section>
 
         <section className="admin-content-tabs admin-final-card" aria-label="بخش‌های محتوا">
@@ -337,11 +355,11 @@ export default function AdminContentManagement() {
         {tab === "news" ? (
           <section className="admin-content-row">
             <article className="admin-content-editor admin-final-card">
-              <h2>ویرایش خبر</h2><p>عنوان، خلاصه و وضعیت انتشار را تغییر دهید.</p>
-              <div className="admin-mini-field"><label>عنوان خبر</label><input className="admin-content-input" value={title} onChange={(event) => setTitle(event.target.value)} placeholder="عنوان خبر" /></div>
+              <h2>{creatingNews ? "خبر جدید" : "ویرایش خبر"}</h2><p>{creatingNews ? "عنوان، خلاصه و وضعیت انتشار خبر جدید را وارد کنید." : "عنوان، خلاصه و وضعیت انتشار را تغییر دهید."}</p>
+              <div className="admin-mini-field"><label>عنوان خبر</label><input ref={titleInputRef} className="admin-content-input" value={title} onChange={(event) => setTitle(event.target.value)} placeholder="عنوان خبر" /></div>
               <div className="admin-mini-field"><label>وضعیت</label><select className="admin-content-input" value={status} onChange={(event) => setStatus(event.target.value as AdminNewsItem["status"])}><option value="published">منتشرشده</option><option value="draft">پیش‌نویس</option></select></div>
               <div className="admin-mini-field"><label>خلاصه</label><textarea className="admin-content-input admin-content-textarea" value={summary} onChange={(event) => setSummary(event.target.value)} placeholder="خلاصه خبر برای نمایش عمومی" /></div>
-              <div className="admin-content-editor-actions"><button className="primary" type="button" onClick={persistNews} disabled={busy}>{busy ? "در حال ذخیره…" : "ذخیره تغییرات"}</button><button type="button" onClick={removeNewsItem} disabled={!selectedId || busy}>حذف خبر</button></div>
+              <div className="admin-content-editor-actions"><button className="primary" type="button" onClick={persistNews} disabled={busy}>{busy ? "در حال ذخیره…" : creatingNews ? "ثبت خبر" : "ذخیره تغییرات"}</button><button type="button" onClick={removeNewsItem} disabled={creatingNews || !selectedId || busy}>حذف خبر</button></div>
               {message ? <div className="admin-content-message">{message}</div> : null}
             </article>
 
