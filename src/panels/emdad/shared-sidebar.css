@@ -28,20 +28,24 @@ html.emdad-shared-sidebar-active .emdad-certificate-issuer-trigger {
 }
 
 .emdad-shared-sidebar {
-  position: fixed;
+  position: absolute;
   z-index: 500;
   top: 0;
-  left: calc(50% + 496px);
+  left: 1216px;
+  right: auto;
   width: 224px;
   min-width: 224px;
   max-width: 224px;
   height: 900px;
+  min-height: 900px;
+  max-height: 900px;
   box-sizing: border-box;
   padding: 20px 16px 18px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 8px;
+  overflow: hidden;
   background: #17324d;
   direction: rtl;
   text-align: right;
@@ -56,7 +60,11 @@ html.emdad-shared-sidebar-active .emdad-certificate-issuer-trigger {
 
 .emdad-shared-logo {
   width: 192px;
+  min-width: 192px;
+  max-width: 192px;
   height: 56px;
+  min-height: 56px;
+  max-height: 56px;
   flex: 0 0 56px;
   padding: 8px 10px;
   display: flex;
@@ -76,18 +84,22 @@ html.emdad-shared-sidebar-active .emdad-certificate-issuer-trigger {
 
 .emdad-shared-identity {
   width: 192px;
+  min-width: 192px;
+  max-width: 192px;
   height: 64px;
+  min-height: 64px;
+  max-height: 64px;
   flex: 0 0 64px;
   padding: 7px 12px;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
   gap: 2px;
   overflow: hidden;
   color: #fff;
   direction: rtl;
-  text-align: right;
+  text-align: center;
 }
 
 .emdad-shared-identity p,
@@ -95,7 +107,7 @@ html.emdad-shared-sidebar-active .emdad-certificate-issuer-trigger {
   width: 100%;
   margin: 0;
   direction: rtl;
-  text-align: right;
+  text-align: center;
 }
 
 .emdad-shared-identity p {
@@ -113,7 +125,11 @@ html.emdad-shared-sidebar-active .emdad-certificate-issuer-trigger {
 
 .emdad-shared-nav {
   width: 192px;
+  min-width: 192px;
+  max-width: 192px;
   height: 38px;
+  min-height: 38px;
+  max-height: 38px;
   flex: 0 0 38px;
   padding: 0 12px;
   display: flex;
@@ -133,7 +149,7 @@ html.emdad-shared-sidebar-active .emdad-certificate-issuer-trigger {
   cursor: pointer;
 }
 
-.emdad-shared-nav:hover:not([data-active="true"]) {
+.emdad-shared-nav:hover:not([data-active="true"]):not(.emdad-shared-logout) {
   background: rgba(255, 255, 255, 0.08);
   color: #fff;
 }
@@ -194,21 +210,28 @@ html.emdad-shared-sidebar-active .emdad-certificate-issuer-trigger {
   position: relative;
   margin-top: auto;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.96);
-  color: #17324d;
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: #17324d !important;
   font-weight: 500;
+  opacity: 1 !important;
   direction: rtl;
   text-align: center;
 }
 
-.emdad-shared-logout:hover {
+.emdad-shared-nav.emdad-shared-logout:hover,
+.emdad-shared-nav.emdad-shared-logout:focus-visible {
   background: #fff !important;
-  color: #17324d;
+  color: #17324d !important;
+  opacity: 1 !important;
 }
 
-.emdad-shared-logout > span:first-child {
+.emdad-shared-logout > span:first-child,
+.emdad-shared-logout:hover > span:first-child,
+.emdad-shared-logout:focus-visible > span:first-child {
   width: 100%;
   min-width: 100%;
+  color: #17324d !important;
+  opacity: 1 !important;
   text-align: center;
 }
 
@@ -217,10 +240,4 @@ html.emdad-shared-sidebar-active .emdad-certificate-issuer-trigger {
   right: 12px;
   top: 50%;
   transform: translateY(-50%);
-}
-
-@media (max-width: 1439px) {
-  .emdad-shared-sidebar {
-    left: 1216px;
-  }
 }
