@@ -48,13 +48,73 @@ const apiBaseUrl = (env.VITE_API_BASE_URL ?? "").replace(/\/$/, "");
 const useDevelopmentFallback = Boolean(import.meta.env.DEV);
 
 const demoRoles: AdminRole[] = [
+  { roleId: "role-product-owner", code: "product_owner", name: "مدیر محصول / خانه خلاق", activeMemberCount: 1 },
+  { roleId: "role-evaluator", code: "evaluator", name: "ارزیاب", activeMemberCount: 0 },
+  { roleId: "role-company", code: "company", name: "شرکت تأمین‌کننده", activeMemberCount: 2 },
+  { roleId: "role-startup", code: "startup", name: "استارتاپ مجری", activeMemberCount: 1 },
+  { roleId: "role-finance", code: "finance", name: "کارشناس مالی ماه", activeMemberCount: 1 },
+  { roleId: "role-supervisor", code: "supervisor", name: "نهاد ناظر", activeMemberCount: 1 },
+  { roleId: "role-auditor", code: "auditor", name: "ممیز", activeMemberCount: 1 },
   { roleId: "role-system-admin", code: "system_admin", name: "مدیر سامانه", activeMemberCount: 1 },
-  { roleId: "role-creative-house", code: "creative_house", name: "کارشناس خانه خلاق", activeMemberCount: 1 },
-  { roleId: "role-emdad", code: "emdad", name: "کارشناس کمیته امداد", activeMemberCount: 1 },
-  { roleId: "role-fund-manager", code: "fund_manager", name: "مدیر صندوق ماه", activeMemberCount: 1 },
-  { roleId: "role-company", code: "company_manager", name: "نماینده شرکت", activeMemberCount: 2 },
-  { roleId: "role-startup", code: "startup_manager", name: "مدیر استارتاپ", activeMemberCount: 1 },
-  { roleId: "role-auditor", code: "auditor", name: "ناظر و گزارش‌گیر", activeMemberCount: 1 },
+];
+
+const demoOrganizations: AdminOrganization[] = [
+  {
+    organizationId: "org-company-a",
+    name: "شرکت توسعه پایدار آفتاب",
+    type: "company",
+    status: "active",
+    createdAtUtc: "2026-08-18T08:00:00Z",
+    activeMemberCount: 1,
+  },
+  {
+    organizationId: "org-company-b",
+    name: "شرکت راهکار نوین فردا",
+    type: "company",
+    status: "active",
+    createdAtUtc: "2026-08-19T08:00:00Z",
+    activeMemberCount: 1,
+  },
+  {
+    organizationId: "org-startup-a",
+    name: "استارتاپ مسیر سبز",
+    type: "startup",
+    status: "active",
+    createdAtUtc: "2026-08-20T08:00:00Z",
+    activeMemberCount: 1,
+  },
+  {
+    organizationId: "org-creative-house",
+    name: "خانه خلاق و نوآوری ماه",
+    type: "creative_house",
+    status: "active",
+    createdAtUtc: "2026-08-20T08:10:00Z",
+    activeMemberCount: 1,
+  },
+  {
+    organizationId: "org-emdad",
+    name: "کمیته امداد",
+    type: "emdad",
+    status: "active",
+    createdAtUtc: "2026-08-20T08:20:00Z",
+    activeMemberCount: 1,
+  },
+  {
+    organizationId: "org-mah-fund",
+    name: "صندوق ماه",
+    type: "fund",
+    status: "active",
+    createdAtUtc: "2026-08-20T08:30:00Z",
+    activeMemberCount: 1,
+  },
+  {
+    organizationId: "org-mah",
+    name: "سامانه ماه",
+    type: "platform",
+    status: "active",
+    createdAtUtc: "2026-08-20T08:40:00Z",
+    activeMemberCount: 2,
+  },
 ];
 
 const demoUsers: AdminUser[] = [
@@ -89,9 +149,9 @@ const demoUsers: AdminUser[] = [
         organizationId: "org-creative-house",
         organizationName: "خانه خلاق و نوآوری ماه",
         organizationType: "creative_house",
-        roleId: "role-creative-house",
-        roleCode: "creative_house",
-        roleName: "کارشناس خانه خلاق",
+        roleId: "role-product-owner",
+        roleCode: "product_owner",
+        roleName: "مدیر محصول / خانه خلاق",
         isActive: true,
       },
     ],
@@ -108,9 +168,9 @@ const demoUsers: AdminUser[] = [
         organizationId: "org-emdad",
         organizationName: "کمیته امداد",
         organizationType: "emdad",
-        roleId: "role-emdad",
-        roleCode: "emdad",
-        roleName: "کارشناس کمیته امداد",
+        roleId: "role-supervisor",
+        roleCode: "supervisor",
+        roleName: "نهاد ناظر",
         isActive: true,
       },
     ],
@@ -127,9 +187,9 @@ const demoUsers: AdminUser[] = [
         organizationId: "org-mah-fund",
         organizationName: "صندوق ماه",
         organizationType: "fund",
-        roleId: "role-fund-manager",
-        roleCode: "fund_manager",
-        roleName: "مدیر صندوق ماه",
+        roleId: "role-finance",
+        roleCode: "finance",
+        roleName: "کارشناس مالی ماه",
         isActive: true,
       },
     ],
@@ -147,8 +207,8 @@ const demoUsers: AdminUser[] = [
         organizationName: "شرکت توسعه پایدار آفتاب",
         organizationType: "company",
         roleId: "role-company",
-        roleCode: "company_manager",
-        roleName: "نماینده شرکت",
+        roleCode: "company",
+        roleName: "شرکت تأمین‌کننده",
         isActive: true,
       },
     ],
@@ -166,8 +226,8 @@ const demoUsers: AdminUser[] = [
         organizationName: "شرکت راهکار نوین فردا",
         organizationType: "company",
         roleId: "role-company",
-        roleCode: "company_manager",
-        roleName: "نماینده شرکت",
+        roleCode: "company",
+        roleName: "شرکت تأمین‌کننده",
         isActive: true,
       },
     ],
@@ -185,8 +245,8 @@ const demoUsers: AdminUser[] = [
         organizationName: "استارتاپ مسیر سبز",
         organizationType: "startup",
         roleId: "role-startup",
-        roleCode: "startup_manager",
-        roleName: "مدیر استارتاپ",
+        roleCode: "startup",
+        roleName: "استارتاپ مجری",
         isActive: true,
       },
       {
@@ -196,7 +256,7 @@ const demoUsers: AdminUser[] = [
         organizationType: "platform",
         roleId: "role-auditor",
         roleCode: "auditor",
-        roleName: "ناظر و گزارش‌گیر",
+        roleName: "ممیز",
         isActive: true,
       },
     ],
@@ -276,7 +336,7 @@ export function setAdminUserActive(userId: string, isActive: boolean) {
 }
 
 export function listAdminOrganizations() {
-  return adminRequest<AdminOrganization[]>("/api/v1/admin/organizations");
+  return developmentFallback(adminRequest<AdminOrganization[]>("/api/v1/admin/organizations"), demoOrganizations);
 }
 
 export function createAdminOrganization(input: { name: string; type: string }) {
