@@ -90,7 +90,7 @@
   direction: rtl;
 }
 
-.admin-news-image-file {
+.admin-content-file.admin-news-image-file {
   min-width: 0;
   flex: 1;
   margin-top: 0;
