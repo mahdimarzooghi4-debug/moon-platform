@@ -219,7 +219,17 @@ export default function AdminAddUser() {
             <div className="admin-form-grid">
               <div className="admin-form-field">
                 <label htmlFor="admin-user-id">کاربر همگام‌شده</label>
-                <select id="admin-user-id" className="admin-form-input" value={userId} onChange={(event) => setUserId(event.target.value)} disabled={loading || saving} required>
+                <select
+                  id="admin-user-id"
+                  className="admin-form-input"
+                  value={userId}
+                  onChange={(event) => {
+                    setUserId(event.target.value);
+                    setSelectedQueueId("");
+                  }}
+                  disabled={loading || saving}
+                  required
+                >
                   <option value="">انتخاب کاربر</option>
                   {users.map((user) => (
                     <option value={user.userId} key={user.userId}>{user.displayName || user.externalSubject} {user.isActive ? "" : "(غیرفعال)"}</option>
@@ -228,7 +238,17 @@ export default function AdminAddUser() {
               </div>
               <div className="admin-form-field">
                 <label htmlFor="admin-user-org">سازمان / مجموعه</label>
-                <select id="admin-user-org" className="admin-form-input" value={organizationId} onChange={(event) => setOrganizationId(event.target.value)} disabled={loading || saving} required>
+                <select
+                  id="admin-user-org"
+                  className="admin-form-input"
+                  value={organizationId}
+                  onChange={(event) => {
+                    setOrganizationId(event.target.value);
+                    setSelectedQueueId("");
+                  }}
+                  disabled={loading || saving}
+                  required
+                >
                   <option value="">انتخاب سازمان فعال</option>
                   {organizations.map((organization) => (
                     <option value={organization.organizationId} key={organization.organizationId}>{organization.name}</option>
