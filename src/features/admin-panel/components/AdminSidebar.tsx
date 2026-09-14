@@ -9,6 +9,7 @@ type AdminSidebarProps = {
     | "organizations"
     | "projects"
     | "funding"
+    | "individual-participations"
     | "revenues"
     | "reports"
     | "content"
@@ -21,6 +22,7 @@ const sidebarItems = [
   { key: "organizations", label: "شرکت‌ها و استارتاپ‌ها", to: "/panel/admin/organizations", icon: "nav-organizations.svg" },
   { key: "projects", label: "پروژه‌ها", to: "/panel/admin/projects", icon: "nav-projects.svg" },
   { key: "funding", label: "تأمین مالی", to: "/panel/admin/funding", icon: "nav-funding.svg" },
+  { key: "individual-participations", label: "مشارکت افراد حقیقی", to: "/panel/admin/individual-participations", icon: "nav-history.svg" },
   { key: "revenues", label: "درآمدها", to: "/panel/admin/revenues", icon: "nav-history.svg" },
   { key: "reports", label: "گزارش‌ها", to: "/panel/admin/reports", icon: "nav-history.svg" },
   { key: "content", label: "مدیریت محتوا", to: "/panel/admin/content", icon: null },
