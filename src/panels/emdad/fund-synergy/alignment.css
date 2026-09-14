@@ -16,6 +16,7 @@
   align-items: center !important;
   direction: rtl !important;
   text-align: center !important;
+  box-sizing: border-box !important;
 }
 
 [data-name="emdad-fund-synergy"] [data-name="fund-synergy-table"] [data-name="table-header"] > div {
@@ -23,24 +24,28 @@
   left: auto !important;
   right: auto !important;
   top: auto !important;
-  width: auto !important;
+  width: 100% !important;
   height: 36px !important;
   transform: none !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+  padding: 0 10px !important;
+  box-sizing: border-box !important;
   text-align: center !important;
 }
 
 [data-name="emdad-fund-synergy"] [data-name="fund-synergy-table"] [data-name="table-header"] > div:nth-child(2) {
   justify-content: flex-start !important;
+  direction: rtl !important;
   text-align: right !important;
-  padding-right: 10px !important;
+  padding: 0 10px !important;
 }
 
 [data-name="emdad-fund-synergy"] .moon-synergy-request-row {
   grid-template-columns: 74px 300px 210px 160px 155px 205px !important;
   padding: 0 8px !important;
+  box-sizing: border-box !important;
 }
 
 [data-name="emdad-fund-synergy"] .moon-synergy-request-cell {
@@ -49,13 +54,16 @@
   align-items: center !important;
   justify-content: center !important;
   height: 100% !important;
+  box-sizing: border-box !important;
   text-align: center !important;
 }
 
 [data-name="emdad-fund-synergy"] .moon-synergy-request-project {
   align-items: flex-start !important;
   justify-content: center !important;
+  direction: rtl !important;
   text-align: right !important;
+  padding: 0 10px !important;
 }
 
 [data-name="emdad-fund-synergy"] .moon-synergy-request-action {
