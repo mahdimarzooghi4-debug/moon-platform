@@ -70,10 +70,6 @@ public sealed record AdminNewsArticleView(
     string Title,
     string Summary,
     string Status,
-    bool HasImage,
-    string? ImageFileName,
-    string? ImageContentType,
-    long? ImageSize,
     DateTimeOffset UpdatedAtUtc);
 
 public sealed record AdminNewsImage(
