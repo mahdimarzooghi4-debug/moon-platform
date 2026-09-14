@@ -84,7 +84,8 @@ export default function ManagedPublicContent() {
     let observer: MutationObserver | null = null;
 
     const pathname = window.location.pathname;
-    if (pathname !== "/" && pathname !== "/news") return;
+    const isManagedNewsPage = pathname === "/news" || pathname === "/news/social-impact-1404";
+    if (pathname !== "/" && !isManagedNewsPage) return;
 
     const waitForRoot = (apply: (root: HTMLElement) => boolean | void) => {
       const run = () => {
