@@ -164,7 +164,7 @@ export default function AdminOrganizations() {
           </div>
         </header>
 
-        <section className="admin-users-kpis" aria-label="شاخص‌های حساب‌ها">
+        <section className="admin-users-kpis" aria-label="شاخص‌های حساب‌ها" style={{ direction: "rtl" }}>
           <article className="admin-users-kpi"><img src={`${ASSET_ROOT}/users-active.svg`} alt="" /><span>شرکت‌ها</span><strong>{loading ? "…" : numberFa.format(companyCount)}</strong><small>بدون نیاز به فعال‌سازی</small></article>
           <article className="admin-users-kpi"><img src={`${ASSET_ROOT}/users-roles.svg`} alt="" /><span>استارتاپ‌های فعال</span><strong>{loading ? "…" : numberFa.format(activeStartups)}</strong><small>همگام‌شده و فعال</small></article>
           <article className="admin-users-kpi"><img src={`${ASSET_ROOT}/users-review.svg`} alt="" /><span>منتظر ایجاد دسترسی</span><strong>{numberFa.format(awaitingAccessStartups.length)}</strong><small>تأییدشده توسط خانه خلاق</small></article>
