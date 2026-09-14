@@ -1,0 +1,52 @@
+[data-name="emdad-fund-synergy"] [data-name="fund-synergy-table"] {
+  height: 296px !important;
+  overflow: hidden !important;
+}
+
+[data-name="emdad-fund-synergy"] .moon-synergy-request-list {
+  top: 123px !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+  gap: 6px !important;
+  padding: 0 !important;
+}
+
+[data-name="emdad-fund-synergy"] .moon-synergy-request-row {
+  min-height: 46px !important;
+  height: 46px !important;
+  grid-template-columns: 74px 300px 210px 160px 155px 185px !important;
+  padding: 0 8px !important;
+  border-radius: 8px !important;
+}
+
+[data-name="emdad-fund-synergy"] .moon-synergy-request-cell {
+  padding: 0 8px !important;
+  line-height: 1.45 !important;
+}
+
+[data-name="emdad-fund-synergy"] .moon-synergy-request-project {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  gap: 1px !important;
+}
+
+[data-name="emdad-fund-synergy"] .moon-synergy-request-project small {
+  margin-top: 0 !important;
+  line-height: 1.35 !important;
+}
+
+[data-name="emdad-fund-synergy"] .moon-synergy-request-status {
+  min-width: 118px !important;
+  height: 26px !important;
+}
+
+[data-name="emdad-fund-synergy"] .moon-synergy-request-action {
+  width: 148px !important;
+  height: 32px !important;
+}
+
+[data-name="emdad-fund-synergy"] .moon-synergy-request-empty {
+  height: 138px !important;
+}
