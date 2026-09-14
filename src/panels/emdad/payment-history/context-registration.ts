@@ -132,7 +132,48 @@ function setButtonText(button: HTMLElement, text: string) {
   else button.textContent = text;
 }
 
+function decorateReleaseQueueActions() {
+  if (window.location.pathname !== "/panel/emdad/release-requests") return;
+  const requests = readArray(RELEASE_REQUESTS_KEY);
+  const byId = new Map(
+    requests
+      .filter((item) => typeof item.id === "string")
+      .map((item) => [String(item.id), item] as const),
+  );
+
+  document
+    .querySelectorAll<HTMLButtonElement>(
+      '[data-name="emdad-release-requests"] [data-release-request-id]',
+    )
+    .forEach((button) => {
+      const id = button.dataset.releaseRequestId;
+      if (!id) return;
+      const request = byId.get(id);
+      if (!request) return;
+
+      const approved = typeof request.emdadApprovedAt === "string";
+      const hasReceipt = typeof request.receipt === "string" && normalize(String(request.receipt)).length > 0;
+      const row = button.closest<HTMLElement>(".creative-release-queue-row");
+      const status = row?.querySelector<HTMLElement>(".creative-release-queue-status");
+
+      if (approved && !hasReceipt) {
+        button.dataset.paymentReady = "true";
+        button.textContent = "ثبت پرداخت و رسید";
+        if (status) {
+          status.dataset.paymentStage = "approved";
+          status.textContent = "تأیید شده؛ در انتظار پرداخت";
+        }
+        return;
+      }
+
+      delete button.dataset.paymentReady;
+      if (status) delete status.dataset.paymentStage;
+    });
+}
+
 function decorateContextActions() {
+  decorateReleaseQueueActions();
+
   if (window.location.pathname === "/panel/emdad/release-requests/detail") {
     const request = selectedById(RELEASE_REQUESTS_KEY, RELEASE_SELECTED_KEY);
     const button = document.querySelector<HTMLElement>(
@@ -178,6 +219,18 @@ window.addEventListener(
     if (event.button !== 0) return;
     const target = event.target;
     if (!(target instanceof Element)) return;
+
+    const releaseQueueAction = target.closest<HTMLButtonElement>(
+      '[data-name="emdad-release-requests"] [data-release-request-id]',
+    );
+    if (releaseQueueAction?.dataset.releaseRequestId && releaseQueueAction.dataset.paymentReady === "true") {
+      const request = readArray(RELEASE_REQUESTS_KEY).find(
+        (item) => item.id === releaseQueueAction.dataset.releaseRequestId,
+      );
+      const draft = request ? releasePaymentDraft(request) : null;
+      if (draft) openPayment(draft, event);
+      return;
+    }
 
     const releaseApprove = target.closest<HTMLElement>(
       '[data-name="emdad-release-request-detail"] [data-name="approve-release-button"]',
@@ -292,8 +345,10 @@ const start = () => {
       Array.from(mutation.addedNodes).some((node) => {
         if (!(node instanceof Element)) return false;
         return (
+          node.matches('[data-name="emdad-release-requests"]') ||
           node.matches('[data-name="emdad-release-request-detail"]') ||
           node.matches('[data-name="emdad-fund-synergy-allocation"]') ||
+          Boolean(node.querySelector('[data-name="emdad-release-requests"]')) ||
           Boolean(node.querySelector('[data-name="emdad-release-request-detail"]')) ||
           Boolean(node.querySelector('[data-name="emdad-fund-synergy-allocation"]'))
         );
