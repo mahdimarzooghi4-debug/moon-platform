@@ -29,6 +29,10 @@ public sealed class AdminNewsArticle
     public string Title { get; set; } = string.Empty;
     public string Summary { get; set; } = string.Empty;
     public string Status { get; set; } = "draft";
+    public string? ImageFileName { get; set; }
+    public string? ImageContentType { get; set; }
+    public long? ImageSize { get; set; }
+    public byte[]? ImageData { get; set; }
     public DateTimeOffset UpdatedAtUtc { get; set; } = DateTimeOffset.UtcNow;
 }
 
@@ -66,6 +70,17 @@ public sealed record AdminNewsArticleView(
     string Title,
     string Summary,
     string Status,
+    bool HasImage,
+    string? ImageFileName,
+    string? ImageContentType,
+    long? ImageSize,
+    DateTimeOffset UpdatedAtUtc);
+
+public sealed record AdminNewsImage(
+    string FileName,
+    string ContentType,
+    long Size,
+    byte[] Data,
     DateTimeOffset UpdatedAtUtc);
 
 public sealed record AdminHeroVideoMetaView(
