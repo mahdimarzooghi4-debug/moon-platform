@@ -39,7 +39,7 @@ html:has(.emdad-shared-sidebar) .emdad-certificate-issuer-trigger {
   z-index: 500;
   top: 0;
   left: auto;
-  right: 0;
+  right: var(--emdad-content-gutter);
   width: 224px;
   min-width: 224px;
   max-width: 224px;
