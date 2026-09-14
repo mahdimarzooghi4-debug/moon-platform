@@ -533,3 +533,35 @@
 .admin-logout img {
   filter: brightness(0) saturate(100%) invert(17%) sepia(22%) saturate(1990%) hue-rotate(169deg) brightness(90%) contrast(92%);
 }
+
+/* Shared dashboard-style surfaces for all secondary admin pages. */
+.admin-users-kpi,
+.admin-users-toolbar,
+.admin-users-table-card,
+.admin-form-card,
+.admin-form-actions,
+.admin-final-card,
+.admin-settings-card,
+.admin-settings-footer,
+.admin-revenue-schedule {
+  border-color: #e4ebf1 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 3px 5px rgba(23, 46, 71, 0.06) !important;
+}
+
+.admin-users-kpis {
+  height: 104px !important;
+}
+
+.admin-users-kpi {
+  height: 104px !important;
+  padding: 12px 16px !important;
+  gap: 4px !important;
+}
+
+.admin-users-kpi img {
+  top: 11px !important;
+  left: 15px !important;
+  width: 36px !important;
+  height: 36px !important;
+}
