@@ -24,12 +24,6 @@ const numberFa = new Intl.NumberFormat("fa-IR");
 const typeLabel: Record<string, string> = {
   company: "شرکت",
   startup: "استارتاپ",
-  creative_house: "خانه خلاق",
-  fund_manager: "مدیریت صندوق",
-  fund: "مدیریت صندوق",
-  emdad: "کمیته امداد",
-  supervisor: "نهاد ناظر",
-  platform: "سامانه ماه",
 };
 
 function normalize(value: string) {
@@ -45,6 +39,12 @@ function uniquePendingStartups(records: AdminProvisioningRecord[]) {
       if (!byName.has(key)) byName.set(key, record);
     });
   return Array.from(byName.values());
+}
+
+function organizationStatusMatches(item: AdminOrganization, statusFilter: string) {
+  if (!statusFilter) return true;
+  if (item.type === "company") return statusFilter === "active";
+  return item.status === statusFilter;
 }
 
 export default function AdminOrganizations() {
@@ -97,26 +97,30 @@ export default function AdminOrganizations() {
     };
   }, []);
 
+  const visibleOrganizations = useMemo(
+    () => organizations.filter((item) => item.type === "company" || item.type === "startup"),
+    [organizations],
+  );
   const pendingStartups = useMemo(() => uniquePendingStartups(provisioned), [provisioned]);
 
   const awaitingAccessStartups = useMemo(() => {
     const knownStartupNames = new Set<string>();
-    organizations
+    visibleOrganizations
       .filter((organization) => organization.type === "startup")
       .forEach((organization) => knownStartupNames.add(normalize(organization.name)));
     pendingStartups.forEach((record) => knownStartupNames.add(normalize(record.startupName)));
     return approvedStartups.filter((item) => !knownStartupNames.has(normalize(item.startupName)));
-  }, [approvedStartups, organizations, pendingStartups]);
+  }, [approvedStartups, pendingStartups, visibleOrganizations]);
 
   const filtered = useMemo(() => {
     const normalized = normalize(query);
-    return organizations.filter((item) => {
+    return visibleOrganizations.filter((item) => {
       const matchesQuery = !normalized || normalize(item.name).includes(normalized) || item.organizationId.includes(normalized);
       const matchesType = !typeFilter || item.type === typeFilter;
-      const matchesStatus = !statusFilter || item.status === statusFilter;
+      const matchesStatus = organizationStatusMatches(item, statusFilter);
       return matchesQuery && matchesType && matchesStatus;
     });
-  }, [organizations, query, statusFilter, typeFilter]);
+  }, [query, statusFilter, typeFilter, visibleOrganizations]);
 
   const filteredPendingStartups = useMemo(() => {
     const normalized = normalize(query);
@@ -146,8 +150,8 @@ export default function AdminOrganizations() {
     });
   }, [awaitingAccessStartups, query, statusFilter, typeFilter]);
 
-  const activeCompanies = organizations.filter((item) => item.type === "company" && item.status === "active").length;
-  const activeStartups = organizations.filter((item) => item.type === "startup" && item.status === "active").length;
+  const companyCount = visibleOrganizations.filter((item) => item.type === "company").length;
+  const activeStartups = visibleOrganizations.filter((item) => item.type === "startup" && item.status === "active").length;
   const totalFiltered = filtered.length + filteredPendingStartups.length + filteredAwaitingAccess.length;
 
   return (
@@ -156,44 +160,40 @@ export default function AdminOrganizations() {
         <header className="admin-users-header">
           <div className="admin-users-heading">
             <h1>شرکت‌ها و استارتاپ‌ها</h1>
-            <p>شرکت‌ها مستقیم فعال می‌شوند؛ استارتاپ تأییدشده خانه خلاق ابتدا منتظر ایجاد دسترسی مدیر می‌ماند.</p>
+            <p>این بخش فقط حساب‌های شرکت و استارتاپ را نمایش می‌دهد؛ شرکت‌ها بدون مرحله فعال‌سازی وارد سامانه می‌شوند.</p>
           </div>
         </header>
 
         <section className="admin-users-kpis" aria-label="شاخص‌های حساب‌ها">
-          <article className="admin-users-kpi"><img src={`${ASSET_ROOT}/users-active.svg`} alt="" /><span>شرکت‌های فعال</span><strong>{loading ? "…" : numberFa.format(activeCompanies)}</strong><small>بدون مرحله تأیید مدیر</small></article>
+          <article className="admin-users-kpi"><img src={`${ASSET_ROOT}/users-active.svg`} alt="" /><span>شرکت‌ها</span><strong>{loading ? "…" : numberFa.format(companyCount)}</strong><small>بدون نیاز به فعال‌سازی</small></article>
           <article className="admin-users-kpi"><img src={`${ASSET_ROOT}/users-roles.svg`} alt="" /><span>استارتاپ‌های فعال</span><strong>{loading ? "…" : numberFa.format(activeStartups)}</strong><small>همگام‌شده و فعال</small></article>
           <article className="admin-users-kpi"><img src={`${ASSET_ROOT}/users-review.svg`} alt="" /><span>منتظر ایجاد دسترسی</span><strong>{numberFa.format(awaitingAccessStartups.length)}</strong><small>تأییدشده توسط خانه خلاق</small></article>
-          <article className="admin-users-kpi"><img src={`${ASSET_ROOT}/users-blocked.svg`} alt="" /><span>منتظر فعال‌سازی</span><strong>{numberFa.format(pendingStartups.length)}</strong><small>شخص و نقش توسط مدیر ثبت شده</small></article>
+          <article className="admin-users-kpi"><img src={`${ASSET_ROOT}/users-blocked.svg`} alt="" /><span>منتظر فعال‌سازی</span><strong>{numberFa.format(pendingStartups.length)}</strong><small>فقط استارتاپ‌ها</small></article>
         </section>
 
         <section className="admin-users-toolbar" aria-label="ابزارهای فهرست">
           <input className="admin-users-control" placeholder="جستجو در نام، مدیر، موبایل یا شناسه" value={query} onChange={(event) => setQuery(event.target.value)} />
-          <select className="admin-users-control" value={typeFilter} onChange={(event) => setTypeFilter(event.target.value)} aria-label="نوع سازمان">
+          <select className="admin-users-control" value={typeFilter} onChange={(event) => setTypeFilter(event.target.value)} aria-label="نوع حساب">
             <option value="">همه نوع‌ها</option>
             <option value="company">شرکت</option>
             <option value="startup">استارتاپ</option>
-            <option value="creative_house">خانه خلاق</option>
-            <option value="fund_manager">مدیریت صندوق</option>
-            <option value="supervisor">نهاد ناظر</option>
-            <option value="platform">سامانه ماه</option>
           </select>
-          <select className="admin-users-control" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} aria-label="وضعیت سازمان">
+          <select className="admin-users-control" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} aria-label="وضعیت حساب">
             <option value="">همه وضعیت‌ها</option>
             <option value="active">فعال</option>
             <option value="awaiting_access">منتظر ایجاد دسترسی</option>
             <option value="pending">در انتظار فعال‌سازی</option>
-            <option value="inactive">غیرفعال</option>
+            <option value="inactive">استارتاپ غیرفعال</option>
           </select>
           <div className="admin-users-count">{numberFa.format(totalFiltered)} حساب</div>
         </section>
 
         <section className="admin-users-table-card">
-          <h2>فهرست سازمان‌ها</h2>
-          <p>استارتاپ تأییدشده خانه خلاق در همین فهرست وارد صف ایجاد دسترسی می‌شود و پس از تعریف شخص و نقش به مرحله فعال‌سازی می‌رود.</p>
-          {failed ? <p className="admin-form-actions-note">دریافت سازمان‌های Backend ناموفق بود؛ صف استارتاپ‌ها و دعوت‌های محلی همچنان نمایش داده می‌شوند.</p> : null}
+          <h2>فهرست شرکت‌ها و استارتاپ‌ها</h2>
+          <p>شرکت‌ها مستقیم در فهرست فعال هستند؛ فقط استارتاپ‌ها مراحل تأیید خانه خلاق، ایجاد دسترسی و فعال‌سازی را طی می‌کنند.</p>
+          {failed ? <p className="admin-form-actions-note">دریافت داده Backend ناموفق بود؛ داده‌های نمونه توسعه و صف استارتاپ‌ها نمایش داده می‌شوند.</p> : null}
           <div className="admin-users-table">
-            <div className="admin-users-row admin-users-table-head"><span>سازمان / استارتاپ</span><span>نوع حساب</span><span>وضعیت</span><span>اعضای فعال</span><span>شناسه / مدیر</span><span>اقدام</span></div>
+            <div className="admin-users-row admin-users-table-head"><span>شرکت / استارتاپ</span><span>نوع حساب</span><span>وضعیت</span><span>اعضای فعال</span><span>شناسه / مدیر</span><span>اقدام</span></div>
             {filteredAwaitingAccess.map((item) => (
               <div className="admin-users-row" key={`approved-${item.id}`}>
                 <div className="admin-user-cell"><strong>{item.startupName}</strong><small>{item.activityArea || "حوزه فعالیت ثبت نشده"}</small></div>
@@ -214,24 +214,28 @@ export default function AdminOrganizations() {
                 <Link className="admin-user-action" to="/panel/admin/users">مشاهده دعوت</Link>
               </div>
             ))}
-            {!loading && filtered.map((item) => (
-              <div className="admin-users-row" key={item.organizationId}>
-                <div className="admin-user-cell"><strong>{item.name}</strong><small>{item.organizationId}</small></div>
-                <span>{typeLabel[item.type] ?? item.type}</span>
-                <span className={`admin-status-pill ${item.status === "active" ? "admin-status-active" : "admin-status-review"}`}>{item.status === "active" ? "فعال" : "غیرفعال"}</span>
-                <span>{numberFa.format(item.activeMemberCount)}</span>
-                <span className="admin-access-pill admin-access-full">{item.organizationId.slice(0, 8)}…</span>
-                <Link className="admin-user-action" to={`/panel/admin/organizations/${item.organizationId}`}>مشاهده</Link>
-              </div>
-            ))}
+            {!loading && filtered.map((item) => {
+              const isCompany = item.type === "company";
+              const isActive = isCompany || item.status === "active";
+              return (
+                <div className="admin-users-row" key={item.organizationId}>
+                  <div className="admin-user-cell"><strong>{item.name}</strong><small>{item.organizationId}</small></div>
+                  <span>{typeLabel[item.type] ?? item.type}</span>
+                  <span className={`admin-status-pill ${isActive ? "admin-status-active" : "admin-status-review"}`}>{isCompany ? "فعال؛ بدون نیاز به فعال‌سازی" : item.status === "active" ? "فعال" : "غیرفعال"}</span>
+                  <span>{numberFa.format(item.activeMemberCount)}</span>
+                  <span className="admin-access-pill admin-access-full">{item.organizationId.slice(0, 8)}…</span>
+                  <Link className="admin-user-action" to={`/panel/admin/organizations/${item.organizationId}`}>مشاهده</Link>
+                </div>
+              );
+            })}
             <div className="admin-pagination">
-              <span>{loading ? "در حال دریافت…" : `نمایش ${numberFa.format(totalFiltered)} سازمان`}</span>
+              <span>{loading ? "در حال دریافت…" : `نمایش ${numberFa.format(totalFiltered)} حساب`}</span>
               <div className="admin-pagination-controls"><span className="admin-page-number">۱</span></div>
             </div>
           </div>
         </section>
 
-        <aside className="admin-info-note">شرکت نیاز به تأیید مدیر سامانه ندارد. استارتاپ پس از تأیید خانه خلاق اینجا وارد صف «ایجاد دسترسی» می‌شود؛ مدیر شخص و نقش را می‌سازد و بعد رکورد به «در انتظار فعال‌سازی» منتقل می‌شود.</aside>
+        <aside className="admin-info-note">شرکت‌ها پس از ثبت، مستقیم قابل استفاده‌اند و فعال‌سازی جداگانه ندارند. استارتاپ‌ها پس از تأیید خانه خلاق اینجا وارد صف ایجاد دسترسی می‌شوند.</aside>
       </main>
       <AdminSidebar active="organizations" />
     </div>
