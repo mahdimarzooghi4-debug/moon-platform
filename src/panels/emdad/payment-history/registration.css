@@ -1,0 +1,253 @@
+.emdad-register-payment-button {
+  position: absolute;
+  left: 151px;
+  top: 15px;
+  width: 238px;
+  height: 42px;
+  border: 1px solid #2094e3;
+  border-radius: 8px;
+  background: #2094e3;
+  color: #fff;
+  font-family: "Vazirmatn", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.emdad-register-payment-button:hover {
+  background: #1887cf;
+}
+
+.emdad-payment-ledger {
+  position: absolute;
+  left: 19px;
+  top: 78px;
+  width: 1120px;
+  max-height: 190px;
+  overflow: auto;
+  font-family: "Vazirmatn", sans-serif;
+}
+
+.emdad-payment-ledger-header,
+.emdad-payment-ledger-row {
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr 1.15fr 1fr 0.9fr 1fr;
+  align-items: center;
+  column-gap: 8px;
+  direction: rtl;
+}
+
+.emdad-payment-ledger-header {
+  min-height: 38px;
+  padding: 0 12px;
+  border-radius: 8px;
+  background: #f5f8fb;
+  color: #60758a;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.emdad-payment-ledger-row {
+  min-height: 52px;
+  margin-top: 8px;
+  padding: 0 12px;
+  border: 1px solid #e4ebf1;
+  border-radius: 8px;
+  background: #fff;
+  color: #17324d;
+  font-size: 11px;
+}
+
+.emdad-payment-ledger-row strong {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.emdad-payment-ledger-row span:nth-child(2) {
+  display: inline-flex;
+  width: fit-content;
+  min-width: 72px;
+  justify-content: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #edf7fe;
+  color: #2094e3;
+  font-weight: 500;
+}
+
+.emdad-payment-ledger-empty {
+  min-height: 88px;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed #d5e0e8;
+  border-radius: 8px;
+  color: #60758a;
+  font-size: 11px;
+}
+
+.emdad-payment-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(23, 50, 77, 0.42);
+  font-family: "Vazirmatn", sans-serif;
+}
+
+.emdad-payment-modal {
+  width: 720px;
+  max-width: calc(100vw - 48px);
+  border: 1px solid #dce6ee;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 24px 70px rgba(23, 50, 77, 0.24);
+  overflow: hidden;
+  color: #17324d;
+}
+
+.emdad-payment-modal,
+.emdad-payment-modal * {
+  box-sizing: border-box;
+  font-family: "Vazirmatn", sans-serif !important;
+}
+
+.emdad-payment-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 24px 18px;
+  border-bottom: 1px solid #e4ebf1;
+}
+
+.emdad-payment-modal-header h2,
+.emdad-payment-modal-header p {
+  margin: 0;
+}
+
+.emdad-payment-modal-header h2 {
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 30px;
+}
+
+.emdad-payment-modal-header p {
+  margin-top: 4px;
+  color: #60758a;
+  font-size: 11px;
+  line-height: 20px;
+}
+
+.emdad-payment-modal-close {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  border: 1px solid #e4ebf1;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #60758a;
+  font-size: 22px;
+  line-height: 30px;
+  cursor: pointer;
+}
+
+.emdad-payment-form {
+  padding: 20px 24px 22px;
+}
+
+.emdad-payment-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 16px;
+}
+
+.emdad-payment-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  color: #17324d;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.emdad-payment-form input,
+.emdad-payment-form select,
+.emdad-payment-form textarea {
+  width: 100%;
+  border: 1px solid #dce6ee;
+  border-radius: 9px;
+  background: #fbfcfd;
+  color: #17324d;
+  outline: none;
+  font-size: 12px;
+}
+
+.emdad-payment-form input,
+.emdad-payment-form select {
+  height: 42px;
+  padding: 0 12px;
+}
+
+.emdad-payment-form textarea {
+  min-height: 78px;
+  resize: vertical;
+  padding: 10px 12px;
+}
+
+.emdad-payment-form input:focus,
+.emdad-payment-form select:focus,
+.emdad-payment-form textarea:focus {
+  border-color: #2094e3;
+  box-shadow: 0 0 0 3px rgba(32, 148, 227, 0.1);
+}
+
+.emdad-payment-note {
+  margin-top: 14px;
+}
+
+.emdad-payment-form-error {
+  min-height: 20px;
+  margin: 10px 0 0;
+  color: #c94a4a;
+  font-size: 11px;
+}
+
+.emdad-payment-modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.emdad-payment-modal-actions button {
+  min-width: 150px;
+  height: 42px;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.emdad-payment-secondary {
+  border: 1px solid #dce6ee;
+  background: #fff;
+  color: #17324d;
+}
+
+.emdad-payment-primary {
+  border: 1px solid #2094e3;
+  background: #2094e3;
+  color: #fff;
+}
+
+@media (max-width: 760px) {
+  .emdad-payment-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
