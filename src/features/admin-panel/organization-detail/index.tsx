@@ -2,17 +2,20 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { AdminSidebar } from "../components/AdminSidebar";
 import { listAdminOrganizations, setAdminOrganizationStatus, type AdminOrganization } from "../api";
+import { getAdminOrganizationProfile, saveAdminOrganizationProfile } from "../management-api";
 import { getOrganizationOverride, saveOrganizationOverride } from "../organization-overrides";
 import "../index.css";
 import "../users-flow.css";
 import "../list-flow.css";
 
 const typeLabel: Record<string, string> = { company: "شرکت", startup: "استارتاپ" };
+const isDevelopment = Boolean(import.meta.env.DEV);
+const guidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-const demoDetails: Record<string, { manager: string; mobile: string; extraLabel: string; extraValue: string }> = {
-  "org-company-a": { manager: "مریم کریمی", mobile: "09121234567", extraLabel: "شناسه ملی", extraValue: "14009876543" },
-  "org-company-b": { manager: "رضا نادری", mobile: "09123334455", extraLabel: "شناسه ملی", extraValue: "14008765432" },
-  "org-startup-a": { manager: "الهام موسوی", mobile: "09125556677", extraLabel: "حوزه فعالیت", extraValue: "فناوری سبز و اشتغال" },
+const demoDetails: Record<string, { manager: string; extraLabel: string; extraValue: string }> = {
+  "org-company-a": { manager: "نماینده شرکت آفتاب", extraLabel: "شناسه ملی", extraValue: "نمونه توسعه" },
+  "org-company-b": { manager: "نماینده شرکت فردا", extraLabel: "شناسه ملی", extraValue: "نمونه توسعه" },
+  "org-startup-a": { manager: "مدیر استارتاپ نمونه", extraLabel: "حوزه فعالیت", extraValue: "فناوری سبز و اشتغال" },
 };
 
 export default function AdminOrganizationDetail() {
@@ -33,8 +36,15 @@ export default function AdminOrganizationDetail() {
     const override = getOrganizationOverride(found.organizationId);
     setStartupName(override?.name ?? found.name);
     setManager(override?.manager ?? details?.manager ?? "");
-    setMobile(override?.mobile ?? details?.mobile ?? "");
+    setMobile(override?.mobile ?? "");
     setActivityArea(override?.activityArea ?? details?.extraValue ?? "");
+  };
+
+  const applyServerProfile = (profile: Awaited<ReturnType<typeof getAdminOrganizationProfile>>) => {
+    setStartupName(profile.name);
+    setManager(profile.manager);
+    setMobile(profile.mobile);
+    setActivityArea(profile.activityArea);
   };
 
   const load = async () => {
@@ -43,6 +53,9 @@ export default function AdminOrganizationDetail() {
     const found = items.find((item) => item.organizationId === organizationId) ?? null;
     if (!found) throw new Error("organization_not_found");
     applyOrganization(found);
+    if (found.type === "startup" && guidPattern.test(found.organizationId)) {
+      try { applyServerProfile(await getAdminOrganizationProfile(found.organizationId)); } catch { /* profile is optional before first edit */ }
+    }
   };
 
   useEffect(() => {
@@ -52,12 +65,19 @@ export default function AdminOrganizationDetail() {
       setLoading(false);
       return () => { active = false; };
     }
+
     listAdminOrganizations()
-      .then((items) => {
+      .then(async (items) => {
         if (!active) return;
         const found = items.find((item) => item.organizationId === organizationId) ?? null;
         if (!found) { setError("شرکت یا استارتاپ موردنظر پیدا نشد."); return; }
         applyOrganization(found);
+        if (found.type === "startup" && guidPattern.test(found.organizationId)) {
+          try {
+            const profile = await getAdminOrganizationProfile(found.organizationId);
+            if (active) applyServerProfile(profile);
+          } catch { /* keep base data when profile does not exist */ }
+        }
       })
       .catch(() => { if (active) setError("دریافت اطلاعات حساب ناموفق بود."); })
       .finally(() => { if (active) setLoading(false); });
@@ -71,16 +91,44 @@ export default function AdminOrganizationDetail() {
   const companyFields = useMemo(() => {
     if (!organization || !isCompany) return [];
     return [
-      ["نام مجموعه", organization.name], ["شناسه سازمان", organization.organizationId], ["نوع حساب", typeLabel[organization.type] ?? organization.type],
-      ["مسئول حساب", details?.manager ?? "ثبت نشده"], ["شماره تماس", details?.mobile ?? "ثبت نشده"], [details?.extraLabel ?? "اطلاعات تکمیلی", details?.extraValue ?? "ثبت نشده"],
-      ["اعضای فعال", String(organization.activeMemberCount)], ["تاریخ ایجاد", new Date(organization.createdAtUtc).toLocaleDateString("fa-IR")], ["وضعیت حساب", "فعال؛ بدون نیاز به فعال‌سازی"],
+      ["نام مجموعه", organization.name],
+      ["شناسه سازمان", organization.organizationId],
+      ["نوع حساب", typeLabel[organization.type] ?? organization.type],
+      ["مسئول حساب", details?.manager ?? "ثبت نشده"],
+      [details?.extraLabel ?? "اطلاعات تکمیلی", details?.extraValue ?? "ثبت نشده"],
+      ["اعضای فعال", String(organization.activeMemberCount)],
+      ["تاریخ ایجاد", new Date(organization.createdAtUtc).toLocaleDateString("fa-IR")],
+      ["وضعیت حساب", "فعال؛ بدون نیاز به فعال‌سازی"],
     ] as const;
   }, [details, isCompany, organization]);
 
-  const saveStartup = () => {
-    if (!organization || !isStartup) return;
-    saveOrganizationOverride({ organizationId: organization.organizationId, name: startupName.trim(), manager: manager.trim(), mobile: mobile.trim(), activityArea: activityArea.trim() });
-    setSaved(true);
+  const saveStartup = async () => {
+    if (!organization || !isStartup || saving) return;
+    const input = { name: startupName.trim(), manager: manager.trim(), mobile: mobile.trim(), activityArea: activityArea.trim() };
+    if (!input.name) { setError("نام استارتاپ الزامی است."); return; }
+
+    setSaving(true);
+    setSaved(false);
+    setError("");
+    try {
+      if (guidPattern.test(organization.organizationId)) {
+        applyServerProfile(await saveAdminOrganizationProfile(organization.organizationId, input));
+      } else if (!isDevelopment) {
+        throw new Error("invalid_organization_id");
+      }
+      saveOrganizationOverride({ organizationId: organization.organizationId, ...input });
+      setOrganization((current) => current ? { ...current, name: input.name } : current);
+      setSaved(true);
+    } catch {
+      if (isDevelopment) {
+        saveOrganizationOverride({ organizationId: organization.organizationId, ...input });
+        setOrganization((current) => current ? { ...current, name: input.name } : current);
+        setSaved(true);
+        setError("Backend در دسترس نبود؛ تغییر فقط در fallback توسعه ثبت شد.");
+      } else {
+        setError("ذخیره تغییرات استارتاپ در سرور انجام نشد.");
+      }
+    } finally { setSaving(false); }
   };
 
   const toggleStatus = async () => {
@@ -103,7 +151,7 @@ export default function AdminOrganizationDetail() {
 
         <section className="admin-form-card">
           <h2>{isStartup ? "ویرایش اطلاعات استارتاپ" : "اطلاعات شرکت"}</h2>
-          <p>{isStartup ? "مدیر سامانه می‌تواند مشخصات مدیریتی استارتاپ را اصلاح کند." : "اطلاعات شرکت برای مشاهده مدیریتی نمایش داده می‌شود و نیاز به فعال‌سازی ندارد."}</p>
+          <p>{isStartup ? "مشخصات مدیریتی استارتاپ در Backend ذخیره می‌شود." : "اطلاعات شرکت فقط برای مشاهده مدیریتی است و فعال‌سازی جداگانه ندارد."}</p>
           {loading ? <p className="admin-form-actions-note">در حال دریافت اطلاعات…</p> : null}
           {error ? <p className="admin-form-actions-note">{error}</p> : null}
 
@@ -121,10 +169,10 @@ export default function AdminOrganizationDetail() {
           )}
         </section>
 
-        <aside className="admin-info-note admin-detail-note">{isCompany ? "شرکت پس از ثبت مستقیم قابل استفاده است و مرحله فعال‌سازی جداگانه ندارد." : "تغییرات پروفایل استارتاپ در store مدیریتی ثبت می‌شود؛ تغییر وضعیت فعال/غیرفعال همچنان از API سازمان انجام می‌شود."}</aside>
+        <aside className="admin-info-note admin-detail-note">{isCompany ? "شرکت پس از ثبت مستقیم قابل استفاده است و مرحله فعال‌سازی جداگانه ندارد." : "پروفایل استارتاپ و وضعیت دسترسی از API مدیریتی سامانه کنترل می‌شود."}</aside>
 
         <section className="admin-form-actions admin-detail-actions">
-          {isStartup ? <button className="admin-users-button admin-users-button-primary" type="button" onClick={saveStartup}>ذخیره مشخصات</button> : null}
+          {isStartup ? <button className="admin-users-button admin-users-button-primary" type="button" onClick={saveStartup} disabled={saving}>{saving ? "در حال ذخیره…" : "ذخیره مشخصات"}</button> : null}
           {isStartup ? <button className="admin-users-button" type="button" disabled={!organization || saving} onClick={toggleStatus}>{saving ? "در حال ثبت…" : organization?.status === "active" ? "غیرفعال کردن" : "فعال کردن"}</button> : null}
           <Link className="admin-users-button" to="/panel/admin/users/new">تخصیص دسترسی</Link>
           <p className="admin-form-actions-note">{saved ? "تغییرات استارتاپ ثبت شد." : `اعضای فعال: ${organization?.activeMemberCount ?? "—"}`}</p>
