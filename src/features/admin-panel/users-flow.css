@@ -1,12 +1,12 @@
 .admin-users-main {
   width: 1216px;
-  height: 900px;
+  min-height: 900px;
   box-sizing: border-box;
   padding: 22px 28px;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  overflow: hidden;
+  overflow: visible;
   background: #f5f8fb;
   direction: rtl;
 }
@@ -201,11 +201,11 @@ select.admin-users-control {
 .admin-users-table-card {
   position: relative;
   width: 1160px;
-  height: 510px;
+  min-height: 510px;
   box-sizing: border-box;
   padding: 14px 19px 12px;
   flex: 0 0 auto;
-  overflow: hidden;
+  overflow: visible;
   background: #fff;
   border: 1px solid #e4ebf1;
   border-radius: 14px;
