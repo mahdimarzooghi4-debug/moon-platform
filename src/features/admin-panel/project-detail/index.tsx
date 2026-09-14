@@ -123,7 +123,7 @@ export default function AdminProjectDetail() {
         <aside className="admin-info-note admin-detail-note">اطلاعات مدیریتی پروژه از API پنل مدیر ذخیره می‌شود. localStorage فقط fallback محیط توسعه است.</aside>
         <section className="admin-form-actions admin-detail-actions">
           <button className="admin-users-button admin-users-button-primary" type="button" onClick={save} disabled={!project || saving}>{saving ? "در حال ذخیره…" : "ذخیره تغییرات"}</button>
-          <Link className="admin-users-button" to="/panel/admin/funding/sample">مشاهده تأمین مالی</Link>
+          <Link className="admin-users-button" to="/panel/admin/funding">مشاهده تأمین مالی</Link>
           <Link className="admin-users-button" to="/panel/admin/projects">بازگشت</Link>
           <p className="admin-form-actions-note">{saved ? "تغییرات پروژه در منبع مدیریتی ثبت شد." : "اطلاعات قابل ویرایش است."}</p>
         </section>
