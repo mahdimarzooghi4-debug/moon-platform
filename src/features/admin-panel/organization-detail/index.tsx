@@ -13,30 +13,47 @@ import "../list-flow.css";
 const typeLabel: Record<string, string> = {
   company: "شرکت",
   startup: "استارتاپ",
-  creative_house: "خانه خلاق",
-  fund_manager: "مدیریت صندوق",
-  supervisor: "نهاد ناظر",
-  platform: "سامانه ماه",
+};
+
+const demoDetails: Record<string, { manager: string; mobile: string; extraLabel: string; extraValue: string }> = {
+  "org-company-a": {
+    manager: "مریم کریمی",
+    mobile: "09121234567",
+    extraLabel: "شناسه ملی",
+    extraValue: "14009876543",
+  },
+  "org-company-b": {
+    manager: "رضا نادری",
+    mobile: "09123334455",
+    extraLabel: "شناسه ملی",
+    extraValue: "14008765432",
+  },
+  "org-startup-a": {
+    manager: "الهام موسوی",
+    mobile: "09125556677",
+    extraLabel: "حوزه فعالیت",
+    extraValue: "فناوری سبز و اشتغال",
+  },
 };
 
 export default function AdminOrganizationDetail() {
-  const { id } = useParams();
+  const { organizationId } = useParams();
   const [organization, setOrganization] = useState<AdminOrganization | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
   const load = async () => {
-    if (!id) return;
+    if (!organizationId) return;
     const items = await listAdminOrganizations();
-    const found = items.find((item) => item.organizationId === id) ?? null;
+    const found = items.find((item) => item.organizationId === organizationId) ?? null;
     if (!found) throw new Error("organization_not_found");
     setOrganization(found);
   };
 
   useEffect(() => {
     let active = true;
-    if (!id) {
+    if (!organizationId) {
       setError("شناسه سازمان معتبر نیست.");
       setLoading(false);
       return () => {
@@ -47,15 +64,15 @@ export default function AdminOrganizationDetail() {
     listAdminOrganizations()
       .then((items) => {
         if (!active) return;
-        const found = items.find((item) => item.organizationId === id) ?? null;
+        const found = items.find((item) => item.organizationId === organizationId) ?? null;
         if (!found) {
-          setError("سازمان موردنظر پیدا نشد.");
+          setError("شرکت یا استارتاپ موردنظر پیدا نشد.");
           return;
         }
         setOrganization(found);
       })
       .catch(() => {
-        if (active) setError("دریافت اطلاعات سازمان از سرور ناموفق بود.");
+        if (active) setError("دریافت اطلاعات حساب ناموفق بود.");
       })
       .finally(() => {
         if (active) setLoading(false);
@@ -64,7 +81,10 @@ export default function AdminOrganizationDetail() {
     return () => {
       active = false;
     };
-  }, [id]);
+  }, [organizationId]);
+
+  const details = organization ? demoDetails[organization.organizationId] : undefined;
+  const isCompany = organization?.type === "company";
 
   const fields = useMemo(() => {
     if (!organization) return [];
@@ -72,14 +92,17 @@ export default function AdminOrganizationDetail() {
       ["نام مجموعه", organization.name],
       ["شناسه سازمان", organization.organizationId],
       ["نوع حساب", typeLabel[organization.type] ?? organization.type],
+      ["مسئول حساب", details?.manager ?? "ثبت نشده"],
+      ["شماره تماس", details?.mobile ?? "ثبت نشده"],
+      [details?.extraLabel ?? "اطلاعات تکمیلی", details?.extraValue ?? "ثبت نشده"],
       ["اعضای فعال", String(organization.activeMemberCount)],
       ["تاریخ ایجاد", new Date(organization.createdAtUtc).toLocaleDateString("fa-IR")],
-      ["وضعیت حساب", organization.status === "active" ? "فعال" : "غیرفعال"],
+      ["وضعیت حساب", isCompany ? "فعال؛ بدون نیاز به فعال‌سازی" : organization.status === "active" ? "فعال" : "غیرفعال"],
     ] as const;
-  }, [organization]);
+  }, [details, isCompany, organization]);
 
   const toggleStatus = async () => {
-    if (!organization || saving) return;
+    if (!organization || saving || isCompany) return;
     setSaving(true);
     setError("");
     try {
@@ -89,7 +112,7 @@ export default function AdminOrganizationDetail() {
       );
       await load();
     } catch {
-      setError("تغییر وضعیت سازمان انجام نشد.");
+      setError("تغییر وضعیت استارتاپ انجام نشد.");
     } finally {
       setSaving(false);
     }
@@ -99,13 +122,13 @@ export default function AdminOrganizationDetail() {
     <div className="admin-panel-shell" data-node-id="2273:226">
       <main className="admin-users-main" dir="rtl">
         <header className="admin-users-header">
-          <div className="admin-users-heading"><h1>جزئیات شرکت / استارتاپ</h1><p>نمای مدیریتی حساب و وضعیت فعالیت سازمان</p></div>
+          <div className="admin-users-heading"><h1>جزئیات شرکت / استارتاپ</h1><p>مشخصات حساب، مسئول و وضعیت دسترسی مجموعه</p></div>
           <div className="admin-users-actions"><Link className="admin-users-button admin-users-button-wide" to="/panel/admin/organizations">بازگشت به فهرست</Link></div>
         </header>
 
         <section className="admin-form-card">
           <h2>اطلاعات مجموعه</h2>
-          <p>مشخصات و وضعیت این حساب مستقیماً از Backend خوانده می‌شود.</p>
+          <p>برای داده‌های توسعه، اطلاعات نمونه تکمیلی هم نمایش داده می‌شود.</p>
           {loading ? <p className="admin-form-actions-note">در حال دریافت اطلاعات…</p> : null}
           {error ? <p className="admin-form-actions-note">{error}</p> : null}
           <div className="admin-form-grid">
@@ -113,10 +136,16 @@ export default function AdminOrganizationDetail() {
           </div>
         </section>
 
-        <aside className="admin-info-note admin-detail-note">غیرفعال‌کردن سازمان باعث می‌شود عضویت‌های آن سازمان در `/api/v1/me` به‌عنوان دسترسی فعال برگردانده نشوند. تغییر وضعیت در Audit ثبت می‌شود.</aside>
+        <aside className="admin-info-note admin-detail-note">
+          {isCompany
+            ? "شرکت پس از ثبت نیاز به مرحله فعال‌سازی ندارد و حساب آن مستقیم قابل استفاده است."
+            : "فعال یا غیرفعال‌کردن استارتاپ روی دسترسی اعضای آن اثر می‌گذارد و باید در Audit ثبت شود."}
+        </aside>
 
         <section className="admin-form-actions admin-detail-actions">
-          <button className="admin-users-button admin-users-button-primary" type="button" disabled={!organization || saving} onClick={toggleStatus}>{saving ? "در حال ثبت…" : organization?.status === "active" ? "غیرفعال کردن" : "فعال کردن"}</button>
+          {!isCompany ? (
+            <button className="admin-users-button admin-users-button-primary" type="button" disabled={!organization || saving} onClick={toggleStatus}>{saving ? "در حال ثبت…" : organization?.status === "active" ? "غیرفعال کردن" : "فعال کردن"}</button>
+          ) : null}
           <Link className="admin-users-button" to="/panel/admin/users/new">تخصیص دسترسی</Link>
           <p className="admin-form-actions-note">اعضای فعال: {organization?.activeMemberCount ?? "—"}</p>
         </section>
