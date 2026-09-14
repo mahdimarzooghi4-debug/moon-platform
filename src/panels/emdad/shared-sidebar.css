@@ -3,12 +3,12 @@ html.emdad-shared-sidebar-active body {
 }
 
 html.emdad-shared-sidebar-active .emdad-panel {
-  width: 1440px !important;
-  min-width: 1440px !important;
-  max-width: 1440px !important;
+  width: 1216px !important;
+  min-width: 1216px !important;
+  max-width: 1216px !important;
   margin-left: auto !important;
-  margin-right: 0 !important;
-  flex: 0 0 1440px !important;
+  margin-right: 224px !important;
+  flex: 0 0 1216px !important;
 }
 
 html.emdad-shared-sidebar-active .emdad-panel > [data-name="Main Content"] {
@@ -31,11 +31,11 @@ html:has(.emdad-shared-sidebar) .emdad-certificate-issuer-trigger {
 }
 
 .emdad-shared-sidebar {
-  position: absolute;
+  position: fixed;
   z-index: 500;
   top: 0;
-  left: 1216px;
-  right: auto;
+  left: auto;
+  right: 0;
   width: 224px;
   min-width: 224px;
   max-width: 224px;
