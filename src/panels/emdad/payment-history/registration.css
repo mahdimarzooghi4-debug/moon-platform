@@ -246,6 +246,43 @@
   color: #fff;
 }
 
+.emdad-release-success-payment-button {
+  position: absolute;
+  left: 423px;
+  top: 85px;
+  width: 210px;
+  height: 42px;
+  border: 1px solid #2094e3;
+  border-radius: 9px;
+  background: #2094e3;
+  color: #fff;
+  font-family: "Vazirmatn", sans-serif !important;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.emdad-release-success-payment-button:hover:not(:disabled) {
+  background: #1887cf;
+}
+
+.emdad-release-success-payment-button:disabled,
+.emdad-release-success-payment-button[data-payment-complete="true"] {
+  border-color: #bfe5d1;
+  background: #e9f8f1;
+  color: #159455;
+  cursor: default;
+}
+
+[data-name="emdad-release-success"] [data-name="status-badge"] {
+  width: 160px !important;
+}
+
+[data-name="emdad-release-success"] [data-name="status-badge"] > div {
+  left: 80px !important;
+  width: 144px !important;
+}
+
 @media (max-width: 760px) {
   .emdad-payment-form-grid {
     grid-template-columns: 1fr;
