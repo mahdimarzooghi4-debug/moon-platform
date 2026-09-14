@@ -13,7 +13,7 @@ type StartupSidebarProps = {
 const sidebarItems = [
   { key: "dashboard", label: "داشبورد", to: "/panel/startup", icon: "nav-dashboard.svg" },
   { key: "projects", label: "پروژه‌های من", to: "/panel/startup/projects", icon: "nav-projects.svg" },
-  { key: "stages", label: "مراحل پروژه", to: "/panel/startup/projects", icon: "nav-stages.svg" },
+  { key: "stages", label: "مراحل پروژه", to: "/panel/startup/stages", icon: "nav-stages.svg" },
   { key: "reports", label: "گزارش‌ها و مستندات", to: "/panel/startup/reports", icon: "nav-reports.svg" },
   { key: "profile", label: "پروفایل استارتاپ", to: "/panel/startup/profile", icon: "nav-profile.svg" },
   { key: "financing", label: "کارمزد تأمین مالی", to: "/panel/startup/financing-fee", icon: "nav-profile.svg" },
