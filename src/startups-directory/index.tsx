@@ -22,21 +22,21 @@ export default function Main() {
     <div dir="rtl" className="main-container mah-startups-directory-page flex w-[1440px] flex-col items-center flex-nowrap bg-[#fcfbf8] relative overflow-hidden mx-auto my-0">
       <div className="flex pt-[16px] pr-[120px] pb-[16px] pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] border-solid border-t border-t-[#e4ebf1] relative">
         <div className="flex w-[384px] gap-[12px] items-center shrink-0 flex-nowrap relative z-[1]">
-          <div className="flex w-[120px] h-[44px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border-[1.5px] border-[#2094e3] relative overflow-hidden z-[2]">
+          <a href="/auth" aria-label="ورود کاربران" className="flex w-[120px] h-[44px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border-[1.5px] border-[#2094e3] relative overflow-hidden z-[2]">
             <span className="flex w-[65px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#2094e3] relative text-center whitespace-nowrap z-[3]">
               ورود کاربران
             </span>
-          </div>
-          <div className="flex w-[120px] h-[44px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border-[1.5px] border-[#2094e3] relative overflow-hidden z-[4]">
+          </a>
+          <a href="/participation/track" aria-label="پیگیری مشارکت" className="flex w-[120px] h-[44px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border-[1.5px] border-[#2094e3] relative overflow-hidden z-[4]">
             <span className="flex w-[89px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#2094e3] relative text-center whitespace-nowrap z-[5]">
               پیگیری مشارکت
             </span>
-          </div>
-          <div className="flex w-[120px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#2094e3] rounded-[12px] relative z-[6]">
+          </a>
+          <a href="/projects" aria-label="شروع مشارکت" className="flex w-[120px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#2094e3] rounded-[12px] relative z-[6]">
             <span className="flex w-[82px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#fff] relative text-center whitespace-nowrap z-[7]">
               شروع مشارکت
             </span>
-          </div>
+          </a>
         </div>
         <div className="flex w-[630px] gap-[40px] justify-end items-center shrink-0 flex-nowrap relative z-[8]">
           <div className="flex w-[453px] gap-[24px] items-center shrink-0 flex-nowrap relative z-[9]">
@@ -73,16 +73,16 @@ export default function Main() {
         <div className="flex pt-[32px] pr-[32px] pb-[32px] pl-[32px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[24px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-20">
           <div className="flex w-[420px] flex-col gap-[12px] items-end shrink-0 flex-nowrap relative z-[21]">
             <div className="flex w-[320px] gap-[12px] items-start shrink-0 flex-nowrap relative z-[22]">
-              <div className="flex w-[177px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[23]">
+              <a href="#startup-evaluation-process" aria-label="فرایند ارزیابی استارتاپ‌ها" className="flex w-[177px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[23]">
                 <span className="flex w-[137px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#2094e3] relative text-center whitespace-nowrap z-[24]">
                   فرایند ارزیابی استارتاپ‌ها
                 </span>
-              </div>
-              <div className="flex w-[131px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#2094e3] rounded-[12px] relative z-[25]">
+              </a>
+              <a href="/register/startup" aria-label="ثبت‌نام استارتاپ" className="flex w-[131px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#2094e3] rounded-[12px] relative z-[25]">
                 <span className="flex w-[91px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#fff] relative text-center whitespace-nowrap z-[26]">
                   ثبت‌نام استارتاپ
                 </span>
-              </div>
+              </a>
             </div>
             <span className="flex w-[377px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-right whitespace-nowrap z-[27]">
               نمایش عمومی پروفایل پس از بررسی اطلاعات و تأیید سامانه ماه
@@ -239,16 +239,16 @@ export default function Main() {
                 </div>
               </div>
               <div className="flex gap-[12px] items-start self-stretch shrink-0 flex-nowrap relative z-[134]">
-                <div className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] justify-center items-center grow shrink-0 basis-0 flex-nowrap bg-[#2094e3] rounded-[10px] relative z-[135]">
+                <a href="/startups/profile/states/unavailable" aria-label="مشاهده پروفایل" className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] justify-center items-center grow shrink-0 basis-0 flex-nowrap bg-[#2094e3] rounded-[10px] relative z-[135]">
                   <span className="flex w-[86px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-medium leading-[20px] text-[#fff] relative text-right whitespace-nowrap z-[136]">
                     مشاهده پروفایل
                   </span>
-                </div>
-                <div className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] justify-center items-center grow shrink-0 basis-0 flex-nowrap rounded-[10px] border-solid border border-[#e4ebf1] relative z-[137]">
+                </a>
+                <a href="/projects/family-health" aria-label="مشاهده پروژه فعال" className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] justify-center items-center grow shrink-0 basis-0 flex-nowrap rounded-[10px] border-solid border border-[#e4ebf1] relative z-[137]">
                   <span className="flex w-[102px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-medium leading-[20px] text-[#60758a] relative text-right whitespace-nowrap z-[138]">
                     مشاهده پروژه فعال
                   </span>
-                </div>
+                </a>
               </div>
               <span className="h-[17px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[11px] font-normal leading-[17px] text-[#60758a] relative text-center whitespace-nowrap z-[139]">
                 مشارکت فقط از طریق پروژه‌های تأییدشده انجام می‌شود.
@@ -329,16 +329,16 @@ export default function Main() {
                 </div>
               </div>
               <div className="flex gap-[12px] items-start self-stretch shrink-0 flex-nowrap relative z-[172]">
-                <div className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] justify-center items-center grow shrink-0 basis-0 flex-nowrap bg-[#2094e3] rounded-[10px] relative z-[173]">
+                <a href="/startups/profile/states/unavailable" aria-label="مشاهده پروفایل" className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] justify-center items-center grow shrink-0 basis-0 flex-nowrap bg-[#2094e3] rounded-[10px] relative z-[173]">
                   <span className="flex w-[86px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-medium leading-[20px] text-[#fff] relative text-right whitespace-nowrap z-[174]">
                     مشاهده پروفایل
                   </span>
-                </div>
-                <div className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] justify-center items-center grow shrink-0 basis-0 flex-nowrap rounded-[10px] border-solid border border-[#e4ebf1] relative z-[175]">
+                </a>
+                <a href="/projects/youth-skills" aria-label="مشاهده پروژه فعال" className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] justify-center items-center grow shrink-0 basis-0 flex-nowrap rounded-[10px] border-solid border border-[#e4ebf1] relative z-[175]">
                   <span className="flex w-[102px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-medium leading-[20px] text-[#60758a] relative text-right whitespace-nowrap z-[176]">
                     مشاهده پروژه فعال
                   </span>
-                </div>
+                </a>
               </div>
               <span className="h-[17px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[11px] font-normal leading-[17px] text-[#60758a] relative text-center whitespace-nowrap z-[177]">
                 مشارکت فقط از طریق پروژه‌های تأییدشده انجام می‌شود.
@@ -419,16 +419,16 @@ export default function Main() {
                 </div>
               </div>
               <div className="flex gap-[12px] items-start self-stretch shrink-0 flex-nowrap relative z-[210]">
-                <div className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] justify-center items-center grow shrink-0 basis-0 flex-nowrap bg-[#2094e3] rounded-[10px] relative z-[211]">
+                <a href="/startups/profile/states/unavailable" aria-label="مشاهده پروفایل" className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] justify-center items-center grow shrink-0 basis-0 flex-nowrap bg-[#2094e3] rounded-[10px] relative z-[211]">
                   <span className="flex w-[86px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-medium leading-[20px] text-[#fff] relative text-right whitespace-nowrap z-[212]">
                     مشاهده پروفایل
                   </span>
-                </div>
-                <div className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] justify-center items-center grow shrink-0 basis-0 flex-nowrap rounded-[10px] border-solid border border-[#e4ebf1] relative z-[213]">
+                </a>
+                <a href="/projects/variants/rural-women" aria-label="مشاهده پروژه فعال" className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] justify-center items-center grow shrink-0 basis-0 flex-nowrap rounded-[10px] border-solid border border-[#e4ebf1] relative z-[213]">
                   <span className="flex w-[102px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-medium leading-[20px] text-[#60758a] relative text-right whitespace-nowrap z-[214]">
                     مشاهده پروژه فعال
                   </span>
-                </div>
+                </a>
               </div>
               <span className="h-[17px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[11px] font-normal leading-[17px] text-[#60758a] relative text-center whitespace-nowrap z-[215]">
                 مشارکت فقط از طریق پروژه‌های تأییدشده انجام می‌شود.
@@ -503,11 +503,11 @@ export default function Main() {
                     </span>
                   </div>
                 </div>
-                <div className="flex pt-[8px] pr-[8px] pb-[8px] pl-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[245]">
+                <a href="/startups/profile/states/unavailable" aria-label="مشاهده پروفایل استارتاپ" className="flex pt-[8px] pr-[8px] pb-[8px] pl-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[245]">
                   <span className="flex w-[124px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-medium leading-[18.75px] text-[#2094e3] relative text-right whitespace-nowrap z-[246]">
                     مشاهده پروفایل استارتاپ
                   </span>
-                </div>
+                </a>
               </div>
               <div hidden={!visibleBottom.includes(4)} style={{ order: displayOrder(4) }} className="mah-directory-card flex pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col gap-[16px] items-start grow shrink-0 basis-0 flex-nowrap bg-[#fff] rounded-[16px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[247]">
                 <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[248]">
@@ -569,11 +569,11 @@ export default function Main() {
                     </span>
                   </div>
                 </div>
-                <div className="flex pt-[8px] pr-[8px] pb-[8px] pl-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[272]">
+                <a href="/startups/profile/states/unavailable" aria-label="مشاهده پروفایل استارتاپ" className="flex pt-[8px] pr-[8px] pb-[8px] pl-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[272]">
                   <span className="flex w-[124px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-medium leading-[18.75px] text-[#2094e3] relative text-right whitespace-nowrap z-[273]">
                     مشاهده پروفایل استارتاپ
                   </span>
-                </div>
+                </a>
               </div>
               <div hidden={!visibleBottom.includes(5)} style={{ order: displayOrder(5) }} className="mah-directory-card flex pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col gap-[16px] items-start grow shrink-0 basis-0 flex-nowrap bg-[#fff] rounded-[16px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[274]">
                 <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[275]">
@@ -634,11 +634,11 @@ export default function Main() {
                     </span>
                   </div>
                 </div>
-                <div className="flex pt-[8px] pr-[8px] pb-[8px] pl-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[299]">
+                <a href="/startups/profile/states/unavailable" aria-label="مشاهده پروفایل استارتاپ" className="flex pt-[8px] pr-[8px] pb-[8px] pl-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[299]">
                   <span className="flex w-[124px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-medium leading-[18.75px] text-[#2094e3] relative text-right whitespace-nowrap z-[300]">
                     مشاهده پروفایل استارتاپ
                   </span>
-                </div>
+                </a>
               </div>
             </div>
             <div className="mah-directory-row flex w-[1200px] h-[313px] justify-between items-center relative z-[355]">
@@ -701,11 +701,11 @@ export default function Main() {
                     </span>
                   </div>
                 </div>
-                <div className="flex pt-[8px] pr-[8px] pb-[8px] pl-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[326]">
+                <a href="/startups/profile/states/unavailable" aria-label="مشاهده پروفایل استارتاپ" className="flex pt-[8px] pr-[8px] pb-[8px] pl-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[326]">
                   <span className="flex w-[124px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-medium leading-[18.75px] text-[#2094e3] relative text-right whitespace-nowrap z-[327]">
                     مشاهده پروفایل استارتاپ
                   </span>
-                </div>
+                </a>
               </div>
               <div hidden={!visibleBottom.includes(7)} style={{ order: displayOrder(7) }} className="mah-directory-card flex pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col gap-[16px] items-start grow shrink-0 basis-0 flex-nowrap bg-[#fff] rounded-[16px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[328]">
                 <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[329]">
@@ -766,11 +766,11 @@ export default function Main() {
                     </span>
                   </div>
                 </div>
-                <div className="flex pt-[8px] pr-[8px] pb-[8px] pl-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[353]">
+                <a href="/startups/profile/states/unavailable" aria-label="مشاهده پروفایل استارتاپ" className="flex pt-[8px] pr-[8px] pb-[8px] pl-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[353]">
                   <span className="flex w-[124px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-medium leading-[18.75px] text-[#2094e3] relative text-right whitespace-nowrap z-[354]">
                     مشاهده پروفایل استارتاپ
                   </span>
-                </div>
+                </a>
               </div>
               <div hidden={!visibleBottom.includes(8)} style={{ order: displayOrder(8) }} className="mah-directory-card flex pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col gap-[16px] items-start grow shrink-0 basis-0 flex-nowrap bg-[#fff] rounded-[16px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[355]">
                 <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[356]">
@@ -832,11 +832,11 @@ export default function Main() {
                     </span>
                   </div>
                 </div>
-                <div className="flex pt-[8px] pr-[8px] pb-[8px] pl-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[380]">
+                <a href="/startups/profile/states/unavailable" aria-label="مشاهده پروفایل استارتاپ" className="flex pt-[8px] pr-[8px] pb-[8px] pl-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[380]">
                   <span className="flex w-[124px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-medium leading-[18.75px] text-[#2094e3] relative text-right whitespace-nowrap z-[381]">
                     مشاهده پروفایل استارتاپ
                   </span>
-                </div>
+                </a>
               </div>
             </div>
           </div>
@@ -855,7 +855,7 @@ export default function Main() {
             <button type="button" disabled={page + 1 >= pageCount} onClick={() => setPage((current) => Math.min(pageCount - 1, current + 1))} className="rounded-[8px] border border-[#e4ebf1] bg-white px-[14px] py-[8px] text-[13px] disabled:cursor-not-allowed disabled:opacity-40">بعدی</button>
           </div>
         </div>
-        <div className="flex flex-col gap-[24px] items-end self-stretch shrink-0 flex-nowrap relative z-[399]">
+        <div id="startup-evaluation-process" className="flex flex-col gap-[24px] items-end self-stretch shrink-0 flex-nowrap relative z-[399]">
           <div className="flex flex-col gap-[6px] items-end self-stretch shrink-0 flex-nowrap relative z-[400]">
             <span className="flex w-[423px] h-[38px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[24px] font-extrabold leading-[37.5px] text-[#17324d] relative text-right whitespace-nowrap z-[401]">
               استارتاپ‌ها چگونه وارد سامانه ماه می‌شوند؟
@@ -988,16 +988,16 @@ export default function Main() {
             </span>
           </div>
           <div className="flex w-[326px] gap-[16px] items-center shrink-0 flex-nowrap relative z-[453]">
-            <div className="flex w-[179px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[454]">
+            <a href="/registration/track" aria-label="پیگیری درخواست ثبت‌نام" className="flex w-[179px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[454]">
               <span className="flex w-[139px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#2094e3] relative text-center whitespace-nowrap z-[455]">
                 پیگیری درخواست ثبت‌نام
               </span>
-            </div>
-            <div className="flex w-[131px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#2094e3] rounded-[12px] relative z-[456]">
+            </a>
+            <a href="/register/startup" aria-label="ثبت‌نام استارتاپ" className="flex w-[131px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#2094e3] rounded-[12px] relative z-[456]">
               <span className="flex w-[91px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#fff] relative text-center whitespace-nowrap z-[457]">
                 ثبت‌نام استارتاپ
               </span>
-            </div>
+            </a>
           </div>
           <span className="flex w-[248px] h-[19px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#aebccb] relative text-center whitespace-nowrap z-[458]">
             ثبت‌نام به معنای تأیید نهایی استارتاپ یا پروژه نیست.
