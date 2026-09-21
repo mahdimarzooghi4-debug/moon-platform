@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter, HashRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import CompanyRegistrationPage from "../features/company-registration";
 import StartupRegistrationPage from "../features/startup-registration";
 import AuthEntryPage from "../page";
@@ -69,6 +69,7 @@ const CompanyRegistrationSuccessPage = lazy(() => import("../features/company-re
 const CompanyRegistrationStatusPage = lazy(() => import("../features/company-registration/status"));
 const NotFoundPage = lazy(() => import("../not-found"));
 const StartupsDirectoryPage = lazy(() => import("../startups-directory"));
+const StartupDirectorySampleProfilePage = lazy(() => import("../startups-directory/SampleProfile"));
 const StartupPublicProfilePage = lazy(() => import("../startup-public-profile"));
 const StartupPublicProfileNoProjectsPage = lazy(() => import("../startup-public-profile/states/no-projects"));
 const StartupPublicProfileUnavailablePage = lazy(() => import("../startup-public-profile/states/unavailable"));
@@ -187,9 +188,8 @@ function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
 }
 
 export function AppRouter() {
-  const Router = import.meta.env.VITE_GITHUB_PAGES === "true" ? HashRouter : BrowserRouter;
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={lazyElement(LandingPage)} />
         <Route path="/about" element={lazyElement(AboutPage)} />
@@ -198,6 +198,7 @@ export function AppRouter() {
         <Route path="/startups" element={lazyElement(ForStartupsPage)} />
         <Route path="/for-startups" element={lazyElement(ForStartupsPage)} />
         <Route path="/startups-directory" element={lazyElement(StartupsDirectoryPage)} />
+        <Route path="/startups-directory/:sampleId" element={lazyElement(StartupDirectorySampleProfilePage)} />
         <Route path="/startups/directory" element={lazyElement(StartupsDirectoryPage)} />
         <Route path="/startups/profile/states/no-projects" element={lazyElement(StartupPublicProfileNoProjectsPage)} />
         <Route path="/startups/profile/states/unavailable" element={lazyElement(StartupPublicProfileUnavailablePage)} />
@@ -390,6 +391,6 @@ export function AppRouter() {
         <Route path="/projects/:projectId" element={lazyElement(ProjectDetailsPage)} />
         <Route path="*" element={lazyElement(NotFoundPage)} />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
