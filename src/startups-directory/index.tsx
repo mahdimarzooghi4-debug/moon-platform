@@ -20,7 +20,7 @@ export default function Main() {
   };
   return (
     <div dir="rtl" className="main-container mah-startups-directory-page flex w-[1440px] flex-col items-center flex-nowrap bg-[#fcfbf8] relative overflow-hidden mx-auto my-0">
-      <div className="flex pt-[16px] pr-[120px] pb-[16px] pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] border-solid border-t border-t-[#e4ebf1] relative">
+      <div className="mah-directory-header flex pt-[16px] pr-[120px] pb-[16px] pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] border-solid border-t border-t-[#e4ebf1] relative">
         <div className="flex w-[384px] gap-[12px] items-center shrink-0 flex-nowrap relative z-[1]">
           <a href="/auth" aria-label="ورود کاربران" className="flex w-[120px] h-[44px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border-[1.5px] border-[#2094e3] relative overflow-hidden z-[2]">
             <span className="flex w-[65px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#2094e3] relative text-center whitespace-nowrap z-[3]">
@@ -65,12 +65,12 @@ export default function Main() {
         </div>
       </div>
       <div className="flex w-[1200px] pt-[24px] pr-0 pb-[64px] pl-0 flex-col gap-[40px] items-end shrink-0 flex-nowrap relative z-[17]">
-        <div className="flex justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[18]">
+        <div className="mah-directory-breadcrumb flex justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[18]">
           <span className="flex w-[133px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#60758a] relative text-right whitespace-nowrap z-[19]">
             صفحه اصلی / استارتاپ‌ها
           </span>
         </div>
-        <div className="flex pt-[32px] pr-[32px] pb-[32px] pl-[32px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[24px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-20">
+        <div className="mah-directory-intro flex pt-[32px] pr-[32px] pb-[32px] pl-[32px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[24px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-20">
           <div className="flex w-[420px] flex-col gap-[12px] items-end shrink-0 flex-nowrap relative z-[21]">
             <div className="flex w-[320px] gap-[12px] items-start shrink-0 flex-nowrap relative z-[22]">
               <a href="#startup-evaluation-process" aria-label="فرایند ارزیابی استارتاپ‌ها" className="flex w-[177px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[23]">
@@ -99,7 +99,7 @@ export default function Main() {
             </span>
           </div>
         </div>
-        <div className="flex pt-[24px] pr-[24px] pb-[24px] pl-[24px] flex-col gap-[16px] items-end self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[20px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[31]">
+        <div className="mah-directory-kpis flex pt-[24px] pr-[24px] pb-[24px] pl-[24px] flex-col gap-[16px] items-end self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[20px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[31]">
           <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[32]">
             <div className="flex w-[180px] flex-col gap-[4px] items-center shrink-0 flex-nowrap relative z-[33]">
               <span className="flex w-[65px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#60758a] relative text-right whitespace-nowrap z-[34]">
