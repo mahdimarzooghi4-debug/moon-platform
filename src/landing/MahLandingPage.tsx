@@ -374,14 +374,13 @@ export default function Main() {
                 ۵۱٪ تأمین شده
               </span>
             </div>
-            <div className="self-stretch grow shrink-0 basis-0 relative overflow-hidden z-[159]" />
-            <div className="flex justify-center items-center self-stretch shrink-0 flex-nowrap relative z-[160]">
-              <div className="flex pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center grow shrink-0 basis-0 flex-nowrap bg-[#2094e3] rounded-[12px] relative z-[161]">
-                <span className="flex w-[107px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#fff] relative text-right whitespace-nowrap z-[162]">
-                  مشاهده و مشارکت
-                </span>
-              </div>
-            </div>
+            <a
+              href="/projects"
+              aria-label="مشاهده و مشارکت در پروژه سلامت خانواده"
+              className="absolute bottom-[24px] right-[24px] left-[24px] z-[161] flex min-h-[44px] items-center justify-center rounded-[12px] bg-[#2094e3] px-[20px] py-[11px] font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#fff] text-center no-underline"
+            >
+              مشاهده و مشارکت
+            </a>
           </div>
           <div className="flex h-[567px] pt-[24px] pr-[24px] pb-[24px] pl-[24px] flex-col gap-[16px] items-end grow shrink-0 basis-0 flex-nowrap bg-[#fcfbf8] rounded-[24px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[163]">
             <div className="flex h-[180px] flex-col items-start self-stretch shrink-0 flex-nowrap bg-[url(/assets/codia/udJSnUQToA.png)] bg-cover bg-no-repeat rounded-[16px] relative overflow-hidden z-[164]" />
