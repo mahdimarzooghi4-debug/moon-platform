@@ -69,6 +69,7 @@ const CompanyRegistrationSuccessPage = lazy(() => import("../features/company-re
 const CompanyRegistrationStatusPage = lazy(() => import("../features/company-registration/status"));
 const NotFoundPage = lazy(() => import("../not-found"));
 const StartupsDirectoryPage = lazy(() => import("../startups-directory"));
+const StartupDirectorySampleProfilePage = lazy(() => import("../startups-directory/SampleProfile"));
 const StartupPublicProfilePage = lazy(() => import("../startup-public-profile"));
 const StartupPublicProfileNoProjectsPage = lazy(() => import("../startup-public-profile/states/no-projects"));
 const StartupPublicProfileUnavailablePage = lazy(() => import("../startup-public-profile/states/unavailable"));
@@ -197,6 +198,7 @@ export function AppRouter() {
         <Route path="/startups" element={lazyElement(ForStartupsPage)} />
         <Route path="/for-startups" element={lazyElement(ForStartupsPage)} />
         <Route path="/startups-directory" element={lazyElement(StartupsDirectoryPage)} />
+        <Route path="/startups-directory/:sampleId" element={lazyElement(StartupDirectorySampleProfilePage)} />
         <Route path="/startups/directory" element={lazyElement(StartupsDirectoryPage)} />
         <Route path="/startups/profile/states/no-projects" element={lazyElement(StartupPublicProfileNoProjectsPage)} />
         <Route path="/startups/profile/states/unavailable" element={lazyElement(StartupPublicProfileUnavailablePage)} />
