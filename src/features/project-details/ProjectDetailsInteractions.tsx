@@ -1,36 +1,11 @@
 import { useEffect } from "react";
 
-const PROJECT_GALLERY = [
-  {
-    src: "/assets/codia/qN8rNm5ete.webp",
-    alt: "زنان روستایی در کارگاه تولید محصولات محلی",
-  },
-  {
-    src: "/assets/codia/xkhGZiM7zx.webp",
-    alt: "محصولات تولیدشده در پروژه اشتغال زنان روستایی",
-  },
-  {
-    src: "/assets/codia/k38ngLiS1o.webp",
-    alt: "آموزش مهارت به زنان روستایی",
-  },
-  {
-    src: "/assets/codia/RR9PzHGgQe.webp",
-    alt: "عرضه محصولات محلی زنان روستایی",
-  },
-] as const;
-
 const CONTRIBUTION_AMOUNTS: Record<string, number> = {
   "۵۰۰ هزار تومان": 500_000,
   "۱ میلیون تومان": 1_000_000,
   "۵ میلیون تومان": 5_000_000,
   "۱۰ میلیون تومان": 10_000_000,
 };
-
-const PERSIAN_DIGITS = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
-
-function toPersianDigits(value: number) {
-  return String(value).replace(/\d/g, (digit) => PERSIAN_DIGITS[Number(digit)]);
-}
 
 function normalizedText(node: Element) {
   return (node.textContent ?? "").replace(/\s+/g, " ").trim();
@@ -144,44 +119,6 @@ export default function ProjectDetailsInteractions() {
           goalRow.style.justifyContent = "space-between";
           goalRow.style.alignItems = "center";
         }
-      }
-
-      const galleryCounter = Array.from(root.querySelectorAll<HTMLElement>("span")).find((node) =>
-        /^[۱۲۳۴] از ۴$/.test(normalizedText(node)),
-      );
-      const galleryRow = galleryCounter?.parentElement;
-      const previousControl = galleryRow?.children.item(0);
-      const nextControl = galleryRow?.children.item(2);
-      const heroImage =
-        root.querySelector<HTMLImageElement>('img[data-project-gallery="true"]') ??
-        root.querySelector<HTMLImageElement>('img[src="/assets/codia/qN8rNm5ete.webp"]');
-
-      if (
-        galleryCounter &&
-        heroImage &&
-        previousControl instanceof HTMLElement &&
-        nextControl instanceof HTMLElement
-      ) {
-        heroImage.dataset.projectGallery = "true";
-        if (!heroImage.dataset.galleryIndex) heroImage.dataset.galleryIndex = "0";
-
-        const setGalleryImage = (nextIndex: number) => {
-          const normalizedIndex = (nextIndex + PROJECT_GALLERY.length) % PROJECT_GALLERY.length;
-          const image = PROJECT_GALLERY[normalizedIndex];
-
-          heroImage.src = image.src;
-          heroImage.alt = image.alt;
-          heroImage.dataset.galleryIndex = String(normalizedIndex);
-          galleryCounter.textContent = `${toPersianDigits(normalizedIndex + 1)} از ${toPersianDigits(PROJECT_GALLERY.length)}`;
-        };
-
-        const moveGallery = (delta: number) => {
-          const currentIndex = Number(heroImage.dataset.galleryIndex ?? "0");
-          setGalleryImage(currentIndex + delta);
-        };
-
-        makeButton(previousControl, "تصویر قبلی پروژه", () => moveGallery(-1));
-        makeButton(nextControl, "تصویر بعدی پروژه", () => moveGallery(1));
       }
 
       if (!root.dataset.projectContributionAmount) {
