@@ -46,3 +46,79 @@ button {
 .mah-about-stakeholder-cta {
   margin-top: auto !important;
 }
+
+/* Figma exported the About page with RTL text but LTR physical placement:
+ * flex items-end is the left edge once direction:rtl is applied. */
+.mah-about-page {
+  direction: rtl !important;
+  text-align: right;
+}
+
+/* Header: actions on the left; brand on the physical right. */
+.mah-about-page > .mah-about-header {
+  direction: ltr !important;
+}
+.mah-about-page .mah-about-header > div:last-child {
+  direction: ltr !important;
+}
+.mah-about-page .mah-about-header > div:last-child > div:first-child {
+  direction: rtl !important;
+}
+.mah-about-page .mah-about-header a,
+.mah-about-page .mah-about-header span {
+  text-align: right;
+}
+
+/* Breadcrumb starts at the right margin, not the left margin. */
+.mah-about-page > .mah-about-breadcrumb {
+  direction: rtl !important;
+  justify-content: flex-start !important;
+}
+.mah-about-page .mah-about-breadcrumb > span {
+  text-align: right !important;
+  justify-content: flex-start !important;
+}
+
+/* Source DOM is image first, copy second: LTR outer row puts the photo
+ * to the left and the Persian copy at the right, as expected on an RTL page. */
+.mah-about-page > .mah-about-hero {
+  direction: ltr !important;
+  justify-content: space-between !important;
+}
+.mah-about-page > .mah-about-hero > div:last-child {
+  direction: rtl !important;
+  align-items: flex-start !important;
+  text-align: right !important;
+}
+.mah-about-page .mah-about-hero > div:last-child .flex-col.items-end {
+  align-items: flex-start !important;
+}
+.mah-about-page .mah-about-hero > div:last-child span:not(.text-center) {
+  direction: rtl;
+  text-align: right !important;
+  justify-content: flex-start !important;
+}
+
+/* Right-align entire content sections and cards, not only their words. */
+.mah-about-page > .flex-col.items-end,
+.mah-about-page .flex-col.items-end {
+  align-items: flex-start !important;
+}
+.mah-about-page .flex-col.items-end > span:not(.text-center),
+.mah-about-page .flex-col.items-end > p:not(.text-center) {
+  direction: rtl;
+  text-align: right !important;
+}
+.mah-about-page .flex-col.items-end > .flex.justify-end {
+  justify-content: flex-start !important;
+}
+
+/* Footer: logo is last in the exported markup, so the column row
+ * remains physically LTR while the contents of each column are RTL. */
+.mah-about-page .mah-about-footer > div:first-child {
+  direction: ltr !important;
+}
+.mah-about-page .mah-about-footer > div:first-child > div {
+  direction: rtl !important;
+  text-align: right !important;
+}
