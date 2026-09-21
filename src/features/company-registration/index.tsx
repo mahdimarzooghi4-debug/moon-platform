@@ -3,7 +3,7 @@ import "./index.css";
 
 export default function Main() {
   return (
-    <div className="main-container flex w-[1440px] flex-col justify-between items-center flex-nowrap bg-[#f7fafc] relative mx-auto my-0">
+    <div dir="rtl" className="main-container mah-company-registration-page flex w-[1440px] flex-col justify-between items-center flex-nowrap bg-[#f7fafc] relative mx-auto my-0">
       <div className="flex h-[80px] pt-0 pr-[120px] pb-0 pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] border-solid border-t border-t-[#e4ebf1] relative">
         <div className="flex w-[237px] gap-[20px] items-center shrink-0 flex-nowrap relative z-[1]">
           <span className="flex w-[87px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[21.875px] text-[#718096] relative text-right whitespace-nowrap z-[2]">
@@ -19,8 +19,8 @@ export default function Main() {
       </div>
       <div className="flex pt-[32px] pr-0 pb-[32px] pl-0 flex-col gap-[24px] items-center self-stretch shrink-0 flex-nowrap relative z-[6]">
         <div className="flex w-[1000px] flex-col gap-[24px] items-start shrink-0 flex-nowrap relative z-[7]">
-          <div className="flex flex-col gap-[16px] items-end self-stretch shrink-0 flex-nowrap relative z-[8]">
-            <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[9]">
+          <div className="mah-company-registration-head flex flex-col gap-[16px] items-end self-stretch shrink-0 flex-nowrap relative z-[8]">
+            <div className="mah-company-registration-heading-row flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[9]">
               <div className="flex w-[123px] gap-[12px] items-center shrink-0 flex-nowrap relative z-10">
                 <span className="h-[19px] shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#159455] relative text-left whitespace-nowrap z-[11]">
                   ✓ ذخیره خودکار انجام شد
@@ -42,7 +42,7 @@ export default function Main() {
               شود.
             </span>
           </div>
-          <div className="flex pt-[16px] pr-0 pb-[16px] pl-0 gap-[16px] justify-center items-center self-stretch shrink-0 flex-nowrap relative z-[17]">
+          <div className="mah-company-registration-steps flex pt-[16px] pr-0 pb-[16px] pl-0 gap-[16px] justify-center items-center self-stretch shrink-0 flex-nowrap relative z-[17]">
             <div className="flex w-[165px] h-[36px] gap-[8px] items-center shrink-0 flex-nowrap relative z-[18]">
               <span className="flex w-[81px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[21.875px] text-[#718096] relative text-right whitespace-nowrap z-[19]">
                 بازبینی و ارسال
@@ -87,7 +87,7 @@ export default function Main() {
               </div>
             </div>
           </div>
-          <div className="flex pt-[36px] pr-[36px] pb-[36px] pl-[36px] flex-col gap-[24px] items-end self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[20px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_24px_0_rgba(0,0,0,0.03)] z-[37]">
+          <div className="mah-company-registration-form flex pt-[36px] pr-[36px] pb-[36px] pl-[36px] flex-col gap-[24px] items-end self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[20px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_24px_0_rgba(0,0,0,0.03)] z-[37]">
             <div className="flex flex-col gap-[6px] items-end self-stretch shrink-0 flex-nowrap relative z-[38]">
               <span className="flex w-[143px] h-[28px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[18px] font-bold leading-[28px] text-[#1a202c] relative text-right whitespace-nowrap z-[39]">
                 اطلاعات ثبتی شرکت
