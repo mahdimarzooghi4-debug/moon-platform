@@ -3,8 +3,8 @@ import "./index.css";
 
 export default function Main() {
   return (
-    <div className="main-container flex w-[1440px] flex-col items-center flex-nowrap bg-[#fcfbf8] relative overflow-hidden mx-auto my-0">
-      <div className="flex pt-[16px] pr-[120px] pb-[16px] pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] border-solid border-t border-t-[#e4ebf1] relative">
+    <div dir="rtl" className="main-container mah-about-page flex w-[1440px] flex-col items-center flex-nowrap bg-[#fcfbf8] relative overflow-hidden mx-auto my-0">
+      <div className="mah-about-header flex pt-[16px] pr-[120px] pb-[16px] pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] border-solid border-t border-t-[#e4ebf1] relative">
         <div className="flex w-[384px] gap-[12px] justify-end items-center shrink-0 flex-nowrap relative z-[1]">
           <div className="flex w-[120px] h-[44px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border-[1.5px] border-[#2094e3] relative overflow-hidden z-[2]">
             <span className="flex w-[65px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#2094e3] relative text-center whitespace-nowrap z-[3]">
@@ -48,12 +48,12 @@ export default function Main() {
           <div className="w-[137px] h-[46px] shrink-0 bg-[url(/assets/codia/TMHBH1Usk6.png)] bg-cover bg-no-repeat relative z-[16]" />
         </div>
       </div>
-      <div className="flex pt-[24px] pr-[120px] pb-0 pl-[120px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[17]">
+      <div className="mah-about-breadcrumb flex pt-[24px] pr-[120px] pb-0 pl-[120px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[17]">
         <span className="flex w-[132px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[18]">
           صفحه اصلی / درباره ماه
         </span>
       </div>
-      <div className="flex pt-[64px] pr-[120px] pb-[80px] pl-[120px] gap-[64px] justify-end items-center self-stretch shrink-0 flex-nowrap relative z-[19]">
+      <div className="mah-about-hero flex pt-[64px] pr-[120px] pb-[80px] pl-[120px] gap-[64px] justify-end items-center self-stretch shrink-0 flex-nowrap relative z-[19]">
         <div className="flex w-[520px] h-[420px] items-start shrink-0 flex-nowrap bg-[url(/assets/codia/u77cV3iroB.png)] bg-cover bg-no-repeat rounded-[24px] relative overflow-hidden z-20">
           <div className="flex h-[91px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] justify-between items-start shrink-0 flex-nowrap bg-[rgba(0,0,0,0.7)] rounded-[16px] absolute bottom-[24px] left-[24px] right-[24px] z-[21]">
             <div className="flex flex-col gap-[4px] items-center grow shrink-0 basis-0 flex-nowrap relative z-[22]">
@@ -1313,7 +1313,7 @@ export default function Main() {
           </div>
         </div>
       </div>
-      <div className="flex pt-[80px] pr-[120px] pb-[40px] pl-[120px] flex-col gap-[48px] items-end self-stretch shrink-0 flex-nowrap bg-[#111e30] relative z-[531]">
+      <div className="mah-about-footer flex pt-[80px] pr-[120px] pb-[40px] pl-[120px] flex-col gap-[48px] items-end self-stretch shrink-0 flex-nowrap bg-[#111e30] relative z-[531]">
         <div className="flex gap-[48px] items-start self-stretch shrink-0 flex-nowrap relative z-[532]">
           <div className="flex w-[220px] h-[182px] flex-col gap-[12px] items-end shrink-0 flex-nowrap relative z-[533]">
             <span className="flex w-[59px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#fff] relative text-right whitespace-nowrap z-[534]">
