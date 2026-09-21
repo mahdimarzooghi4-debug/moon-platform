@@ -1,4 +1,5 @@
 import React from "react";
+import CompanyRecommendations from "./CompanyRecommendations";
 import "./index.css";
 
 export default function MahForCompanies() {
@@ -541,59 +542,7 @@ export default function MahForCompanies() {
             سازمانی شما
           </span>
         </div>
-        <div className="flex gap-[24px] justify-end items-start self-stretch shrink-0 flex-wrap relative z-[221]">
-          <div className="flex w-[282px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col gap-[10px] items-end flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[222]">
-            <span className="h-[22px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[223]">
-              براساس میزان منابع موردنیاز
-            </span>
-            <div className="flex pt-[12px] pr-[12px] pb-[12px] pl-[12px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fcfbf8] rounded-[8px] border-solid border border-[#e4ebf1] relative z-[224]">
-              <div className="w-[14px] h-[14px] shrink-0 bg-[url(/assets/codia/ZuTjzavXAZ.png)] bg-cover bg-no-repeat relative overflow-hidden z-[225]" />
-              <span className="flex w-[97px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[226]">
-                انتخاب بازه بودجه
-              </span>
-            </div>
-          </div>
-          <div className="flex w-[282px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col gap-[10px] items-end flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[227]">
-            <span className="h-[22px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[228]">
-              براساس جامعه هدف
-            </span>
-            <div className="flex pt-[12px] pr-[12px] pb-[12px] pl-[12px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fcfbf8] rounded-[8px] border-solid border border-[#e4ebf1] relative z-[229]">
-              <div className="w-[14px] h-[14px] shrink-0 bg-[url(/assets/codia/NOSyNCS1Z0.png)] bg-cover bg-no-repeat relative overflow-hidden z-[230]" />
-              <span className="flex w-[121px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[231]">
-                زنان، کودکان، معلولین
-              </span>
-            </div>
-          </div>
-          <div className="flex w-[282px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col gap-[10px] items-end flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[232]">
-            <span className="h-[22px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[233]">
-              براساس استان
-            </span>
-            <div className="flex pt-[12px] pr-[12px] pb-[12px] pl-[12px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fcfbf8] rounded-[8px] border-solid border border-[#e4ebf1] relative z-[234]">
-              <div className="w-[14px] h-[14px] shrink-0 bg-[url(/assets/codia/XyA5GhiLT3.png)] bg-cover bg-no-repeat relative overflow-hidden z-[235]" />
-              <span className="flex w-[117px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[236]">
-                تمام استان‌های کشور
-              </span>
-            </div>
-          </div>
-          <div className="flex w-[282px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col gap-[10px] items-end flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[237]">
-            <span className="h-[22px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[238]">
-              براساس حوزه اثر
-            </span>
-            <div className="flex pt-[12px] pr-[12px] pb-[12px] pl-[12px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fcfbf8] rounded-[8px] border-solid border border-[#e4ebf1] relative z-[239]">
-              <div className="w-[14px] h-[14px] shrink-0 bg-[url(/assets/codia/TjzJWqnq1h.png)] bg-cover bg-no-repeat relative overflow-hidden z-[240]" />
-              <span className="flex w-[133px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[241]">
-                اشتغال، آموزش، سلامت
-              </span>
-            </div>
-          </div>
-        </div>
-        <div className="flex justify-center items-start self-stretch shrink-0 flex-nowrap relative z-[242]">
-          <div className="flex w-[149px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#2094e3] rounded-[12px] relative z-[243]">
-            <span className="flex w-[109px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#fff] relative text-center whitespace-nowrap z-[244]">
-              مشاهده پیشنهادها
-            </span>
-          </div>
-        </div>
+        <CompanyRecommendations />
       </div>
       <div className="flex pt-[80px] pr-[120px] pb-[80px] pl-[120px] gap-[64px] justify-end items-center self-stretch shrink-0 flex-nowrap bg-[#fff] relative z-[245]">
         <div className="flex pt-[32px] pr-[32px] pb-[32px] pl-[32px] flex-col gap-[24px] items-end grow shrink-0 basis-0 flex-nowrap bg-[#fcfbf8] rounded-[24px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[246]">
