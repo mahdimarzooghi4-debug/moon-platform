@@ -1176,12 +1176,6 @@ export default function MahForCompanies() {
                 </span>
               </div>
             </div>
-            <div className="flex gap-[8px] justify-end items-center self-stretch shrink-0 flex-nowrap relative z-[506]">
-              <span className="flex w-[253px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#60758a] relative text-right whitespace-nowrap z-[507]">
-                با ثبت این فرم، با تماس تیم پشتیبانی ماه موافقم.
-              </span>
-              <div className="flex w-[18px] h-[18px] items-start shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[4px] border-solid border border-[#2094e3] relative z-[508]" />
-            </div>
           </div>
           <div className="flex pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#2094e3] rounded-[12px] relative z-[509]">
             <span className="flex w-[117px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#fff] relative text-center whitespace-nowrap z-[510]">
