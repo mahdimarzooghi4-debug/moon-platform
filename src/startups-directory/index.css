@@ -122,3 +122,58 @@ button {
   outline: 2px solid #2094e3;
   outline-offset: 3px;
 }
+
+/* Physical RTL alignment: on a column with direction:rtl, items-end is
+   the LEFT edge. The exported Figma screen used it on most sections. */
+.mah-startups-directory-page > div:nth-child(2),
+.mah-startups-directory-page .flex-col.items-end {
+  align-items: flex-start !important;
+}
+
+.mah-startups-directory-page .mah-directory-row {
+  direction: rtl !important;
+  justify-content: flex-start !important;
+  align-items: stretch !important;
+}
+
+.mah-startups-directory-page .mah-directory-card .flex.justify-end,
+.mah-startups-directory-page .mah-directory-intro span.flex.justify-end,
+.mah-startups-directory-page .mah-directory-breadcrumb span.flex.justify-end {
+  justify-content: flex-start !important;
+}
+
+.mah-startups-directory-page .mah-directory-card > div,
+.mah-startups-directory-page .mah-directory-intro > div,
+.mah-startups-directory-page .mah-directory-kpis > div,
+.mah-startups-directory-page .mah-directory-breadcrumb {
+  text-align: right !important;
+}
+
+.mah-startups-directory-page .mah-directory-card span:not(.text-center),
+.mah-startups-directory-page .mah-directory-intro span:not(.text-center) {
+  text-align: right !important;
+}
+
+/* The footer's logo is last in exported DOM order. LTR distributes columns
+   with the logo physically right; each column keeps Persian RTL text. */
+.mah-startups-directory-page .mah-directory-footer-row {
+  direction: ltr !important;
+}
+
+.mah-startups-directory-page .mah-directory-footer-row > div {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+/* Prevent anchor boxes from taking blue UA-link color or squashing labels. */
+.mah-startups-directory-page a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mah-startups-directory-page a[href]:hover {
+  filter: brightness(.95);
+}
+
+.mah-startups-directory-page .mah-directory-card[hidden] {
+  display: none !important;
+}
