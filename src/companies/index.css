@@ -214,3 +214,32 @@ button, input, select, textarea {
   outline: 2px solid #2094e3;
   outline-offset: 3px;
 }
+
+/* The generated companies page keeps physical card positions LTR; make each
+   visible recommendation control and project text cell independently RTL. */
+.mah-companies-page .mah-company-recommendations {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+.mah-companies-page .mah-company-recommendations > label {
+  direction: rtl !important;
+  align-items: stretch !important;
+  text-align: right !important;
+}
+
+.mah-companies-page .mah-company-recommendations > label > span,
+.mah-companies-page .mah-company-recommendations select {
+  direction: rtl !important;
+  text-align: right !important;
+  width: 100%;
+}
+
+.mah-companies-page .mah-company-project-card > div:nth-child(2) > div:first-child > span,
+.mah-companies-page .mah-company-project-card > div:nth-child(2) > span,
+.mah-companies-page .mah-company-project-card > div:nth-child(3) > div > div > span,
+.mah-companies-page .mah-company-project-card > div:nth-child(4) > div:first-child > span {
+  direction: rtl !important;
+  text-align: right !important;
+  unicode-bidi: plaintext;
+}
