@@ -155,9 +155,24 @@ function styleProjectCards(root: HTMLElement) {
   // Layout/alignment belongs to index.css. This helper only identifies the
   // Figma card row/cards and preserves the requested middle-card copy.
   cardRow.classList.add("mah-company-projects-row");
-  cards.slice(0, 3).forEach((card) => {
+  cards.slice(0, 3).forEach((card, index) => {
     card.classList.add("mah-company-project-card");
     card.setAttribute("dir", "rtl");
+
+    // Figma cards are plain divs: give their detail actions real destinations.
+    // The middle card deliberately copies the first rural-women card.
+    const href = index === 2 ? "/projects/family-health" : "/projects/variants/rural-women";
+    const detailText = Array.from(card.querySelectorAll<HTMLElement>("span")).find(
+      (node) => normalize(node.textContent) === "مشاهده جزئیات پروژه",
+    );
+    const button = detailText?.parentElement;
+    if (button instanceof HTMLElement) {
+      button.dataset.mahCompanyHref = href;
+      button.setAttribute("role", "link");
+      button.setAttribute("aria-label", "مشاهده جزئیات پروژه");
+      button.setAttribute("tabindex", "0");
+      button.style.cursor = "pointer";
+    }
   });
 }
 
