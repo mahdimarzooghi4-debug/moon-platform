@@ -82,9 +82,22 @@ button {
   unicode-bidi: isolate;
 }
 
-/* Metric pairs follow the Figma left-to-right physical column order. */
+/* Preserve the physical column order while each Persian metric reads right-to-left.
+   Without explicit RTL on the cells, "۴۵۰ فرد" is rendered as "فرد ۴۵۰". */
 .mah-projects-page article > div:nth-child(3) > div {
   direction: ltr;
+}
+
+.mah-projects-page article > div:nth-child(3) > div > div {
+  direction: rtl;
+  align-items: flex-start;
+  text-align: right;
+}
+
+.mah-projects-page article > div:nth-child(3) > div > div > span {
+  direction: rtl;
+  unicode-bidi: isolate;
+  text-align: right;
 }
 
 /* Funding block is laid out LTR physically; Persian labels remain RTL. */
