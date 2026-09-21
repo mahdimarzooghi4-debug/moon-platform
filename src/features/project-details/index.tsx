@@ -203,7 +203,7 @@ export default function Main() {
             <div className="flex w-[322px] flex-col gap-[12px] items-end shrink-0 flex-nowrap relative z-[77]">
               <div className="flex flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[78]">
                 <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[79]">
-                  <div dir="rtl" className="w-[158px] shrink-0 text-left font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative whitespace-nowrap z-[80]">
+                  <div dir="rtl" className="w-[158px] shrink-0 text-left font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative whitespace-nowrap z-[80]" style={{ textAlign: "left" }}>
                     هدف: <strong className="font-bold">۴۰۰ میلیون</strong>
                   </div>
                   <span className="flex w-[89px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-bold leading-[18.75px] text-[#17324d] relative text-right whitespace-nowrap z-[81]">
