@@ -285,9 +285,9 @@ function ProjectCard({ project }: { project: Project }) {
       <div className="flex w-full flex-col items-end gap-[12px]">
         <div className="grid w-full grid-cols-2 gap-x-[16px] gap-y-[12px]">
           {project.metrics.map((metric) => (
-            <div key={metric.label} className="flex flex-col items-end gap-[2px] text-right">
-              <span className="text-[11px] font-normal text-[#60758a]">{metric.label}</span>
-              <span className="text-[14px] font-bold text-[#17324d]">{metric.value}</span>
+            <div key={metric.label} dir="rtl" className="flex w-full flex-col items-start gap-[2px] text-right">
+              <span dir="rtl" className="w-full text-right text-[11px] font-normal text-[#60758a]">{metric.label}</span>
+              <span dir="rtl" className="w-full text-right text-[14px] font-bold text-[#17324d]">{metric.value}</span>
             </div>
           ))}
         </div>
