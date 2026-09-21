@@ -85,13 +85,19 @@ textarea {
 
 /* The labels and displayed values use fixed-width mockup spans; keep the
    Persian content on the right edge within each field. */
-.mah-company-registration-form span[class~="text-right"] {
-  align-self: stretch;
-}
-
 .mah-company-registration-form [dir="ltr"],
 .mah-company-registration-form input[type="email"],
 .mah-company-registration-form input[type="url"] {
   direction: ltr;
   text-align: left !important;
+}
+
+/* The header places the logo last in the DOM, so its physical position
+   should be on the right while the back links stay on the left. */
+.mah-company-registration-page > div:first-child {
+  direction: ltr !important;
+}
+
+.mah-company-registration-page > div:first-child > div {
+  direction: rtl;
 }
