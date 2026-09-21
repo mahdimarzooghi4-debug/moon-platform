@@ -1,8 +1,11 @@
 import React from "react";
 import "./index.css";
+import MoonIntroDialog from "./MoonIntroDialog";
 
 export default function Main() {
+  const [introOpen, setIntroOpen] = React.useState(false);
   return (
+    <>
     <div className="main-container flex w-[1440px] flex-col items-center flex-nowrap bg-[#fcfbf8] relative overflow-hidden mx-auto my-0">
       <div className="flex pt-[16px] pr-[120px] pb-[16px] pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] border-solid border-t border-t-[#e4ebf1] relative">
         <div className="flex w-[384px] gap-[12px] justify-end items-center shrink-0 flex-nowrap relative z-[1]">
@@ -53,11 +56,16 @@ export default function Main() {
           <div className="flex flex-col items-center grow shrink-0 basis-0 flex-nowrap relative z-[19]">
             <div className="flex h-[380px] flex-col justify-center items-center self-stretch shrink-0 flex-nowrap bg-[rgba(17,30,48,0.06)] bg-[url(/assets/codia/rO73Py6N6q.png)] bg-cover bg-no-repeat rounded-[24px] relative overflow-hidden z-20">
               <div className="flex h-[71px] pt-0 pr-0 pb-0 pl-0 justify-between items-start shrink-0 flex-nowrap absolute top-[19px] left-[19px] right-[19px] z-[21]" />
-              <div className="flex w-[72px] h-[72px] flex-col justify-center items-center shrink-0 flex-nowrap bg-[#2094e3] rounded-[36px] relative z-[22]">
+              <button
+                type="button"
+                aria-label="نمایش معرفی ماه و وضعیت ویدئوی ۹۰ ثانیه‌ای"
+                onClick={() => setIntroOpen(true)}
+                className="flex w-[72px] h-[72px] flex-col justify-center items-center shrink-0 flex-nowrap bg-[#2094e3] rounded-[36px] relative z-[22] cursor-pointer hover:bg-[#167dca] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#2094e3]"
+              >
                 <div className="flex w-[24px] h-[24px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[23]">
                   <div className="w-[24px] h-[24px] shrink-0 bg-[url(/assets/codia/Nn6705XhfS.png)] bg-cover bg-no-repeat relative overflow-hidden z-[24]" />
                 </div>
-              </div>
+              </button>
             </div>
           </div>
           <div className="flex flex-col gap-[24px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[25]">
@@ -67,11 +75,15 @@ export default function Main() {
               </span>
             </div>
             <div className="flex w-[301px] gap-[12px] items-center shrink-0 flex-nowrap relative z-[28]">
-              <div className="flex w-[167px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[29]">
+              <button
+                type="button"
+                onClick={() => setIntroOpen(true)}
+                className="flex w-[167px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[29] cursor-pointer hover:bg-[#f2f8ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#2094e3]"
+              >
                 <span className="flex w-[119px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#2094e3] relative text-center whitespace-nowrap z-30">
                   معرفی ماه در ۹۰ ثانیه
                 </span>
-              </div>
+              </button>
               <div className="flex w-[122px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#2094e3] rounded-[12px] relative z-[31]">
                 <span className="flex w-[82px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#fff] relative text-center whitespace-nowrap z-[32]">
                   شروع مشارکت
@@ -816,5 +828,7 @@ export default function Main() {
         </div>
       </div>
     </div>
+    {introOpen && <MoonIntroDialog onClose={() => setIntroOpen(false)} />}
+    </>
   );
 }

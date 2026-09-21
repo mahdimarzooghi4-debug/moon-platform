@@ -18,8 +18,6 @@ const actions: LandingAction[] = [
   { selector: '[class~="z-[15]"]', href: '/', label: 'صفحه اصلی' },
   { selector: '[class~="z-[16]"]', href: '/', label: 'لوگوی ماه' },
 
-  { selector: '[class~="z-[22]"]', href: '/how-it-works', label: 'پخش معرفی ماه' },
-  { selector: '[class~="z-[29]"]', href: '/how-it-works', label: 'معرفی ماه در ۹۰ ثانیه' },
   { selector: '[class~="z-[31]"]', href: '/projects', label: 'شروع مشارکت' },
 
   { selector: '[class~="z-[92]"]', href: '/register/startup', label: 'ثبت‌نام استارتاپ' },
