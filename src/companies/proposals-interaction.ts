@@ -1,7 +1,6 @@
 const COMPANY_PATHS = new Set(["/companies", "/for-companies"]);
 
 const COMPANY_ACTIONS: Record<string, string> = {
-  "مشاهده پیشنهادها": "/projects",
   "ورود به حساب سازمانی": "/auth",
   "ثبت درخواست تماس": "/contact",
   "درخواست تماس": "/contact",
