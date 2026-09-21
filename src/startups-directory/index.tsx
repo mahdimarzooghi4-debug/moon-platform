@@ -1005,7 +1005,7 @@ export default function Main() {
         </div>
       </div>
       <div className="flex pt-[80px] pr-[120px] pb-[40px] pl-[120px] flex-col gap-[64px] items-start self-stretch shrink-0 flex-nowrap bg-[#111e30] relative z-[459]">
-        <div className="flex gap-[48px] items-start self-stretch shrink-0 flex-nowrap relative z-[460]">
+        <div className="mah-directory-footer-row flex gap-[48px] items-start self-stretch shrink-0 flex-nowrap relative z-[460]">
           <div className="flex w-[220px] h-[182px] flex-col gap-[12px] items-end shrink-0 flex-nowrap relative z-[461]">
             <span className="flex w-[59px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#fff] relative text-right whitespace-nowrap z-[462]">
               ارتباط با ما
