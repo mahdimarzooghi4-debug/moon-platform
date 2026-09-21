@@ -38,3 +38,60 @@ input,
 textarea {
   unicode-bidi: plaintext;
 }
+
+/* Company registration, step 1: align the exported Figma form from the
+   physical right without moving the centered card or changing its data. */
+.mah-company-registration-page,
+.mah-company-registration-head,
+.mah-company-registration-form {
+  direction: rtl;
+  text-align: right;
+}
+
+.mah-company-registration-head,
+.mah-company-registration-form,
+.mah-company-registration-form .flex.flex-col.items-end {
+  align-items: flex-start !important;
+}
+
+.mah-company-registration-form [class~="justify-end"] {
+  justify-content: flex-start !important;
+}
+
+.mah-company-registration-form span,
+.mah-company-registration-form input,
+.mah-company-registration-form select,
+.mah-company-registration-form textarea,
+.mah-company-registration-head span {
+  text-align: right !important;
+  direction: rtl;
+}
+
+/* In the source the autosave note comes before the page title. Keep autosave
+   physically left and the page title at the right edge in an RTL UI. */
+.mah-company-registration-heading-row,
+.mah-company-registration-steps {
+  direction: ltr !important;
+}
+
+.mah-company-registration-heading-row > *,
+.mah-company-registration-steps > * {
+  direction: rtl;
+}
+
+.mah-company-registration-head .mah-company-registration-heading-row > div:last-child > span {
+  justify-content: flex-start !important;
+}
+
+/* The labels and displayed values use fixed-width mockup spans; keep the
+   Persian content on the right edge within each field. */
+.mah-company-registration-form span[class~="text-right"] {
+  align-self: stretch;
+}
+
+.mah-company-registration-form [dir="ltr"],
+.mah-company-registration-form input[type="email"],
+.mah-company-registration-form input[type="url"] {
+  direction: ltr;
+  text-align: left !important;
+}
