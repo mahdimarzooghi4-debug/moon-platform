@@ -9,22 +9,26 @@ export type StartupFilters = {
 };
 
 export type StartupSample = {
+  id: string;
   name: string;
   region: string;
+  city: string;
   impact: string[];
+  summary: string;
   active: boolean;
+  projectHref?: string;
 };
 
 export const STARTUP_SAMPLES: StartupSample[] = [
-  { name: "سلامت‌یار خانواده", region: "فارس", impact: ["سلامت", "فناوری اجتماعی"], active: true },
-  { name: "مهارت‌نو", region: "خراسان رضوی", impact: ["آموزش", "اشتغال"], active: true },
-  { name: "مهارت‌نو", region: "گلستان", impact: ["اشتغال", "توسعه روستایی"], active: true },
-  { name: "بازار بومی", region: "مازندران", impact: ["فناوری اجتماعی", "توسعه روستایی"], active: true },
-  { name: "روستاتک", region: "سیستان و بلوچستان", impact: ["توسعه روستایی", "اشتغال"], active: true },
-  { name: "خانه‌کار", region: "تهران", impact: ["اشتغال"], active: true },
-  { name: "آینده‌ساز", region: "خوزستان", impact: ["آموزش"], active: true },
-  { name: "زیست‌پاک", region: "اصفهان", impact: ["فناوری اجتماعی"], active: true },
-  { name: "همیار سلامت", region: "کرمان", impact: ["سلامت"], active: true },
+  { id: "family-health", name: "سلامت‌یار خانواده", region: "فارس", city: "شیراز", impact: ["سلامت", "فناوری اجتماعی"], summary: "دسترسی خانواده‌ها به خدمات سلامت", active: true, projectHref: "/projects/family-health" },
+  { id: "youth-skills", name: "مهارت‌نو", region: "خراسان رضوی", city: "مشهد", impact: ["آموزش", "اشتغال"], summary: "آموزش مهارت‌های کاربردی به نوجوانان", active: true, projectHref: "/projects/youth-skills" },
+  { id: "rural-women", name: "مهارت‌نو", region: "گلستان", city: "گرگان", impact: ["اشتغال", "توسعه روستایی"], summary: "آموزش مهارت و پشتیبانی معیشت زنان روستایی", active: true, projectHref: "/projects/variants/rural-women" },
+  { id: "local-market", name: "بازار بومی", region: "مازندران", city: "ساری", impact: ["فناوری اجتماعی", "توسعه روستایی"], summary: "تجارت اجتماعی و توسعه بازار برای محصولات محلی و روستایی کشور", active: true },
+  { id: "rural-tech", name: "روستاتک", region: "سیستان و بلوچستان", city: "زاهدان", impact: ["توسعه روستایی", "اشتغال"], summary: "ارائه فناوری‌های نوین کشاورزی و ابزارهای معیشت پایدار کشاورزان", active: true },
+  { id: "home-work", name: "خانه‌کار", region: "تهران", city: "تهران", impact: ["اشتغال"], summary: "توسعه کسب‌وکارهای خانگی و توانمندسازی اقتصادی زنان خانه‌دار", active: true },
+  { id: "future-builders", name: "آینده‌ساز", region: "خوزستان", city: "اهواز", impact: ["آموزش"], summary: "ارائه آموزش‌های فنی، تخصصی و مهارتی برای نوجوانان مناطق محروم", active: true },
+  { id: "clean-ecosystem", name: "زیست‌پاک", region: "اصفهان", city: "اصفهان", impact: ["فناوری اجتماعی"], summary: "راهکارهای محیط‌زیستی، تفکیک از مبدا و توسعه اقتصاد چرخشی محلی", active: true },
+  { id: "community-health", name: "همیار سلامت", region: "کرمان", city: "کرمان", impact: ["سلامت"], summary: "ارائه خدمات سلامت اولیه، ارتقای بهداشت عمومی و پیشگیری خانواده", active: true },
 ];
 
 export const EMPTY_FILTERS: StartupFilters = {
@@ -120,12 +124,9 @@ export default function StartupDirectoryControls({
               <option value="inactive">بدون پروژه فعال</option>
             </select>
           </label>
-          <label className="flex min-h-[42px] items-center rounded-[10px] border border-[#e4ebf1] bg-white px-[12px]">
-            <span className="sr-only">مرحله رشد</span>
-            <select dir="rtl" className={selectClass} disabled title="اطلاعات مرحله رشد هنوز برای استارتاپ‌های نمایشی ثبت نشده است.">
-              <option>مرحله رشد (اطلاعات موجود نیست)</option>
-            </select>
-          </label>
+          <p className="m-0 flex min-h-[42px] items-center rounded-[10px] border border-[#e4ebf1] bg-[#fcfbf8] px-[12px] text-right text-[12px] text-[#60758a]" title="مرحله رشد در اطلاعات نمایشی این فهرست ثبت نشده است.">
+            مرحله رشد: هنوز اطلاعاتی ثبت نشده
+          </p>
           <label className="flex min-h-[42px] items-center rounded-[10px] border border-[#e4ebf1] bg-white px-[12px]">
             <span className="sr-only">مرتب‌سازی</span>
             <select dir="rtl" value={draft.sort} onChange={(event) => setField("sort", event.target.value)} className={selectClass}>

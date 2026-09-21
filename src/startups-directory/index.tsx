@@ -61,13 +61,13 @@ export default function Main() {
               صفحه اصلی
             </a>
           </div>
-          <div className="w-[137px] h-[46px] shrink-0 bg-[url(/assets/logo.png)] bg-cover bg-no-repeat relative z-[16]" />
+          <a href="/" aria-label="بازگشت به صفحه اصلی ماه" className="block w-[137px] h-[46px] shrink-0 bg-[url(/assets/logo.png)] bg-cover bg-no-repeat relative z-[16]" />
         </div>
       </div>
       <div className="flex w-[1200px] pt-[24px] pr-0 pb-[64px] pl-0 flex-col gap-[40px] items-end shrink-0 flex-nowrap relative z-[17]">
         <div className="mah-directory-breadcrumb flex justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[18]">
           <span className="flex w-[133px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#60758a] relative text-right whitespace-nowrap z-[19]">
-            صفحه اصلی / استارتاپ‌ها
+            <a href="/" className="text-[#2094e3] hover:underline">صفحه اصلی</a> / <a href="/startups-directory" className="text-[#2094e3] hover:underline">استارتاپ‌ها</a>
           </span>
         </div>
         <div className="mah-directory-intro flex pt-[32px] pr-[32px] pb-[32px] pl-[32px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[24px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-20">
@@ -239,7 +239,7 @@ export default function Main() {
                 </div>
               </div>
               <div className="flex gap-[12px] items-start self-stretch shrink-0 flex-nowrap relative z-[134]">
-                <a href="/startups/profile/states/unavailable" aria-label="مشاهده پروفایل" className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] justify-center items-center grow shrink-0 basis-0 flex-nowrap bg-[#2094e3] rounded-[10px] relative z-[135]">
+                <a href={`/startups-directory/${STARTUP_SAMPLES[0].id}`} aria-label="مشاهده پروفایل" className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] justify-center items-center grow shrink-0 basis-0 flex-nowrap bg-[#2094e3] rounded-[10px] relative z-[135]">
                   <span className="flex w-[86px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-medium leading-[20px] text-[#fff] relative text-right whitespace-nowrap z-[136]">
                     مشاهده پروفایل
                   </span>
@@ -329,7 +329,7 @@ export default function Main() {
                 </div>
               </div>
               <div className="flex gap-[12px] items-start self-stretch shrink-0 flex-nowrap relative z-[172]">
-                <a href="/startups/profile/states/unavailable" aria-label="مشاهده پروفایل" className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] justify-center items-center grow shrink-0 basis-0 flex-nowrap bg-[#2094e3] rounded-[10px] relative z-[173]">
+                <a href={`/startups-directory/${STARTUP_SAMPLES[1].id}`} aria-label="مشاهده پروفایل" className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] justify-center items-center grow shrink-0 basis-0 flex-nowrap bg-[#2094e3] rounded-[10px] relative z-[173]">
                   <span className="flex w-[86px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-medium leading-[20px] text-[#fff] relative text-right whitespace-nowrap z-[174]">
                     مشاهده پروفایل
                   </span>
@@ -419,7 +419,7 @@ export default function Main() {
                 </div>
               </div>
               <div className="flex gap-[12px] items-start self-stretch shrink-0 flex-nowrap relative z-[210]">
-                <a href="/startups/profile/states/unavailable" aria-label="مشاهده پروفایل" className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] justify-center items-center grow shrink-0 basis-0 flex-nowrap bg-[#2094e3] rounded-[10px] relative z-[211]">
+                <a href={`/startups-directory/${STARTUP_SAMPLES[2].id}`} aria-label="مشاهده پروفایل" className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] justify-center items-center grow shrink-0 basis-0 flex-nowrap bg-[#2094e3] rounded-[10px] relative z-[211]">
                   <span className="flex w-[86px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-medium leading-[20px] text-[#fff] relative text-right whitespace-nowrap z-[212]">
                     مشاهده پروفایل
                   </span>
@@ -503,7 +503,7 @@ export default function Main() {
                     </span>
                   </div>
                 </div>
-                <a href="/startups/profile/states/unavailable" aria-label="مشاهده پروفایل استارتاپ" className="flex pt-[8px] pr-[8px] pb-[8px] pl-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[245]">
+                <a href={`/startups-directory/${STARTUP_SAMPLES[3].id}`} aria-label="مشاهده پروفایل استارتاپ" className="flex pt-[8px] pr-[8px] pb-[8px] pl-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[245]">
                   <span className="flex w-[124px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-medium leading-[18.75px] text-[#2094e3] relative text-right whitespace-nowrap z-[246]">
                     مشاهده پروفایل استارتاپ
                   </span>
@@ -569,7 +569,7 @@ export default function Main() {
                     </span>
                   </div>
                 </div>
-                <a href="/startups/profile/states/unavailable" aria-label="مشاهده پروفایل استارتاپ" className="flex pt-[8px] pr-[8px] pb-[8px] pl-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[272]">
+                <a href={`/startups-directory/${STARTUP_SAMPLES[4].id}`} aria-label="مشاهده پروفایل استارتاپ" className="flex pt-[8px] pr-[8px] pb-[8px] pl-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[272]">
                   <span className="flex w-[124px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-medium leading-[18.75px] text-[#2094e3] relative text-right whitespace-nowrap z-[273]">
                     مشاهده پروفایل استارتاپ
                   </span>
@@ -634,7 +634,7 @@ export default function Main() {
                     </span>
                   </div>
                 </div>
-                <a href="/startups/profile/states/unavailable" aria-label="مشاهده پروفایل استارتاپ" className="flex pt-[8px] pr-[8px] pb-[8px] pl-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[299]">
+                <a href={`/startups-directory/${STARTUP_SAMPLES[5].id}`} aria-label="مشاهده پروفایل استارتاپ" className="flex pt-[8px] pr-[8px] pb-[8px] pl-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[299]">
                   <span className="flex w-[124px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-medium leading-[18.75px] text-[#2094e3] relative text-right whitespace-nowrap z-[300]">
                     مشاهده پروفایل استارتاپ
                   </span>
@@ -701,7 +701,7 @@ export default function Main() {
                     </span>
                   </div>
                 </div>
-                <a href="/startups/profile/states/unavailable" aria-label="مشاهده پروفایل استارتاپ" className="flex pt-[8px] pr-[8px] pb-[8px] pl-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[326]">
+                <a href={`/startups-directory/${STARTUP_SAMPLES[6].id}`} aria-label="مشاهده پروفایل استارتاپ" className="flex pt-[8px] pr-[8px] pb-[8px] pl-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[326]">
                   <span className="flex w-[124px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-medium leading-[18.75px] text-[#2094e3] relative text-right whitespace-nowrap z-[327]">
                     مشاهده پروفایل استارتاپ
                   </span>
@@ -766,7 +766,7 @@ export default function Main() {
                     </span>
                   </div>
                 </div>
-                <a href="/startups/profile/states/unavailable" aria-label="مشاهده پروفایل استارتاپ" className="flex pt-[8px] pr-[8px] pb-[8px] pl-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[353]">
+                <a href={`/startups-directory/${STARTUP_SAMPLES[7].id}`} aria-label="مشاهده پروفایل استارتاپ" className="flex pt-[8px] pr-[8px] pb-[8px] pl-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[353]">
                   <span className="flex w-[124px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-medium leading-[18.75px] text-[#2094e3] relative text-right whitespace-nowrap z-[354]">
                     مشاهده پروفایل استارتاپ
                   </span>
@@ -832,7 +832,7 @@ export default function Main() {
                     </span>
                   </div>
                 </div>
-                <a href="/startups/profile/states/unavailable" aria-label="مشاهده پروفایل استارتاپ" className="flex pt-[8px] pr-[8px] pb-[8px] pl-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[380]">
+                <a href={`/startups-directory/${STARTUP_SAMPLES[8].id}`} aria-label="مشاهده پروفایل استارتاپ" className="flex pt-[8px] pr-[8px] pb-[8px] pl-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[380]">
                   <span className="flex w-[124px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-medium leading-[18.75px] text-[#2094e3] relative text-right whitespace-nowrap z-[381]">
                     مشاهده پروفایل استارتاپ
                   </span>
@@ -1005,73 +1005,60 @@ export default function Main() {
         </div>
       </div>
       <div className="flex pt-[80px] pr-[120px] pb-[40px] pl-[120px] flex-col gap-[64px] items-start self-stretch shrink-0 flex-nowrap bg-[#111e30] relative z-[459]">
-        <div className="flex gap-[48px] items-start self-stretch shrink-0 flex-nowrap relative z-[460]">
+        <div className="mah-directory-footer-row flex gap-[48px] items-start self-stretch shrink-0 flex-nowrap relative z-[460]">
           <div className="flex w-[220px] h-[182px] flex-col gap-[12px] items-end shrink-0 flex-nowrap relative z-[461]">
             <span className="flex w-[59px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#fff] relative text-right whitespace-nowrap z-[462]">
               ارتباط با ما
             </span>
-            <span className="flex w-[115px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[463]">
-              تلفن: ۰۲۱-۸۸۸۸۸۸۸۸
-            </span>
-            <span className="flex w-[156px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[464]">
-              ایمیل: info@mahplatform.ir
-            </span>
-            <div className="flex w-[48px] pt-[8px] pr-0 pb-0 pl-0 gap-[12px] items-center shrink-0 flex-nowrap relative z-[465]">
-              <div className="flex w-[18px] h-[18px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[466]">
-                <div className="w-[18px] h-[18px] shrink-0 bg-[url(/assets/telegram.png)] bg-cover bg-no-repeat relative overflow-hidden z-[467]" />
-              </div>
-              <div className="flex w-[18px] h-[18px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[468]">
-                <div className="w-[18px] h-[18px] shrink-0 bg-[url(/assets/eitaa.png)] bg-cover bg-no-repeat relative overflow-hidden z-[469]" />
-              </div>
-            </div>
+            <a href="/contact" className="block text-right text-[13px] leading-[24px] text-[#e4ebf1] hover:underline">مشاهده راه‌های ارتباط با ماه</a>
           </div>
           <div className="flex w-[150px] h-[182px] flex-col gap-[12px] items-end shrink-0 flex-nowrap relative z-[470]">
             <span className="flex w-[39px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#fff] relative text-right whitespace-nowrap z-[471]">
               حقوقی
             </span>
-            <span className="flex w-[82px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[472]">
+            <a href="/terms" className="flex w-[82px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[472]">
               قوانین و مقررات
-            </span>
-            <span className="flex w-[75px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[473]">
+            </a>
+            <a href="/privacy-policy" className="flex w-[75px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[473]">
               حریم خصوصی
-            </span>
+            </a>
           </div>
           <div className="flex w-[160px] h-[182px] flex-col gap-[12px] items-end shrink-0 flex-nowrap relative z-[474]">
             <span className="flex w-[49px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#fff] relative text-right whitespace-nowrap z-[475]">
               پشتیبانی
             </span>
-            <span className="flex w-[55px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[476]">
+            <a href="/contact" className="flex w-[55px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[476]">
               تماس با ما
-            </span>
-            <span className="flex w-[77px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[477]">
+            </a>
+            <a href="/faq" className="flex w-[77px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[477]">
               سؤالات متداول
-            </span>
-            <span className="flex w-[82px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[478]">
+            </a>
+            <a href="/participation/track" className="flex w-[82px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[478]">
               پیگیری مشارکت
-            </span>
+            </a>
           </div>
           <div className="flex w-[180px] flex-col gap-[12px] items-end shrink-0 flex-nowrap relative z-[479]">
             <span className="flex w-[83px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#fff] relative text-right whitespace-nowrap z-[480]">
               دسترسی سریع
             </span>
-            <span className="flex w-[38px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[481]">
+            <a href="/projects" className="flex w-[38px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[481]">
               پروژه‌ها
-            </span>
-            <span className="flex w-[69px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[482]">
+            </a>
+            <a href="/companies" className="flex w-[69px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[482]">
               برای شرکت‌ها
-            </span>
-            <span className="flex w-[71px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[483]">
+            </a>
+            <a href="/how-it-works" className="flex w-[71px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[483]">
               نحوه مشارکت
-            </span>
-            <span className="flex w-[84px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[484]">
+            </a>
+            <a href="/register/startup" className="flex w-[84px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[484]">
               ثبت‌نام استارتاپ
-            </span>
-            <span className="flex w-[80px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[485]">
+            </a>
+            <a href="/news" className="flex w-[80px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[485]">
               اخبار و رویدادها
-            </span>
+            </a>
           </div>
           <div className="flex w-[298px] h-[182px] flex-col gap-[14px] items-end shrink-0 flex-nowrap relative z-[486]">
-            <div className="w-[210px] h-[70px] shrink-0 bg-[url(/assets/footer-logo.png)] bg-cover bg-no-repeat relative z-[487]" />
+            <a href="/" aria-label="بازگشت به صفحه اصلی ماه" className="block w-[210px] h-[70px] shrink-0 bg-[url(/assets/footer-logo.png)] bg-cover bg-no-repeat relative z-[487]" />
             <span className="flex w-[298px] h-[44px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[13px] font-normal leading-[22px] text-[#e4ebf1] relative text-right z-[488]">
               سامانه مشارکت در پروژه‌های اثر اجتماعی با مسیر مالی شفاف و اثر
               قابل‌اندازه‌گیری.
