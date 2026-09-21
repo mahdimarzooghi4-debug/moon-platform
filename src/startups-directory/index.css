@@ -27,3 +27,88 @@ textarea,
 button {
   outline: 0;
 }
+
+/* The generated Figma page used left-facing flex placement despite RTL text.
+   Keep the wide, centered mockup but put the logo, breadcrumbs and heading
+   on the physical right and let each visible control read right-to-left. */
+.mah-startups-directory-page {
+  direction: rtl;
+  text-align: right;
+}
+
+.mah-startups-directory-page .mah-directory-header,
+.mah-startups-directory-page .mah-directory-intro {
+  direction: ltr !important;
+}
+
+.mah-startups-directory-page .mah-directory-header > *,
+.mah-startups-directory-page .mah-directory-intro > * {
+  direction: rtl;
+}
+
+.mah-startups-directory-page .mah-directory-intro > div:last-child,
+.mah-startups-directory-page .mah-directory-intro > div:last-child > span {
+  direction: rtl !important;
+  align-items: flex-start !important;
+  text-align: right !important;
+}
+
+.mah-startups-directory-page .mah-directory-breadcrumb {
+  direction: rtl !important;
+  justify-content: flex-start !important;
+}
+
+.mah-startups-directory-page .mah-directory-breadcrumb > span {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+.mah-startups-directory-page .mah-directory-kpis {
+  direction: rtl !important;
+}
+
+.mah-startups-directory-page .mah-directory-kpis > div > div {
+  direction: rtl !important;
+  align-items: flex-start !important;
+}
+
+.mah-startups-directory-page .mah-directory-kpis > div > div > span {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+.mah-startups-directory-page .mah-directory-card {
+  direction: rtl !important;
+  align-items: flex-end !important;
+  text-align: right !important;
+}
+
+.mah-startups-directory-page .mah-directory-card span:not(.text-center) {
+  direction: rtl !important;
+  text-align: right !important;
+  unicode-bidi: plaintext;
+}
+
+.mah-startups-directory-page .mah-directory-card[hidden] {
+  display: none !important;
+}
+
+.mah-startups-directory-page .mah-directory-row:not(:has(> .mah-directory-card:not([hidden]))) {
+  display: none !important;
+}
+
+.mah-startups-directory-page button,
+.mah-startups-directory-page select,
+.mah-startups-directory-page input {
+  font-family: "Vazirmatn", sans-serif;
+}
+
+.mah-startups-directory-page a[href] {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.mah-startups-directory-page a[href]:focus-visible {
+  outline: 2px solid #2094e3;
+  outline-offset: 3px;
+}
