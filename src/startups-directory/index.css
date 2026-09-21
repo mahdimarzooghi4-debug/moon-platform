@@ -41,9 +41,19 @@ button {
   direction: ltr !important;
 }
 
-.mah-startups-directory-page .mah-directory-header > *,
-.mah-startups-directory-page .mah-directory-intro > * {
+.mah-startups-directory-page .mah-directory-intro > *,
+.mah-startups-directory-page .mah-directory-header > div:first-child {
   direction: rtl;
+}
+
+/* The logo is the last element in the nav group, so its row stays LTR
+   while the Persian navigation labels read RTL. */
+.mah-startups-directory-page .mah-directory-header > div:last-child {
+  direction: ltr !important;
+}
+
+.mah-startups-directory-page .mah-directory-header > div:last-child > div:first-child {
+  direction: rtl !important;
 }
 
 .mah-startups-directory-page .mah-directory-intro > div:last-child,
