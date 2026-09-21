@@ -1010,20 +1010,7 @@ export default function Main() {
             <span className="flex w-[59px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#fff] relative text-right whitespace-nowrap z-[462]">
               ارتباط با ما
             </span>
-            <span className="flex w-[115px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[463]">
-              تلفن: ۰۲۱-۸۸۸۸۸۸۸۸
-            </span>
-            <span className="flex w-[156px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[464]">
-              ایمیل: info@mahplatform.ir
-            </span>
-            <div className="flex w-[48px] pt-[8px] pr-0 pb-0 pl-0 gap-[12px] items-center shrink-0 flex-nowrap relative z-[465]">
-              <div className="flex w-[18px] h-[18px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[466]">
-                <div className="w-[18px] h-[18px] shrink-0 bg-[url(/assets/telegram.png)] bg-cover bg-no-repeat relative overflow-hidden z-[467]" />
-              </div>
-              <div className="flex w-[18px] h-[18px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[468]">
-                <div className="w-[18px] h-[18px] shrink-0 bg-[url(/assets/eitaa.png)] bg-cover bg-no-repeat relative overflow-hidden z-[469]" />
-              </div>
-            </div>
+            <a href="/contact" className="block text-right text-[13px] leading-[24px] text-[#e4ebf1] hover:underline">مشاهده راه‌های ارتباط با ماه</a>
           </div>
           <div className="flex w-[150px] h-[182px] flex-col gap-[12px] items-end shrink-0 flex-nowrap relative z-[470]">
             <span className="flex w-[39px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#fff] relative text-right whitespace-nowrap z-[471]">
