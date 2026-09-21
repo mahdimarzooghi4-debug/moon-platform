@@ -177,3 +177,10 @@ button {
 .mah-startups-directory-page .mah-directory-card[hidden] {
   display: none !important;
 }
+
+/* A filtered row with one or two matches must not stretch cards to 1200px. */
+.mah-startups-directory-page .mah-directory-row > .mah-directory-card {
+  flex: 0 0 calc((100% - 48px) / 3) !important;
+  min-width: 0;
+  max-width: calc((100% - 48px) / 3);
+}
