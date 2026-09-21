@@ -896,11 +896,11 @@ export default function MahForCompanies() {
               KPI و گزارش مستقل.
             </span>
             <div className="flex pt-[8px] pr-0 pb-0 pl-0 justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[393]">
-              <div className="flex w-[110px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[394]">
+              <a href="/projects" aria-label="انتخاب پروژه" className="flex w-[110px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[394]">
                 <span className="flex w-[70px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#2094e3] relative text-center whitespace-nowrap z-[395]">
                   انتخاب پروژه
                 </span>
-              </div>
+              </a>
             </div>
           </div>
           <div className="flex w-[384px] pt-[32px] pr-[32px] pb-[32px] pl-[32px] flex-col gap-[20px] items-end flex-nowrap bg-[#fff] rounded-[16px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[396]">
@@ -912,11 +912,11 @@ export default function MahForCompanies() {
               آموزش مناطق محروم یا سلامت.
             </span>
             <div className="flex pt-[8px] pr-0 pb-0 pl-0 justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[399]">
-              <div className="flex w-[109px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[400]">
+              <a href="#company-impact-area" aria-label="انتخاب حوزه" className="flex w-[109px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[400]">
                 <span className="flex w-[69px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#2094e3] relative text-center whitespace-nowrap z-[401]">
                   انتخاب حوزه
                 </span>
-              </div>
+              </a>
             </div>
           </div>
           <div className="flex w-[384px] pt-[32px] pr-[32px] pb-[32px] pl-[32px] flex-col gap-[20px] items-end flex-nowrap bg-[#fff] rounded-[16px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[402]">
@@ -928,11 +928,11 @@ export default function MahForCompanies() {
               چارچوب پروژه‌های قابل سنجش ماه.
             </span>
             <div className="flex pt-[8px] pr-0 pb-0 pl-0 justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[405]">
-              <div className="flex w-[138px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[406]">
+              <a href="/contact" aria-label="درخواست مشاوره" className="flex w-[138px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[406]">
                 <span className="flex w-[98px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#2094e3] relative text-center whitespace-nowrap z-[407]">
                   درخواست مشاوره
                 </span>
-              </div>
+              </a>
             </div>
           </div>
         </div>
