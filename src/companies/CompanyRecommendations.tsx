@@ -70,7 +70,7 @@ export default function CompanyRecommendations() {
       <div dir="rtl" className="flex flex-wrap items-start justify-between gap-[24px] self-stretch relative z-[221]">
         <label className="flex w-[282px] flex-col gap-[10px] rounded-[12px] border border-[#e4ebf1] bg-white p-[20px] text-right">
           <span className="text-[14px] font-semibold text-[#17324d]">براساس حوزه اثر</span>
-          <select aria-label="حوزه اثر" className={selectClasses} value={filters.area} onChange={update("area")}>
+          <select id="company-impact-area" aria-label="حوزه اثر" className={selectClasses} style={{ scrollMarginTop: "24px" }} value={filters.area} onChange={update("area")}>
             <option value="">همه حوزه‌ها</option>
             <option value="employment">اشتغال و معیشت</option>
             <option value="health">سلامت</option>
