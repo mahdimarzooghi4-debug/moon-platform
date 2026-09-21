@@ -1,7 +1,20 @@
 import React from "react";
 import "./index.css";
 
+const PROJECT_GALLERY = [
+  { src: "/assets/codia/qN8rNm5ete.webp", alt: "زنان روستایی در کارگاه تولید محصولات محلی" },
+  { src: "/assets/codia/xkhGZiM7zx.webp", alt: "محصولات تولیدشده در پروژه اشتغال زنان روستایی" },
+  { src: "/assets/codia/k38ngLiS1o.webp", alt: "آموزش مهارت به زنان روستایی" },
+  { src: "/assets/codia/RR9PzHGgQe.webp", alt: "عرضه محصولات محلی زنان روستایی" },
+] as const;
+
+const formatFa = new Intl.NumberFormat("fa-IR");
+
 export default function Main() {
+  const [galleryIndex, setGalleryIndex] = React.useState(0);
+  const currentImage = PROJECT_GALLERY[galleryIndex];
+  const moveGallery = (step: number) =>
+    setGalleryIndex((current) => (current + step + PROJECT_GALLERY.length) % PROJECT_GALLERY.length);
   return (
     <div className="main-container flex w-[1440px] flex-col items-center flex-nowrap bg-[#fcfbf8] relative overflow-hidden mx-auto my-0">
       <div className="flex pt-[16px] pr-[120px] pb-[16px] pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] border-solid border-t border-t-[#e4ebf1] relative">
@@ -64,8 +77,8 @@ export default function Main() {
           <div className="flex h-[340px] flex-col justify-center items-center self-stretch shrink-0 flex-nowrap rounded-[16px] relative overflow-hidden z-[22]">
             <img
               className="w-full h-full object-cover absolute inset-0"
-              src="/assets/codia/qN8rNm5ete.webp"
-              alt="زنان روستایی در کارگاه تولید محصولات محلی"
+              src={currentImage.src}
+              alt={currentImage.alt}
             />
             <div className="flex h-[57px] pt-[16px] pr-[16px] pb-[16px] pl-[16px] justify-between items-start shrink-0 flex-nowrap absolute top-0 left-0 right-0 z-[23]">
               <div className="flex w-[67px] pt-[4px] pr-[8px] pb-[4px] pl-[8px] items-start shrink-0 flex-nowrap bg-[rgba(0,0,0,0.7)] rounded-[8px] relative z-[24]">
@@ -76,21 +89,15 @@ export default function Main() {
             </div>
           </div>
           <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[26]">
-            <div className="flex w-[26px] gap-[8px] items-start shrink-0 flex-nowrap relative z-[27]">
-              <div className="flex w-[26px] pt-[6px] pr-[6px] pb-[6px] pl-[6px] items-start shrink-0 flex-nowrap bg-[#fff] rounded-[8px] border-solid border border-[#e4ebf1] relative z-[28]">
-                <div className="flex w-[14px] h-[14px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[29]">
-                  <div className="w-[14px] h-[14px] shrink-0 bg-[url(/assets/codia/0QoTAMVLqZ.svg)] bg-cover bg-no-repeat relative z-30" />
-                </div>
-              </div>
-            </div>
-            <span className="flex w-[24px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-right whitespace-nowrap z-[31]">
-              ۱ از ۴
+            <button type="button" aria-label="تصویر قبلی پروژه" onClick={() => moveGallery(-1)} className="flex h-[26px] w-[26px] shrink-0 items-center justify-center rounded-[8px] border border-[#e4ebf1] bg-white hover:border-[#2094e3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#2094e3]">
+              <img src="/assets/codia/0QoTAMVLqZ.svg" alt="" className="h-[14px] w-[14px]" />
+            </button>
+            <span dir="rtl" aria-live="polite" className="text-center text-[12px] font-normal leading-[19px] text-[#60758a]">
+              {formatFa.format(galleryIndex + 1)} از {formatFa.format(PROJECT_GALLERY.length)}
             </span>
-            <div className="flex w-[26px] pt-[6px] pr-[6px] pb-[6px] pl-[6px] items-start shrink-0 flex-nowrap bg-[#fff] rounded-[8px] border-solid border border-[#e4ebf1] relative rotate-180 z-[32]">
-              <div className="flex w-[14px] h-[14px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[33]">
-                <div className="w-[14px] h-[14px] shrink-0 bg-[url(/assets/codia/LnPKCKpf3w.svg)] bg-cover bg-no-repeat relative z-[34]" />
-              </div>
-            </div>
+            <button type="button" aria-label="تصویر بعدی پروژه" onClick={() => moveGallery(1)} className="flex h-[26px] w-[26px] shrink-0 items-center justify-center rounded-[8px] border border-[#e4ebf1] bg-white hover:border-[#2094e3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#2094e3]">
+              <img src="/assets/codia/LnPKCKpf3w.svg" alt="" className="h-[14px] w-[14px]" />
+            </button>
           </div>
         </div>
         <div className="flex w-[632px] flex-col gap-[20px] items-end shrink-0 flex-nowrap relative z-[35]">
@@ -195,20 +202,12 @@ export default function Main() {
             <div className="flex w-[322px] flex-col gap-[12px] items-end shrink-0 flex-nowrap relative z-[77]">
               <div className="flex flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[78]">
                 <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[79]">
-                  <div className="w-[86px] shrink-0 font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] relative text-right whitespace-nowrap z-[80]">
-                    <span className="font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-right">
-                      هدف:{" "}
-                    </span>
-                    <span className="font-['Vazirmatn'] text-[12px] font-bold leading-[18.75px] text-[#60758a] relative text-right">
-                      ۴
-                    </span>
-                    <span className="font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-right">
-                      ۰۰ میلیون
-                    </span>
+                  <div dir="rtl" className="min-w-[150px] shrink-0 text-right font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative whitespace-nowrap z-[80]">
+                    هدف: <strong className="font-bold">۴۰۰ میلیون</strong>
                   </div>
                   <span className="flex w-[89px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-bold leading-[18.75px] text-[#17324d] relative text-right whitespace-nowrap z-[81]">
                     {" "}
-                    ۲۳۲میلیون تومان
+                    ۲۳۲ میلیون تومان
                   </span>
                 </div>
                 <div className="flex h-[8px] justify-end items-start self-stretch shrink-0 flex-nowrap bg-[#e4ebf1] rounded-[4px] relative overflow-hidden z-[82]">
@@ -393,9 +392,9 @@ export default function Main() {
                   <span className="flex w-[160px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#60758a] relative text-right whitespace-nowrap z-[159]">
                     پایش درآمد و اشتغال ایجادشده
                   </span>
-                  <div className="flex w-[14px] h-[14px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[160]">
-                    <div className="w-[14px] h-[14px] shrink-0 bg-[url(/assets/codia/mSLyOsuNkH.svg)] bg-cover bg-no-repeat relative z-[161]" />
-                  </div>
+                  <svg aria-hidden="true" className="h-[14px] w-[14px] shrink-0 relative z-[160]" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M14 0L4.375 14L0 7.63636" stroke="#159455" strokeWidth="2" strokeLinecap="round" />
+                  </svg>
                 </div>
                 <div className="flex w-[178px] gap-[8px] justify-end items-center shrink-0 flex-nowrap relative z-[162]">
                   <span className="flex w-[156px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#60758a] relative text-right whitespace-nowrap z-[163]">
