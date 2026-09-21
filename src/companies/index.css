@@ -199,3 +199,18 @@ button, input, select, textarea {
 .mah-company-project-card > div:last-child > span {
   text-align: center !important;
 }
+
+/* Respect recommendation filters even when Figma cards use display:flex !important. */
+.mah-company-project-card[hidden] {
+  display: none !important;
+}
+
+.mah-companies-page select {
+  direction: rtl;
+  text-align: right;
+}
+
+.mah-company-project-card [data-mah-company-href]:focus-visible {
+  outline: 2px solid #2094e3;
+  outline-offset: 3px;
+}
