@@ -128,18 +128,31 @@ function enhance(root: HTMLElement, pathname: string) {
     target.style.cursor = "pointer";
   });
 
+}
+
+function enhancePublicLogo(root: HTMLElement) {
+  // Figma exports many public headers as background-image divs instead of links.
+  // Only touch logo-sized images in the FIRST header section, never hero images
+  // or other pictures farther down the page.
   const firstSection = root.firstElementChild;
-  if (firstSection instanceof HTMLElement) {
-    const logo = firstSection.querySelector<HTMLElement>('[class~="z-[16]"]');
-    if (logo && !logo.dataset.mahPublicAction && !hasNativeDestination(logo)) {
-      logo.dataset.mahPublicAction = "route";
-      logo.dataset.mahPublicTarget = "/";
-      logo.setAttribute("role", "link");
-      logo.setAttribute("tabindex", "0");
-      logo.setAttribute("aria-label", "صفحه اصلی");
-      logo.style.cursor = "pointer";
-    }
-  }
+  if (!(firstSection instanceof HTMLElement)) return;
+
+  const logo = Array.from(firstSection.querySelectorAll<HTMLElement>("div, img")).find((node) => {
+    const classes = typeof node.className === "string" ? node.className : "";
+    const isLogoSize =
+      (classes.includes("w-[137px]") && classes.includes("h-[46px]")) ||
+      (classes.includes("w-[210px]") && classes.includes("h-[70px]"));
+    const isImage = node instanceof HTMLImageElement || classes.includes("bg-[url(");
+    return isLogoSize && isImage;
+  });
+  if (!logo || logo.dataset.mahPublicAction || logo.closest("a[href]")) return;
+
+  logo.dataset.mahPublicAction = "route";
+  logo.dataset.mahPublicTarget = "/";
+  logo.setAttribute("role", "link");
+  logo.setAttribute("tabindex", "0");
+  logo.setAttribute("aria-label", "بازگشت به صفحه اصلی سامانه ماه");
+  logo.style.cursor = "pointer";
 }
 
 async function copyCurrentLink() {
@@ -177,9 +190,11 @@ export default function PublicPageInteractions() {
   useEffect(() => {
     const apply = () => {
       const pathname = window.location.pathname;
-      if (!STATIC_PUBLIC_PATH.test(pathname)) return;
+      if (pathname.startsWith("/panel/") || pathname.startsWith("/auth")) return;
       const root = document.querySelector<HTMLElement>(".main-container");
-      if (root) enhance(root, pathname);
+      if (!root) return;
+      enhancePublicLogo(root);
+      if (STATIC_PUBLIC_PATH.test(pathname)) enhance(root, pathname);
     };
 
     apply();
