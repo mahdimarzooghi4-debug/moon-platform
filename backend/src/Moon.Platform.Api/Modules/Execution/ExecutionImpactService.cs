@@ -511,12 +511,15 @@ public sealed class ExecutionImpactService(
         var activeProjectCount = await dbContext.Projects.AsNoTracking()
             .CountAsync(x => x.Status == ProjectStatuses.Published && !closedProjectIds.Contains(x.Id), cancellationToken);
 
-        var funding = await dbContext.FundingCommitments.AsNoTracking()
+        var fundingRows = await dbContext.FundingCommitments.AsNoTracking()
             .Where(x => x.Status == CommitmentStatuses.Reconciled)
             .GroupBy(x => x.Currency)
-            .Select(group => new PublicLandingFundingView(group.Key, group.Sum(x => x.AmountMinor)))
+            .Select(group => new { Currency = group.Key, AmountMinor = group.Sum(x => x.AmountMinor) })
             .OrderBy(x => x.Currency)
             .ToArrayAsync(cancellationToken);
+        var funding = fundingRows
+            .Select(x => new PublicLandingFundingView(x.Currency, x.AmountMinor))
+            .ToArray();
 
         return new PublicLandingKpisView(
             startupCount,
