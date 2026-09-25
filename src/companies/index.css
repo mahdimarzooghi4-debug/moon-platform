@@ -243,3 +243,38 @@ button, input, select, textarea {
   text-align: right !important;
   unicode-bidi: plaintext;
 }
+
+
+/* Final companies-page RTL correction; scoped to avoid global .main-container
+   rules from other generated pages affecting this screen. */
+.mah-companies-page {
+  direction: ltr !important;
+  text-align: right !important;
+}
+.mah-companies-page :where(span,p,label,a,button,input,textarea,select,h1,h2,h3,h4) {
+  direction: rtl !important;
+  unicode-bidi: plaintext;
+}
+.mah-companies-page [class*="text-right"] { text-align: right !important; }
+.mah-companies-page [class*="text-center"] { text-align: center !important; }
+.mah-companies-page .flex-col.items-end { align-items: flex-end !important; }
+.mah-companies-page .flex.justify-end { justify-content: flex-end !important; }
+.mah-companies-page > div:first-child,
+.mah-companies-page > div:first-child > div:last-child,
+.mah-companies-page > div:first-child > div:last-child > div:first-child {
+  direction: ltr !important;
+}
+.mah-companies-page > div:first-child > div:last-child > div:first-child > * {
+  direction: rtl !important;
+}
+.mah-companies-page > div:nth-child(2) {
+  direction: ltr !important;
+  justify-content: flex-end !important;
+}
+.mah-companies-page > div:nth-child(3) {
+  direction: ltr !important;
+}
+.mah-companies-page > div:nth-child(3) > div:last-child {
+  direction: rtl !important;
+  align-items: flex-end !important;
+}
