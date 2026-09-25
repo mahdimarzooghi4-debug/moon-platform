@@ -32,12 +32,23 @@ button {
 }
 
 
-/* Generated Figma screen uses LTR for physical composition:
-   header actions left / logo right, hero image left / Persian copy right.
-   Keep layout geometry LTR even when the public shell is RTL. */
-body.mah-public-rtl #app .mah-project-rural-women-page,
-body.mah-public-rtl #app .mah-project-rural-women-page :where(div, section, article, header, footer, nav, main, form, ul, ol, li) {
+/* Generated Figma screen uses LTR only for the page's physical composition.
+   Do not force every nested box to LTR: inner cards and headings are Persian/RTL. */
+body.mah-public-rtl #app .mah-project-rural-women-page {
   direction: ltr !important;
+}
+
+/* Direct page sections preserve their exported physical position. */
+body.mah-public-rtl #app .mah-project-rural-women-page > div {
+  direction: ltr !important;
+}
+
+/* Inner content boxes are RTL so titles, labels and card contents align to the right. */
+body.mah-public-rtl #app .mah-project-rural-women-page > div > div,
+body.mah-public-rtl #app .mah-project-rural-women-page > div > div > div,
+body.mah-public-rtl #app .mah-project-rural-women-page :where(section, article, form, ul, ol, li) {
+  direction: rtl !important;
+  text-align: right;
 }
 
 /* Persian copy remains RTL/right-aligned inside that physical layout. */
@@ -47,5 +58,12 @@ body.mah-public-rtl #app .mah-project-rural-women-page :where(span, p, label, h1
 }
 
 body.mah-public-rtl #app .mah-project-rural-women-page :where(span, p, label, h1, h2, h3, h4, h5, h6):not([class~="text-center"]):not([dir="ltr"]) {
+  text-align: right !important;
+}
+
+/* Stretch text titles inside cards to the card's right edge. */
+body.mah-public-rtl #app .mah-project-rural-women-page :where(h1, h2, h3, h4, h5, h6, p, span)[class*="self-stretch"]:not([class~="text-center"]) {
+  width: 100% !important;
+  justify-content: flex-start !important;
   text-align: right !important;
 }
