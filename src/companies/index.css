@@ -278,3 +278,21 @@ button, input, select, textarea {
   direction: rtl !important;
   align-items: flex-end !important;
 }
+
+
+/* Physical right-edge lock for companies hero actions.
+   The generated layout is physically LTR, while the copy remains Persian RTL. */
+.mah-companies-page .mah-companies-hero-copy {
+  direction: ltr !important;
+  align-items: flex-end !important;
+}
+
+.mah-companies-page .mah-companies-hero-copy > :where(span, div) {
+  direction: rtl !important;
+}
+
+.mah-companies-page .mah-companies-hero-actions {
+  align-self: flex-end !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
+}
