@@ -7,7 +7,7 @@ export function ContactInfoColumn() {
         </span>
 
         <div className="flex flex-col gap-[16px] items-end self-stretch shrink-0 flex-nowrap relative z-[83]">
-          <div className="flex gap-[12px] justify-end items-center self-stretch shrink-0 flex-nowrap relative">
+          <div className="mah-contact-info-row flex gap-[12px] justify-end items-center self-stretch shrink-0 flex-nowrap relative">
             <span className="mah-contact-ltr h-[22px] shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[22px] text-[#17324d] relative text-right whitespace-nowrap">
               ۰۲۱-۶۶۴۸۵۳۷۴
             </span>
@@ -16,7 +16,7 @@ export function ContactInfoColumn() {
             </div>
           </div>
 
-          <div className="flex gap-[12px] justify-end items-center self-stretch shrink-0 flex-nowrap relative">
+          <div className="mah-contact-info-row flex gap-[12px] justify-end items-center self-stretch shrink-0 flex-nowrap relative">
             <span className="mah-contact-ltr h-[22px] shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[22px] text-[#17324d] relative text-left whitespace-nowrap">
               info@mahcsr.ir
             </span>
@@ -25,7 +25,7 @@ export function ContactInfoColumn() {
             </div>
           </div>
 
-          <div className="flex gap-[12px] justify-end items-start self-stretch shrink-0 flex-nowrap relative">
+          <div className="mah-contact-info-row flex gap-[12px] justify-end items-start self-stretch shrink-0 flex-nowrap relative">
             <span className="grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[22px] text-[#17324d] relative text-right">
               شنبه تا چهارشنبه، ساعت ۸:۰۰ الی ۱۷:۰۰
             </span>
@@ -34,7 +34,7 @@ export function ContactInfoColumn() {
             </div>
           </div>
 
-          <div className="flex gap-[12px] justify-end items-start self-stretch shrink-0 flex-nowrap relative">
+          <div className="mah-contact-info-row flex gap-[12px] justify-end items-start self-stretch shrink-0 flex-nowrap relative">
             <span className="flex w-[304px] min-h-[40px] justify-end items-start grow shrink-0 basis-0 font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#60758a] relative text-right">
               تهران، خیابان انقلاب، خیابان رازی، کوچه شهبازیان، پلاک ۲۲
             </span>
