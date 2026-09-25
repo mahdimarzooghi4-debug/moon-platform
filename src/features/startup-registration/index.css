@@ -19,7 +19,8 @@ body {
 
 .main-container {
   overflow: hidden;
-  direction: ltr;
+  direction: rtl;
+  text-align: right;
 }
 
 .main-container,

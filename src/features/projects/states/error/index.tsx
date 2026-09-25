@@ -85,7 +85,7 @@ export default function Main() {
           </div>
           <div className="flex w-[447px] flex-col gap-[8px] items-end shrink-0 flex-nowrap relative z-[33]">
             <span className="flex w-[274px] h-[50px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[32px] font-extrabold leading-[50px] text-[#17324d] relative text-right whitespace-nowrap z-[34]">
-              پروژه‌های اثر اجتماعی
+              پروژه‌های دارای اثر اجتماعی
             </span>
             <span className="flex w-[447px] h-[23px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[15px] font-normal leading-[23px] text-[#60758a] relative text-right whitespace-nowrap z-[35]">
               پروژه‌ای را انتخاب کنید که اثر آن از قبل مشخص، تأیید و
@@ -181,7 +181,7 @@ export default function Main() {
           <div className="flex w-[298px] h-[182px] flex-col gap-[14px] items-end shrink-0 flex-nowrap relative z-[71]">
             <div className="w-[210px] h-[70px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-24/1t4obeBtKN.png)] bg-cover bg-no-repeat relative z-[72]" />
             <span className="flex w-[298px] h-[44px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[13px] font-normal leading-[22px] text-[#e4ebf1] relative text-right z-[73]">
-              سامانه مشارکت در پروژه‌های اثر اجتماعی با مسیر مالی شفاف و اثر
+              سامانه مشارکت در پروژه‌های دارای اثر اجتماعی با مسیر مالی شفاف و اثر
               قابل‌اندازه‌گیری.
             </span>
           </div>
