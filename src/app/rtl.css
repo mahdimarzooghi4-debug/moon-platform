@@ -1,6 +1,22 @@
+/* Layout-direction architecture
+   -----------------------------
+   Generated public Figma screens are physically LTR (flex/grid placement),
+   while their Persian text is RTL. Do not put RTL direction on html/body/#app:
+   direction is inherited and reverses flex/grid geometry across the whole site.
+
+   Non-public flows (panels/auth/register) keep their RTL shell explicitly.
+   Public routes get RTL only on textual elements further below. */
 html,
-body,
+body {
+  direction: ltr;
+}
+
 #app {
+  direction: ltr;
+  text-align: initial;
+}
+
+body:not(.mah-public-rtl) #app {
   direction: rtl;
   text-align: right;
 }
@@ -325,8 +341,8 @@ input[type="tel"],
    containers. Generated public pages use physical LTR flex/grid geometry in
    several places, and overriding every div/section reverses those designs. */
 body.mah-public-rtl #app {
-  direction: rtl;
-  text-align: right;
+  direction: ltr;
+  text-align: initial;
 }
 
 body.mah-public-rtl #app .main-container :where(p, span, label, h1, h2, h3, h4, h5, h6, li, button, a):not([dir="ltr"]) {
