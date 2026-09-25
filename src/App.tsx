@@ -48,6 +48,12 @@ export default function App() {
     };
   }, []);
 
+  useEffect(() => {
+    const isPublicPage = !pathname.startsWith("/panel/");
+    document.body.classList.toggle("mah-public-rtl", isPublicPage);
+    return () => document.body.classList.remove("mah-public-rtl");
+  }, [pathname]);
+
   const isStartupTeamMemberPage = pathname === STARTUP_TEAM_MEMBER_PATH;
   const isProjectImpactDocumentsPage = pathname === PROJECT_IMPACT_DOCUMENTS_PATH;
   const isFundManagerPage = pathname.startsWith(FUND_MANAGER_PREFIX);
