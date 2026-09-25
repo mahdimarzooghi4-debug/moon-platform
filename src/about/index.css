@@ -176,3 +176,23 @@ button {
   direction: ltr !important;
   justify-content: center !important;
 }
+
+
+/* Align numbered financial-flow statements to one physical right edge. */
+.mah-about-page .mah-about-financial-steps {
+  align-items: stretch !important;
+}
+
+.mah-about-page .mah-about-financial-steps > div {
+  direction: ltr !important;
+  justify-content: flex-end !important;
+  width: 100% !important;
+}
+
+.mah-about-page .mah-about-financial-steps > div > span {
+  width: auto !important;
+  flex: 0 1 auto !important;
+  direction: rtl !important;
+  justify-content: flex-end !important;
+  text-align: right !important;
+}
