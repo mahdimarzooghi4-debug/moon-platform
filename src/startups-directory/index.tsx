@@ -943,36 +943,38 @@ export default function Main() {
               <span className="flex w-[217px] h-[34px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[22px] font-bold leading-[34px] text-[#17324d] relative text-right whitespace-nowrap z-[434]">
                 اثر اجتماعی قابل سنجش
               </span>
-              <span className="flex w-[857px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[22px] text-[#60758a] relative text-right whitespace-nowrap z-[435]">
-                برای هر پروژه، شاخص‌های مشخص و قابل اندازه‌گیری تعریف می‌شوند.
-                آزادسازی منابع پروژه پس از بررسی گزارش‌ها و تأیید تحقق این
-                شاخص‌ها انجام می‌شود.
+              <span className="flex w-[857px] min-h-[44px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[22px] text-[#60758a] relative text-right z-[435]">
+                <span>
+                  برای هر پروژه، شاخص‌های مشخص و قابل اندازه‌گیری تعریف می‌شوند.
+                  <br />
+                  آزادسازی منابع پروژه پس از بررسی گزارش‌ها و تأیید تحقق این شاخص‌ها انجام می‌شود.
+                </span>
               </span>
             </div>
             <div className="flex gap-[24px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[436]">
-              <div className="flex w-[180px] gap-[8px] items-center shrink-0 flex-nowrap relative z-[437]">
-                <span className="flex w-[156px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#17324d] relative text-right whitespace-nowrap z-[438]">
-                  پرداخت پس از تأیید خانه خلاق
-                </span>
+              <div dir="rtl" className="flex w-[180px] gap-[8px] items-center shrink-0 flex-nowrap relative z-[437]">
                 <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[439]">
                   <div className="w-[16px] h-[16px] shrink-0 bg-[url(/assets/shield-check.png)] bg-cover bg-no-repeat relative overflow-hidden z-[440]" />
                 </div>
-              </div>
-              <div className="flex w-[142px] gap-[8px] items-center shrink-0 flex-nowrap relative z-[441]">
-                <span className="flex w-[118px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#17324d] relative text-right whitespace-nowrap z-[442]">
-                  گزارش‌دهی مرحله‌ای اثر
+                <span className="flex w-[156px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#17324d] relative text-right whitespace-nowrap z-[438]">
+                  پرداخت پس از تأیید خانه خلاق
                 </span>
+              </div>
+              <div dir="rtl" className="flex w-[142px] gap-[8px] items-center shrink-0 flex-nowrap relative z-[441]">
                 <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[443]">
                   <div className="w-[16px] h-[16px] shrink-0 bg-[url(/assets/file-text.png)] bg-cover bg-no-repeat relative overflow-hidden z-[444]" />
                 </div>
-              </div>
-              <div className="flex w-[194px] gap-[8px] items-center shrink-0 flex-nowrap relative z-[445]">
-                <span className="flex w-[170px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#17324d] relative text-right whitespace-nowrap z-[446]">
-                  شاخص‌های مشخص پیش از اجرا
+                <span className="flex w-[118px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#17324d] relative text-right whitespace-nowrap z-[442]">
+                  گزارش‌دهی مرحله‌ای اثر
                 </span>
+              </div>
+              <div dir="rtl" className="flex w-[194px] gap-[8px] items-center shrink-0 flex-nowrap relative z-[445]">
                 <div className="flex w-[16px] h-[16px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[447]">
                   <div className="w-[16px] h-[16px] shrink-0 bg-[url(/assets/target.png)] bg-cover bg-no-repeat relative overflow-hidden z-[448]" />
                 </div>
+                <span className="flex w-[170px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#17324d] relative text-right whitespace-nowrap z-[446]">
+                  شاخص‌های مشخص پیش از اجرا
+                </span>
               </div>
             </div>
           </div>
