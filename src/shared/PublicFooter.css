@@ -178,8 +178,9 @@ html.moon-public-footer-active [class~="bg-[#111e30]"]:last-child {
   width: 18px;
   height: 18px;
   object-fit: contain;
-  opacity: 0.92;
-  filter: brightness(0) invert(1);
+  opacity: 1;
+  filter: none;
+  mix-blend-mode: normal;
 }
 
 .moon-footer-bottom {
@@ -231,4 +232,12 @@ html.moon-public-footer-active [class~="bg-[#111e30]"]:last-child {
 .moon-footer-socials .moon-footer-social-telegram {
   width: 17px;
   height: 17px;
+}
+
+
+.moon-footer-socials .moon-footer-social-telegram,
+.moon-footer-socials .moon-footer-social-bale {
+  filter: none !important;
+  mix-blend-mode: normal !important;
+  object-fit: contain;
 }
