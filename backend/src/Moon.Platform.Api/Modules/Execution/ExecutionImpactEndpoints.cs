@@ -142,6 +142,11 @@ public static class ExecutionImpactEndpoints
             CancellationToken cancellationToken) =>
             Results.Ok(await service.GetPublicOverviewAsync(cancellationToken)));
 
+        endpoints.MapGet("/api/v1/public/landing-kpis", async Task<IResult> (
+            IExecutionImpactService service,
+            CancellationToken cancellationToken) =>
+            Results.Ok(await service.GetPublicLandingKpisAsync(cancellationToken)));
+
         return endpoints;
     }
 
