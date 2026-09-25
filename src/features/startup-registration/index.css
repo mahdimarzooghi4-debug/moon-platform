@@ -82,3 +82,35 @@ textarea {
 .main-container .text-center {
   text-align: center !important;
 }
+
+/* Physical RTL layout: generated flex rows were exported in LTR visual order. */
+.main-container .flex-col.items-end {
+  align-items: flex-start !important;
+}
+
+.mah-registration-header,
+.mah-registration-title-row,
+.mah-registration-stepper,
+.mah-registration-field-row {
+  direction: ltr !important;
+}
+
+.mah-registration-header > *,
+.mah-registration-title-row > *,
+.mah-registration-stepper > *,
+.mah-registration-field-row > * {
+  direction: rtl !important;
+}
+
+.mah-registration-field-row > * {
+  text-align: right !important;
+}
+
+.mah-registration-radio-row {
+  direction: rtl !important;
+  justify-content: flex-start !important;
+}
+
+.main-container .flex.justify-end:not(.justify-center) {
+  justify-content: flex-start !important;
+}
