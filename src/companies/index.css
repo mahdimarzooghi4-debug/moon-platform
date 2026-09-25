@@ -296,3 +296,48 @@ button, input, select, textarea {
   margin-left: auto !important;
   margin-right: 0 !important;
 }
+
+
+/* Full physical-right lock for companies hero. */
+.mah-companies-page .mah-companies-hero-copy {
+  direction: ltr !important;
+  align-items: flex-end !important;
+  text-align: right !important;
+}
+
+.mah-companies-page .mah-companies-hero-copy > span,
+.mah-companies-page .mah-companies-hero-copy > div {
+  align-self: flex-end !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
+}
+
+.mah-companies-page .mah-companies-hero-copy > span {
+  direction: rtl !important;
+  justify-content: flex-end !important;
+  text-align: right !important;
+}
+
+.mah-companies-page .mah-companies-hero-actions {
+  direction: rtl !important;
+  justify-content: flex-start !important;
+  align-self: flex-end !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
+}
+
+.mah-companies-page .mah-companies-hero-secondary {
+  direction: ltr !important;
+  align-items: flex-end !important;
+  align-self: stretch !important;
+  text-align: right !important;
+}
+
+.mah-companies-page .mah-companies-hero-secondary > span {
+  direction: rtl !important;
+  align-self: flex-end !important;
+  justify-content: flex-end !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
+  text-align: right !important;
+}
