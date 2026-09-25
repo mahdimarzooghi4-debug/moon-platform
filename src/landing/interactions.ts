@@ -21,7 +21,7 @@ const actions: LandingAction[] = [
   { selector: '[class~="z-[31]"]', href: '/projects', label: 'شروع مشارکت' },
 
   { selector: '[class~="z-[92]"]', href: '/register/startup', label: 'ثبت‌نام استارتاپ' },
-  { selector: '[class~="z-[107]"]', href: '/register/company', label: 'ورود شرکت‌ها' },
+  { selector: '[class~="z-[107]"]', href: '/auth?accountType=company', label: 'ورود شرکت‌ها' },
   { selector: '[class~="z-[122]"]', href: '/projects', label: 'مشارکت فردی' },
 
   { selector: '[class~="z-[161]"]', href: '/projects', label: 'مشاهده و مشارکت' },

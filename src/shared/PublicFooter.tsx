@@ -1,6 +1,7 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import "./PublicFooter.css";
 
+const HIDDEN_PATHS = new Set(["/"]);
 const HIDDEN_PREFIXES = ["/panel/", "/auth", "/register/"];
 
 function usePathname() {
@@ -81,7 +82,7 @@ function useRouteContentReady() {
 }
 
 function shouldShowFooter(pathname: string) {
-  if (pathname.includes("/print")) return false;
+  if (HIDDEN_PATHS.has(pathname) || pathname.includes("/print")) return false;
   return !HIDDEN_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(prefix));
 }
 
