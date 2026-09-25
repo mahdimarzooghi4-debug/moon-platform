@@ -10,7 +10,7 @@ import { Section08 } from "./sections/Section08";
 
 export default function MahProjectRuralWomen() {
   return (
-    <div dir="ltr" className="main-container flex w-[1440px] flex-col items-center flex-nowrap bg-[#fcfbf8] relative overflow-hidden mx-auto my-0">
+    <div dir="ltr" className="main-container mah-project-rural-women-page flex w-[1440px] flex-col items-center flex-nowrap bg-[#fcfbf8] relative overflow-hidden mx-auto my-0">
       <Section01 />
       <Section02 />
       <Section03 />
