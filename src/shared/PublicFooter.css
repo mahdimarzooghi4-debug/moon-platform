@@ -224,3 +224,10 @@ html.moon-public-footer-active [class~="bg-[#111e30]"]:last-child {
     grid-column: auto;
   }
 }
+
+/* Supplied monochrome social marks read cleanly on the dark footer. */
+.moon-footer-socials .moon-footer-social-telegram,
+.moon-footer-socials .moon-footer-social-bale {
+  filter: invert(1);
+  mix-blend-mode: screen;
+}
