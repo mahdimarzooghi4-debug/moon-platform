@@ -176,3 +176,39 @@ textarea {
   justify-content: flex-start !important;
   align-self: flex-end !important;
 }
+
+
+/* Article body is Persian/RTL even though the page shell keeps its Figma
+   two-column physical LTR composition. */
+.mah-news-details-page .mah-news-article-body {
+  direction: rtl !important;
+  text-align: right !important;
+  align-items: stretch !important;
+}
+
+.mah-news-details-page .mah-news-article-body > div {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+.mah-news-details-page .mah-news-article-body > div.flex-col {
+  align-items: flex-end !important;
+}
+
+.mah-news-details-page .mah-news-article-body :where(span, p, h1, h2, h3, h4, h5, h6):not([class~="text-center"]) {
+  direction: rtl !important;
+  text-align: right !important;
+  justify-content: flex-start !important;
+}
+
+/* In RTL flex rows, flex-end lands on the physical left. Article action/link
+   rows therefore use flex-start so their buttons/links sit on the right. */
+.mah-news-details-page .mah-news-article-body .flex.justify-end {
+  justify-content: flex-start !important;
+}
+
+/* File/report action groups also start from the physical right. */
+.mah-news-details-page .mah-news-article-body > div > .flex,
+.mah-news-details-page .mah-news-article-body > div > div > .flex {
+  text-align: right;
+}
