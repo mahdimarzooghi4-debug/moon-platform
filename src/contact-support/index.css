@@ -119,7 +119,7 @@ button {
 /* Final contact/support RTL correction, scoped so other generated page CSS
    cannot reverse the physical alignment. */
 .mah-contact-page {
-  direction: ltr !important;
+  direction: rtl !important;
   text-align: right !important;
 }
 .mah-contact-page :where(span,p,label,a,button,input,textarea,select,h1,h2,h3,h4) {
