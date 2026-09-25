@@ -861,7 +861,7 @@ export default function Main() {
               استارتاپ‌ها چگونه وارد سامانه ماه می‌شوند؟
             </span>
           </div>
-          <div className="flex gap-[20px] justify-end items-end self-stretch shrink-0 flex-nowrap relative z-[402]">
+          <div className="mah-directory-process-row flex gap-[20px] justify-end items-end self-stretch shrink-0 flex-nowrap relative z-[402]">
             <div className="flex pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col gap-[12px] items-end grow shrink-0 basis-0 flex-nowrap bg-[#fff] rounded-[16px] border-solid border border-[#e4ebf1] relative z-[403]">
               <div className="flex w-[132px] justify-between items-center shrink-0 flex-nowrap relative z-[404]">
                 <span className="flex w-[102px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[405]">
@@ -930,7 +930,7 @@ export default function Main() {
             پروژه به‌صورت مستقل ارزیابی می‌شود.
           </span>
         </div>
-        <div className="flex pt-[32px] pr-[32px] pb-[32px] pl-[32px] gap-[40px] items-start self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[24px] border-solid border border-[#2094e3] relative z-[428]">
+        <div className="mah-directory-impact-row flex pt-[32px] pr-[32px] pb-[32px] pl-[32px] gap-[40px] items-start self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[24px] border-solid border border-[#2094e3] relative z-[428]">
           <div className="flex w-[300px] flex-col gap-[16px] justify-center items-start shrink-0 flex-nowrap relative z-[429]">
             <div className="flex w-[197px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#2094e3] rounded-[12px] relative z-[430]">
               <span className="flex w-[157px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#fff] relative text-center whitespace-nowrap z-[431]">
