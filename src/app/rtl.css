@@ -321,12 +321,17 @@ input[type="tel"],
 
 
 /* Public-site RTL baseline.
-   Generated pages may carry local LTR directions from design export; this rule
-   makes Persian public pages consistently RTL without touching authenticated panels. */
-body.mah-public-rtl #app,
-body.mah-public-rtl #app .main-container,
-body.mah-public-rtl #app .main-container :where(div, section, article, header, footer, nav, main, form, ul, ol, li, p, span, label, h1, h2, h3, h4, h5, h6, button, a) {
+   Keep Persian text RTL/right-aligned, but do not force direction on layout
+   containers. Generated public pages use physical LTR flex/grid geometry in
+   several places, and overriding every div/section reverses those designs. */
+body.mah-public-rtl #app {
+  direction: rtl;
+  text-align: right;
+}
+
+body.mah-public-rtl #app .main-container :where(p, span, label, h1, h2, h3, h4, h5, h6, li, button, a):not([dir="ltr"]) {
   direction: rtl !important;
+  unicode-bidi: plaintext;
 }
 
 body.mah-public-rtl #app .main-container :where(p, span, label, h1, h2, h3, h4, h5, h6, li):not([class~="text-center"]):not([dir="ltr"]) {
