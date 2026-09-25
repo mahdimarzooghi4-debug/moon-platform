@@ -364,7 +364,7 @@ export default function MahForStartups() {
             یک پروژه قابل ارزیابی چه اجزایی دارد؟
           </span>
           <span className="h-[22px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-center whitespace-nowrap z-[136]">
-            معیارهای هشت‌گانه در تدوین پروپوزال پروژه‌های اثر اجتماعی
+            معیارهای هشت‌گانه در تدوین پروپوزال پروژه‌های دارای اثر اجتماعی
           </span>
         </div>
         <div className="self-stretch shrink-0 relative z-[137]">
@@ -1123,7 +1123,7 @@ export default function MahForStartups() {
       </div>
       <div className="flex pt-[120px] pr-[120px] pb-[80px] pl-[120px] flex-col gap-[24px] items-center self-stretch shrink-0 flex-nowrap bg-[#fcfbf8] border-solid border-b border-b-[#e4ebf1] relative z-[451]">
         <span className="h-[50px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[32px] font-extrabold leading-[50px] text-[#17324d] relative text-center whitespace-nowrap z-[452]">
-          پروژه اثر اجتماعی خود را در سامانه ماه ثبت کنید
+          پروژه دارای اثر اجتماعی خود را در سامانه ماه ثبت کنید
         </span>
         <span className="h-[22px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-center whitespace-nowrap z-[453]">
           فرصتی برای توسعه راه‌کارهای خلاق کارآفرینی با تکیه بر نظارت اصولی و
@@ -1231,7 +1231,7 @@ export default function MahForStartups() {
           <div className="flex w-[298px] h-[182px] flex-col gap-[14px] items-end shrink-0 flex-nowrap relative z-[487]">
             <div className="w-[210px] h-[70px] shrink-0 bg-[url(/assets/codia/uFBDgjfaPO.png)] bg-cover bg-no-repeat relative z-[488]" />
             <span className="flex w-[298px] h-[44px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[13px] font-normal leading-[22px] text-[#e4ebf1] relative text-right z-[489]">
-              سامانه مشارکت در پروژه‌های اثر اجتماعی با مسیر مالی شفاف و اثر
+              سامانه مشارکت در پروژه‌های دارای اثر اجتماعی با مسیر مالی شفاف و اثر
               قابل‌اندازه‌گیری.
             </span>
           </div>
