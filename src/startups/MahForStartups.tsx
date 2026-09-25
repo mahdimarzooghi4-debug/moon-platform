@@ -66,7 +66,7 @@ export default function MahForStartups() {
               برمی‌دارند. با ثبت فرآیندها، پروژه‌های کارآفرینی شما پس از
               صحه‌گذاری به منبع پایدار مسئولیت اجتماعی متصل می‌گردند.
             </span>
-            <div className="flex w-[316px] gap-[16px] justify-end items-center shrink-0 flex-nowrap relative z-[25]">
+            <div className="mah-startups-hero-actions flex w-[316px] gap-[16px] justify-end items-center self-end shrink-0 flex-nowrap relative z-[25]">
               <div className="flex w-[169px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[26]">
                 <span className="flex w-[129px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#2094e3] relative text-center whitespace-nowrap z-[27]">
                   پیگیری وضعیت ثبت‌نام
@@ -833,7 +833,7 @@ export default function MahForStartups() {
             سامانه ماه
           </span>
         </div>
-        <div className="flex gap-[48px] items-center self-stretch shrink-0 flex-nowrap relative z-[330]">
+        <div className="mah-startups-public-profile-row flex gap-[48px] items-center self-stretch shrink-0 flex-nowrap relative z-[330]">
           <div className="flex flex-col gap-[20px] items-start grow shrink-0 basis-0 flex-nowrap relative z-[331]">
             <span className="h-[28px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[18px] font-bold leading-[28px] text-[#17324d] relative text-right whitespace-nowrap z-[332]">
               شفافیت داده؛ چه اطلاعاتی منتشر می‌شوند؟
@@ -881,7 +881,7 @@ export default function MahForStartups() {
               </div>
             </div>
           </div>
-          <div className="flex w-[480px] pt-[32px] pr-[32px] pb-[32px] pl-[32px] flex-col gap-[20px] items-end shrink-0 flex-nowrap bg-[#fff] rounded-[24px] border-solid border-2 border-[#2094e3] relative z-[348]">
+          <div className="mah-startups-green-card flex w-[480px] pt-[32px] pr-[32px] pb-[32px] pl-[32px] flex-col gap-[20px] items-end shrink-0 flex-nowrap bg-[#fff] rounded-[24px] border-solid border-2 border-[#2094e3] relative z-[348]">
             <div className="flex gap-[16px] justify-end items-center self-stretch shrink-0 flex-nowrap relative z-[349]">
               <div className="flex w-[178px] flex-col gap-[4px] items-end shrink-0 flex-nowrap relative z-[350]">
                 <div className="flex w-[76px] gap-[8px] items-center shrink-0 flex-nowrap relative z-[351]">
