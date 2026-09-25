@@ -55,7 +55,7 @@ export default function Main() {
           </span>
         </div>
         <div className="flex flex-col gap-[20px] items-center self-stretch shrink-0 flex-nowrap relative z-20">
-          <span className="flex w-[850px] h-[48px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[32px] font-extrabold leading-[48px] text-[#17324d] relative text-center whitespace-nowrap z-[21]">
+          <span className="mah-news-details-title flex w-[850px] h-[48px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[32px] font-extrabold leading-[48px] text-[#17324d] relative text-right whitespace-nowrap z-[21]">
             گزارش اثر اجتماعی سامانه ماه در سال ۱۴۰۴ منتشر شد
           </span>
           <span className="flex w-[800px] h-[52px] justify-center items-start shrink-0 font-['Vazirmatn'] text-[15px] font-normal leading-[26px] text-[#60758a] relative text-center z-[22]">
