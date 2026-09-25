@@ -181,3 +181,61 @@ button {
   justify-content: space-between !important;
 }
 .mah-contact-page .mah-support-email-label > span { direction: rtl !important; }
+
+
+/* Full contact/support page RTL alignment.
+   Keep the generated physical section layout intact, but make every Persian
+   content block use a single right-aligned axis. */
+.mah-contact-page {
+  text-align: right !important;
+}
+
+.mah-contact-page :where(span, p, label, h1, h2, h3, h4, h5, h6, a, button, input, textarea, select):not(.mah-contact-ltr) {
+  direction: rtl !important;
+  text-align: right !important;
+  unicode-bidi: plaintext;
+}
+
+.mah-contact-page .flex-col {
+  text-align: right !important;
+}
+
+.mah-contact-page .flex-col.items-start,
+.mah-contact-page .flex-col.items-center {
+  align-items: flex-end !important;
+}
+
+.mah-contact-page .flex-col > :where(span, p, label, h1, h2, h3, h4, h5, h6) {
+  align-self: stretch;
+  width: 100% !important;
+  justify-content: flex-start !important;
+  text-align: right !important;
+}
+
+/* Horizontal rows carrying Persian labels should flow from the physical right. */
+.mah-contact-page .flex.justify-between,
+.mah-contact-page .flex.justify-end {
+  direction: rtl !important;
+}
+
+/* Form labels/fields and FAQ copy use the same right edge. */
+.mah-contact-page #mah-support-form :where(label, span, input, textarea, select),
+.mah-contact-page [class*="z-[238]"] :where(span, p) {
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+/* Keep controls whose label is intentionally centered visually centered. */
+.mah-contact-page :where(button, [data-mah-contact-href], [data-mah-contact-scroll], [data-mah-contact-form-action]) > span,
+.mah-contact-page .text-center {
+  text-align: center !important;
+  justify-content: center !important;
+}
+
+/* Explicit LTR contact values remain untouched. */
+.mah-contact-page .mah-contact-ltr,
+.mah-contact-page .mah-contact-ltr * {
+  direction: ltr !important;
+  text-align: left !important;
+  unicode-bidi: isolate !important;
+}
