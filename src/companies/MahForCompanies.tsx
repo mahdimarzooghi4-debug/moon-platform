@@ -79,7 +79,7 @@ export default function MahForCompanies() {
               </span>
             </div>
           </div>
-          <div className="flex flex-col gap-[6px] items-end self-stretch shrink-0 flex-nowrap relative z-30">
+          <div className="mah-companies-hero-secondary flex flex-col gap-[6px] items-end self-stretch shrink-0 flex-nowrap relative z-30">
             <span className="flex w-[185px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#2094e3] relative text-right underline whitespace-nowrap z-[31]">
               قبلاً ثبت‌نام کرده‌اید؟ ورود سازمانی
             </span>
