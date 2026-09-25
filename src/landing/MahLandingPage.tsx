@@ -673,7 +673,7 @@ export default function Main() {
               آخرین اخبار و روایت‌های اثر
             </span>
             <span className="h-[25px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[16px] font-normal leading-[25px] text-[#60758a] relative text-center whitespace-nowrap z-[268]">
-              تازه‌ترین خبرها، گزارش‌ها و نتایج پروژه‌های اجتماعی ماه
+              تازه‌ترین خبرها، گزارش‌ها و نتایج پروژه‌های دارای اثر اجتماعی ماه
             </span>
           </div>
         </div>
@@ -853,7 +853,11 @@ export default function Main() {
             </span>
           </div>
           <div className="flex w-[298px] h-[182px] flex-col gap-[14px] items-end shrink-0 flex-nowrap relative z-[342]">
-            <div className="w-[210px] h-[70px] shrink-0 bg-[url(/assets/codia/4T7A4AiY30.png)] bg-cover bg-no-repeat relative z-[343]" />
+            <div className="w-[210px] h-[70px] shrink-0 bg-[url(/assets/codia/4T7A4AiY30.png)] bg-cover bg-no-repeat relative z-[343]">
+              <span className="absolute right-[72px] bottom-[2px] z-[2] flex w-[96px] h-[9px] items-center justify-center bg-[#111e30] font-['Vazirmatn'] text-[6.5px] font-medium leading-[9px] text-white whitespace-nowrap">
+                مسئولیت اجتماعی هوشمند
+              </span>
+            </div>
             <span className="flex w-[298px] h-[44px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[13px] font-normal leading-[22px] text-[#e4ebf1] relative text-right z-[344]">
               سامانه مشارکت در پروژه‌های دارای اثر اجتماعی با مسیر مالی شفاف و اثر
               قابل‌اندازه‌گیری.
