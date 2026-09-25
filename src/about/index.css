@@ -122,3 +122,42 @@ button {
   direction: rtl !important;
   text-align: right !important;
 }
+
+
+/* Final About-page RTL correction. The generated DOM is physically LTR, while
+   Persian content is RTL. This keeps logo/nav, hero, cards and CTAs on the
+   expected right side instead of being mirrored to the left. */
+.mah-about-page {
+  direction: ltr !important;
+  text-align: right !important;
+}
+.mah-about-page :where(span,p,label,a,button,input,textarea,select,h1,h2,h3,h4) {
+  direction: rtl !important;
+  unicode-bidi: plaintext;
+}
+.mah-about-page [class*="text-right"] { text-align: right !important; }
+.mah-about-page [class*="text-center"] { text-align: center !important; }
+.mah-about-page .flex-col.items-end { align-items: flex-end !important; }
+.mah-about-page .flex.justify-end { justify-content: flex-end !important; }
+.mah-about-page > .mah-about-header,
+.mah-about-page .mah-about-header > div:last-child,
+.mah-about-page .mah-about-header > div:last-child > div:first-child {
+  direction: ltr !important;
+}
+.mah-about-page .mah-about-header > div:last-child > div:first-child > * {
+  direction: rtl !important;
+}
+.mah-about-page > .mah-about-breadcrumb {
+  direction: ltr !important;
+  justify-content: flex-end !important;
+}
+.mah-about-page > .mah-about-hero {
+  direction: ltr !important;
+  justify-content: space-between !important;
+}
+.mah-about-page > .mah-about-hero > div:last-child,
+.mah-about-page .mah-about-hero > div:last-child .flex-col.items-end {
+  direction: rtl !important;
+  align-items: flex-end !important;
+  text-align: right !important;
+}
