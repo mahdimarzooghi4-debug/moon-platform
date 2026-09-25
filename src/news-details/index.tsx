@@ -55,7 +55,7 @@ export default function Main() {
           </span>
         </div>
         <div className="flex flex-col gap-[20px] items-center self-stretch shrink-0 flex-nowrap relative z-20">
-          <span className="flex w-[850px] h-[48px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[32px] font-extrabold leading-[48px] text-[#17324d] relative text-center whitespace-nowrap z-[21]">
+          <span className="mah-news-details-title flex w-[850px] h-[48px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[32px] font-extrabold leading-[48px] text-[#17324d] relative text-right whitespace-nowrap z-[21]">
             گزارش اثر اجتماعی سامانه ماه در سال ۱۴۰۴ منتشر شد
           </span>
           <span className="flex w-[800px] h-[52px] justify-center items-start shrink-0 font-['Vazirmatn'] text-[15px] font-normal leading-[26px] text-[#60758a] relative text-center z-[22]">
@@ -239,7 +239,7 @@ export default function Main() {
             </div>
           </div>
         </div>
-        <div className="flex w-[818px] flex-col gap-[40px] items-start shrink-0 flex-nowrap relative z-[95]">
+        <div className="mah-news-article-body flex w-[818px] flex-col gap-[40px] items-start shrink-0 flex-nowrap relative z-[95]">
           <div className="flex pt-[24px] pr-[24px] pb-[24px] pl-[24px] flex-col gap-[16px] items-start self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[16px] border-solid border border-[#e4ebf1] relative z-[96]">
             <span className="h-[28px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[18px] font-bold leading-[28px] text-[#17324d] relative text-right whitespace-nowrap z-[97]">
               خلاصه گزارش
