@@ -187,9 +187,13 @@ button {
 
 /* Process cards are authored 4→1 in the exported DOM. Render the row LTR so
    step 1 lands on the physical right, while each card remains RTL. */
-.mah-startups-directory-page .mah-directory-process-row,
-.mah-startups-directory-page .mah-directory-impact-row {
+.mah-startups-directory-page .mah-directory-process-row {
   direction: ltr !important;
+}
+
+.mah-startups-directory-page .mah-directory-impact-row {
+  direction: rtl !important;
+  justify-content: flex-start !important;
 }
 
 .mah-startups-directory-page .mah-directory-process-row > *,
@@ -217,4 +221,14 @@ button {
 
 .mah-startups-directory-page .mah-directory-impact-row > div:last-child {
   align-items: flex-start !important;
+  text-align: right !important;
+}
+
+.mah-startups-directory-page .mah-directory-impact-row > div:first-child {
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+}
+
+.mah-startups-directory-page .mah-directory-impact-row .flex.justify-end {
+  justify-content: flex-start !important;
 }
