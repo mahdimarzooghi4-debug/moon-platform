@@ -115,7 +115,7 @@ export default function Main() {
         </div>
       </div>
       <div className="flex pt-[48px] pr-[120px] pb-[48px] pl-[120px] flex-col items-center self-stretch shrink-0 flex-nowrap relative z-[46]">
-        <div className="flex pt-[32px] pr-[32px] pb-[32px] pl-[32px] gap-[32px] items-start self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[24px] border-solid border border-[#e4ebf1] relative z-[47]">
+        <div className="mah-news-featured-card flex pt-[32px] pr-[32px] pb-[32px] pl-[32px] gap-[32px] items-start self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[24px] border-solid border border-[#e4ebf1] relative z-[47]">
           <div className="w-[520px] h-[320px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-24/7rt5oVLKOH.png)] bg-cover bg-no-repeat rounded-[16px] relative z-[48]" />
           <div className="flex flex-col gap-[16px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[49]">
             <span className="h-[38px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[24px] font-extrabold leading-[37.5px] text-[#17324d] relative text-right whitespace-nowrap z-50">
