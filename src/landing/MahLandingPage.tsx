@@ -171,7 +171,7 @@ export default function Main() {
           </div>
           <div className="flex w-[211px] pt-[18px] pr-[18px] pb-[18px] pl-[18px] flex-col gap-[6px] items-end shrink-0 flex-nowrap rounded-[16px] border-solid border border-[#e5edf7] relative overflow-hidden shadow-[0_4px_12px_0_rgba(12,30,63,0.05)] z-[67]">
             <div className="flex w-[36px] h-[36px] flex-col justify-center items-center shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[18px] relative overflow-hidden z-[68]">
-              <div className="w-[21.171px] h-[22.271px] shrink-0 bg-[url(/assets/codia/ZuP4QiPSK8.png)] bg-[length:100%_100%] bg-no-repeat relative z-[69]" />
+              <div className="w-[21.171px] h-[22.271px] shrink-0 bg-[url(/assets/codia/MtRTcVQGjH.png)] bg-[length:100%_100%] bg-no-repeat relative z-[69]" />
             </div>
             <div className="flex w-[125px] gap-[6px] items-baseline shrink-0 flex-nowrap relative overflow-hidden z-[70]">
               <span className="flex w-[49px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[71]">
