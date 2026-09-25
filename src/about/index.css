@@ -161,3 +161,12 @@ button {
   align-items: flex-end !important;
   text-align: right !important;
 }
+
+/* Keep the photo on the left and anchor every hero control to the right. */
+.mah-about-page > .mah-about-hero > div:last-child { align-items: flex-end !important; margin-left: auto !important; margin-right: 0 !important; }
+.mah-about-page > .mah-about-hero > div:last-child > * { align-self: flex-end !important; margin-left: auto !important; margin-right: 0 !important; text-align: right !important; }
+.mah-about-page > .mah-about-hero > div:last-child > div:first-child > * { align-self: flex-end !important; margin-left: auto !important; margin-right: 0 !important; text-align: right !important; }
+.mah-about-page > .mah-about-hero > div:last-child > div:first-child { align-items: flex-end !important; }
+.mah-about-page > .mah-about-hero > div:last-child > div:nth-child(3),
+.mah-about-page > .mah-about-hero > div:last-child > div:nth-child(4) { justify-content: flex-end !important; direction: rtl !important; }
+.mah-about-page > .mah-about-hero > div:last-child span:not(.text-center) { text-align: right !important; justify-content: flex-end !important; }

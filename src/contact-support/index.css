@@ -149,3 +149,16 @@ button {
 .mah-contact-page #mah-support-form .flex-col.items-end {
   align-items: flex-end !important;
 }
+
+/* Contact columns retain the Figma placement: info left, request form right. */
+.mah-contact-page .mah-contact-details { direction: ltr !important; justify-content: space-between !important; }
+.mah-contact-page .mah-contact-details > :first-child { direction: rtl !important; text-align: right !important; }
+.mah-contact-page .mah-contact-details > :last-child { direction: rtl !important; text-align: right !important; min-width: 0; }
+.mah-contact-page .mah-contact-details > :last-child .flex-col.items-start { align-items: flex-end !important; }
+.mah-contact-page .mah-contact-details > :last-child .flex-col.items-start > span,
+.mah-contact-page .mah-contact-details > :last-child .flex-col.items-start > div { text-align: right !important; }
+.mah-contact-page .mah-contact-details > :last-child .flex-col.items-start > div:not(.self-stretch) { align-self: stretch; }
+.mah-contact-page .mah-contact-details :where(input,textarea,select,[contenteditable]) { direction: rtl !important; text-align: right !important; }
+.mah-contact-page .mah-contact-details .mah-contact-ltr { direction: ltr !important; }
+.mah-contact-page .mah-contact-details > :first-child > div:last-child > div:first-child { justify-content: flex-end !important; }
+.mah-contact-page .mah-contact-details > :last-child > div:nth-child(2) > div:nth-last-child(3) { direction: rtl !important; }
