@@ -321,7 +321,7 @@ export default function Main() {
             این اکوسیستم است.
           </span>
         </div>
-        <div className="flex gap-[24px] justify-end items-start self-stretch shrink-0 flex-wrap relative z-[119]">
+        <div className="mah-about-stakeholder-grid flex gap-[24px] justify-end items-start self-stretch shrink-0 flex-wrap relative z-[119]">
           <div className="flex w-[384px] pt-[32px] pr-[32px] pb-[32px] pl-[32px] flex-col gap-[24px] items-end flex-nowrap bg-[#fff] rounded-[20px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[120]">
             <span className="h-[31px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[20px] font-extrabold leading-[31px] text-[#17324d] relative text-right whitespace-nowrap z-[121]">
               افراد حقیقی
@@ -432,11 +432,8 @@ export default function Main() {
           </div>
           <div className="flex w-[384px] pt-[32px] pr-[32px] pb-[32px] pl-[32px] flex-col gap-[24px] items-end flex-nowrap bg-[#fff] rounded-[20px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[198]">
             <div className="w-[320px] self-stretch shrink-0 font-['Vazirmatn'] text-[20px] font-extrabold leading-[31px] relative text-right whitespace-nowrap z-[199]">
-              <span className="font-['Vazirmatn'] text-[20px] font-extrabold leading-[31.25px] text-[#17324d] relative text-right">
-                کمیته امداد امام خمینی
-              </span>
-              <span className="font-['Vazirmatn'] text-[10px] font-extrabold leading-[31.25px] text-[#17324d] relative text-right">
-                (ره)
+              <span className="font-['Vazirmatn'] text-[20px] font-extrabold leading-[31.25px] text-[#17324d] relative text-right" dir="rtl">
+                کمیته امداد امام خمینی <small className="text-[10px]">(ره)</small>
               </span>
             </div>
             <div className="flex flex-col gap-[12px] items-start self-stretch shrink-0 flex-nowrap relative z-[200]">

@@ -170,3 +170,9 @@ button {
 .mah-about-page > .mah-about-hero > div:last-child > div:nth-child(3),
 .mah-about-page > .mah-about-hero > div:last-child > div:nth-child(4) { justify-content: flex-end !important; direction: rtl !important; }
 .mah-about-page > .mah-about-hero > div:last-child span:not(.text-center) { text-align: right !important; justify-content: flex-end !important; }
+
+/* Preserve card order and place the second row against the right edge. */
+.mah-about-page .mah-about-stakeholder-grid {
+  direction: ltr !important;
+  justify-content: flex-end !important;
+}
