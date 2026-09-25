@@ -240,3 +240,14 @@ public sealed record PublicImpactOverviewView(
     int ReportCount,
     DateTimeOffset? LastPublishedAtUtc,
     IReadOnlyList<PublicImpactMetricAggregateView> Metrics);
+
+public sealed record PublicLandingFundingView(
+    string Currency,
+    long AmountMinor);
+
+public sealed record PublicLandingKpisView(
+    int StartupCount,
+    int ActiveProjectCount,
+    decimal BeneficiaryCount,
+    decimal JobsCreated,
+    IReadOnlyList<PublicLandingFundingView> Funding);
