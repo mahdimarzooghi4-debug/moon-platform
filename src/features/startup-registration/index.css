@@ -40,7 +40,7 @@ body {
 
 .main-container input[type="url"],
 .main-container input[type="email"] {
-  direction: rtl;
+  direction: ltr;
   text-align: right;
 }
 
