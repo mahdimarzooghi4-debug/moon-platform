@@ -24,8 +24,9 @@ body {
 }
 
 .main-container {
-  direction: ltr;
+  direction: rtl;
   overflow: hidden;
+  text-align: right;
 }
 
 .main-container,
