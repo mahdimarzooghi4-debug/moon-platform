@@ -768,7 +768,7 @@ export default function Main() {
               یکجا یا بدون پشتوانه اجرایی به استارتاپ‌ها پرداخت نمی‌شود.
             </span>
           </div>
-          <div className="flex flex-col gap-[12px] items-start self-stretch shrink-0 flex-nowrap relative z-[314]">
+          <div className="mah-about-financial-steps flex flex-col gap-[12px] items-start self-stretch shrink-0 flex-nowrap relative z-[314]">
             <div className="flex gap-[12px] justify-end items-center self-stretch shrink-0 flex-nowrap relative z-[315]">
               <span className="flex w-[283px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[316]">
                 واریز وجه حامی به حساب رسمی امانات کمیته امداد
