@@ -943,10 +943,12 @@ export default function Main() {
               <span className="flex w-[217px] h-[34px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[22px] font-bold leading-[34px] text-[#17324d] relative text-right whitespace-nowrap z-[434]">
                 اثر اجتماعی قابل سنجش
               </span>
-              <span className="flex w-[857px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[22px] text-[#60758a] relative text-right whitespace-nowrap z-[435]">
-                برای هر پروژه، شاخص‌های مشخص و قابل اندازه‌گیری تعریف می‌شوند.
-                آزادسازی منابع پروژه پس از بررسی گزارش‌ها و تأیید تحقق این
-                شاخص‌ها انجام می‌شود.
+              <span className="flex w-[857px] min-h-[44px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[22px] text-[#60758a] relative text-right z-[435]">
+                <span>
+                  برای هر پروژه، شاخص‌های مشخص و قابل اندازه‌گیری تعریف می‌شوند.
+                  <br />
+                  آزادسازی منابع پروژه پس از بررسی گزارش‌ها و تأیید تحقق این شاخص‌ها انجام می‌شود.
+                </span>
               </span>
             </div>
             <div className="flex gap-[24px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[436]">
