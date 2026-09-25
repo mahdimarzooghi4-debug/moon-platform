@@ -71,3 +71,15 @@ input,
 textarea {
   unicode-bidi: plaintext;
 }
+
+.main-container {
+  text-align: right;
+}
+
+.main-container :where(span, p, label, input, select, textarea) {
+  text-align: right;
+}
+
+.main-container .text-center {
+  text-align: center !important;
+}
