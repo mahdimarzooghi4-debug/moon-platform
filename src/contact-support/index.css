@@ -114,3 +114,38 @@ textarea,
 button {
   outline: 0;
 }
+
+
+/* Final contact/support RTL correction, scoped so other generated page CSS
+   cannot reverse the physical alignment. */
+.mah-contact-page {
+  direction: ltr !important;
+  text-align: right !important;
+}
+.mah-contact-page :where(span,p,label,a,button,input,textarea,select,h1,h2,h3,h4) {
+  direction: rtl !important;
+  unicode-bidi: plaintext;
+}
+.mah-contact-page [class*="text-right"] { text-align: right !important; }
+.mah-contact-page [class*="text-center"] { text-align: center !important; }
+.mah-contact-page .flex-col.items-end { align-items: flex-end !important; }
+.mah-contact-page .flex.justify-end { justify-content: flex-end !important; }
+.mah-contact-page > div:first-child,
+.mah-contact-page > div:first-child > div:last-child,
+.mah-contact-page > div:first-child > div:last-child > div:first-child {
+  direction: ltr !important;
+}
+.mah-contact-page > div:first-child > div:last-child > div:first-child > * {
+  direction: rtl !important;
+}
+.mah-contact-page > div:nth-child(2) {
+  direction: ltr !important;
+  justify-content: flex-end !important;
+}
+.mah-contact-page #mah-support-form {
+  direction: rtl !important;
+  text-align: right !important;
+}
+.mah-contact-page #mah-support-form .flex-col.items-end {
+  align-items: flex-end !important;
+}

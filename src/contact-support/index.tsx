@@ -17,7 +17,7 @@ export default function Main() {
   }
 
   return (
-    <div className="main-container flex w-[1440px] flex-col items-center flex-nowrap bg-[#fcfbf8] relative overflow-hidden mx-auto my-0">
+    <div className="main-container mah-contact-page flex w-[1440px] flex-col items-center flex-nowrap bg-[#fcfbf8] relative overflow-hidden mx-auto my-0">
       <MainNavigationSection />
       <BreadcrumbSection />
       <SupportHeroSection />

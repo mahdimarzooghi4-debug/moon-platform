@@ -152,3 +152,35 @@ textarea,
 button {
   outline: 0;
 }
+
+
+/* Final page-level RTL correction. Keep generated physical geometry LTR while
+   Persian content and all right-anchored controls remain visually RTL. */
+.mah-startups-page {
+  direction: ltr !important;
+  text-align: right !important;
+}
+.mah-startups-page :where(span,p,label,a,button,input,textarea,select,h1,h2,h3,h4) {
+  direction: rtl !important;
+  unicode-bidi: plaintext;
+}
+.mah-startups-page [class*="text-right"] { text-align: right !important; }
+.mah-startups-page [class*="text-center"] { text-align: center !important; }
+.mah-startups-page .flex-col.items-end { align-items: flex-end !important; }
+.mah-startups-page .flex.justify-end { justify-content: flex-end !important; }
+.mah-startups-page > div:first-child,
+.mah-startups-page > div:first-child > div:last-child,
+.mah-startups-page > div:first-child > div:last-child > div:first-child {
+  direction: ltr !important;
+}
+.mah-startups-page > div:first-child > div:last-child > div:first-child > * {
+  direction: rtl !important;
+}
+.mah-startups-page > div:nth-child(2) { align-items: flex-end !important; }
+.mah-startups-page > div:nth-child(2) > div:nth-child(2) {
+  direction: ltr !important;
+}
+.mah-startups-page > div:nth-child(2) > div:nth-child(2) > div:last-child {
+  direction: rtl !important;
+  align-items: flex-end !important;
+}
