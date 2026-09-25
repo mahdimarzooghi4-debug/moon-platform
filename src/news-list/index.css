@@ -43,32 +43,32 @@ textarea {
  * the left, navigation on the right, featured image on the left, and card
  * order left-to-right) while Persian copy itself remains RTL/right-aligned.
  * Scope the correction to this generated screen so other pages are untouched. */
-.main-container:has(> :nth-child(2) [class*="w-[434px]"]) {
+.mah-news-list-page {
   direction: ltr;
   text-align: right;
 }
 
-.main-container:has(> :nth-child(2) [class*="w-[434px]"]) span,
-.main-container:has(> :nth-child(2) [class*="w-[434px]"]) p,
-.main-container:has(> :nth-child(2) [class*="w-[434px]"]) input,
-.main-container:has(> :nth-child(2) [class*="w-[434px]"]) textarea {
+.mah-news-list-page span,
+.mah-news-list-page p,
+.mah-news-list-page input,
+.mah-news-list-page textarea {
   direction: rtl;
   unicode-bidi: plaintext;
 }
 
 /* Header, internal hero and trust bar use bottom borders in Figma. */
-.main-container:has(> :nth-child(2) [class*="w-[434px]"]) > :nth-child(1),
-.main-container:has(> :nth-child(2) [class*="w-[434px]"]) > :nth-child(2),
-.main-container:has(> :nth-child(2) [class*="w-[434px]"]) > :nth-child(3) {
+.mah-news-list-page > :nth-child(1),
+.mah-news-list-page > :nth-child(2),
+.mah-news-list-page > :nth-child(3) {
   border-top: 0 !important;
   border-bottom: 1px solid #e4ebf1 !important;
 }
 
 /* The generated source lost the three-column grid wrappers. Restore the exact
  * 3-column / 24px layout used by Figma for all three news rows. */
-.main-container:has(> :nth-child(2) [class*="w-[434px]"]) > :nth-child(8) > :nth-child(1),
-.main-container:has(> :nth-child(2) [class*="w-[434px]"]) > :nth-child(8) > :nth-child(2),
-.main-container:has(> :nth-child(2) [class*="w-[434px]"]) > :nth-child(8) > :nth-child(4) {
+.mah-news-list-page > :nth-child(8) > :nth-child(1),
+.mah-news-list-page > :nth-child(8) > :nth-child(2),
+.mah-news-list-page > :nth-child(8) > :nth-child(4) {
   display: grid !important;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px;
@@ -77,18 +77,18 @@ textarea {
 }
 
 /* Footer base has a top divider in Figma, not a bottom divider. */
-.main-container:has(> :nth-child(2) [class*="w-[434px]"]) > :nth-child(10) > :nth-child(2) {
+.mah-news-list-page > :nth-child(10) > :nth-child(2) {
   border-bottom: 0 !important;
   border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
 }
 
 
 /* Featured news card: image must stay on the physical left and Persian copy on the right. */
-body.mah-public-rtl #app .main-container .mah-news-featured-card {
+body.mah-public-rtl #app .mah-news-list-page .mah-news-featured-card {
   direction: ltr !important;
 }
 
-body.mah-public-rtl #app .main-container .mah-news-featured-card > :last-child {
+body.mah-public-rtl #app .mah-news-list-page .mah-news-featured-card > :last-child {
   direction: rtl !important;
   text-align: right !important;
   align-items: flex-end !important;
