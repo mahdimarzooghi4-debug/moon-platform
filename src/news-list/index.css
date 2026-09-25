@@ -81,3 +81,15 @@ textarea {
   border-bottom: 0 !important;
   border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
 }
+
+
+/* Featured news card: image must stay on the physical left and Persian copy on the right. */
+body.mah-public-rtl #app .main-container .mah-news-featured-card {
+  direction: ltr !important;
+}
+
+body.mah-public-rtl #app .main-container .mah-news-featured-card > :last-child {
+  direction: rtl !important;
+  text-align: right !important;
+  align-items: flex-end !important;
+}
