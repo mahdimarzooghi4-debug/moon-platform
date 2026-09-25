@@ -196,3 +196,43 @@ button {
   justify-content: flex-end !important;
   text-align: right !important;
 }
+
+
+/* Numbered financial steps: keep the number badge on the far right and align
+   every following Persian sentence to the same right edge. */
+.mah-about-page .mah-about-financial-steps {
+  width: 100% !important;
+  align-items: stretch !important;
+}
+
+.mah-about-page .mah-about-financial-steps > div {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 24px !important;
+  column-gap: 12px !important;
+  align-items: center !important;
+  width: 100% !important;
+  direction: ltr !important;
+  justify-content: initial !important;
+}
+
+.mah-about-page .mah-about-financial-steps > div > span {
+  grid-column: 1 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  direction: rtl !important;
+  text-align: right !important;
+  justify-content: flex-start !important;
+  justify-self: stretch !important;
+}
+
+.mah-about-page .mah-about-financial-steps > div > div {
+  grid-column: 2 !important;
+  justify-self: end !important;
+  flex: 0 0 24px !important;
+}
+
+.mah-about-page .mah-about-financial-steps > div > div > span {
+  width: 100% !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
