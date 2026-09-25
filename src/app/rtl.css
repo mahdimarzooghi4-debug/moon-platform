@@ -318,3 +318,27 @@ input[type="tel"],
   left: auto !important;
   right: 14px !important;
 }
+
+
+/* Public-site RTL baseline.
+   Generated pages may carry local LTR directions from design export; this rule
+   makes Persian public pages consistently RTL without touching authenticated panels. */
+body.mah-public-rtl #app,
+body.mah-public-rtl #app .main-container,
+body.mah-public-rtl #app .main-container :where(div, section, article, header, footer, nav, main, form, ul, ol, li, p, span, label, h1, h2, h3, h4, h5, h6, button, a) {
+  direction: rtl !important;
+}
+
+body.mah-public-rtl #app .main-container :where(p, span, label, h1, h2, h3, h4, h5, h6, li):not([class~="text-center"]):not([dir="ltr"]) {
+  text-align: right !important;
+}
+
+body.mah-public-rtl #app .main-container [class~="text-left"]:not([class~="text-center"]):not([dir="ltr"]) {
+  text-align: right !important;
+}
+
+/* Explicit LTR islands keep their intended reading direction. */
+body.mah-public-rtl #app .main-container :where([dir="ltr"], .mah-contact-ltr, input[type="email"], input[type="tel"]) {
+  direction: ltr !important;
+  unicode-bidi: isolate;
+}
