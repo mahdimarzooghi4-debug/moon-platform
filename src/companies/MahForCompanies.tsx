@@ -593,7 +593,7 @@ export default function MahForCompanies() {
             اجتماعی به‌طور مداوم بارگذاری و به‌روزرسانی می‌شوند تا اسناد رسمی
             جهت گزارش‌های پایداری شما مهیا باشد.
           </span>
-          <div className="flex flex-col gap-[12px] items-start self-stretch shrink-0 flex-nowrap relative z-[264]">
+          <div className="mah-companies-impact-checks flex flex-col gap-[12px] items-start self-stretch shrink-0 flex-nowrap relative z-[264]">
             <div className="flex gap-[8px] justify-end items-center self-stretch shrink-0 flex-nowrap relative z-[265]">
               <span className="flex w-[228px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[266]">
                 دریافت رسید رسمی و معتبر پرداخت بانکی
@@ -710,7 +710,7 @@ export default function MahForCompanies() {
       </div>
       <div className="flex pt-[80px] pr-[120px] pb-[80px] pl-[120px] flex-col gap-[32px] items-end self-stretch shrink-0 flex-nowrap bg-[#fff] relative z-[314]">
         <div className="flex pt-[40px] pr-[40px] pb-[40px] pl-[40px] gap-[40px] justify-end items-start self-stretch shrink-0 flex-nowrap bg-[#fcfbf8] rounded-[24px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[315]">
-          <div className="flex flex-col gap-[16px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[316]">
+          <div className="mah-companies-certificate-checks flex flex-col gap-[16px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[316]">
             <span className="h-[25px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[16px] font-bold leading-[25px] text-[#17324d] relative text-right whitespace-nowrap z-[317]">
               شرایط عمومی و مستندات بررسی گواهی:
             </span>
