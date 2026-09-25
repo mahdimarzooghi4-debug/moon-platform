@@ -60,10 +60,10 @@ export default function MahHowItWorks() {
               <div className="flex w-[318px] gap-[32px] items-center shrink-0 flex-nowrap relative z-[23]">
                 <div className="flex w-[110px] pt-[16px] pr-[16px] pb-[16px] pl-[16px] justify-center items-center shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[16px] border-solid border-2 border-[#2094e3] relative z-[24]">
                   <span className="flex w-[78px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#2094e3] relative text-right whitespace-nowrap z-[25]">
-                    پروژه دارای اثر اجتماعی
+                    پروژه اجتماعی
                   </span>
                 </div>
-                <div className="w-[40px] h-[2px] shrink-0 bg-[url(/assets/codia/9Sbh3zvpwd.png)] bg-cover bg-no-repeat relative overflow-hidden z-[26]" />
+                <div className="w-[40px] h-[2px] shrink-0 bg-[url(/assets/codia/9Sbh3zvpwd.svg)] bg-cover bg-no-repeat relative overflow-hidden z-[26]" />
                 <div className="flex w-[104px] pt-[16px] pr-[16px] pb-[16px] pl-[16px] justify-center items-center shrink-0 flex-nowrap bg-[#eaf8f0] rounded-[16px] border-solid border-2 border-[#159455] relative z-[27]">
                   <span className="flex w-[72px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#159455] relative text-right whitespace-nowrap z-[28]">
                     مشارکت امن
@@ -71,7 +71,7 @@ export default function MahHowItWorks() {
                 </div>
               </div>
               <div className="flex flex-col gap-[8px] items-center shrink-0 flex-nowrap relative z-[29]">
-                <div className="w-[2px] h-[40px] shrink-0 bg-[url(/assets/codia/uD2yfvF8DE.png)] bg-cover bg-no-repeat relative z-30" />
+                <div className="w-[2px] h-[40px] shrink-0 bg-[url(/assets/codia/uD2yfvF8DE.svg)] bg-cover bg-no-repeat relative z-30" />
               </div>
               <div className="flex w-[284px] gap-[32px] items-center shrink-0 flex-nowrap relative z-[31]">
                 <div className="flex w-[95px] pt-[16px] pr-[16px] pb-[16px] pl-[16px] justify-center items-center shrink-0 flex-nowrap bg-[#fff6e5] rounded-[16px] border-solid border-2 border-[#c27a10] relative z-[32]">
@@ -79,7 +79,7 @@ export default function MahHowItWorks() {
                     ارزیابی KPI
                   </span>
                 </div>
-                <div className="w-[40px] h-[2px] shrink-0 bg-[url(/assets/codia/7TrqVRjfN1.png)] bg-cover bg-no-repeat relative overflow-hidden z-[34]" />
+                <div className="w-[40px] h-[2px] shrink-0 bg-[url(/assets/codia/7TrqVRjfN1.svg)] bg-cover bg-no-repeat relative overflow-hidden z-[34]" />
                 <div className="flex w-[85px] pt-[16px] pr-[16px] pb-[16px] pl-[16px] justify-center items-center shrink-0 flex-nowrap bg-[#f4f6f8] rounded-[16px] border-solid border-2 border-[#60758a] relative z-[35]">
                   <span className="flex w-[53px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[36]">
                     گزارش اثر
