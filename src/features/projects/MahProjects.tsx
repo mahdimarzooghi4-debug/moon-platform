@@ -175,7 +175,7 @@ function InternalHero() {
           ))}
         </div>
         <div className="flex flex-col items-end gap-[8px] text-right" dir="rtl">
-          <h1 className="text-[32px] font-extrabold leading-normal text-[#17324d]">پروژه‌های اثر اجتماعی</h1>
+          <h1 className="text-[32px] font-extrabold leading-normal text-[#17324d]">پروژه‌های دارای اثر اجتماعی</h1>
           <p className="text-[15px] font-normal text-[#60758a]">پروژه‌ای را انتخاب کنید که اثر آن از قبل مشخص، تأیید و قابل‌اندازه‌گیری است.</p>
         </div>
       </div>
@@ -378,7 +378,7 @@ function Footer() {
         </div>
         <div className="flex h-[182px] w-[298px] flex-col items-end gap-[14px] text-right" dir="rtl">
           <Link to="/" className="block h-[70px] w-[210px] bg-[url('/assets/codia/4T7A4AiY30.png')] bg-cover bg-no-repeat" aria-label="سامانه ماه" />
-          <p className="w-full text-[13px] font-normal leading-[22px] text-[#e4ebf1]">سامانه مشارکت در پروژه‌های اثر اجتماعی با مسیر مالی شفاف و اثر قابل‌اندازه‌گیری.</p>
+          <p className="w-full text-[13px] font-normal leading-[22px] text-[#e4ebf1]">سامانه مشارکت در پروژه‌های دارای اثر اجتماعی با مسیر مالی شفاف و اثر قابل‌اندازه‌گیری.</p>
         </div>
       </div>
       <div className="flex w-full flex-col items-center gap-[4px] border-t border-[rgba(255,255,255,0.12)] pt-[20px] text-center text-[12px] font-normal text-[#e4ebf1]" dir="rtl">

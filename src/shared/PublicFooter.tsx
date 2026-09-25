@@ -116,7 +116,7 @@ export default function PublicFooter() {
               <img className="moon-footer-logo" src="/assets/codia/2u7HsAp67E.png" alt="سامانه ماه" />
               <span className="moon-footer-logo-tagline">مسئولیت اجتماعی هوشمند</span>
             </a>
-            <p>سامانه مشارکت در پروژه‌های اثر اجتماعی با مسیر مالی شفاف و اثر قابل‌اندازه‌گیری.</p>
+            <p>سامانه مشارکت در پروژه‌های دارای اثر اجتماعی با مسیر مالی شفاف و اثر قابل‌اندازه‌گیری.</p>
           </section>
 
           <nav className="moon-footer-column" aria-label="دسترسی سریع">
