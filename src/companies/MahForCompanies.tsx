@@ -58,7 +58,7 @@ export default function MahForCompanies() {
         <div className="flex w-[480px] h-[400px] items-start shrink-0 flex-nowrap bg-[url(/assets/codia/484NJFWM9O.png)] bg-cover bg-no-repeat rounded-[24px] relative overflow-hidden z-20">
           <div className="flex h-[91px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] justify-between items-start shrink-0 flex-nowrap bg-[url(/assets/codia/9hnNVXY0hN.png)] bg-cover bg-no-repeat absolute bottom-0 left-[-380px] right-[480px] z-[21]" />
         </div>
-        <div className="flex flex-col gap-[24px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[22]">
+        <div className="mah-companies-hero-copy flex flex-col gap-[24px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[22]">
           <span className="flex w-[640px] h-[120px] justify-end items-start shrink-0 font-['Vazirmatn'] text-[42px] font-normal leading-[60px] text-[#17324d] relative text-right z-[23]">
             سرمایه اجتماعی شرکت شما، با اثری روشن و قابل سنجش
           </span>
@@ -67,7 +67,7 @@ export default function MahForCompanies() {
             واریز کنید و پیشرفت اجرایی، تحقق KPI و نتایج اثر اجتماعی را در پنل
             سازمانی خود دنبال کنید.
           </span>
-          <div className="flex w-[305px] gap-[16px] justify-end items-center shrink-0 flex-nowrap relative z-[25]">
+          <div className="mah-companies-hero-actions flex w-[305px] gap-[16px] justify-end items-center shrink-0 flex-nowrap relative z-[25]">
             <div className="flex w-[132px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[26]">
               <span className="flex w-[92px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#2094e3] relative text-center whitespace-nowrap z-[27]">
                 مشاهده پروژه‌ها
