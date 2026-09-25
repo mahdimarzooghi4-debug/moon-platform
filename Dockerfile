@@ -14,8 +14,7 @@ ENV PATH="$PATH:/root/.dotnet/tools"
 RUN dotnet ef migrations bundle \
     --project src/Moon.Platform.Api/Moon.Platform.Api.csproj \
     --startup-project src/Moon.Platform.Api/Moon.Platform.Api.csproj \
-    -o /app/migrate \
-    --self-contained false
+    -o /app/migrate
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
