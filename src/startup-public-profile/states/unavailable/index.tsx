@@ -139,7 +139,7 @@ export default function Main() {
           <div className="flex w-[298px] h-[182px] flex-col gap-[14px] items-end shrink-0 flex-nowrap relative z-[54]">
             <div className="w-[210px] h-[70px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-24/aVhY7cUEkZ.png)] bg-cover bg-no-repeat relative z-[55]" />
             <span className="flex w-[298px] h-[44px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[13px] font-normal leading-[22px] text-[#e4ebf1] relative text-right z-[56]">
-              سامانه مشارکت در پروژه‌های اثر اجتماعی با مسیر مالی شفاف و اثر
+              سامانه مشارکت در پروژه‌های دارای اثر اجتماعی با مسیر مالی شفاف و اثر
               قابل‌اندازه‌گیری.
             </span>
           </div>
