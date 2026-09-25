@@ -228,3 +228,12 @@ button {
   align-items: flex-end !important;
   text-align: right !important;
 }
+
+
+/* Physical right-edge lock for hero actions.
+   Do not rely on bidi/flex direction here: Figma exports physical LTR geometry. */
+.mah-startups-page .mah-startups-hero-actions {
+  align-self: flex-end !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
+}
