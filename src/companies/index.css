@@ -341,3 +341,29 @@ button, input, select, textarea {
   margin-right: 0 !important;
   text-align: right !important;
 }
+
+
+/* Align checked company-page statements to one physical right edge. */
+.mah-companies-page .mah-companies-impact-checks > div,
+.mah-companies-page .mah-companies-certificate-checks > div {
+  direction: ltr !important;
+  justify-content: flex-end !important;
+  width: 100% !important;
+}
+
+.mah-companies-page .mah-companies-impact-checks > div > span,
+.mah-companies-page .mah-companies-certificate-checks > div > span {
+  width: auto !important;
+  flex: 0 1 auto !important;
+  direction: rtl !important;
+  justify-content: flex-end !important;
+  text-align: right !important;
+}
+
+.mah-companies-page .mah-companies-impact-checks {
+  align-items: flex-end !important;
+}
+
+.mah-companies-page .mah-companies-certificate-checks {
+  align-items: stretch !important;
+}
