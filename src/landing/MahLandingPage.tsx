@@ -248,7 +248,7 @@ export default function Main() {
                 برای استارتاپ‌ها
               </span>
               <span className="flex w-[320px] h-[44px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right z-[85]">
-                پروژه اثر اجتماعی خود را ثبت کنید و پس از ارزیابی برای جذب
+                پروژه دارای اثر اجتماعی خود را ثبت کنید و پس از ارزیابی برای جذب
                 سرمایه آماده شوید.
               </span>
             </div>
@@ -318,7 +318,7 @@ export default function Main() {
                 برای افراد حقیقی
               </span>
               <span className="flex w-[320px] h-[44px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right z-[115]">
-                سریع و بدون ساخت حساب کاربری در پروژه‌های اثر اجتماعی مشارکت
+                سریع و بدون ساخت حساب کاربری در پروژه‌های دارای اثر اجتماعی مشارکت
                 کنید.
               </span>
             </div>
@@ -723,7 +723,7 @@ export default function Main() {
                 پیوستن سه شرکت جدید به شبکه همراهان سازمانی ماه
               </span>
               <span className="flex w-[336px] h-[44px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right overflow-hidden z-[290]">
-                سه مجموعه جدید برای سرمایه‌گذاری شفاف در پروژه‌های اثر اجتماعی
+                سه مجموعه جدید برای سرمایه‌گذاری شفاف در پروژه‌های دارای اثر اجتماعی
                 به سامانه ماه پیوستند.
               </span>
               <div className="self-stretch grow shrink-0 basis-0 relative overflow-hidden z-[291]" />
@@ -796,13 +796,15 @@ export default function Main() {
             <span className="flex w-[156px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[320]">
               ایمیل: info@mahplatform.ir
             </span>
-            <div className="flex w-[48px] pt-[8px] pr-0 pb-0 pl-0 gap-[12px] items-center shrink-0 flex-nowrap relative z-[321]">
+            <div className="flex w-[108px] pt-[8px] pr-0 pb-0 pl-0 gap-[12px] items-center shrink-0 flex-nowrap relative z-[321]" aria-label="شبکه‌های اجتماعی">
               <div className="flex w-[18px] h-[18px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[322]">
                 <div className="w-[18px] h-[18px] shrink-0 bg-[url(/assets/codia/NQaXAcuYaN.png)] bg-cover bg-no-repeat relative overflow-hidden z-[323]" />
               </div>
               <div className="flex w-[18px] h-[18px] flex-col justify-center items-center shrink-0 flex-nowrap relative overflow-hidden z-[324]">
                 <div className="w-[18px] h-[18px] shrink-0 bg-[url(/assets/codia/0ryT0zMK7e.png)] bg-cover bg-no-repeat relative overflow-hidden z-[325]" />
               </div>
+              <img src="/assets/telegram.png" alt="تلگرام" className="w-[18px] h-[18px] shrink-0 object-contain" />
+              <img src="/assets/bale.svg" alt="بله" className="w-[18px] h-[18px] shrink-0 object-contain" />
             </div>
           </div>
           <div className="flex w-[150px] h-[182px] flex-col gap-[12px] items-end shrink-0 flex-nowrap relative z-[326]">
@@ -851,9 +853,9 @@ export default function Main() {
             </span>
           </div>
           <div className="flex w-[298px] h-[182px] flex-col gap-[14px] items-end shrink-0 flex-nowrap relative z-[342]">
-            <div className="w-[210px] h-[70px] shrink-0 bg-[url(/assets/codia/7BGJXYstQY.png)] bg-cover bg-no-repeat relative z-[343]" />
+            <div className="w-[210px] h-[70px] shrink-0 bg-[url(/assets/codia/4T7A4AiY30.png)] bg-cover bg-no-repeat relative z-[343]" />
             <span className="flex w-[298px] h-[44px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[13px] font-normal leading-[22px] text-[#e4ebf1] relative text-right z-[344]">
-              سامانه مشارکت در پروژه‌های اثر اجتماعی با مسیر مالی شفاف و اثر
+              سامانه مشارکت در پروژه‌های دارای اثر اجتماعی با مسیر مالی شفاف و اثر
               قابل‌اندازه‌گیری.
             </span>
           </div>
