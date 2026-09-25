@@ -239,7 +239,7 @@ export default function Main() {
             </div>
           </div>
         </div>
-        <div className="flex w-[818px] flex-col gap-[40px] items-start shrink-0 flex-nowrap relative z-[95]">
+        <div className="mah-news-article-body flex w-[818px] flex-col gap-[40px] items-start shrink-0 flex-nowrap relative z-[95]">
           <div className="flex pt-[24px] pr-[24px] pb-[24px] pl-[24px] flex-col gap-[16px] items-start self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[16px] border-solid border border-[#e4ebf1] relative z-[96]">
             <span className="h-[28px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[18px] font-bold leading-[28px] text-[#17324d] relative text-right whitespace-nowrap z-[97]">
               خلاصه گزارش
