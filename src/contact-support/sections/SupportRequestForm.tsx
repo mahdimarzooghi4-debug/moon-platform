@@ -69,7 +69,7 @@ export function SupportRequestForm() {
             </div>
           </div>
           <div className="flex flex-col gap-[8px] items-start grow shrink-0 basis-0 flex-nowrap relative z-[163]">
-            <div className="flex justify-between items-start self-stretch shrink-0 flex-nowrap relative z-[164]">
+            <div className="mah-support-email-label flex justify-between items-start self-stretch shrink-0 flex-nowrap relative z-[164]">
               <span className="flex w-[36px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-right whitespace-nowrap z-[165]">
                 اختیاری
               </span>
