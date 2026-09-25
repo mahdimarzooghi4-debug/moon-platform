@@ -184,3 +184,36 @@ button {
   direction: rtl !important;
   align-items: flex-end !important;
 }
+
+
+/* Explicit physical-right anchors requested for the Startups page. */
+.mah-startups-page .mah-startups-hero-actions {
+  align-self: flex-end !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  direction: rtl !important;
+}
+
+.mah-startups-page .mah-startups-public-profile-row {
+  direction: ltr !important;
+  justify-content: space-between !important;
+}
+
+.mah-startups-page .mah-startups-green-card {
+  order: 2 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  direction: rtl !important;
+  align-items: flex-end !important;
+  text-align: right !important;
+}
+
+.mah-startups-page .mah-startups-green-card > div:first-child {
+  direction: rtl !important;
+  justify-content: flex-start !important;
+}
+
+.mah-startups-page .mah-startups-green-card > div:first-child > div:first-child {
+  align-items: flex-end !important;
+  text-align: right !important;
+}
