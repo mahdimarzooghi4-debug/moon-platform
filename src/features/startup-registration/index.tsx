@@ -4,7 +4,7 @@ import "./index.css";
 export default function Main() {
   return (
     <div dir="rtl" className="main-container flex w-[1440px] h-[1984px] flex-col justify-between items-center flex-nowrap bg-[#f7fafc] relative mx-auto my-0">
-      <div className="flex h-[80px] pt-0 pr-[120px] pb-0 pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] border-solid border-t border-t-[#e4ebf1] relative">
+      <div className="mah-registration-header flex h-[80px] pt-0 pr-[120px] pb-0 pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] border-solid border-t border-t-[#e4ebf1] relative">
         <div className="flex w-[237px] gap-[20px] items-center shrink-0 flex-nowrap relative z-[1]">
           <span className="flex w-[87px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[21.875px] text-[#718096] relative text-right whitespace-nowrap z-[2]">
             بازگشت به ورود
@@ -22,7 +22,7 @@ export default function Main() {
       <div className="flex pt-[48px] pr-0 pb-[48px] pl-0 flex-col gap-[32px] items-center self-stretch shrink-0 flex-nowrap relative z-[7]">
         <div className="flex w-[1000px] flex-col gap-[24px] items-end shrink-0 flex-nowrap relative z-[8]">
           <div className="flex flex-col gap-[16px] items-end self-stretch shrink-0 flex-nowrap relative z-[9]">
-            <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-10">
+            <div className="mah-registration-title-row flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-10">
               <div className="flex w-[144px] gap-[12px] items-center shrink-0 flex-nowrap relative z-[11]">
                 <span className="h-[22px] shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#159455] relative text-left whitespace-nowrap z-[12]">
                   ✓ ذخیره خودکار انجام شد
@@ -44,7 +44,7 @@ export default function Main() {
               خلاق بررسی شود.
             </span>
           </div>
-          <div className="flex pt-[16px] pr-0 pb-[16px] pl-0 gap-[16px] justify-center items-center self-stretch shrink-0 flex-nowrap relative z-[18]">
+          <div className="mah-registration-stepper flex pt-[16px] pr-0 pb-[16px] pl-0 gap-[16px] justify-center items-center self-stretch shrink-0 flex-nowrap relative z-[18]">
             <div className="flex w-[117px] h-[36px] gap-[8px] items-center shrink-0 flex-nowrap relative z-[19]">
               <span className="flex w-[81px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[21.875px] text-[#718096] relative text-right whitespace-nowrap z-20">
                 بازبینی و ارسال
@@ -121,7 +121,7 @@ export default function Main() {
                 </div>
               </div>
             </div>
-            <div className="flex gap-[16px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[52]">
+            <div className="mah-registration-field-row flex gap-[16px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[52]">
               <div className="flex w-[450px] flex-col gap-[8px] items-end shrink-0 flex-nowrap relative z-[53]">
                 <div className="flex gap-[4px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[54]">
                   <span className="flex w-[121px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#2d3748] relative text-right whitespace-nowrap z-[55]">
@@ -162,7 +162,7 @@ export default function Main() {
                 </span>
               </div>
             </div>
-            <div className="flex gap-[16px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[69]">
+            <div className="mah-registration-field-row flex gap-[16px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[69]">
               <div className="flex w-[450px] flex-col gap-[8px] items-end shrink-0 flex-nowrap relative z-[70]">
                 <div className="flex gap-[4px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[71]">
                   <span className="flex w-[104px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#2d3748] relative text-right whitespace-nowrap z-[72]">
@@ -184,7 +184,7 @@ export default function Main() {
                     وضعیت حقوقی
                   </span>
                 </div>
-                <div className="flex w-[388px] h-[48px] gap-[16px] items-center shrink-0 flex-nowrap relative z-[79]">
+                <div className="mah-registration-radio-row flex w-[388px] h-[48px] gap-[16px] items-center shrink-0 flex-nowrap relative z-[79]">
                   <div className="flex w-[161px] gap-[6px] items-center shrink-0 flex-nowrap relative z-[80]">
                     <span className="flex w-[139px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#4a5568] relative text-right whitespace-nowrap z-[81]">
                       تیم استارتاپی فاقد شرکت
@@ -206,7 +206,7 @@ export default function Main() {
                 </div>
               </div>
             </div>
-            <div className="flex gap-[16px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[89]">
+            <div className="mah-registration-field-row flex gap-[16px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[89]">
               <div className="flex w-[450px] flex-col gap-[8px] items-end shrink-0 flex-nowrap relative z-[90]">
                 <div className="flex gap-[4px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[91]">
                   <span className="h-[22px] shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#e53e3e] relative text-left whitespace-nowrap z-[92]">
@@ -238,7 +238,7 @@ export default function Main() {
                 </div>
               </div>
             </div>
-            <div className="flex gap-[16px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[102]">
+            <div className="mah-registration-field-row flex gap-[16px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[102]">
               <div className="flex w-[450px] flex-col gap-[8px] items-end shrink-0 flex-nowrap relative z-[103]">
                 <div className="flex gap-[4px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[104]">
                   <span className="h-[22px] shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#e53e3e] relative text-left whitespace-nowrap z-[105]">
@@ -270,7 +270,7 @@ export default function Main() {
                 </div>
               </div>
             </div>
-            <div className="flex gap-[16px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[115]">
+            <div className="mah-registration-field-row flex gap-[16px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[115]">
               <div className="flex w-[450px] flex-col gap-[8px] items-end shrink-0 flex-nowrap relative z-[116]">
                 <div className="flex gap-[4px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[117]">
                   <span className="flex w-[197px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#2d3748] relative text-right whitespace-nowrap z-[118]">
@@ -305,7 +305,7 @@ export default function Main() {
               </span>
               <div className="h-px self-stretch shrink-0 bg-[url(https://static.codia.ai/image/2026-08-24/eLJWdr2NsM.png)] bg-cover bg-no-repeat relative z-[129]" />
             </div>
-            <div className="flex gap-[16px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[130]">
+            <div className="mah-registration-field-row flex gap-[16px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[130]">
               <div className="flex w-[450px] flex-col gap-[8px] items-end shrink-0 flex-nowrap relative z-[131]">
                 <div className="flex gap-[4px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[132]">
                   <span className="h-[22px] shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#e53e3e] relative text-left whitespace-nowrap z-[133]">
@@ -337,7 +337,7 @@ export default function Main() {
                 </div>
               </div>
             </div>
-            <div className="flex gap-[16px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[143]">
+            <div className="mah-registration-field-row flex gap-[16px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[143]">
               <div className="flex w-[450px] flex-col gap-[8px] items-end shrink-0 flex-nowrap relative z-[144]">
                 <div className="flex gap-[4px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[145]">
                   <span className="h-[22px] shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#e53e3e] relative text-left whitespace-nowrap z-[146]">
