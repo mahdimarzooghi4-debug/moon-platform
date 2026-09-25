@@ -215,7 +215,7 @@ export default function Main() {
               گزارش‌های اثر بیشتری ببینید
             </span>
             <span className="flex w-[302px] h-[44px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[13px] font-normal leading-[22px] text-[#60758a] relative text-right z-[87]">
-              تمامی گزارش‌های دوره‌ای و سالانه پروژه‌های اجتماعی به صورت عمومی
+              تمامی گزارش‌های دوره‌ای و سالانه پروژه‌های دارای اثر اجتماعی به صورت عمومی
               در سامانه ماه منتشر می‌شود.
             </span>
             <div className="flex pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[88]">
