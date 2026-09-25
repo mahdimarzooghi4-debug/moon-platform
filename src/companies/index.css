@@ -367,3 +367,41 @@ button, input, select, textarea {
 .mah-companies-page .mah-companies-certificate-checks {
   align-items: stretch !important;
 }
+
+
+/* Lock company-page checklist ticks and copy to one right edge.
+   Use a two-column physical grid: Persian copy fills the row, tick stays at the far right. */
+.mah-companies-page .mah-companies-impact-checks,
+.mah-companies-page .mah-companies-certificate-checks {
+  width: 100% !important;
+  align-items: stretch !important;
+}
+
+.mah-companies-page .mah-companies-impact-checks > div,
+.mah-companies-page .mah-companies-certificate-checks > div {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  column-gap: 8px !important;
+  width: 100% !important;
+  direction: ltr !important;
+  justify-content: initial !important;
+}
+
+.mah-companies-page .mah-companies-impact-checks > div > span,
+.mah-companies-page .mah-companies-certificate-checks > div > span {
+  grid-column: 1 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  direction: rtl !important;
+  text-align: right !important;
+  justify-content: flex-start !important;
+  justify-self: stretch !important;
+}
+
+.mah-companies-page .mah-companies-impact-checks > div > div,
+.mah-companies-page .mah-companies-certificate-checks > div > div {
+  grid-column: 2 !important;
+  justify-self: end !important;
+  flex: 0 0 auto !important;
+}
