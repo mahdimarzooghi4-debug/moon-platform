@@ -774,7 +774,7 @@ export default function MahForCompanies() {
             همراهان سازمانی ماه
           </span>
           <span className="h-[25px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[16px] font-normal leading-[25px] text-[#60758a] relative text-center whitespace-nowrap z-[343]">
-            شرکت‌هایی که در پروژه‌های اجتماعی تأییدشده مشارکت کرده‌اند.
+            شرکت‌هایی که در پروژه‌های دارای اثر اجتماعی تأییدشده مشارکت کرده‌اند.
           </span>
         </div>
         <div className="flex pt-[12px] pr-[40px] pb-[12px] pl-[40px] justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[344]">
@@ -1162,7 +1162,7 @@ export default function MahForCompanies() {
               <div className="flex pt-[12px] pr-[12px] pb-[12px] pl-[12px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[10px] border-solid border border-[#e4ebf1] relative z-[499]">
                 <div className="w-[14px] h-[14px] shrink-0 bg-[url(/assets/codia/c0AQpx1XRe.png)] bg-cover bg-no-repeat relative overflow-hidden z-[500]" />
                 <span className="flex w-[162px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[501]">
-                  انتخاب پروژه اجتماعی مناسب
+                  انتخاب پروژه دارای اثر اجتماعی مناسب
                 </span>
               </div>
             </div>
@@ -1277,7 +1277,7 @@ export default function MahForCompanies() {
           <div className="flex w-[298px] h-[182px] flex-col gap-[14px] items-end shrink-0 flex-nowrap relative z-[547]">
             <div className="w-[210px] h-[70px] shrink-0 bg-[url(/assets/codia/UOz1AW0rxH.png)] bg-cover bg-no-repeat relative z-[548]" />
             <span className="flex w-[298px] h-[44px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[13px] font-normal leading-[22px] text-[#e4ebf1] relative text-right z-[549]">
-              سامانه مشارکت در پروژه‌های اثر اجتماعی با مسیر مالی شفاف و اثر
+              سامانه مشارکت در پروژه‌های دارای اثر اجتماعی با مسیر مالی شفاف و اثر
               قابل‌اندازه‌گیری.
             </span>
           </div>
