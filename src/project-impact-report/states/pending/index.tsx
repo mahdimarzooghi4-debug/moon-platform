@@ -4,7 +4,7 @@ import "./index.css";
 function Footer() {
   return <footer className="bg-[#111e30] px-[120px] pb-7 pt-14 text-white">
     <div className="grid grid-cols-[1.7fr_1fr_1fr_1fr_1fr] gap-12">
-      <div><img className="mb-5 h-[50px] w-[150px] object-contain brightness-0 invert" src="/assets/codia/j0Pvw1w6QL.png" alt="سامانه ماه" /><p className="text-[13px] leading-7 text-[#c7d2dc]">سامانه مشارکت در پروژه‌های اثر اجتماعی با مسیر مالی شفاف و اثر قابل‌اندازه‌گیری.</p></div>
+      <div><img className="mb-5 h-[50px] w-[150px] object-contain brightness-0 invert" src="/assets/codia/j0Pvw1w6QL.png" alt="سامانه ماه" /><p className="text-[13px] leading-7 text-[#c7d2dc]">سامانه مشارکت در پروژه‌های دارای اثر اجتماعی با مسیر مالی شفاف و اثر قابل‌اندازه‌گیری.</p></div>
       <div><h3 className="mb-3 font-bold">دسترسی سریع</h3><p className="text-[13px] leading-8 text-[#c7d2dc]">پروژه‌ها<br />برای شرکت‌ها<br />نحوه مشارکت<br />ثبت‌نام استارتاپ<br />اخبار و رویدادها</p></div>
       <div><h3 className="mb-3 font-bold">پشتیبانی</h3><p className="text-[13px] leading-8 text-[#c7d2dc]">تماس با ما<br />سؤالات متداول<br />پیگیری مشارکت</p></div>
       <div><h3 className="mb-3 font-bold">حقوقی</h3><p className="text-[13px] leading-8 text-[#c7d2dc]">قوانین و مقررات<br />حریم خصوصی</p></div>
