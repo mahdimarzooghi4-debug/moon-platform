@@ -886,7 +886,7 @@ export default function Main() {
             پروژه‌های مشابه
           </span>
           <span className="flex w-[346px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-center whitespace-nowrap z-[392]">
-            سایر پروژه‌های اثر اجتماعی فعال در حوزه اشتغال و توانمندسازی
+            سایر پروژه‌های دارای اثر اجتماعی فعال در حوزه اشتغال و توانمندسازی
           </span>
         </div>
         <div className="flex gap-[24px] items-start self-stretch shrink-0 flex-nowrap relative z-[393]">
@@ -1229,7 +1229,7 @@ export default function Main() {
               alt="سامانه ماه"
             />
             <span className="flex w-[298px] h-[44px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[13px] font-normal leading-[22px] text-[#e4ebf1] relative text-right z-[527]">
-              سامانه مشارکت در پروژه‌های اثر اجتماعی با مسیر مالی شفاف و اثر
+              سامانه مشارکت در پروژه‌های دارای اثر اجتماعی با مسیر مالی شفاف و اثر
               قابل‌اندازه‌گیری.
             </span>
           </div>
