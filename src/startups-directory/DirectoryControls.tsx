@@ -89,6 +89,7 @@ export default function StartupDirectoryControls({
         aria-label="جست‌وجو و فیلتر استارتاپ‌ها"
       >
         <div className="flex min-h-[44px] items-center gap-[12px] rounded-[12px] border border-[#e4ebf1] bg-[#fcfbf8] px-[12px]">
+          <img src="/assets/search.png" alt="" className="h-[18px] w-[18px] shrink-0" />
           <input
             dir="rtl"
             type="search"
@@ -98,7 +99,6 @@ export default function StartupDirectoryControls({
             onChange={(event) => setField("query", event.target.value)}
             className="w-full min-w-0 flex-1 border-0 bg-transparent text-right text-[14px] text-[#17324d] outline-none placeholder:text-[#60758a]"
           />
-          <img src="/assets/search.png" alt="" className="h-[18px] w-[18px] shrink-0" />
         </div>
 
         <div className="grid w-full grid-cols-1 gap-[12px] md:grid-cols-3 lg:grid-cols-5">
