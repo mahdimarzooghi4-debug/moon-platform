@@ -82,7 +82,7 @@ function useRouteContentReady() {
 }
 
 function shouldShowFooter(pathname: string) {
-  if (HIDDEN_PATHS.has(pathname) || pathname.includes("/print")) return false;
+  if (pathname.includes("/print")) return false;
   return !HIDDEN_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(prefix));
 }
 
@@ -159,8 +159,8 @@ export default function PublicFooter() {
             <div className="moon-footer-socials" aria-label="شبکه‌های اجتماعی">
               <img src="/assets/startups/icons/instagram.svg" alt="اینستاگرام" />
               <img src="/assets/startups/icons/linkedin.svg" alt="لینکدین" />
-              <img src="/assets/telegram.png" alt="تلگرام" />
-              <img src="/assets/bale.svg" alt="بله" />
+              <img className="moon-footer-social-telegram" src="/assets/telegram-brand.png" alt="تلگرام" />
+              <img className="moon-footer-social-bale" src="/assets/bale-brand.webp" alt="بله" />
             </div>
           </section>
         </div>
