@@ -104,20 +104,3 @@ body {
   background: #fcfbf8;
 }
 
-
-/* The how-it-works design uses LTR for physical composition (illustrations/cards
-   on the left, Persian copy on the right). Restore that spatial order after the
-   global public RTL baseline, while keeping all Persian text RTL/right-aligned. */
-body.mah-public-rtl #app .mah-how-it-works-page,
-body.mah-public-rtl #app .mah-how-it-works-page :where(div, section, article, header, footer, nav, main, form, ul, ol, li) {
-  direction: ltr !important;
-}
-
-body.mah-public-rtl #app .mah-how-it-works-page :where(span, p, label, h1, h2, h3, h4, h5, h6, button, a) {
-  direction: rtl !important;
-  unicode-bidi: plaintext;
-}
-
-body.mah-public-rtl #app .mah-how-it-works-page :where(span, p, label, h1, h2, h3, h4, h5, h6):not([class~="text-center"]) {
-  text-align: right !important;
-}
