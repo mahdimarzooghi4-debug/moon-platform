@@ -30,3 +30,22 @@ textarea,
 button {
   outline: 0;
 }
+
+
+/* Generated Figma screen uses LTR for physical composition:
+   header actions left / logo right, hero image left / Persian copy right.
+   Keep layout geometry LTR even when the public shell is RTL. */
+body.mah-public-rtl #app .mah-project-rural-women-page,
+body.mah-public-rtl #app .mah-project-rural-women-page :where(div, section, article, header, footer, nav, main, form, ul, ol, li) {
+  direction: ltr !important;
+}
+
+/* Persian copy remains RTL/right-aligned inside that physical layout. */
+body.mah-public-rtl #app .mah-project-rural-women-page :where(span, p, label, h1, h2, h3, h4, h5, h6, button, a):not([dir="ltr"]) {
+  direction: rtl !important;
+  unicode-bidi: plaintext;
+}
+
+body.mah-public-rtl #app .mah-project-rural-women-page :where(span, p, label, h1, h2, h3, h4, h5, h6):not([class~="text-center"]):not([dir="ltr"]) {
+  text-align: right !important;
+}
