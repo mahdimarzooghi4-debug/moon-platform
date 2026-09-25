@@ -96,7 +96,7 @@ export default function Main() {
             </span>
             <span className="flex w-[616px] h-[78px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[16px] font-normal leading-[26px] text-[#60758a] relative text-right z-[38]">
               سامانه ماه پلتفرم تخصصی اتصال حامیان و سازمان‌های مسئول به
-              پروژه‌های اثر اجتماعی واقعی است. ما باور داریم که کار خیر سنتی
+              پروژه‌های دارای اثر اجتماعی واقعی است. ما باور داریم که کار خیر سنتی
               جایش را به پروژه‌های دانش‌بنیان، شفاف و مبتنی بر نتایج واقعی داده
               است.
             </span>
@@ -481,7 +481,7 @@ export default function Main() {
             <div className="flex flex-col gap-[12px] items-start self-stretch shrink-0 flex-nowrap relative z-[174]">
               <div className="flex gap-[8px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[175]">
                 <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[22px] text-[#60758a] relative text-right whitespace-nowrap z-[176]">
-                  ثبت ایده و پروژه اثر اجتماعی دانش‌بنیان
+                  ثبت ایده و پروژه دارای اثر اجتماعی دانش‌بنیان
                 </span>
                 <div className="flex w-[14px] pt-[8px] pr-0 pb-0 pl-0 items-start shrink-0 flex-nowrap relative z-[177]">
                   <div className="w-[14px] h-[14px] shrink-0 bg-[url(/assets/codia/R2eE8CcMLB.png)] bg-cover bg-no-repeat relative overflow-hidden z-[178]" />
@@ -1283,7 +1283,7 @@ export default function Main() {
               استارتاپ‌های نوآور
             </span>
             <span className="h-[22px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[22px] text-[#60758a] relative text-right whitespace-nowrap z-[520]">
-              پروژه اثر اجتماعی بومی خود را ثبت و جذب سرمایه کنید
+              پروژه دارای اثر اجتماعی بومی خود را ثبت و جذب سرمایه کنید
             </span>
             <div className="flex pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[521]">
               <span className="flex w-[91px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#2094e3] relative text-center whitespace-nowrap z-[522]">
@@ -1382,7 +1382,7 @@ export default function Main() {
           <div className="flex w-[298px] h-[182px] flex-col gap-[14px] items-end shrink-0 flex-nowrap relative z-[558]">
             <div className="w-[210px] h-[70px] shrink-0 bg-[url(/assets/codia/xK4My45ZOf.png)] bg-cover bg-no-repeat relative z-[559]" />
             <span className="flex w-[298px] h-[44px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[13px] font-normal leading-[22px] text-[#e4ebf1] relative text-right z-[560]">
-              سامانه مشارکت در پروژه‌های اثر اجتماعی با مسیر مالی شفاف و اثر
+              سامانه مشارکت در پروژه‌های دارای اثر اجتماعی با مسیر مالی شفاف و اثر
               قابل‌اندازه‌گیری.
             </span>
           </div>
