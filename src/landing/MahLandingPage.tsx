@@ -1,9 +1,49 @@
 import React from "react";
 import "./index.css";
 import MoonIntroDialog from "./MoonIntroDialog";
+import { getPublicLandingKpis } from "../impact/api";
+
+const integerFormatter = new Intl.NumberFormat("fa-IR", { maximumFractionDigits: 0 });
+const decimalFormatter = new Intl.NumberFormat("fa-IR", { maximumFractionDigits: 1 });
+
+const fallbackKpis = {
+  startupCount: 1250,
+  activeProjectCount: 24,
+  beneficiaryCount: 12840,
+  jobsCreated: 346,
+  fundingBillionToman: 18.4,
+};
 
 export default function Main() {
   const [introOpen, setIntroOpen] = React.useState(false);
+  const [landingKpis, setLandingKpis] = React.useState(fallbackKpis);
+
+  React.useEffect(() => {
+    let cancelled = false;
+
+    getPublicLandingKpis()
+      .then((data) => {
+        if (cancelled) return;
+        const irrFundingMinor = data.funding
+          .filter((item) => item.currency.toUpperCase() === "IRR")
+          .reduce((sum, item) => sum + item.amountMinor, 0);
+
+        setLandingKpis({
+          startupCount: data.startupCount,
+          activeProjectCount: data.activeProjectCount,
+          beneficiaryCount: data.beneficiaryCount,
+          jobsCreated: data.jobsCreated,
+          fundingBillionToman: irrFundingMinor / 10_000_000_000,
+        });
+      })
+      .catch(() => {
+        // Keep the accepted landing placeholders when the public API is unavailable.
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
   return (
     <>
     <div className="main-container flex w-[1440px] flex-col items-center flex-nowrap bg-[#fcfbf8] relative overflow-hidden mx-auto my-0">
@@ -114,7 +154,7 @@ export default function Main() {
                 میلیارد تومان
               </span>
               <span className="flex w-[63px] h-[50px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[32px] font-bold leading-[50px] text-[#17324d] relative text-right whitespace-nowrap z-[44]">
-                ۱۸٫۴
+                {decimalFormatter.format(landingKpis.fundingBillionToman)}
               </span>
             </div>
             <span className="flex w-[87px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#e9811b] relative text-right whitespace-nowrap z-[45]">
@@ -130,7 +170,7 @@ export default function Main() {
                 پروژه
               </span>
               <span className="flex w-[37px] h-[50px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[32px] font-bold leading-[50px] text-[#17324d] relative text-right whitespace-nowrap z-[51]">
-                ۲۴
+                {integerFormatter.format(landingKpis.activeProjectCount)}
               </span>
             </div>
             <span className="flex w-[81px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#c5a056] relative text-right whitespace-nowrap z-[52]">
@@ -146,7 +186,7 @@ export default function Main() {
                 فرصت شغلی
               </span>
               <span className="flex w-[57px] h-[50px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[32px] font-bold leading-[50px] text-[#17324d] relative text-right whitespace-nowrap z-[58]">
-                ۳۴۶
+                {integerFormatter.format(landingKpis.jobsCreated)}
               </span>
             </div>
             <span className="flex w-[97px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#159455] relative text-right whitespace-nowrap z-[59]">
@@ -162,7 +202,7 @@ export default function Main() {
                 نفر
               </span>
               <span className="flex w-[89px] h-[50px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[32px] font-bold leading-[50px] text-[#17324d] relative text-right whitespace-nowrap z-[65]">
-                ۱۲٬۸۴۰
+                {integerFormatter.format(landingKpis.beneficiaryCount)}
               </span>
             </div>
             <span className="flex w-[70px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#c27a10] relative text-right whitespace-nowrap z-[66]">
@@ -178,7 +218,7 @@ export default function Main() {
                 استارتاپ
               </span>
               <span className="flex w-[70px] h-[50px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[32px] font-bold leading-[50px] text-[#17324d] relative text-right whitespace-nowrap z-[72]">
-                ۱٬۲۵۰
+                {integerFormatter.format(landingKpis.startupCount)}
               </span>
             </div>
             <span className="flex w-[99px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#2094e3] relative text-right whitespace-nowrap z-[73]">

@@ -4,6 +4,7 @@ using Moon.Platform.Api.Common.Auditing;
 using Moon.Platform.Api.Common.Authorization;
 using Moon.Platform.Api.Common.Messaging;
 using Moon.Platform.Api.Infrastructure.Persistence;
+using Moon.Platform.Api.Modules.Funding;
 using Moon.Platform.Api.Modules.Projects;
 
 namespace Moon.Platform.Api.Modules.Execution;
@@ -18,6 +19,7 @@ public interface IExecutionImpactService
     Task<IReadOnlyList<PublicImpactReportView>> GetPublicReportsAsync(CancellationToken cancellationToken = default);
     Task<PublicImpactReportView?> GetPublicReportAsync(Guid impactReportId, CancellationToken cancellationToken = default);
     Task<PublicImpactOverviewView> GetPublicOverviewAsync(CancellationToken cancellationToken = default);
+    Task<PublicLandingKpisView> GetPublicLandingKpisAsync(CancellationToken cancellationToken = default);
 }
 
 public sealed class ExecutionImpactService(
@@ -476,6 +478,55 @@ public sealed class ExecutionImpactService(
             current.Count,
             current.Count == 0 ? null : current.Max(x => x.PublishedAtUtc),
             aggregateRows);
+    }
+
+    public async Task<PublicLandingKpisView> GetPublicLandingKpisAsync(CancellationToken cancellationToken = default)
+    {
+        var current = await GetCurrentPublishedReportsAsync(cancellationToken);
+
+        static decimal SumMetrics(IEnumerable<ExecutionImpactReport> reports, IReadOnlySet<string> keys) =>
+            reports.SelectMany(report => report.Metrics)
+                .Where(metric => metric.Aggregation != ExecutionImpactMetricAggregations.None && keys.Contains(metric.Key))
+                .Sum(metric => metric.ActualValue);
+
+        var beneficiaryKeys = new HashSet<string>(StringComparer.Ordinal)
+        {
+            "beneficiaries",
+            "beneficiary_count",
+            "people_benefited",
+            "people_reached"
+        };
+        var jobsKeys = new HashSet<string>(StringComparer.Ordinal)
+        {
+            "jobs_created",
+            "employment_created",
+            "employment",
+            "jobs"
+        };
+
+        var startupCount = await dbContext.Organizations.AsNoTracking()
+            .CountAsync(x => x.Type == "startup" && x.Status == "active", cancellationToken);
+
+        var closedProjectIds = Closeouts.AsNoTracking().Select(x => x.ProjectId);
+        var activeProjectCount = await dbContext.Projects.AsNoTracking()
+            .CountAsync(x => x.Status == ProjectStatuses.Published && !closedProjectIds.Contains(x.Id), cancellationToken);
+
+        var fundingRows = await dbContext.FundingCommitments.AsNoTracking()
+            .Where(x => x.Status == CommitmentStatuses.Reconciled)
+            .GroupBy(x => x.Currency)
+            .Select(group => new { Currency = group.Key, AmountMinor = group.Sum(x => x.AmountMinor) })
+            .OrderBy(x => x.Currency)
+            .ToArrayAsync(cancellationToken);
+        var funding = fundingRows
+            .Select(x => new PublicLandingFundingView(x.Currency, x.AmountMinor))
+            .ToArray();
+
+        return new PublicLandingKpisView(
+            startupCount,
+            activeProjectCount,
+            SumMetrics(current, beneficiaryKeys),
+            SumMetrics(current, jobsKeys),
+            funding);
     }
 
     private async Task<List<ExecutionImpactReport>> GetCurrentPublishedReportsAsync(CancellationToken cancellationToken)

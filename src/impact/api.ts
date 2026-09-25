@@ -48,6 +48,19 @@ export type PublicImpactOverview = {
   metrics: PublicImpactMetricAggregate[];
 };
 
+export type PublicLandingFunding = {
+  currency: string;
+  amountMinor: number;
+};
+
+export type PublicLandingKpis = {
+  startupCount: number;
+  activeProjectCount: number;
+  beneficiaryCount: number;
+  jobsCreated: number;
+  funding: PublicLandingFunding[];
+};
+
 export class PublicImpactApiError extends Error {
   constructor(
     public readonly status: number,
@@ -75,6 +88,10 @@ async function publicImpactRequest<T>(path: string): Promise<T> {
 
 export function getPublicImpactOverview() {
   return publicImpactRequest<PublicImpactOverview>("/api/v1/public/impact-overview");
+}
+
+export function getPublicLandingKpis() {
+  return publicImpactRequest<PublicLandingKpis>("/api/v1/public/landing-kpis");
 }
 
 export function listPublicImpactReports() {
