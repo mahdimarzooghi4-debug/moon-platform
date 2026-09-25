@@ -184,3 +184,34 @@ button {
   direction: rtl !important;
   align-items: flex-end !important;
 }
+
+
+/* Explicit right anchors for Startups hero actions and public-profile card. */
+.main-container .mah-startups-hero-actions {
+  align-self: flex-end !important;
+  margin-inline-start: 0 !important;
+  margin-inline-end: 0 !important;
+  direction: rtl !important;
+}
+
+.main-container .mah-startups-public-profile-row {
+  direction: ltr !important;
+  justify-content: space-between !important;
+}
+
+.main-container .mah-startups-green-card {
+  order: 2 !important;
+  direction: rtl !important;
+  align-items: flex-end !important;
+  text-align: right !important;
+}
+
+.main-container .mah-startups-green-card > div:first-child {
+  direction: rtl !important;
+  justify-content: flex-start !important;
+}
+
+.main-container .mah-startups-green-card > div:first-child > div:first-child {
+  align-items: flex-end !important;
+  text-align: right !important;
+}
