@@ -237,3 +237,33 @@ button {
   margin-left: auto !important;
   margin-right: 0 !important;
 }
+
+
+/* Hero secondary CTA/note physical-right lock. */
+.mah-startups-page .mah-startups-hero-secondary {
+  direction: ltr !important;
+  align-items: flex-end !important;
+  text-align: right !important;
+}
+
+.mah-startups-page .mah-startups-hero-secondary > span {
+  direction: rtl !important;
+  align-self: flex-end !important;
+  justify-content: flex-end !important;
+  text-align: right !important;
+}
+
+/* Keep the leaf icon immediately before the Persian title on the physical right. */
+.mah-startups-page .mah-startups-green-card-header {
+  direction: ltr !important;
+  justify-content: flex-end !important;
+}
+
+.mah-startups-page .mah-startups-green-card-header > div:first-child {
+  direction: rtl !important;
+  order: 1;
+}
+
+.mah-startups-page .mah-startups-green-card-header > div:last-child {
+  order: 2;
+}
