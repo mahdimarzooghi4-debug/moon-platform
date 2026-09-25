@@ -89,7 +89,9 @@ public sealed class Phase3ImpactReportingTests : IAsyncLifetime
             seeded.Project.Id, stage.StageId, "Stage 1 impact", "Impact summary", "Verified attendance records", "Golestan",
             [
                 new ExecutionImpactMetricDefinition("people_trained", "People trained", "person", ExecutionImpactMetricAggregations.Sum, 100, 110),
-                new ExecutionImpactMetricDefinition("satisfaction", "Participant satisfaction", "percent", ExecutionImpactMetricAggregations.Average, 80, 87)
+                new ExecutionImpactMetricDefinition("satisfaction", "Participant satisfaction", "percent", ExecutionImpactMetricAggregations.Average, 80, 87),
+                new ExecutionImpactMetricDefinition("beneficiaries", "Beneficiaries", "person", ExecutionImpactMetricAggregations.Sum, null, 12_840),
+                new ExecutionImpactMetricDefinition("jobs_created", "Jobs created", "job", ExecutionImpactMetricAggregations.Sum, null, 346)
             ],
             seeded.Member.ExternalSubject, "impact-submit", "127.0.0.1");
         Assert.True(submitted.Succeeded);
@@ -135,13 +137,32 @@ public sealed class Phase3ImpactReportingTests : IAsyncLifetime
         var publicReports = await impact.GetPublicReportsAsync();
         var publicReport = Assert.Single(publicReports);
         Assert.Equal(report.ImpactReportId, publicReport.ImpactReportId);
-        Assert.Equal(2, publicReport.Metrics.Count);
+        Assert.Equal(4, publicReport.Metrics.Count);
 
         var overview = await impact.GetPublicOverviewAsync();
         Assert.Equal(1, overview.ProjectCount);
         Assert.Equal(1, overview.ReportCount);
         Assert.Equal(110m, overview.Metrics.Single(x => x.Key == "people_trained").ActualValue);
         Assert.Equal(87m, overview.Metrics.Single(x => x.Key == "satisfaction").ActualValue);
+
+        db.FundingCommitments.Add(new FundingCommitment
+        {
+            ProjectId = seeded.Project.Id,
+            CommittedBySubject = seeded.Finance.ExternalSubject,
+            AmountMinor = 184_000_000_000,
+            Currency = "IRR",
+            Status = CommitmentStatuses.Reconciled,
+            IdempotencyKey = "landing-kpi-funding",
+            ReconciledAtUtc = DateTimeOffset.UtcNow
+        });
+        await db.SaveChangesAsync();
+
+        var landingKpis = await impact.GetPublicLandingKpisAsync();
+        Assert.Equal(1, landingKpis.StartupCount);
+        Assert.Equal(1, landingKpis.ActiveProjectCount);
+        Assert.Equal(12_840m, landingKpis.BeneficiaryCount);
+        Assert.Equal(346m, landingKpis.JobsCreated);
+        Assert.Equal(184_000_000_000, Assert.Single(landingKpis.Funding).AmountMinor);
         Assert.Equal(1, await db.OutboxMessages.CountAsync(x => x.EventType == IntegrationEventTypes.ExecutionImpactPublished));
         Assert.Equal(1, await db.AuditEvents.CountAsync(x => x.Action == "execution.impact.published"));
 
