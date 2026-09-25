@@ -166,3 +166,13 @@ textarea {
 .mah-news-details-page > :nth-child(5) > :nth-child(2) > * span {
   text-align: right !important;
 }
+
+
+/* Article hero title follows Persian reading direction while the overall
+   Figma page composition remains physically LTR. */
+.mah-news-details-page .mah-news-details-title {
+  direction: rtl !important;
+  text-align: right !important;
+  justify-content: flex-start !important;
+  align-self: flex-end !important;
+}
