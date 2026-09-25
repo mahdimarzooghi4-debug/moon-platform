@@ -79,6 +79,8 @@
 
 .company-participation-form-card,
 .company-participation-summary-card {
+  width: 100%;
+  min-width: 0;
   height: 406px;
   padding: 18px 22px;
   direction: rtl;
