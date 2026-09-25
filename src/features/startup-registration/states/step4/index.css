@@ -24,7 +24,7 @@ body {
 }
 
 .main-container {
-  direction: rtl;
+  direction: ltr;
   overflow: hidden;
   text-align: right;
 }
@@ -47,4 +47,24 @@ textarea,
 button {
   font: inherit;
   outline: 0;
+}
+
+/* Keep the exported physical layout while all Persian content reads RTL.
+   The generated DOM order is authored left-to-right (logo/header, 4→1 stepper,
+   paired fields), so the container must stay LTR and content itself RTL. */
+.main-container :where(span, p, label, h1, h2, h3, button, a, select, textarea, input) {
+  direction: rtl;
+  text-align: right;
+}
+
+.main-container .text-center,
+.main-container [class*="justify-center"] > :where(span, p) {
+  text-align: center !important;
+}
+
+.main-container input[type="email"],
+.main-container input[type="url"],
+.main-container input[dir="ltr"] {
+  direction: ltr;
+  text-align: right;
 }
