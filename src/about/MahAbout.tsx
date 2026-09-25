@@ -654,7 +654,7 @@ export default function Main() {
                 </div>
               </div>
               <span className="flex w-[242px] h-[40px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#60758a] relative text-right z-[271]">
-                استارتاپ پروژه اجتماعی خود را همراه با جزییات و برنامه مالی در
+                استارتاپ پروژه دارای اثر اجتماعی خود را همراه با جزییات و برنامه مالی در
                 سامانه ثبت می‌کند.
               </span>
             </div>

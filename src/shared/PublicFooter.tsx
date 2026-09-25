@@ -159,6 +159,8 @@ export default function PublicFooter() {
             <div className="moon-footer-socials" aria-label="شبکه‌های اجتماعی">
               <img src="/assets/startups/icons/instagram.svg" alt="اینستاگرام" />
               <img src="/assets/startups/icons/linkedin.svg" alt="لینکدین" />
+              <img src="/assets/telegram.png" alt="تلگرام" />
+              <img src="/assets/bale.svg" alt="بله" />
             </div>
           </section>
         </div>
