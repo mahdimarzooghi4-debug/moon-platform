@@ -42,9 +42,29 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddSingleton<LedgerIntegrityInterceptor>();
 builder.Services.AddSingleton<ExecutionIntegrityInterceptor>();
+var postgresConnectionString = builder.Configuration.GetConnectionString("Postgres");
+var databaseUrl = builder.Configuration["DATABASE_URL"];
+if (!string.IsNullOrWhiteSpace(databaseUrl))
+{
+    var databaseUri = new Uri(databaseUrl);
+    var credentials = databaseUri.UserInfo.Split(':', 2);
+    if (credentials.Length != 2)
+        throw new InvalidOperationException("DATABASE_URL must include a username and password.");
+
+    postgresConnectionString = new Npgsql.NpgsqlConnectionStringBuilder
+    {
+        Host = databaseUri.Host,
+        Port = databaseUri.IsDefaultPort ? 5432 : databaseUri.Port,
+        Database = Uri.UnescapeDataString(databaseUri.AbsolutePath.TrimStart('/')),
+        Username = Uri.UnescapeDataString(credentials[0]),
+        Password = Uri.UnescapeDataString(credentials[1]),
+        SslMode = Npgsql.SslMode.Prefer
+    }.ConnectionString;
+}
+
 builder.Services.AddDbContext<MoonDbContext>((serviceProvider, options) =>
 {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres"));
+    options.UseNpgsql(postgresConnectionString);
     options.ReplaceService<IModelCustomizer, MoonExecutionModelCustomizer>();
     options.AddInterceptors(
         serviceProvider.GetRequiredService<LedgerIntegrityInterceptor>(),
@@ -210,6 +230,14 @@ builder.Services.AddOpenTelemetry()
     });
 
 var app = builder.Build();
+
+if (builder.Configuration.GetValue<bool>("Database:MigrateOnStartup"))
+{
+    await using var scope = app.Services.CreateAsyncScope();
+    var db = scope.ServiceProvider.GetRequiredService<MoonDbContext>();
+    await db.Database.MigrateAsync();
+}
+
 app.UseExceptionHandler();
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseCors("frontend");
