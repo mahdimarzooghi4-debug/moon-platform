@@ -113,6 +113,9 @@ export default function Main() {
               <span className="flex w-[568px] h-[204px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[48px] font-extrabold leading-[68px] text-[#17324d] relative text-right z-[27]">
                 تغییر یک سرنوشت، از انتخاب ساده امروز ما شروع می‌شود
               </span>
+              <span className="flex w-[568px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[16px] font-normal leading-[28px] text-[#60758a] relative text-right">
+                ماه، حامیان، شرکت‌ها و استارتاپ‌ها را برای ساخت اثر اجتماعی قابل‌اندازه‌گیری به هم متصل می‌کند.
+              </span>
             </div>
             <div className="flex w-[301px] gap-[12px] items-center shrink-0 flex-nowrap relative z-[28]">
               <button
