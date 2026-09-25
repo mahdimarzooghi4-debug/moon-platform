@@ -67,19 +67,19 @@ html.moon-public-footer-active [class~="bg-[#111e30]"]:last-child {
  * beneath the MAH wordmark (not beneath the crescent). */
 .moon-footer-logo-tagline {
   position: absolute;
-  right: 72px;
-  bottom: 2px;
-  z-index: 2;
+  right: 66px;
+  bottom: 0;
+  z-index: 3;
   display: flex;
-  width: 96px;
-  height: 9px;
+  width: 108px;
+  height: 13px;
   align-items: center;
   justify-content: center;
   background: #111e30;
-  color: #fff;
-  font-size: 6.5px;
-  font-weight: 500;
-  line-height: 9px;
+  color: #fff !important;
+  font-size: 7px;
+  font-weight: 600;
+  line-height: 13px;
   text-align: center;
   white-space: nowrap;
 }
@@ -87,7 +87,7 @@ html.moon-public-footer-active [class~="bg-[#111e30]"]:last-child {
 .moon-footer-logo-tagline::before {
   content: "";
   position: absolute;
-  inset: -1px 0 0;
+  inset: -3px -4px 0;
   z-index: -1;
   background: #111e30;
 }
@@ -178,6 +178,8 @@ html.moon-public-footer-active [class~="bg-[#111e30]"]:last-child {
   width: 18px;
   height: 18px;
   object-fit: contain;
+  opacity: 0.92;
+  filter: brightness(0) invert(1);
 }
 
 .moon-footer-bottom {
@@ -225,9 +227,8 @@ html.moon-public-footer-active [class~="bg-[#111e30]"]:last-child {
   }
 }
 
-/* Supplied monochrome social marks read cleanly on the dark footer. */
-.moon-footer-socials .moon-footer-social-telegram,
-.moon-footer-socials .moon-footer-social-bale {
-  filter: invert(1);
-  mix-blend-mode: screen;
+/* Keep all footer social marks visually consistent on the dark background. */
+.moon-footer-socials .moon-footer-social-telegram {
+  width: 17px;
+  height: 17px;
 }
