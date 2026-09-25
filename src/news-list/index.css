@@ -93,3 +93,84 @@ body.mah-public-rtl #app .mah-news-list-page .mah-news-featured-card > :last-chi
   text-align: right !important;
   align-items: flex-end !important;
 }
+
+
+/* News-page RTL finishing pass.
+   Preserve Figma's physical LTR composition, but anchor all Persian content
+   inside its own block to the right. */
+.mah-news-list-page :where(span, p, label, h1, h2, h3, h4, h5, h6, input, textarea, select):not([class~="text-center"]) {
+  direction: rtl !important;
+  text-align: right !important;
+  unicode-bidi: plaintext;
+}
+
+/* Breadcrumb belongs to the physical right edge of the content area. */
+.mah-news-list-page > :nth-child(2) > :first-child {
+  width: 100% !important;
+  direction: rtl !important;
+  justify-content: flex-start !important;
+  text-align: right !important;
+}
+
+/* Hero title/copy stay right-aligned; statistics remain visually centered. */
+.mah-news-list-page > :nth-child(2) > :nth-child(2) > :last-child {
+  direction: rtl !important;
+  align-items: flex-end !important;
+  text-align: right !important;
+}
+
+.mah-news-list-page > :nth-child(2) > :nth-child(2) > :first-child > div {
+  text-align: center !important;
+  align-items: center !important;
+}
+
+.mah-news-list-page > :nth-child(2) > :nth-child(2) > :first-child > div > span {
+  text-align: center !important;
+}
+
+/* Trust-strip statements: text on the left of a fixed right-side icon. */
+.mah-news-list-page > :nth-child(3) > div {
+  direction: ltr !important;
+  justify-content: flex-end !important;
+}
+
+.mah-news-list-page > :nth-child(3) > div > span {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+/* Featured article copy, metadata and CTA row use one right edge. */
+.mah-news-list-page .mah-news-featured-card > :last-child {
+  direction: rtl !important;
+  align-items: stretch !important;
+  text-align: right !important;
+}
+
+.mah-news-list-page .mah-news-featured-card > :last-child > :where(span, div) {
+  text-align: right !important;
+}
+
+.mah-news-list-page .mah-news-featured-card > :last-child > div {
+  justify-content: flex-start !important;
+}
+
+/* Search/filter block and news cards: all Persian copy aligns right even where
+   the generated markup used items-start/text-left. */
+.mah-news-list-page > :nth-child(5),
+.mah-news-list-page > :nth-child(6),
+.mah-news-list-page > :nth-child(7),
+.mah-news-list-page > :nth-child(8),
+.mah-news-list-page > :nth-child(9) {
+  text-align: right !important;
+}
+
+.mah-news-list-page > :nth-child(8) [class*="flex-col"][class*="items-start"],
+.mah-news-list-page > :nth-child(9) [class*="flex-col"][class*="items-start"] {
+  align-items: flex-end !important;
+}
+
+.mah-news-list-page > :nth-child(8) span:not([class~="text-center"]),
+.mah-news-list-page > :nth-child(9) span:not([class~="text-center"]) {
+  text-align: right !important;
+  direction: rtl !important;
+}

@@ -160,7 +160,7 @@ export default function PublicFooter() {
               <img src="/assets/startups/icons/instagram.svg" alt="اینستاگرام" />
               <img src="/assets/startups/icons/linkedin.svg" alt="لینکدین" />
               <img className="moon-footer-social-telegram" src="/assets/telegram-brand.png" alt="تلگرام" />
-              <img className="moon-footer-social-bale" src="/assets/bale-brand.webp" alt="بله" />
+              <img className="moon-footer-social-bale" src="/assets/bale-brand.png" alt="بله" />
             </div>
           </section>
         </div>
