@@ -42,23 +42,23 @@ textarea {
 /* News details — Figma keeps the spatial composition LTR while Persian copy
  * remains RTL. Scope this correction to the article screen only so no other
  * generated page is affected. */
-.main-container:has(> :nth-child(2) [class*="w-[850px]"]) {
+.mah-news-details-page {
   direction: ltr;
   text-align: right;
 }
 
-.main-container:has(> :nth-child(2) [class*="w-[850px]"]) span,
-.main-container:has(> :nth-child(2) [class*="w-[850px]"]) p,
-.main-container:has(> :nth-child(2) [class*="w-[850px]"]) a,
-.main-container:has(> :nth-child(2) [class*="w-[850px]"]) button,
-.main-container:has(> :nth-child(2) [class*="w-[850px]"]) input,
-.main-container:has(> :nth-child(2) [class*="w-[850px]"]) textarea {
+.mah-news-details-page span,
+.mah-news-details-page p,
+.mah-news-details-page a,
+.mah-news-details-page button,
+.mah-news-details-page input,
+.mah-news-details-page textarea {
   direction: rtl;
   unicode-bidi: plaintext;
 }
 
 /* Header uses a bottom divider in the canonical Figma frame. */
-.main-container:has(> :nth-child(2) [class*="w-[850px]"]) > :first-child {
+.mah-news-details-page > :first-child {
   border-top: 0 !important;
   border-bottom: 1px solid #e4ebf1 !important;
 }
@@ -66,26 +66,23 @@ textarea {
 /* Keep the main article split exactly as Figma: sidebar on the left and the
  * 818px article column on the right. Internal flex rows stay LTR so icons,
  * checks and numbered badges remain on the right side of Persian copy. */
-.main-container:has(> :nth-child(2) [class*="w-[850px]"]) > :nth-child(4),
-.main-container:has(> :nth-child(2) [class*="w-[850px]"]) > :nth-child(4) > * {
+.mah-news-details-page > :nth-child(4),
+.mah-news-details-page > :nth-child(4) > * {
   direction: ltr;
 }
 
 /* Persian text itself remains RTL/right-aligned inside the spatial LTR layout. */
-.main-container:has(> :nth-child(2) [class*="w-[850px]"]) > :nth-child(4) p,
-.main-container:has(> :nth-child(2) [class*="w-[850px]"]) > :nth-child(4) span {
+.mah-news-details-page > :nth-child(4) p,
+.mah-news-details-page > :nth-child(4) span {
   direction: rtl;
   unicode-bidi: plaintext;
 }
 
-/* Product decision: remove the article utility actions (report issue, save,
- * share) from the news detail hero. */
-.main-container:has(> :nth-child(2) [class*="w-[850px]"]) > :nth-child(2) [class*="w-[381px]"] {
-  display: none !important;
-}
+/* Figma includes the three article utility actions (report issue, save, share)
+ * under the meta row; keep them visible. */
 
 /* Related projects: three equal cards, matching the Figma row. */
-.main-container:has(> :nth-child(2) [class*="w-[850px]"])
+.mah-news-details-page
   > :nth-child(4)
   > :nth-child(2)
   > :nth-child(13)
@@ -97,7 +94,7 @@ textarea {
   direction: ltr;
 }
 
-.main-container:has(> :nth-child(2) [class*="w-[850px]"])
+.mah-news-details-page
   > :nth-child(4)
   > :nth-child(2)
   > :nth-child(13)
@@ -112,7 +109,7 @@ textarea {
 
 /* Every related-project card keeps the visual row order LTR, but its Persian
  * content is fully RTL/right-aligned. */
-.main-container:has(> :nth-child(2) [class*="w-[850px]"])
+.mah-news-details-page
   > :nth-child(4)
   > :nth-child(2)
   > :nth-child(13)
@@ -123,7 +120,7 @@ textarea {
   align-items: flex-end !important;
 }
 
-.main-container:has(> :nth-child(2) [class*="w-[850px]"])
+.mah-news-details-page
   > :nth-child(4)
   > :nth-child(2)
   > :nth-child(13)
@@ -133,7 +130,7 @@ textarea {
   text-align: right !important;
 }
 
-.main-container:has(> :nth-child(2) [class*="w-[850px]"])
+.mah-news-details-page
   > :nth-child(4)
   > :nth-child(2)
   > :nth-child(13)
@@ -143,7 +140,7 @@ textarea {
 }
 
 /* Related news below the article also stays as three equal-height cards. */
-.main-container:has(> :nth-child(2) [class*="w-[850px]"]) > :nth-child(5) > :nth-child(2) {
+.mah-news-details-page > :nth-child(5) > :nth-child(2) {
   display: grid !important;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px !important;
@@ -151,7 +148,7 @@ textarea {
   direction: ltr;
 }
 
-.main-container:has(> :nth-child(2) [class*="w-[850px]"]) > :nth-child(5) > :nth-child(2) > * {
+.mah-news-details-page > :nth-child(5) > :nth-child(2) > * {
   width: 100% !important;
   min-width: 0 !important;
   height: 100% !important;
@@ -161,11 +158,11 @@ textarea {
   align-items: flex-end !important;
 }
 
-.main-container:has(> :nth-child(2) [class*="w-[850px]"]) > :nth-child(5) > :nth-child(2) > * > * {
+.mah-news-details-page > :nth-child(5) > :nth-child(2) > * > * {
   direction: rtl !important;
   text-align: right !important;
 }
 
-.main-container:has(> :nth-child(2) [class*="w-[850px]"]) > :nth-child(5) > :nth-child(2) > * span {
+.mah-news-details-page > :nth-child(5) > :nth-child(2) > * span {
   text-align: right !important;
 }
