@@ -5,6 +5,7 @@ export default defineConfig({
   base: process.env.VITE_GITHUB_PAGES === 'true' ? '/moon-platform/' : '/',
   plugins: [react()],
   server: {
+    allowedHosts: ['moon-platform-demo.onrender.com'],
     watch: {
       ignored: ['**/.vs/**'],
     },
