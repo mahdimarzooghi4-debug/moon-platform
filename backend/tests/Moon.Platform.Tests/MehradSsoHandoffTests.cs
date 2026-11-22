@@ -114,7 +114,9 @@ public sealed class MehradSsoHandoffTests : IAsyncLifetime
         var second = await service.PreviewAsync(ticket.Id, _merchantId, ticket.Proof);
         Assert.NotNull(first);
         Assert.Equal(_subject, first!.MehradSubject);
-        Assert.Equal(ticket.ExpiresAtUtc, first.ExpiresAtUtc);
+        // PostgreSQL timestamps have microsecond precision; .NET adds 100ns ticks.
+        Assert.True((ticket.ExpiresAtUtc - first.ExpiresAtUtc).Duration()
+            < TimeSpan.FromMilliseconds(1));
         Assert.Equal(first, second);
         Assert.Null((await db.MehradSsoHandoffs.AsNoTracking().SingleAsync()).ConsumedAtUtc);
 
