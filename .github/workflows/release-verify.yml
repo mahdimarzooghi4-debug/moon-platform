@@ -16,6 +16,7 @@ jobs:
           node-version: '20'
           cache: npm
       - run: npm ci --no-audit --no-fund
+      - run: npm run test:auth
       - run: npm run build
         env:
           # Vite bundles the full Moon web; the default Node heap (about 2 GiB)

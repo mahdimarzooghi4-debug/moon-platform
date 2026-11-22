@@ -105,6 +105,29 @@ The exact browser/Keycloak binding, challenge exchange, consumer auth,
 first-time-user handling and activation are **not** delivered by the
 candidate resolver; approval and adversarial tests are required.
 
+## Moon OIDC callback/browser-binding hardening (implemented)
+
+- Independent Moon PKCE login is still the only code path creating Moon
+  browser sessions through Keycloak; Mehrad never supplies a Moon token.
+- After a Keycloak authorization callback, Moon requires exactly one `code`
+  and `state` matched to the pending browser-tab login. Duplicate parameters,
+  missing pending nonce or invalid PKCE verifier fail closed.
+- The Keycloak ID Token is mandatory and must include the exact original
+  `nonce`. The ID Token and access-token subjects and issuer are checked for
+  consistency with the configured Keycloak realm; the ID Token audience and
+  authorized party must match `moon-web`. Missing/expired/future-dated
+  claims are rejected. The callback state is consumed before token exchange,
+  with an in-flight promise guard for React StrictMode's duplicate effects.
+- These browser-side checks are **additional transaction binding**, not JWT
+  signature verification or server authorization. Only Moon's .NET API
+  accepts Keycloak access tokens after its own JWT middleware validates
+  cryptographic signature, issuer, audience and expiry.
+- `npm run test:auth` runs 13 unit tests using Node's built-in test runner
+  and is now a required GitHub Release Verify frontend CI step.
+- No Keycloak authentication SPI, trusted Mehrad-first browser flow or
+  Keycloak session issuance from Mehrad has been introduced. The original
+  Mehrad `state`/login-CSRF gap remains a separate activation blocker.
+
 ## Staging and security evidence required
 
 - Mehrad documents Staging API: https://dev-api.mehrad.app and Production API:
