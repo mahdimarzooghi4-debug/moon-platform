@@ -17,6 +17,7 @@ public static class MehradSsoEndpoints
     {
         var group = app.MapGroup("/api/v1/integrations/mehrad/sso");
         group.MapGet("/callback", CallbackAsync);
+        group.MapGet("/handoff-preview", HandoffPreviewAsync).RequireAuthorization();
         group.MapPost("/link-existing", LinkExistingAsync).RequireAuthorization();
         return app;
     }
@@ -77,6 +78,37 @@ public static class MehradSsoEndpoints
         {
             return Results.BadRequest(new { code = "invalid_mehrad_identity" });
         }
+    }
+
+    private static async Task<IResult> HandoffPreviewAsync(
+        HttpContext context,
+        IConfiguration config,
+        MehradSsoHandoffService handoffs,
+        CancellationToken cancellationToken)
+    {
+        ApplyNoStoreHeaders(context.Response);
+        if (!config.GetValue<bool>("MehradSso:Enabled")) return Results.NotFound();
+        if (!MehradSsoRequestGuard.TryReadConfiguration(config, out var settings))
+            return Results.StatusCode(StatusCodes.Status503ServiceUnavailable);
+        if (!MehradSsoRequestGuard.IsExpectedHttpsOrigin(context.Request, settings.PublicOrigin))
+            return Results.StatusCode(StatusCodes.Status403Forbidden);
+
+        // A Keycloak bearer token and a host-only HttpOnly cookie are both needed.
+        // Proof, provider tokens and unverified profile data never enter the response.
+        if (!context.Request.Cookies.TryGetValue(HandoffCookieName, out var cookie) ||
+            !MehradSsoRequestGuard.TryDecodeTicket(cookie, out var handoffId, out var proof))
+            return Results.BadRequest(new { code = "missing_handoff" });
+
+        var preview = await handoffs.PreviewAsync(
+            handoffId, settings.MerchantId, proof, cancellationToken);
+        if (preview is null)
+            return Results.StatusCode(StatusCodes.Status410Gone);
+
+        return Results.Ok(new
+        {
+            mehradSubject = preview.MehradSubject.ToString("D"),
+            expiresAtUtc = preview.ExpiresAtUtc
+        });
     }
 
     private static async Task<IResult> LinkExistingAsync(

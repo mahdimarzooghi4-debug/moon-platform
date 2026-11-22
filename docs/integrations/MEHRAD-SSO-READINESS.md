@@ -11,7 +11,10 @@ Moon preserves independent Keycloak OIDC login and Moon-owned account authorizat
   https://mahcsr.ir/api/v1/integrations/mehrad/sso/callback?code={code}
 - The secret is stored privately by the owner and must never enter Git, chat, frontend or logs.
 - Important: verify the correct SSO token/JWKS endpoint for development keys with
-  Mehrad. The Moon token client currently targets https://api.mehrad.app.
+  Mehrad. The official integrations index identifies Staging as
+  https://dev-api.mehrad.app and Production as https://api.mehrad.app.
+  The Moon token client currently targets the Production URL, so Staging
+  activation must remain blocked until environment isolation is implemented.
   Do not silently send development credentials to a production provider API.
 
 ## Existing-account linking implemented
@@ -21,6 +24,10 @@ is issued only after ID token validation. A secure HttpOnly SameSite cookie hold
 the browser proof. The /mehrad/confirm screen reads the existing Moon Keycloak
 session, displays the Moon account, and requires explicit consent before a
 same-origin POST to /api/v1/integrations/mehrad/sso/link-existing.
+A bearer-authenticated, same-origin GET to /api/v1/integrations/mehrad/sso/handoff-preview
+checks the still-active handoff cookie, shows the verified Mehrad subject UUID,
+and does not consume the one-use proof or return provider credentials. The
+browser requires this preview before presenting an active consent action.
 After separate Moon OIDC login, only the known /mehrad/confirm return path is
 allowed for this workflow. Moon authorization and roles do not change.
 
@@ -43,7 +50,9 @@ complete seamless Mehrad-first login. Never link users by unverified phone or ID
 ## Blockers before activation
 
 1. Review login-CSRF and identity mix-up, as Mehrad's described flow lacks state.
-   The user should see a verified Mehrad identity before consenting to a link.
+   The screen now displays the signed Mehrad subject UUID before consent.
+   However, a UUID alone is not human-recognizable; independent review of
+   identity intent/binding is still required before any Stage activation.
 2. Define trusted Keycloak identity broker and first-time-user provisioning policy
    for genuine seamless Mehrad-first login. Do not forge Moon/Keycloak JWTs.
 3. Obtain authorized test user, confirm development SSO API URL, provider JWT/JWKS

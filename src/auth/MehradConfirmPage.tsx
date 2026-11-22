@@ -7,28 +7,66 @@ type Status = "login-required" | "loading" | "ready" | "submitting"
 
 const LOGIN_URL = "/auth?returnTo=%2Fmehrad%2Fconfirm";
 const LINK_URL = "/api/v1/integrations/mehrad/sso/link-existing";
+const PREVIEW_URL = "/api/v1/integrations/mehrad/sso/handoff-preview";
+
+type ProviderPreview = { mehradSubject: string; expiresAtUtc: string };
 
 /** Existing-account linkage only. No Mehrad secrets or handoff proofs are read in JS. */
 export default function MehradConfirmPage() {
   const [session] = useState<AuthSession | null>(() => getSession());
   const [identity, setIdentity] = useState<CurrentIdentity | null>(null);
+  const [provider, setProvider] = useState<ProviderPreview | null>(null);
   const [agreed, setAgreed] = useState(false);
   const [status, setStatus] = useState<Status>(() => session ? "loading" : "login-required");
 
   useEffect(() => {
     if (!session) return;
     let active = true;
-    getCurrentIdentity(session).then((current) => {
-      if (!active) return;
-      if (!current.isActive) { setStatus("account-error"); return; }
-      setIdentity(current);
-      setStatus("ready");
-    }).catch(() => { if (active) setStatus("account-error"); });
+    async function load() {
+      if (!session) return;
+      try {
+        // Never allow account linking without a verified, unconsumed Mehrad handoff.
+        const response = await fetch(PREVIEW_URL, {
+          method: "GET",
+          credentials: "same-origin",
+          cache: "no-store",
+          headers: {
+            Accept: "application/json",
+            Authorization: "Bearer " + session.accessToken,
+          },
+        });
+        if (!active) return;
+        if (!response.ok) {
+          setStatus(response.status === 401 || response.status === 403
+            ? "account-error" : [400, 404, 410].includes(response.status)
+              ? "expired" : "request-error");
+          return;
+        }
+        const verified = (await response.json()) as ProviderPreview;
+        if (!/^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(verified.mehradSubject) ||
+            !Number.isFinite(Date.parse(verified.expiresAtUtc)) ||
+            Date.parse(verified.expiresAtUtc) <= Date.now()) {
+          if (active) setStatus("expired");
+          return;
+        }
+
+        const current = await getCurrentIdentity(session);
+        if (!active) return;
+        if (!current.isActive) { setStatus("account-error"); return; }
+        setProvider(verified);
+        setIdentity(current);
+        setStatus("ready");
+      } catch {
+        if (active) setStatus("request-error");
+      }
+    }
+    void load();
     return () => { active = false; };
   }, [session]);
 
   async function submit() {
-    if (!session || !identity?.isActive || !agreed || status !== "ready") return;
+    if (!session || !identity?.isActive || !provider || !agreed || status !== "ready") return;
+    if (Date.parse(provider.expiresAtUtc) <= Date.now()) { setStatus("expired"); return; }
     setStatus("submitting");
     try {
       // The API and web must share an HTTPS origin. Origin and proof are verified server-side.
@@ -56,7 +94,7 @@ export default function MehradConfirmPage() {
   const messages: Record<Status, string> = {
     "login-required": "برای اتصال حساب موجود، ابتدا از مسیر مستقل ماه وارد شوید.",
     loading: "در حال بررسی حساب فعلی شما در ماه…",
-    ready: "حساب نمایش‌داده‌شده را بررسی کنید. اتصال فقط پس از تأیید شما انجام می‌شود.",
+    ready: "شناسه تأییدشده مهراد و حساب ماه را بررسی کنید؛ اتصال فقط با تأیید شما انجام می‌شود.",
     submitting: "در حال ثبت اتصال امن حساب‌ها…",
     linked: "اتصال حساب‌ها ثبت شد. ورود مستقل ماه همچنان در دسترس است.",
     "account-error": "حساب فعلی ماه شناسایی نشد یا فعال نیست. لطفاً دوباره وارد شوید.",
@@ -80,6 +118,13 @@ export default function MehradConfirmPage() {
           این صفحه صرفاً حساب موجود ماه را به مهراد متصل می‌کند.
           ورود بدون نشست مستقل ماه هنوز فعال نشده است.
         </p>
+        {provider && (
+          <div className="mb-5 rounded-xl border border-[#cde8db] bg-[#f3fcf8] p-4 text-sm leading-7">
+            <p className="font-semibold">شناسه تأییدشده حساب مهراد</p>
+            <p dir="ltr" className="break-all text-xs text-[#456e5a]">{provider.mehradSubject}</p>
+            <p className="text-xs text-[#526d60]">این شناسه از توکن امضاشده مهراد آمده است؛ نام یا شماره همراه از روی آن حدس زده نشده است.</p>
+          </div>
+        )}
         {identity && (
           <div className="mb-5 rounded-xl border border-[#d7e5ef] bg-[#f8fbfe] p-4 text-sm leading-7">
             <p className="font-semibold">حساب شناسایی‌شده در ماه</p>

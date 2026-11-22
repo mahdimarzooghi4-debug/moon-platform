@@ -103,6 +103,55 @@ public sealed class MehradSsoHandoffTests : IAsyncLifetime
         Assert.Empty(await db.MehradSsoHandoffs.ToListAsync());
     }
 
+    [Fact]
+    public async Task Preview_returns_verified_subject_without_consuming_proof()
+    {
+        await using var db = CreateDb();
+        var service = new MehradSsoHandoffService(db);
+        var ticket = await service.IssueAsync(Verified(), _merchantId);
+
+        var first = await service.PreviewAsync(ticket.Id, _merchantId, ticket.Proof);
+        var second = await service.PreviewAsync(ticket.Id, _merchantId, ticket.Proof);
+        Assert.NotNull(first);
+        Assert.Equal(_subject, first!.MehradSubject);
+        Assert.Equal(ticket.ExpiresAtUtc, first.ExpiresAtUtc);
+        Assert.Equal(first, second);
+        Assert.Null((await db.MehradSsoHandoffs.AsNoTracking().SingleAsync()).ConsumedAtUtc);
+
+        Assert.NotNull(await service.ConsumeAsync(ticket.Id, _merchantId, ticket.Proof));
+        Assert.Null(await service.PreviewAsync(ticket.Id, _merchantId, ticket.Proof));
+    }
+
+    [Fact]
+    public async Task Preview_rejects_wrong_proof_or_merchant_without_consuming_ticket()
+    {
+        await using var db = CreateDb();
+        var service = new MehradSsoHandoffService(db);
+        var ticket = await service.IssueAsync(Verified(), _merchantId);
+        Assert.Null(await service.PreviewAsync(ticket.Id, Guid.NewGuid(), ticket.Proof));
+        Assert.Null(await service.PreviewAsync(ticket.Id, _merchantId, new string('a', 64)));
+        Assert.Null(await service.PreviewAsync(ticket.Id, _merchantId, "invalid"));
+        Assert.Null(await service.PreviewAsync(Guid.NewGuid(), _merchantId, ticket.Proof));
+        Assert.NotNull(await service.PreviewAsync(ticket.Id, _merchantId, ticket.Proof));
+        Assert.NotNull(await service.ConsumeAsync(ticket.Id, _merchantId, ticket.Proof));
+    }
+
+    [Fact]
+    public async Task Expired_handoff_cannot_be_previewed_or_consumed()
+    {
+        await using var db = CreateDb();
+        var service = new MehradSsoHandoffService(db);
+        var ticket = await service.IssueAsync(Verified(), _merchantId);
+        await db.MehradSsoHandoffs
+            .Where(x => x.Id == ticket.Id)
+            .ExecuteUpdateAsync(s => s.SetProperty(
+                x => x.ExpiresAtUtc, DateTimeOffset.UtcNow.AddSeconds(-1)));
+
+        Assert.Null(await service.PreviewAsync(ticket.Id, _merchantId, ticket.Proof));
+        Assert.Null(await service.ConsumeAsync(ticket.Id, _merchantId, ticket.Proof));
+        Assert.Null((await db.MehradSsoHandoffs.AsNoTracking().SingleAsync()).ConsumedAtUtc);
+    }
+
     private MehradVerifiedIdentity Verified() =>
         new(_subject.ToString("D"), "Test User", DateTimeOffset.UtcNow.AddMinutes(10));
 

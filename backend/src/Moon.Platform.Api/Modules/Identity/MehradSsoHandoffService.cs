@@ -49,19 +49,39 @@ public sealed class MehradSsoHandoffService(MoonDbContext db)
         return new MehradHandoffTicket(record.Id, proof, expires);
     }
 
+    /// <summary>
+    /// Read-only preview of a valid unconsumed provider handoff.
+    /// The HTTP caller must separately authenticate to Moon and carry the host-only cookie.
+    /// This operation never consumes the one-time proof.
+    /// </summary>
+    public async Task<MehradHandoffPreview?> PreviewAsync(
+        Guid handoffId, Guid merchantId, string? proof,
+        CancellationToken cancellationToken = default)
+    {
+        if (!IsWellFormedProof(handoffId, merchantId, proof)) return null;
+        var now = DateTimeOffset.UtcNow;
+        var digest = HashProof(proof!);
+        return await db.MehradSsoHandoffs.AsNoTracking()
+            .Where(x => x.Id == handoffId &&
+                x.MerchantId == merchantId &&
+                x.ProofSha256 == digest &&
+                x.CreatedAtUtc <= now &&
+                x.ExpiresAtUtc > now &&
+                x.ConsumedAtUtc == null)
+            .Select(x => new MehradHandoffPreview(x.MehradSubject, x.ExpiresAtUtc))
+            .SingleOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<MehradHandoffIdentity?> ConsumeAsync(
         Guid handoffId,
         Guid merchantId,
         string? proof,
         CancellationToken cancellationToken = default)
     {
-        if (handoffId == Guid.Empty || merchantId == Guid.Empty ||
-            proof is null || proof.Length != 64 ||
-            !proof.All(c => c is >= '0' and <= '9' or >= 'a' and <= 'f'))
-            return null;
+        if (!IsWellFormedProof(handoffId, merchantId, proof)) return null;
 
         var now = DateTimeOffset.UtcNow;
-        var hash = HashProof(proof);
+        var hash = HashProof(proof!);
 
         // Atomic conditional UPDATE: exactly one parallel request can consume it.
         var consumed = await db.MehradSsoHandoffs
@@ -81,9 +101,16 @@ public sealed class MehradSsoHandoffService(MoonDbContext db)
         return new MehradHandoffIdentity(row.MerchantId, row.MehradSubject);
     }
 
+    private static bool IsWellFormedProof(Guid handoffId, Guid merchantId, string? proof) =>
+        handoffId != Guid.Empty && merchantId != Guid.Empty &&
+        proof is not null && proof.Length == 64 &&
+        proof.All(c => c is >= '0' and <= '9' or >= 'a' and <= 'f');
+
     private static string HashProof(string proof) =>
         Convert.ToHexStringLower(SHA256.HashData(Encoding.ASCII.GetBytes(proof)));
 }
+
+public sealed record MehradHandoffPreview(Guid MehradSubject, DateTimeOffset ExpiresAtUtc);
 
 public sealed record MehradHandoffTicket(
     Guid Id, string Proof, DateTimeOffset ExpiresAtUtc);
