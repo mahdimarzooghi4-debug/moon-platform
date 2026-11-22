@@ -86,7 +86,7 @@ public sealed class MehradSsoHandoffTests : IAsyncLifetime
                 .ConsumeAsync(ticket.Id, _merchantId, ticket.Proof);
         }
         var attempts = await Task.WhenAll(ConsumeAsync(), ConsumeAsync());
-        Assert.Single(attempts.Where(x => x is not null));
+        Assert.Single(attempts, x => x is not null);
     }
 
     [Fact]
