@@ -24,24 +24,55 @@ public enum MehradAccountLinkOutcome
 /// </summary>
 public sealed class MehradAccountLinkService(MoonDbContext db, IAuditWriter audit)
 {
-    public async Task<MehradAccountLinkOutcome> LinkExistingMoonUserAsync(
+    public Task<MehradAccountLinkOutcome> LinkExistingMoonUserAsync(
         ClaimsPrincipal authenticatedMoonPrincipal,
         MehradVerifiedIdentity verifiedMehradIdentity,
         Guid merchantId,
         string correlationId,
         CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(authenticatedMoonPrincipal);
         ArgumentNullException.ThrowIfNull(verifiedMehradIdentity);
+        if (verifiedMehradIdentity.TokenExpiresAtUtc <= DateTimeOffset.UtcNow ||
+            !Guid.TryParse(verifiedMehradIdentity.MehradSubject, out var subject))
+            return Task.FromResult(MehradAccountLinkOutcome.InvalidIdentity);
+
+        return LinkCoreAsync(authenticatedMoonPrincipal, subject, merchantId, correlationId, cancellationToken);
+    }
+
+    /// <summary>
+    /// Only for a handoff already consumed from the server-side handoff store.
+    /// The route must validate Keycloak authentication, same-origin confirmation
+    /// and one-time proof before calling this method.
+    /// </summary>
+    public Task<MehradAccountLinkOutcome> LinkFromConsumedHandoffAsync(
+        ClaimsPrincipal authenticatedMoonPrincipal,
+        MehradHandoffIdentity consumedHandoff,
+        string correlationId,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(consumedHandoff);
+        return LinkCoreAsync(
+            authenticatedMoonPrincipal,
+            consumedHandoff.MehradSubject,
+            consumedHandoff.MerchantId,
+            correlationId,
+            cancellationToken);
+    }
+
+    private async Task<MehradAccountLinkOutcome> LinkCoreAsync(
+        ClaimsPrincipal authenticatedMoonPrincipal,
+        Guid mehradSubject,
+        Guid merchantId,
+        string correlationId,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(authenticatedMoonPrincipal);
         ArgumentException.ThrowIfNullOrWhiteSpace(correlationId);
 
-        // The caller must already have completed the existing Moon/Keycloak login.
         var keycloakSubject = authenticatedMoonPrincipal.FindFirst("sub")?.Value;
         if (authenticatedMoonPrincipal.Identity?.IsAuthenticated != true ||
             string.IsNullOrWhiteSpace(keycloakSubject) ||
             merchantId == Guid.Empty ||
-            verifiedMehradIdentity.TokenExpiresAtUtc <= DateTimeOffset.UtcNow ||
-            !Guid.TryParse(verifiedMehradIdentity.MehradSubject, out var mehradSubject) ||
             mehradSubject == Guid.Empty)
             return MehradAccountLinkOutcome.InvalidIdentity;
 

@@ -11,6 +11,7 @@ using Moon.Platform.Api.Common.Auditing;
 using Moon.Platform.Api.Common.Authorization;
 using Moon.Platform.Api.Common.Messaging;
 using Moon.Platform.Api.Infrastructure.Persistence;
+using Moon.Platform.Api.Integrations.Mehrad;
 using Moon.Platform.Api.Integrations.Payments;
 using Moon.Platform.Api.Integrations.Sms;
 using Moon.Platform.Api.Modules.AdminManagement;
@@ -120,6 +121,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 builder.Services.AddScoped<IAuditWriter, AuditWriter>();
 builder.Services.AddScoped<IOutboxWriter, OutboxWriter>();
 builder.Services.AddScoped<IIdentitySyncService, IdentitySyncService>();
+builder.Services.AddScoped<MehradAccountLinkService>();
+builder.Services.AddScoped<MehradSsoHandoffService>();
+builder.Services.AddHttpClient<MehradSsoTokenClient>(client =>
+{
+    client.BaseAddress = new Uri("https://api.mehrad.app");
+    client.Timeout = TimeSpan.FromSeconds(10);
+});
+builder.Services.AddHttpClient<MehradIdTokenValidator>(client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(10);
+});
 builder.Services.AddScoped<IAdminAccessService, AdminAccessService>();
 builder.Services.AddScoped<IAdminManagementService, AdminManagementService>();
 builder.Services.AddScoped<IOrganizationAccessService, OrganizationAccessService>();
@@ -282,6 +294,7 @@ app.MapGet("/api/v1/organizations/{organizationId:guid}/access", (Guid organizat
     access = "member"
 })).RequireAuthorization(OrganizationPolicies.Member);
 
+app.MapMehradSsoEndpoints();
 app.MapAdminAccessEndpoints();
 app.MapAdminManagementEndpoints();
 app.MapAdminNewsImageEndpoints();
