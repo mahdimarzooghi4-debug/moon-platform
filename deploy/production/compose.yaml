@@ -5,7 +5,7 @@ name: moon-platform
 
 services:
   gateway:
-    image: caddy:2.10.2-alpine
+    image: public.ecr.aws/docker/library/caddy:2.10.2-alpine
     restart: unless-stopped
     ports:
       - "80:80"
@@ -91,7 +91,7 @@ services:
       - private
 
   moon-db:
-    image: postgres:18-alpine
+    image: public.ecr.aws/docker/library/postgres:18-alpine
     restart: unless-stopped
     environment:
       POSTGRES_DB: moon
@@ -134,7 +134,7 @@ services:
       - private
 
   keycloak-db:
-    image: postgres:18-alpine
+    image: public.ecr.aws/docker/library/postgres:18-alpine
     restart: unless-stopped
     environment:
       POSTGRES_DB: keycloak

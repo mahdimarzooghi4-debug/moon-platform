@@ -30,6 +30,16 @@ jobs:
           assert "reverse_proxy api:8080" in config
           assert "reverse_proxy keycloak:8080" in config
           assert "access_log" not in config and "log {" not in config
+          # Server-verified registry sources. Never silently switch back to
+          # Docker Hub, which returned 403 from the Ubuntu host.
+          compose = Path("deploy/production/compose.yaml").read_text()
+          dockerfile = Path("Dockerfile").read_text()
+          for name in ("postgres:18-alpine", "caddy:2.10.2-alpine"):
+              assert "public.ecr.aws/docker/library/" + name in compose
+          assert "image: postgres:" not in compose and "image: caddy:" not in compose
+          assert "FROM public.ecr.aws/docker/library/node:22-alpine AS build" in dockerfile
+          assert "FROM public.ecr.aws/nginx/nginx-unprivileged:stable-alpine AS runtime" in dockerfile
+
           PY
   frontend:
     runs-on: ubuntu-latest
@@ -37,7 +47,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: npm
       - run: npm ci --no-audit --no-fund
       - run: npm run test:auth

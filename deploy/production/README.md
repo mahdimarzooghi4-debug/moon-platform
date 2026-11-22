@@ -25,6 +25,30 @@ public HTTPS Keycloak issuer
 gateway for signature-key discovery. The JWT issuer/audience are NOT replaced by
 an internal HTTP issuer. HTTPS and certificate validation remain mandatory.
 
+## Registry compatibility on the owner’s host
+
+The host successfully pulled and ran an Alpine test image from Amazon ECR
+Public. Docker Hub and download.docker.com responded with HTTP 403 on this
+host. Direct pulls of Keycloak 26.7.3 from Quay, .NET 10 SDK/runtime from
+Microsoft Container Registry, and PostgreSQL 18, Node 22, unprivileged Nginx
+and Caddy 2.10.2 from ECR Public succeeded (owner-observed SSH output).
+The deployment Compose and frontend Dockerfile therefore use **those exact
+registries**. This change does NOT change versions of Keycloak or Postgres,
+nor guarantee that all layers/build dependencies are reachable.
+
+**Resource warning:** the dedicated Ubuntu host reports about 3.8 GiB RAM
+and 4 GiB swap. Production Vite builds previously required a GitHub CI
+Node heap greater than 5 GiB. Do not attempt parallel Docker builds on the
+host without a memory/capacity assessment. Prefer immutable, reviewed
+images built by CI and transferred through an approved registry or
+authenticated delivery path. No production image publishing pipeline has
+yet been approved, so the Compose `build:` entries are an implementation
+template, NOT a command to run on the live host.
+
+Do not run `docker system prune`; downloaded base images should be kept
+until the corresponding services are validated. Clean-up requires explicit
+inventory, verified backups and release acceptance.
+
 PostgreSQL 18 instances are **independent** for Moon and Keycloak, each on the
 internal Docker network with NO published database ports. RabbitMQ/outbox
 dispatch remains disabled by policy until verified producer/consumer
