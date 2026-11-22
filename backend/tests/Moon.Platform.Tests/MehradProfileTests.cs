@@ -28,11 +28,32 @@ public sealed class MehradProfileTests
         });
         using var http = new HttpClient(handler);
         var result = await new MehradProfileClient(http).FetchProfileAsync(
-            Exchange("profile openid"), Verified());
+            Exchange("profile openid"), Verified(), MehradProviderEndpoints.Production);
         Assert.Equal(Subject, result.Sub);
         Assert.Equal("Example User", result.Name);
         Assert.Null(result.Mobile);
         Assert.Null(result.NationalCode);
+    }
+
+    [Fact]
+    public async Task Staging_profile_request_never_reaches_production_host()
+    {
+        using var handler = new FakeHttpHandler(request =>
+        {
+            Assert.Equal(
+                "https://dev-api.mehrad.app/gateway/sso/profile",
+                request.RequestUri!.ToString());
+            return new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(
+                    """{"sub":"3f1a9c22-58b4-4f6e-9d77-1b2c3d4e5f60","name":"Sample"}""",
+                    Encoding.UTF8, "application/json")
+            };
+        });
+        using var http = new HttpClient(handler);
+        var profile = await new MehradProfileClient(http).FetchProfileAsync(
+            Exchange("openid profile"), Verified(), MehradProviderEndpoints.Staging);
+        Assert.Equal(Subject, profile.Sub);
     }
 
     [Fact]
@@ -42,7 +63,7 @@ public sealed class MehradProfileTests
             throw new InvalidOperationException("Network should not be called."));
         using var http = new HttpClient(handler);
         await Assert.ThrowsAnyAsync<SecurityTokenException>(() =>
-            new MehradProfileClient(http).FetchProfileAsync(Exchange("openid"), Verified()));
+            new MehradProfileClient(http).FetchProfileAsync(Exchange("openid"), Verified(), MehradProviderEndpoints.Production));
     }
 
     [Fact]
@@ -57,7 +78,7 @@ public sealed class MehradProfileTests
             });
         using var http = new HttpClient(handler);
         await Assert.ThrowsAnyAsync<SecurityTokenException>(() =>
-            new MehradProfileClient(http).FetchProfileAsync(Exchange("openid profile"), Verified()));
+            new MehradProfileClient(http).FetchProfileAsync(Exchange("openid profile"), Verified(), MehradProviderEndpoints.Production));
     }
 
     [Fact]
@@ -67,7 +88,7 @@ public sealed class MehradProfileTests
             new HttpResponseMessage(HttpStatusCode.Unauthorized));
         using var http = new HttpClient(handler);
         await Assert.ThrowsAsync<HttpRequestException>(() =>
-            new MehradProfileClient(http).FetchProfileAsync(Exchange("profile"), Verified()));
+            new MehradProfileClient(http).FetchProfileAsync(Exchange("profile"), Verified(), MehradProviderEndpoints.Production));
     }
 
     private static MehradTokenResponse Exchange(string scope) =>

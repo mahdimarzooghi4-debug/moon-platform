@@ -125,7 +125,8 @@ builder.Services.AddScoped<MehradAccountLinkService>();
 builder.Services.AddScoped<MehradSsoHandoffService>();
 builder.Services.AddHttpClient<MehradSsoTokenClient>(client =>
 {
-    client.BaseAddress = new Uri("https://api.mehrad.app");
+    // The token exchange uses an absolute URI from the pinned provider environment.
+    // No default production BaseAddress is allowed for development credentials.
     client.Timeout = TimeSpan.FromSeconds(10);
 });
 builder.Services.AddHttpClient<MehradIdTokenValidator>(client =>

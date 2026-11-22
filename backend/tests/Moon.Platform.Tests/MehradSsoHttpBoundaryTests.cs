@@ -25,16 +25,36 @@ public sealed class MehradSsoHttpBoundaryTests
             {
                 ["MehradSso:MerchantId"] = MerchantId.ToString("D"),
                 ["MehradSso:ClientSecret"] = "unit-test-secret",
-                ["MehradSso:PublicOrigin"] = origin
+                ["MehradSso:PublicOrigin"] = origin,
+                ["MehradSso:Environment"] = "Staging"
             }).Build();
 
         Assert.True(MehradSsoRequestGuard.TryReadConfiguration(
             Valid("https://moon.example"), out var valid));
         Assert.Equal(MerchantId, valid.MerchantId);
+        Assert.Equal("https://dev-api.mehrad.app/", valid.Provider.ApiOrigin.ToString());
         Assert.Equal("https://moon.example/", valid.PublicOrigin.ToString());
         Assert.False(MehradSsoRequestGuard.TryReadConfiguration(Valid("http://moon.example"), out _));
         Assert.False(MehradSsoRequestGuard.TryReadConfiguration(Valid("https://moon.example/path"), out _));
         Assert.False(MehradSsoRequestGuard.TryReadConfiguration(Valid("https://moon.example/?redirect=evil"), out _));
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("staging")]
+    [InlineData("https://attacker.example")]
+    public void Unknown_or_missing_provider_environment_fails_closed(string? environment)
+    {
+        var config = new ConfigurationBuilder().AddInMemoryCollection(
+            new Dictionary<string, string?>
+            {
+                ["MehradSso:MerchantId"] = MerchantId.ToString("D"),
+                ["MehradSso:ClientSecret"] = "unit-test-secret",
+                ["MehradSso:PublicOrigin"] = "https://moon.example",
+                ["MehradSso:Environment"] = environment
+            }).Build();
+        Assert.False(MehradSsoRequestGuard.TryReadConfiguration(config, out _));
     }
 
     [Fact]

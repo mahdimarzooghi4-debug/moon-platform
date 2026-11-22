@@ -11,22 +11,23 @@ namespace Moon.Platform.Api.Integrations.Mehrad;
 /// </summary>
 public sealed class MehradProfileClient(HttpClient httpClient)
 {
-    private const string ProfileUrl = "https://api.mehrad.app/gateway/sso/profile";
 
     public async Task<MehradProfile> FetchProfileAsync(
         MehradTokenResponse exchange,
         MehradVerifiedIdentity verifiedIdentity,
+        MehradProviderEndpoints provider,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(exchange);
         ArgumentNullException.ThrowIfNull(verifiedIdentity);
+        ArgumentNullException.ThrowIfNull(provider);
 
         if (string.IsNullOrWhiteSpace(exchange.AccessToken) ||
             !exchange.Scope.Split(' ', StringSplitOptions.RemoveEmptyEntries)
                 .Contains("profile", StringComparer.Ordinal))
             throw new SecurityTokenException("Mehrad profile scope and Access Token are required.");
 
-        using var request = new HttpRequestMessage(HttpMethod.Get, ProfileUrl);
+        using var request = new HttpRequestMessage(HttpMethod.Get, provider.ProfileUrl);
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", exchange.AccessToken);
         using var response = await httpClient.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();

@@ -32,7 +32,7 @@ public sealed class MehradSsoTests
         using var handler = new StubHttpHandler(async request =>
         {
             Assert.Equal(HttpMethod.Post, request.Method);
-            Assert.Equal("/gateway/sso/token", request.RequestUri!.AbsolutePath);
+            Assert.Equal("https://dev-api.mehrad.app/gateway/sso/token", request.RequestUri!.ToString());
             using var body = JsonDocument.Parse(await request.Content!.ReadAsStringAsync());
             var root = body.RootElement;
             Assert.Equal("authorization_code", root.GetProperty("grant_type").GetString());
@@ -50,7 +50,7 @@ public sealed class MehradSsoTests
         });
         using var client = new HttpClient(handler) { BaseAddress = new Uri("https://api.mehrad.app") };
         var response = await new MehradSsoTokenClient(client)
-            .ExchangeCodeAsync(MerchantId, "secret", "temporary-code");
+            .ExchangeCodeAsync(MerchantId, "secret", "temporary-code", MehradProviderEndpoints.Staging);
         Assert.Equal("opaque-test-token", response.AccessToken);
         Assert.Equal("signed-id-token", response.IdToken);
         Assert.Equal(43200, response.ExpiresIn);
@@ -62,7 +62,7 @@ public sealed class MehradSsoTests
         using var rsa = RSA.Create(2048);
         using var http = JwksClient(rsa);
         var identity = await new MehradIdTokenValidator(http).ValidateAsync(
-            Exchange(CreateJwt(rsa)), MerchantId);
+            Exchange(CreateJwt(rsa)), MerchantId, MehradProviderEndpoints.Production);
 
         Assert.Equal(UserId.ToString("D"), identity.MehradSubject);
         Assert.Equal("Test User", identity.Name);
@@ -76,7 +76,7 @@ public sealed class MehradSsoTests
         using var http = JwksClient(rsa);
         await Assert.ThrowsAnyAsync<SecurityTokenException>(() =>
             new MehradIdTokenValidator(http).ValidateAsync(
-                Exchange(CreateJwt(rsa)) with { Scope = "profile" }, MerchantId));
+                Exchange(CreateJwt(rsa)) with { Scope = "profile" }, MerchantId, MehradProviderEndpoints.Production));
     }
 
     [Fact]
@@ -86,7 +86,7 @@ public sealed class MehradSsoTests
         using var http = JwksClient(rsa);
         await Assert.ThrowsAnyAsync<SecurityTokenException>(() =>
             new MehradIdTokenValidator(http).ValidateAsync(
-                Exchange(CreateJwt(rsa, audience: Guid.NewGuid())), MerchantId));
+                Exchange(CreateJwt(rsa, audience: Guid.NewGuid())), MerchantId, MehradProviderEndpoints.Production));
     }
 
     [Fact]
@@ -96,7 +96,7 @@ public sealed class MehradSsoTests
         using var http = JwksClient(rsa);
         await Assert.ThrowsAnyAsync<SecurityTokenException>(() =>
             new MehradIdTokenValidator(http).ValidateAsync(
-                Exchange(CreateJwt(rsa, issuer: "https://untrusted.example")), MerchantId));
+                Exchange(CreateJwt(rsa, issuer: "https://untrusted.example")), MerchantId, MehradProviderEndpoints.Production));
     }
 
     [Fact]
@@ -106,7 +106,7 @@ public sealed class MehradSsoTests
         using var http = JwksClient(rsa);
         await Assert.ThrowsAnyAsync<SecurityTokenException>(() =>
             new MehradIdTokenValidator(http).ValidateAsync(
-                Exchange(CreateJwt(rsa, expires: DateTime.UtcNow.AddMinutes(-5))), MerchantId));
+                Exchange(CreateJwt(rsa, expires: DateTime.UtcNow.AddMinutes(-5))), MerchantId, MehradProviderEndpoints.Production));
     }
 
     [Fact]
@@ -117,7 +117,7 @@ public sealed class MehradSsoTests
         using var http = JwksClient(trustedRsa);
         await Assert.ThrowsAnyAsync<SecurityTokenException>(() =>
             new MehradIdTokenValidator(http).ValidateAsync(
-                Exchange(CreateJwt(untrustedRsa)), MerchantId));
+                Exchange(CreateJwt(untrustedRsa)), MerchantId, MehradProviderEndpoints.Production));
     }
 
     [Fact]
@@ -127,7 +127,41 @@ public sealed class MehradSsoTests
         using var http = JwksClient(rsa);
         await Assert.ThrowsAnyAsync<SecurityTokenException>(() =>
             new MehradIdTokenValidator(http).ValidateAsync(
-                Exchange(CreateJwt(rsa, tokenType: "access")), MerchantId));
+                Exchange(CreateJwt(rsa, tokenType: "access")), MerchantId, MehradProviderEndpoints.Production));
+    }
+
+    [Theory]
+    [InlineData("Staging", "https://dev-api.mehrad.app/")]
+    [InlineData("Production", "https://api.mehrad.app/")]
+    public void Provider_selection_is_exact_and_pinned(string name, string expectedOrigin)
+    {
+        Assert.True(MehradProviderEndpoints.TryResolve(name, out var endpoints));
+        Assert.Equal(expectedOrigin, endpoints.ApiOrigin.ToString());
+        Assert.False(MehradProviderEndpoints.TryResolve(null, out _));
+        Assert.False(MehradProviderEndpoints.TryResolve("staging", out _));
+        Assert.False(MehradProviderEndpoints.TryResolve("https://evil.example", out _));
+    }
+
+    [Fact]
+    public async Task Staging_id_token_uses_staging_jwks_and_staging_issuer()
+    {
+        using var rsa = RSA.Create(2048);
+        using var http = JwksClient(rsa, MehradProviderEndpoints.Staging);
+        var identity = await new MehradIdTokenValidator(http).ValidateAsync(
+            Exchange(CreateJwt(rsa, issuer: MehradProviderEndpoints.Staging.ExpectedIssuer)),
+            MerchantId, MehradProviderEndpoints.Staging);
+        Assert.Equal(UserId.ToString("D"), identity.MehradSubject);
+    }
+
+    [Fact]
+    public async Task Production_issuer_is_not_accepted_in_staging_even_with_staging_signing_key()
+    {
+        using var rsa = RSA.Create(2048);
+        using var http = JwksClient(rsa, MehradProviderEndpoints.Staging);
+        await Assert.ThrowsAnyAsync<SecurityTokenException>(() =>
+            new MehradIdTokenValidator(http).ValidateAsync(
+                Exchange(CreateJwt(rsa, issuer: MehradProviderEndpoints.Production.ExpectedIssuer)),
+                MerchantId, MehradProviderEndpoints.Staging));
     }
 
     private static MehradTokenResponse Exchange(string jwt) =>
@@ -162,8 +196,9 @@ public sealed class MehradSsoTests
         return handler.WriteToken(handler.CreateToken(descriptor));
     }
 
-    private static HttpClient JwksClient(RSA rsa)
+    private static HttpClient JwksClient(RSA rsa, MehradProviderEndpoints? provider = null)
     {
+        provider ??= MehradProviderEndpoints.Production;
         var publicKey = rsa.ExportParameters(false);
         var jwks = JsonSerializer.Serialize(new
         {
@@ -183,7 +218,7 @@ public sealed class MehradSsoTests
         return new HttpClient(new StubHttpHandler(request =>
         {
             Assert.Equal(
-                "https://api.mehrad.app/gateway/sso/.well-known/jwks.json",
+                provider.JwksUrl.ToString(),
                 request.RequestUri!.ToString());
             return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
             {

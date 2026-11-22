@@ -45,8 +45,8 @@ public static class MehradSsoEndpoints
         try
         {
             var exchange = await tokenClient.ExchangeCodeAsync(
-                settings.MerchantId, settings.ClientSecret, code, cancellationToken);
-            var identity = await idValidator.ValidateAsync(exchange, settings.MerchantId, cancellationToken);
+                settings.MerchantId, settings.ClientSecret, code, settings.Provider, cancellationToken);
+            var identity = await idValidator.ValidateAsync(exchange, settings.MerchantId, settings.Provider, cancellationToken);
             var ticket = await handoffs.IssueAsync(identity, settings.MerchantId, cancellationToken);
             var maxAge = ticket.ExpiresAtUtc - DateTimeOffset.UtcNow;
             if (maxAge <= TimeSpan.Zero)
@@ -171,7 +171,7 @@ public static class MehradSsoEndpoints
 }
 
 public sealed record MehradSsoRuntimeSettings(
-    Guid MerchantId, string ClientSecret, Uri PublicOrigin);
+    Guid MerchantId, string ClientSecret, Uri PublicOrigin, MehradProviderEndpoints Provider);
 
 /// <summary>Pure HTTP/config boundary policy; unit-testable without real merchant secrets.</summary>
 public static class MehradSsoRequestGuard
@@ -182,6 +182,8 @@ public static class MehradSsoRequestGuard
         var idText = config["MehradSso:MerchantId"];
         var secret = config["MehradSso:ClientSecret"];
         var origin = config["MehradSso:PublicOrigin"];
+        if (!MehradProviderEndpoints.TryResolve(config["MehradSso:Environment"], out var provider))
+            return false;
         if (!Guid.TryParse(idText, out var id) || id == Guid.Empty ||
             string.IsNullOrWhiteSpace(secret) ||
             !Uri.TryCreate(origin, UriKind.Absolute, out var uri) ||
@@ -191,7 +193,7 @@ public static class MehradSsoRequestGuard
             uri.Fragment.Length != 0 ||
             uri.UserInfo.Length != 0)
             return false;
-        settings = new MehradSsoRuntimeSettings(id, secret, uri);
+        settings = new MehradSsoRuntimeSettings(id, secret, uri, provider);
         return true;
     }
 

@@ -25,12 +25,14 @@ public sealed class MehradSsoTokenClient(HttpClient httpClient)
         Guid merchantId,
         string clientSecret,
         string authorizationCode,
+        MehradProviderEndpoints provider,
         CancellationToken cancellationToken = default)
     {
         if (merchantId == Guid.Empty) throw new ArgumentException("Merchant ID is required.", nameof(merchantId));
+        ArgumentNullException.ThrowIfNull(provider);
         var signature = CreateClientSignature(clientSecret, authorizationCode);
         using var response = await httpClient.PostAsJsonAsync(
-            "/gateway/sso/token",
+            provider.TokenUrl,
             new
             {
                 grant_type = "authorization_code",

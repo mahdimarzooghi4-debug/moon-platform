@@ -10,12 +10,13 @@ Moon preserves independent Keycloak OIDC login and Moon-owned account authorizat
 - Mehrad reportedly confirmed Moon redirect template:
   https://mahcsr.ir/api/v1/integrations/mehrad/sso/callback?code={code}
 - The secret is stored privately by the owner and must never enter Git, chat, frontend or logs.
-- Important: verify the correct SSO token/JWKS endpoint for development keys with
-  Mehrad. The official integrations index identifies Staging as
-  https://dev-api.mehrad.app and Production as https://api.mehrad.app.
-  The Moon token client currently targets the Production URL, so Staging
-  activation must remain blocked until environment isolation is implemented.
-  Do not silently send development credentials to a production provider API.
+- Provider environments are pinned separately: Staging uses
+  https://dev-api.mehrad.app; Production uses https://api.mehrad.app.
+  Token exchange, profile lookup and JWKS are all built from the same
+  pinned provider environment. An unset/unknown environment fails closed.
+  The Staging issuer is pinned to the Staging API origin as specified by
+  Mehrad's general issuer=service URL guidance; real signed Staging tokens
+  and issuer metadata still require verification before activation.
 
 ## Existing-account linking implemented
 
@@ -37,7 +38,10 @@ complete seamless Mehrad-first login. Never link users by unverified phone or ID
 ## Configuration and deployment preconditions
 
 - Keep MehradSso__Enabled=false until Stage review.
+- Set MehradSso__Environment=Staging explicitly for the dev-merchant key.
+  Only the exact values Staging and Production are accepted, with no fallback.
 - Inject MehradSso__MerchantId and MehradSso__ClientSecret via server-only secrets.
+  Never use a Staging secret with Production, or the reverse.
 - After HTTPS deployment set MehradSso__PublicOrigin=https://mahcsr.ir .
 - The Moon site is not on a server at that origin yet. No Stage has occurred.
 - The current deploy/nginx.conf serves static SPA assets only. Provide trusted

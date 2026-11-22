@@ -66,11 +66,11 @@ accept a random third-party ID Token for local session issuance.
 ## Staging and security evidence required
 
 - Mehrad documents Staging API: https://dev-api.mehrad.app and Production API:
-  https://api.mehrad.app. The current Moon server code is pinned to the latter.
-  Block any sandbox credential use until separate fixed staging token/JWKS
-  routing and staging ID Token issuer validation are implemented and tested.
-- Exact SSO issuer, expected scopes and JWT signature for Staging require
-  provider confirmation before enabling the real flow.
+  https://api.mehrad.app. Moon now explicitly pins separate providers for
+  the code exchange, scoped profile and JWKS/issuer validation. Missing or
+  unknown environment configuration fails closed.
+- Signed Staging tokens, the actual reported issuer, key rotation and scopes
+  still require live provider verification before enabling the real flow.
 - Browser and PostgreSQL tests: correct existing link; no linked user;
   mixed subject/merchant; bad issuer/signature/audience; stale/forged/replayed
   proof; parallel exchanges; lost acknowledgments; login-CSRF and identity

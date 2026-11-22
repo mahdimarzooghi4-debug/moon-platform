@@ -10,15 +10,15 @@ namespace Moon.Platform.Api.Integrations.Mehrad;
 /// </summary>
 public sealed class MehradIdTokenValidator(HttpClient httpClient)
 {
-    private const string Issuer = "https://api.mehrad.app";
-    private const string JwksUrl = "https://api.mehrad.app/gateway/sso/.well-known/jwks.json";
 
     public async Task<MehradVerifiedIdentity> ValidateAsync(
         MehradTokenResponse exchange,
         Guid merchantId,
+        MehradProviderEndpoints provider,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(exchange);
+        ArgumentNullException.ThrowIfNull(provider);
         if (merchantId == Guid.Empty)
             throw new ArgumentException("Mehrad merchant ID must be configured.", nameof(merchantId));
 
@@ -29,7 +29,7 @@ public sealed class MehradIdTokenValidator(HttpClient httpClient)
             throw new SecurityTokenException("Mehrad openid scope and ID Token are required.");
 
         // Provider URL is pinned: never accept a JWKS URL from a request or token.
-        using var response = await httpClient.GetAsync(JwksUrl, cancellationToken);
+        using var response = await httpClient.GetAsync(provider.JwksUrl, cancellationToken);
         response.EnsureSuccessStatusCode();
         var signingKeys = new JsonWebKeySet(
             await response.Content.ReadAsStringAsync(cancellationToken)).GetSigningKeys();
@@ -40,7 +40,7 @@ public sealed class MehradIdTokenValidator(HttpClient httpClient)
         var parameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidIssuer = Issuer,
+            ValidIssuer = provider.ExpectedIssuer,
             ValidateAudience = true,
             ValidAudience = merchantId.ToString("D"),
             ValidateIssuerSigningKey = true,
