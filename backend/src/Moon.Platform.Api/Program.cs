@@ -1,4 +1,6 @@
 using System.Security.Claims;
+using System.Net;
+using Microsoft.AspNetCore.HttpOverrides;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -61,6 +63,36 @@ if (!string.IsNullOrWhiteSpace(databaseUrl))
         Password = Uri.UnescapeDataString(credentials[1]),
         SslMode = Npgsql.SslMode.Prefer
     }.ConnectionString;
+}
+
+// Compose injects the DB password separately so connection-string delimiters
+// in strong passwords are handled by Npgsql, not unsafe string concatenation.
+var separateDbPassword = builder.Configuration["ConnectionStrings:PostgresPassword"];
+if (!string.IsNullOrWhiteSpace(separateDbPassword))
+{
+    if (string.IsNullOrWhiteSpace(postgresConnectionString))
+        throw new InvalidOperationException("PostgreSQL connection information is missing.");
+    var securePostgres = new Npgsql.NpgsqlConnectionStringBuilder(postgresConnectionString)
+    {
+        Password = separateDbPassword
+    };
+    postgresConnectionString = securePostgres.ConnectionString;
+}
+
+var trustedProxyIp = builder.Configuration["ReverseProxy:TrustedProxyIp"];
+if (!string.IsNullOrWhiteSpace(trustedProxyIp))
+{
+    if (!IPAddress.TryParse(trustedProxyIp, out var trustedProxy))
+        throw new InvalidOperationException("ReverseProxy:TrustedProxyIp must be a literal IP address.");
+    builder.Services.Configure<ForwardedHeadersOptions>(options =>
+    {
+        // Single fixed Docker gateway, never trust arbitrary client headers.
+        options.ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+                                   ForwardedHeaders.XForwardedProto |
+                                   ForwardedHeaders.XForwardedHost;
+        options.ForwardLimit = 1;
+        options.KnownProxies.Add(trustedProxy);
+    });
 }
 
 builder.Services.AddDbContext<MoonDbContext>((serviceProvider, options) =>
@@ -233,7 +265,15 @@ builder.Services.AddOpenTelemetry()
     .ConfigureResource(resource => resource.AddService("moon-platform-api"))
     .WithTracing(tracing =>
     {
-        tracing.AddAspNetCoreInstrumentation().AddHttpClientInstrumentation();
+        // Mehrad codes arrive in a query string: never export callback URL
+        // (including ?code=...) as a trace attribute to the collector.
+        tracing.AddAspNetCoreInstrumentation(options =>
+        {
+            options.Filter = context =>
+                !context.Request.Path.StartsWithSegments(
+                    "/api/v1/integrations/mehrad/sso/callback",
+                    StringComparison.OrdinalIgnoreCase);
+        }).AddHttpClientInstrumentation();
         if (Uri.TryCreate(otlpEndpoint, UriKind.Absolute, out var endpoint)) tracing.AddOtlpExporter(options => options.Endpoint = endpoint);
     })
     .WithMetrics(metrics =>
@@ -244,13 +284,20 @@ builder.Services.AddOpenTelemetry()
 
 var app = builder.Build();
 
-if (builder.Configuration.GetValue<bool>("Database:MigrateOnStartup"))
+if (builder.Configuration.GetValue<bool>("Database:MigrateOnStartup") ||
+    builder.Configuration.GetValue<bool>("Database:MigrateOnly"))
 {
     await using var scope = app.Services.CreateAsyncScope();
     var db = scope.ServiceProvider.GetRequiredService<MoonDbContext>();
     await db.Database.MigrateAsync();
 }
 
+// Explicit, audited operator-controlled migration job: migrate and exit.
+// Public API startup always runs with Database:MigrateOnStartup=false.
+if (builder.Configuration.GetValue<bool>("Database:MigrateOnly"))
+    return;
+
+app.UseForwardedHeaders();
 app.UseExceptionHandler();
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseCors("frontend");
