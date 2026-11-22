@@ -38,12 +38,24 @@ nor guarantee that all layers/build dependencies are reachable.
 
 **Resource warning:** the dedicated Ubuntu host reports about 3.8 GiB RAM
 and 4 GiB swap. Production Vite builds previously required a GitHub CI
-Node heap greater than 5 GiB. Do not attempt parallel Docker builds on the
-host without a memory/capacity assessment. Prefer immutable, reviewed
-images built by CI and transferred through an approved registry or
-authenticated delivery path. No production image publishing pipeline has
-yet been approved, so the Compose `build:` entries are an implementation
-template, NOT a command to run on the live host.
+Node heap greater than 5 GiB. The Compose file therefore uses immutable local
+image tags and does not build application images on the server.
+
+For an approved image build, open Actions → Release Verify, select the
+`feat/mehrad-sso-integration` branch, and run the workflow manually. The
+`server-images` job runs only for that branch, after the deployment contract,
+frontend and backend jobs pass. It builds the frontend and API images at the
+workflow commit SHA, then uploads a seven-day artifact containing the images
+and a SHA-256 checksum. This creates an artifact only; it does not deploy,
+change DNS or publish a public registry image.
+
+Download the artifact and transfer both files to
+`deploy/production/` on the server. Verify the archive with
+`sha256sum -c moon-platform-images-<FULL_SHA>.tar.gz.sha256`, load it with
+`docker load -i moon-platform-images-<FULL_SHA>.tar.gz`, and set
+`MOON_IMAGE_TAG=<FULL_SHA>` in the private `.env.production`. Run the
+read-only preflight again. The exact image SHA must match the approved source
+commit; do not use a moving tag such as `latest`.
 
 Do not run `docker system prune`; downloaded base images should be kept
 until the corresponding services are validated. Clean-up requires explicit
