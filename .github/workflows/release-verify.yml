@@ -17,6 +17,10 @@ jobs:
           cache: npm
       - run: npm ci --no-audit --no-fund
       - run: npm run build
+        env:
+          # Vite bundles the full Moon web; the default Node heap (about 2 GiB)
+          # exhausted in Release Verify #89 despite successful dependency install.
+          NODE_OPTIONS: --max-old-space-size=5120
 
   backend:
     runs-on: ubuntu-latest
