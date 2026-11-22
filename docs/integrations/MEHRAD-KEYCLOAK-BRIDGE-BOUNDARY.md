@@ -63,6 +63,48 @@ accept a random third-party ID Token for local session issuance.
 - Moon login must remain usable during Mehrad downtime.
 - Secrets, short-lived codes and proofs never enter front-end URLs/logs.
 
+## Server-side candidate resolution foundation (implemented, no login)
+
+- Local Keycloak is pinned to `26.7.3` in `backend/docker-compose.yml`.
+  The imported `moon` realm has `registrationAllowed=false`; independent
+  `moon-web` OAuth/OIDC code + PKCE login remains the primary login path.
+- `MehradKeycloakCandidateResolver.ResolveFromOneTimeProofAsync` takes the
+  handoff ID, pinned merchant UUID and secret proof **on the server**.
+  It atomically consumes the at-most-five-minute verified handoff and only
+  then reads the exact immutable `(merchantId, mehradSubject)` identity link.
+  Failed/wrong proofs do not consume a legitimate handoff; replay cannot
+  produce a second candidate. The proof is never accepted from a public
+  Moon/Keycloak login endpoint.
+- Only an active Moon user with a previously linked Keycloak `sub` can be
+  returned as a `(MoonUserId, KeycloakSubject)` **candidate**. Unknown links,
+  cross-merchant claims, deactivated users and replayed proofs fail closed.
+  No account, permission, role, session or token is created.
+- A Moon database mapping does NOT prove that a corresponding Keycloak user
+  remains present or enabled. Any eventual Keycloak authenticator must
+  validate the account independently and bind the one-time proof to its own
+  browser-authentication session, including `state` and CSRF protection.
+- This slice is internal only: **no bridge HTTP endpoint, no custom Keycloak
+  Authenticator SPI and no new OAuth grant** are enabled or registered.
+
+## Proposed Keycloak browser handoff (not yet implemented)
+
+1. Mehrad redirects to Moon's registered callback with a short-lived code.
+2. Moon validates the HMAC code exchange and the signed provider ID Token.
+3. A separately security-reviewed Keycloak 26.7.3 Authenticator SPI must start
+   or resume a standard browser authentication session using a bound,
+   one-time, fixed-audience challenge. The absence of provider `state`
+   requires explicit anti-mix-up review before this design can be activated.
+4. The trusted server component consumes the provider handoff once, yielding
+   the existing Keycloak-sub candidate. Unknown/disabled identities fail.
+5. Keycloak must look up the exact enabled user and create its **own** login
+   session; the Moon API must not forge JWTs or assign default privileges.
+6. Moon's existing OIDC code/PKCE callback, session-sync and authorization
+   still operate, and direct Moon login remains independent.
+
+The exact browser/Keycloak binding, challenge exchange, consumer auth,
+first-time-user handling and activation are **not** delivered by the
+candidate resolver; approval and adversarial tests are required.
+
 ## Staging and security evidence required
 
 - Mehrad documents Staging API: https://dev-api.mehrad.app and Production API:

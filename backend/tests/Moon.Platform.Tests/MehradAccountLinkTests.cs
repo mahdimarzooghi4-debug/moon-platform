@@ -133,6 +133,126 @@ public sealed class MehradAccountLinkTests : IAsyncLifetime
         Assert.Null(await service.ResolveActiveMoonUserIdAsync(_merchantId, _mehradId));
     }
 
+    [Fact]
+    public async Task Bridge_candidate_requires_consumed_one_time_handoff_and_exact_link()
+    {
+        await using var db = CreateDb();
+        const string keycloakSubject = "existing-keycloak-user-sub";
+        var moonUser = new AppUser { ExternalSubject = keycloakSubject };
+        db.Users.Add(moonUser);
+        await db.SaveChangesAsync();
+
+        var linker = new MehradAccountLinkService(db, new AuditWriter(db));
+        Assert.Equal(MehradAccountLinkOutcome.Linked,
+            await linker.LinkExistingMoonUserAsync(
+                Principal(keycloakSubject), Verified(_mehradId), _merchantId, "candidate-link"));
+
+        var handoffs = new MehradSsoHandoffService(db);
+        var ticket = await handoffs.IssueAsync(Verified(_mehradId), _merchantId);
+        var resolver = new MehradKeycloakCandidateResolver(db, handoffs);
+
+        var initialLinks = await db.MehradIdentityLinks.CountAsync();
+        var initialAudits = await db.AuditEvents.CountAsync();
+        var candidate = await resolver.ResolveFromOneTimeProofAsync(
+            ticket.Id, _merchantId, ticket.Proof);
+
+        Assert.NotNull(candidate);
+        Assert.Equal(moonUser.Id, candidate!.MoonUserId);
+        Assert.Equal(keycloakSubject, candidate.KeycloakSubject);
+        Assert.Null(await resolver.ResolveFromOneTimeProofAsync(
+            ticket.Id, _merchantId, ticket.Proof));
+        Assert.Equal(initialLinks, await db.MehradIdentityLinks.CountAsync());
+        Assert.Equal(initialAudits, await db.AuditEvents.CountAsync());
+        Assert.Empty(await db.Memberships.ToListAsync());
+        Assert.Single(await db.Users.ToListAsync());
+    }
+
+    [Fact]
+    public async Task Bridge_candidate_rejects_wrong_merchant_and_proof_before_valid_redemption()
+    {
+        await using var db = CreateDb();
+        var moonUser = new AppUser { ExternalSubject = "keycloak-exact-sub" };
+        db.Users.Add(moonUser);
+        await db.SaveChangesAsync();
+
+        var linker = new MehradAccountLinkService(db, new AuditWriter(db));
+        Assert.Equal(MehradAccountLinkOutcome.Linked,
+            await linker.LinkExistingMoonUserAsync(
+                Principal(moonUser.ExternalSubject), Verified(_mehradId), _merchantId, "link"));
+
+        var handoffs = new MehradSsoHandoffService(db);
+        var ticket = await handoffs.IssueAsync(Verified(_mehradId), _merchantId);
+        var resolver = new MehradKeycloakCandidateResolver(db, handoffs);
+
+        Assert.Null(await resolver.ResolveFromOneTimeProofAsync(
+            ticket.Id, Guid.NewGuid(), ticket.Proof));
+        Assert.Null(await resolver.ResolveFromOneTimeProofAsync(
+            ticket.Id, _merchantId, new string('a', 64)));
+        Assert.Null(await resolver.ResolveFromOneTimeProofAsync(
+            Guid.NewGuid(), _merchantId, ticket.Proof));
+
+        // Invalid attempts never use the legitimate proof.
+        Assert.Equal(moonUser.ExternalSubject,
+            (await resolver.ResolveFromOneTimeProofAsync(
+                ticket.Id, _merchantId, ticket.Proof))?.KeycloakSubject);
+        Assert.Null(await resolver.ResolveFromOneTimeProofAsync(
+            ticket.Id, _merchantId, ticket.Proof));
+    }
+
+    [Fact]
+    public async Task Bridge_candidate_rejects_deactivated_user_without_reactivation()
+    {
+        await using var db = CreateDb();
+        var moonUser = new AppUser { ExternalSubject = "disabled-keycloak-sub" };
+        db.Users.Add(moonUser);
+        await db.SaveChangesAsync();
+
+        var linker = new MehradAccountLinkService(db, new AuditWriter(db));
+        Assert.Equal(MehradAccountLinkOutcome.Linked,
+            await linker.LinkExistingMoonUserAsync(
+                Principal(moonUser.ExternalSubject), Verified(_mehradId), _merchantId, "link"));
+
+        moonUser.IsActive = false;
+        await db.SaveChangesAsync();
+        var handoffs = new MehradSsoHandoffService(db);
+        var ticket = await handoffs.IssueAsync(Verified(_mehradId), _merchantId);
+        var resolver = new MehradKeycloakCandidateResolver(db, handoffs);
+
+        Assert.Null(await resolver.ResolveFromOneTimeProofAsync(
+            ticket.Id, _merchantId, ticket.Proof));
+        Assert.Null(await resolver.ResolveFromOneTimeProofAsync(
+            ticket.Id, _merchantId, ticket.Proof));
+        Assert.False((await db.Users.SingleAsync()).IsActive);
+        Assert.Single(await db.MehradIdentityLinks.ToListAsync());
+    }
+
+    [Fact]
+    public async Task Bridge_candidate_never_provisions_unknown_user_or_guesses_from_provider()
+    {
+        await using var db = CreateDb();
+        var handoffs = new MehradSsoHandoffService(db);
+        var ticket = await handoffs.IssueAsync(Verified(_mehradId), _merchantId);
+        var resolver = new MehradKeycloakCandidateResolver(db, handoffs);
+
+        Assert.Null(await resolver.ResolveFromOneTimeProofAsync(
+            Guid.Empty, _merchantId, ticket.Proof));
+        Assert.Null(await resolver.ResolveFromOneTimeProofAsync(
+            ticket.Id, Guid.Empty, ticket.Proof));
+        Assert.Null(await resolver.ResolveFromOneTimeProofAsync(
+            ticket.Id, _merchantId, null));
+
+        // A valid, verified provider identity without an existing link gets NO account.
+        Assert.Null(await resolver.ResolveFromOneTimeProofAsync(
+            ticket.Id, _merchantId, ticket.Proof));
+        Assert.Null(await resolver.ResolveFromOneTimeProofAsync(
+            ticket.Id, _merchantId, ticket.Proof));
+
+        Assert.Empty(await db.Users.ToListAsync());
+        Assert.Empty(await db.MehradIdentityLinks.ToListAsync());
+        Assert.Empty(await db.Memberships.ToListAsync());
+        Assert.Empty(await db.AuditEvents.ToListAsync());
+    }
+
     private static ClaimsPrincipal Principal(string subject) =>
         new(new ClaimsIdentity(new[] { new Claim("sub", subject) }, "unit-test-oidc"));
 
