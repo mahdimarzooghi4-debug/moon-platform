@@ -1362,6 +1362,45 @@ namespace Moon.Platform.Api.Infrastructure.Persistence.Migrations
                     b.ToTable("organizations", "moon");
                 });
 
+            modelBuilder.Entity("Moon.Platform.Api.Modules.Identity.MehradSsoHandoff", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("ConsumedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("ExpiresAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("MehradSubject")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("MerchantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ProofSha256")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExpiresAtUtc");
+
+                    b.HasIndex("MerchantId", "MehradSubject");
+
+                    b.ToTable("mehrad_sso_handoffs", "moon", t =>
+                        {
+                            t.HasCheckConstraint("CK_mehrad_sso_handoffs_consumed_after_created",
+                                "\"ConsumedAtUtc\" IS NULL OR \"ConsumedAtUtc\" >= \"CreatedAtUtc\"");
+                        });
+                });
+
             modelBuilder.Entity("Moon.Platform.Api.Modules.Identity.Role", b =>
                 {
                     b.Property<Guid>("Id")

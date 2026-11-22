@@ -28,6 +28,20 @@ public sealed class MehradIdentityLink
     public DateTimeOffset LinkedAtUtc { get; set; } = DateTimeOffset.UtcNow;
 }
 
+/// <summary>
+/// Transient login-handoff proof. Never serves as a Moon authentication session.
+/// </summary>
+public sealed class MehradSsoHandoff
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid MerchantId { get; set; }
+    public Guid MehradSubject { get; set; }
+    public string ProofSha256 { get; set; } = string.Empty;
+    public DateTimeOffset CreatedAtUtc { get; set; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset ExpiresAtUtc { get; set; }
+    public DateTimeOffset? ConsumedAtUtc { get; set; }
+}
+
 public sealed class Role
 {
     public Guid Id { get; set; } = Guid.NewGuid();

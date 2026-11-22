@@ -15,6 +15,7 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
     public DbSet<Organization> Organizations => Set<Organization>();
     public DbSet<AppUser> Users => Set<AppUser>();
     public DbSet<MehradIdentityLink> MehradIdentityLinks => Set<MehradIdentityLink>();
+    public DbSet<MehradSsoHandoff> MehradSsoHandoffs => Set<MehradSsoHandoff>();
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<Membership> Memberships => Set<Membership>();
     public DbSet<AuditEvent> AuditEvents => Set<AuditEvent>();
@@ -94,6 +95,18 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
             entity.HasIndex(x => x.UserId);
             entity.HasOne<AppUser>().WithMany().HasForeignKey(x => x.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<MehradSsoHandoff>(entity =>
+        {
+            entity.ToTable("mehrad_sso_handoffs");
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.ProofSha256).HasMaxLength(64).IsRequired();
+            entity.HasIndex(x => x.ExpiresAtUtc);
+            entity.HasIndex(x => new { x.MerchantId, x.MehradSubject });
+            entity.ToTable(table => table.HasCheckConstraint(
+                "CK_mehrad_sso_handoffs_consumed_after_created",
+                "\"ConsumedAtUtc\" IS NULL OR \"ConsumedAtUtc\" >= \"CreatedAtUtc\""));
         });
 
         modelBuilder.Entity<Role>(entity =>
