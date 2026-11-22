@@ -26,13 +26,7 @@ services:
         ipv4_address: 172.30.88.10
 
   web:
-    build:
-      context: ../..
-      dockerfile: Dockerfile
-      args:
-        VITE_OIDC_AUTHORITY: https://${MOON_PUBLIC_DOMAIN:?set public host}/identity/realms/moon
-        VITE_OIDC_CLIENT_ID: moon-web
-        VITE_API_BASE_URL: https://${MOON_PUBLIC_DOMAIN:?set public host}
+    image: moon-platform/web:${MOON_IMAGE_TAG:?set immutable image SHA}
     restart: unless-stopped
     expose:
       - "8080"
@@ -40,9 +34,7 @@ services:
       - frontend
 
   api:
-    build:
-      context: ../../backend
-      dockerfile: Dockerfile
+    image: moon-platform/api:${MOON_IMAGE_TAG:?set immutable image SHA}
     restart: unless-stopped
     environment: &moon_api_environment
       ASPNETCORE_ENVIRONMENT: Production
@@ -76,9 +68,7 @@ services:
 
   migrate:
     profiles: ["migrations"]
-    build:
-      context: ../../backend
-      dockerfile: Dockerfile
+    image: moon-platform/api:${MOON_IMAGE_TAG:?set immutable image SHA}
     restart: "no"
     environment:
       <<: *moon_api_environment
