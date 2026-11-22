@@ -104,3 +104,45 @@ jobs:
         run: dotnet ef migrations has-pending-model-changes --project src/Moon.Platform.Api/Moon.Platform.Api.csproj --startup-project src/Moon.Platform.Api/Moon.Platform.Api.csproj
       - working-directory: backend
         run: dotnet test Moon.Platform.slnx -c Release --no-build --no-restore --logger "console;verbosity=normal"
+
+  # Manual, branch-pinned image bundle for the dedicated host. This never deploys.
+  server-images:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/feat/mehrad-sso-integration'
+    needs: [production-deployment-contract, frontend, backend]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build frontend image
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build \\
+            --build-arg VITE_OIDC_AUTHORITY=https://mahcsr.ir/identity/realms/moon \\
+            --build-arg VITE_OIDC_CLIENT_ID=moon-web \\
+            --build-arg VITE_API_BASE_URL=https://mahcsr.ir \\
+            --build-arg NODE_OPTIONS=--max-old-space-size=5120 \\
+            --tag "moon-platform/web:${IMAGE_TAG}" .
+      - name: Build API image
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: docker build --tag "moon-platform/api:${IMAGE_TAG}" --file backend/Dockerfile backend
+      - name: Save and checksum immutable images
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          archive="moon-platform-images-${IMAGE_TAG}.tar.gz"
+          docker save "moon-platform/web:${IMAGE_TAG}" "moon-platform/api:${IMAGE_TAG}" | gzip -1 > "$archive"
+          sha256sum "$archive" > "$archive.sha256"
+          echo "Built image tag: \`${IMAGE_TAG}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "The tarball contains only the frontend and API images; it contains no deployment secrets." >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: moon-platform-images-${{ github.sha }}
+          path: |
+            moon-platform-images-${{ github.sha }}.tar.gz
+            moon-platform-images-${{ github.sha }}.tar.gz.sha256
+          if-no-files-found: error
+          retention-days: 7
