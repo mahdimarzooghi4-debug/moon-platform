@@ -14,6 +14,7 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
 {
     public DbSet<Organization> Organizations => Set<Organization>();
     public DbSet<AppUser> Users => Set<AppUser>();
+    public DbSet<MehradIdentityLink> MehradIdentityLinks => Set<MehradIdentityLink>();
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<Membership> Memberships => Set<Membership>();
     public DbSet<AuditEvent> AuditEvents => Set<AuditEvent>();
@@ -36,6 +37,7 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {
         GuardAuditAppendOnly();
+        GuardMehradLinksAppendOnly();
         GuardLockedProjectVersions();
         GuardFinalEvaluations();
         GuardDecisionsAppendOnly();
@@ -49,6 +51,7 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
     public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
     {
         GuardAuditAppendOnly();
+        GuardMehradLinksAppendOnly();
         GuardLockedProjectVersions();
         GuardFinalEvaluations();
         GuardDecisionsAppendOnly();
@@ -80,6 +83,17 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
             entity.Property(x => x.ExternalSubject).HasMaxLength(200).IsRequired();
             entity.Property(x => x.DisplayName).HasMaxLength(200);
             entity.HasIndex(x => x.ExternalSubject).IsUnique();
+        });
+
+        modelBuilder.Entity<MehradIdentityLink>(entity =>
+        {
+            entity.ToTable("mehrad_identity_links");
+            entity.HasKey(x => x.Id);
+            entity.HasIndex(x => new { x.MerchantId, x.MehradSubject }).IsUnique();
+            entity.HasIndex(x => new { x.MerchantId, x.UserId }).IsUnique();
+            entity.HasIndex(x => x.UserId);
+            entity.HasOne<AppUser>().WithMany().HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<Role>(entity =>
@@ -218,6 +232,13 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
             entity.HasIndex(x => x.CorrelationId);
             entity.HasIndex(x => new { x.SubjectType, x.SubjectId });
         });
+    }
+
+    private void GuardMehradLinksAppendOnly()
+    {
+        if (ChangeTracker.Entries<MehradIdentityLink>()
+            .Any(entry => entry.State is EntityState.Modified or EntityState.Deleted))
+            throw new InvalidOperationException("Mehrad identity links are immutable.");
     }
 
     private void GuardAuditAppendOnly()

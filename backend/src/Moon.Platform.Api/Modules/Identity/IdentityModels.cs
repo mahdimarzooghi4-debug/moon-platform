@@ -18,6 +18,16 @@ public sealed class AppUser
     public DateTimeOffset CreatedAtUtc { get; set; } = DateTimeOffset.UtcNow;
 }
 
+/// <summary>Immutable provider-to-Moon account link. PII is not a linking key.</summary>
+public sealed class MehradIdentityLink
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid MerchantId { get; set; }
+    public Guid MehradSubject { get; set; }
+    public Guid UserId { get; set; }
+    public DateTimeOffset LinkedAtUtc { get; set; } = DateTimeOffset.UtcNow;
+}
+
 public sealed class Role
 {
     public Guid Id { get; set; } = Guid.NewGuid();

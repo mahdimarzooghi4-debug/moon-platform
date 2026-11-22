@@ -1267,6 +1267,37 @@ namespace Moon.Platform.Api.Infrastructure.Persistence.Migrations
                     b.ToTable("users", "moon");
                 });
 
+            modelBuilder.Entity("Moon.Platform.Api.Modules.Identity.MehradIdentityLink", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("LinkedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("MehradSubject")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("MerchantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("MerchantId", "MehradSubject")
+                        .IsUnique();
+
+                    b.HasIndex("MerchantId", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("mehrad_identity_links", "moon");
+                });
+
             modelBuilder.Entity("Moon.Platform.Api.Modules.Identity.Membership", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1746,6 +1777,15 @@ namespace Moon.Platform.Api.Infrastructure.Persistence.Migrations
                     b.HasOne("Moon.Platform.Api.Modules.Funding.FundingPayment", null)
                         .WithMany()
                         .HasForeignKey("PaymentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Moon.Platform.Api.Modules.Identity.MehradIdentityLink", b =>
+                {
+                    b.HasOne("Moon.Platform.Api.Modules.Identity.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
