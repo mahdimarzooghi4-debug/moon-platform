@@ -25,14 +25,6 @@ jobs:
           ref: ${{ github.sha }}
       - name: Validate production Compose
         run: docker compose --env-file deploy/production/env.example -f deploy/production/compose.yaml config --quiet
-      - name: Build immutable production images
-        env:
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          set -euo pipefail
-          docker build --build-arg VITE_OIDC_AUTHORITY=https://mahcsr.ir/identity/realms/moon --build-arg VITE_OIDC_CLIENT_ID=moon-web --build-arg VITE_API_BASE_URL=https://mahcsr.ir --build-arg NODE_OPTIONS=--max-old-space-size=5120 --tag "moon-platform/web:${IMAGE_TAG}" .
-          docker build --tag "moon-platform/api:${IMAGE_TAG}" --file backend/Dockerfile backend
-          docker save "moon-platform/web:${IMAGE_TAG}" "moon-platform/api:${IMAGE_TAG}" | gzip -1 > moon-images.tar.gz
       - name: Configure SSH
         env:
           DEPLOY_KEY: ${{ secrets.MOON_DEPLOY_SSH_KEY }}
@@ -45,7 +37,7 @@ jobs:
           printf '%s\n' "$DEPLOY_KEY" > "$HOME/.ssh/moon_deploy"
           printf '%s\n' "$KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
           chmod 600 "$HOME/.ssh/moon_deploy" "$HOME/.ssh/known_hosts"
-      - name: Transfer image bundle
+      - name: Build and deploy on server
         env:
           DEPLOY_HOST: ${{ secrets.MOON_DEPLOY_HOST }}
           DEPLOY_USER: ${{ secrets.MOON_DEPLOY_USER }}
@@ -54,30 +46,32 @@ jobs:
           set -euo pipefail
           test -n "$DEPLOY_HOST" || { echo "Missing MOON_DEPLOY_HOST"; exit 1; }
           test -n "$DEPLOY_USER" || { echo "Missing MOON_DEPLOY_USER"; exit 1; }
-          scp -i "$HOME/.ssh/moon_deploy" -o BatchMode=yes moon-images.tar.gz "${DEPLOY_USER}@${DEPLOY_HOST}:/opt/moon/moon-images-${IMAGE_TAG}.tar.gz"
-      - name: Deploy on server
-        env:
-          DEPLOY_HOST: ${{ secrets.MOON_DEPLOY_HOST }}
-          DEPLOY_USER: ${{ secrets.MOON_DEPLOY_USER }}
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          set -euo pipefail
-          ssh -i "$HOME/.ssh/moon_deploy" -o BatchMode=yes "${DEPLOY_USER}@${DEPLOY_HOST}" "IMAGE_TAG='${IMAGE_TAG}' bash -s" <<'REMOTE'
+          ssh -i "$HOME/.ssh/moon_deploy" -o BatchMode=yes "$DEPLOY_USER@$DEPLOY_HOST" "IMAGE_TAG='$IMAGE_TAG' bash -s" <<'REMOTE'
           set -euo pipefail
           cd /opt/moon/app
           test -f deploy/production/.env.production
           git fetch --depth=1 origin main
           git switch -C moon-production FETCH_HEAD
           test "$(git rev-parse HEAD)" = "$IMAGE_TAG"
+
           if grep -q '^MOON_IMAGE_TAG=' deploy/production/.env.production; then
             sed -i "s/^MOON_IMAGE_TAG=.*/MOON_IMAGE_TAG=$IMAGE_TAG/" deploy/production/.env.production
           else
             printf '\nMOON_IMAGE_TAG=%s\n' "$IMAGE_TAG" >> deploy/production/.env.production
           fi
           chmod 600 deploy/production/.env.production
-          docker load -i "/opt/moon/moon-images-$IMAGE_TAG.tar.gz"
           bash deploy/production/preflight.sh
+
+          docker build \
+            --build-arg VITE_OIDC_AUTHORITY=https://mahcsr.ir/identity/realms/moon \
+            --build-arg VITE_OIDC_CLIENT_ID=moon-web \
+            --build-arg VITE_API_BASE_URL=https://mahcsr.ir \
+            --build-arg NODE_OPTIONS=--max-old-space-size=5120 \
+            --tag "moon-platform/web:$IMAGE_TAG" .
+          docker build \
+            --tag "moon-platform/api:$IMAGE_TAG" \
+            --file backend/Dockerfile backend
+
           docker compose --env-file deploy/production/.env.production -f deploy/production/compose.yaml up -d --remove-orphans
           docker compose --env-file deploy/production/.env.production -f deploy/production/compose.yaml ps
-          rm -f "/opt/moon/moon-images-$IMAGE_TAG.tar.gz"
           REMOTE
