@@ -7,6 +7,40 @@ on:
   workflow_dispatch:
 
 jobs:
+  production-deployment-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate production Compose config WITHOUT deploying
+        run: docker compose --env-file deploy/production/env.example -f deploy/production/compose.yaml config --quiet
+      - name: Validate private operator scripts and production Keycloak realm
+        run: |
+          bash -n deploy/production/preflight.sh
+          bash -n deploy/production/backup-databases.sh
+          python3 -m json.tool backend/keycloak/moon-realm-production.json >/dev/null
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          realm = json.loads(Path("backend/keycloak/moon-realm-production.json").read_text())
+          assert realm["realm"] == "moon" and not realm["registrationAllowed"]
+          web = next(c for c in realm["clients"] if c["clientId"] == "moon-web")
+          assert web["redirectUris"] == ["https://mahcsr.ir/auth/callback"]
+          assert web["webOrigins"] == ["https://mahcsr.ir"]
+          config = Path("deploy/production/Caddyfile").read_text()
+          assert "reverse_proxy api:8080" in config
+          assert "reverse_proxy keycloak:8080" in config
+          assert "access_log" not in config and "log {" not in config
+          # Server-verified registry sources. Never silently switch back to
+          # Docker Hub, which returned 403 from the Ubuntu host.
+          compose = Path("deploy/production/compose.yaml").read_text()
+          dockerfile = Path("Dockerfile").read_text()
+          for name in ("postgres:18-alpine", "caddy:2.10.2-alpine"):
+              assert "public.ecr.aws/docker/library/" + name in compose
+          assert "image: postgres:" not in compose and "image: caddy:" not in compose
+          assert "FROM public.ecr.aws/docker/library/node:22-alpine AS build" in dockerfile
+          assert "FROM public.ecr.aws/nginx/nginx-unprivileged:stable-alpine AS runtime" in dockerfile
+
+          PY
   frontend:
     runs-on: ubuntu-latest
     steps:
