@@ -231,6 +231,14 @@ builder.Services.AddOpenTelemetry()
 
 var app = builder.Build();
 
+if (builder.Configuration.GetValue<bool>("Database:MigrateOnly"))
+{
+    await using var migrationScope = app.Services.CreateAsyncScope();
+    var migrationDb = migrationScope.ServiceProvider.GetRequiredService<MoonDbContext>();
+    await migrationDb.Database.MigrateAsync();
+    return;
+}
+
 if (builder.Configuration.GetValue<bool>("Database:MigrateOnStartup"))
 {
     await using var scope = app.Services.CreateAsyncScope();

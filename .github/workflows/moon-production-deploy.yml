@@ -72,6 +72,7 @@ jobs:
             --tag "moon-platform/api:$IMAGE_TAG" \
             --file backend/Dockerfile backend
 
+          docker compose --profile migrations --env-file deploy/production/.env.production -f deploy/production/compose.yaml run --rm migrate
           docker compose --env-file deploy/production/.env.production -f deploy/production/compose.yaml up -d --remove-orphans
           docker compose --env-file deploy/production/.env.production -f deploy/production/compose.yaml ps
           REMOTE
