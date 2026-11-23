@@ -196,3 +196,26 @@
   object-fit: cover;
   background: #111e30;
 }
+
+.admin-trusted-publish {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0;
+  color: #17324d;
+  font-size: 11px;
+}
+
+.admin-trusted-company-row {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  text-align: right;
+  cursor: pointer;
+}
+
+.admin-trusted-company-row:hover,
+.admin-trusted-company-row.is-selected {
+  background: #f1f8fd;
+}

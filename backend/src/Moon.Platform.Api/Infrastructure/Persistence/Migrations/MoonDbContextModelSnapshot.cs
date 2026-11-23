@@ -316,6 +316,48 @@ namespace Moon.Platform.Api.Infrastructure.Persistence.Migrations
                     b.ToTable("admin_organization_profiles", "moon");
                 });
 
+            modelBuilder.Entity("Moon.Platform.Api.Modules.AdminManagement.AdminTrustedCompany", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", Npgsql.EntityFrameworkCore.PostgreSQL.Metadata.NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<bool>("IsPublished")
+                        .HasColumnType("boolean");
+
+                    b.Property<byte[]>("LogoData")
+                        .HasColumnType("bytea");
+
+                    b.Property<string>("LogoContentType")
+                        .HasMaxLength(120)
+                        .HasColumnType("character varying(120)");
+
+                    b.Property<string>("LogoFileName")
+                        .HasMaxLength(240)
+                        .HasColumnType("character varying(240)");
+
+                    b.Property<long?>("LogoSize")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IsPublished", "SortOrder");
+
+                    b.ToTable("admin_trusted_companies", "moon");
+                });
+
             modelBuilder.Entity("Moon.Platform.Api.Modules.Evaluations.ProjectDecision", b =>
                 {
                     b.Property<Guid>("Id")

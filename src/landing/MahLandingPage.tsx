@@ -2,6 +2,7 @@ import React from "react";
 import "./index.css";
 import MoonIntroDialog from "./MoonIntroDialog";
 import { getPublicLandingKpis } from "../impact/api";
+import { listPublicTrustedCompanies, publicTrustedCompanyLogoUrl, type PublicTrustedCompany } from "../features/admin-panel/management-api";
 
 const integerFormatter = new Intl.NumberFormat("fa-IR", { maximumFractionDigits: 0 });
 const decimalFormatter = new Intl.NumberFormat("fa-IR", { maximumFractionDigits: 1 });
@@ -17,6 +18,7 @@ type LandingKpiView = {
 export default function Main() {
   const [introOpen, setIntroOpen] = React.useState(false);
   const [landingKpis, setLandingKpis] = React.useState<LandingKpiView | null>(null);
+  const [trustedCompanies, setTrustedCompanies] = React.useState<PublicTrustedCompany[]>([]);
 
   React.useEffect(() => {
     let cancelled = false;
@@ -43,6 +45,14 @@ export default function Main() {
     return () => {
       cancelled = true;
     };
+  }, []);
+
+  React.useEffect(() => {
+    let cancelled = false;
+    listPublicTrustedCompanies()
+      .then((items) => { if (!cancelled) setTrustedCompanies(items); })
+      .catch(() => { if (!cancelled) setTrustedCompanies([]); });
+    return () => { cancelled = true; };
   }, []);
   return (
     <>
@@ -618,55 +628,15 @@ export default function Main() {
             همراهان سازمانی در مسیر سرمایه‌گذاری اجتماعی شفاف و اثرگذار
           </span>
         </div>
-        <div className="flex pt-0 pr-[24px] pb-0 pl-[24px] justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[239]">
-          <div className="flex w-[120px] h-[38px] gap-[10px] justify-center items-center shrink-0 flex-nowrap opacity-70 relative z-[240]">
-            <span className="flex w-[75px] h-[34px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[22px] font-bold leading-[34px] text-[#606d7c] relative text-center whitespace-nowrap z-[241]">
-              راهکار نو
-            </span>
-            <div className="flex w-[36px] h-[36px] flex-col justify-center items-center shrink-0 flex-nowrap bg-[#2094e3] rounded-[12px] relative z-[242]">
-              <div className="w-[14px] h-[14px] shrink-0 bg-[url(/assets/codia/ziERz1A9aZ.png)] bg-cover bg-no-repeat relative overflow-hidden z-[243]" />
+        <div className="flex pt-0 pr-[24px] pb-0 pl-[24px] justify-between items-center self-stretch shrink-0 flex-wrap gap-y-5 relative z-[239]">
+          {trustedCompanies.map((company) => (
+            <div className="flex min-w-[120px] h-[38px] gap-[10px] justify-center items-center shrink-0 flex-nowrap opacity-70" key={company.id}>
+              <span className="h-[34px] font-['Vazirmatn'] text-[22px] font-bold leading-[34px] text-[#606d7c] text-center whitespace-nowrap">{company.name}</span>
+              <div className="flex w-[36px] h-[36px] flex-col justify-center items-center shrink-0 overflow-hidden bg-[#2094e3] rounded-[12px]">
+                {company.hasLogo ? <img className="h-full w-full object-contain bg-white" src={publicTrustedCompanyLogoUrl(company.id)} alt={`لوگوی ${company.name}`} /> : <span className="text-white text-sm font-bold" aria-hidden="true">{company.name.slice(0, 1)}</span>}
+              </div>
             </div>
-          </div>
-          <div className="flex w-[100px] h-[38px] gap-[10px] justify-center items-center shrink-0 flex-nowrap opacity-70 relative z-[244]">
-            <span className="flex w-[54px] h-[34px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[22px] font-bold leading-[34px] text-[#606d7c] relative text-center whitespace-nowrap z-[245]">
-              پیشرو
-            </span>
-            <div className="flex w-[36px] h-[36px] flex-col justify-center items-center shrink-0 flex-nowrap bg-[#2094e3] rounded-[12px] relative z-[246]">
-              <div className="w-[14px] h-[14px] shrink-0 bg-[url(/assets/codia/uVmpYvWQi7.png)] bg-cover bg-no-repeat relative overflow-hidden z-[247]" />
-            </div>
-          </div>
-          <div className="flex w-[125px] h-[38px] gap-[10px] justify-center items-center shrink-0 flex-nowrap opacity-70 relative z-[248]">
-            <span className="flex w-[79px] h-[34px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[22px] font-bold leading-[34px] text-[#606d7c] relative text-center whitespace-nowrap z-[249]">
-              هم‌آفرین
-            </span>
-            <div className="flex w-[36px] h-[36px] flex-col justify-center items-center shrink-0 flex-nowrap bg-[#2094e3] rounded-[12px] relative z-[250]">
-              <div className="w-[14px] h-[14px] shrink-0 bg-[url(/assets/codia/v3XUKgbb2i.png)] bg-cover bg-no-repeat relative overflow-hidden z-[251]" />
-            </div>
-          </div>
-          <div className="flex w-[153px] h-[38px] gap-[10px] justify-center items-center shrink-0 flex-nowrap opacity-70 relative z-[252]">
-            <span className="flex w-[107px] h-[34px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[22px] font-bold leading-[34px] text-[#606d7c] relative text-center whitespace-nowrap z-[253]">
-              فردای روشن
-            </span>
-            <div className="flex w-[36px] h-[36px] flex-col justify-center items-center shrink-0 flex-nowrap bg-[#2094e3] rounded-[12px] relative z-[254]">
-              <div className="w-[14px] h-[14px] shrink-0 bg-[url(/assets/codia/SEnyEKiAqo.png)] bg-cover bg-no-repeat relative overflow-hidden z-[255]" />
-            </div>
-          </div>
-          <div className="flex w-[138px] h-[38px] gap-[10px] justify-center items-center shrink-0 flex-nowrap opacity-70 relative z-[256]">
-            <span className="flex w-[92px] h-[34px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[22px] font-bold leading-[34px] text-[#606d7c] relative text-center whitespace-nowrap z-[257]">
-              توسعه آریا
-            </span>
-            <div className="flex w-[36px] h-[36px] flex-col justify-center items-center shrink-0 flex-nowrap bg-[#2094e3] rounded-[12px] relative z-[258]">
-              <div className="w-[14px] h-[14px] shrink-0 bg-[url(/assets/codia/PeD9PMAuMz.png)] bg-cover bg-no-repeat relative overflow-hidden z-[259]" />
-            </div>
-          </div>
-          <div className="flex w-[115px] h-[38px] gap-[10px] justify-center items-center shrink-0 flex-nowrap opacity-70 relative z-[260]">
-            <span className="flex w-[69px] h-[34px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[22px] font-bold leading-[34px] text-[#606d7c] relative text-center whitespace-nowrap z-[261]">
-              سپهر نو
-            </span>
-            <div className="flex w-[36px] h-[36px] flex-col justify-center items-center shrink-0 flex-nowrap bg-[#2094e3] rounded-[12px] relative z-[262]">
-              <div className="w-[14px] h-[14px] shrink-0 bg-[url(/assets/codia/xFsiBGoAsW.png)] bg-cover bg-no-repeat relative overflow-hidden z-[263]" />
-            </div>
-          </div>
+          ))}
         </div>
       </div>
       <div className="flex pt-[96px] pr-[120px] pb-[96px] pl-[120px] flex-col gap-[40px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] relative z-[264]">

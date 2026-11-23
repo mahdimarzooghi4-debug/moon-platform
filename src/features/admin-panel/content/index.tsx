@@ -12,6 +12,7 @@ import {
   saveAdminManagedNews,
   saveAdminNewsImage,
 } from "../management-api";
+import TrustedCompaniesEditor from "./trusted-companies";
 import {
   ADMIN_NEWS_CHANGED,
   deleteAdminNews,
@@ -37,7 +38,7 @@ const numberFa = new Intl.NumberFormat("fa-IR");
 const isDevelopment = Boolean(import.meta.env.DEV);
 const allowedNewsImageTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
 
-type ContentTab = "news" | "hero";
+type ContentTab = "news" | "hero" | "companies";
 
 function toNewsItem(item: Awaited<ReturnType<typeof listAdminManagedNews>>[number]): AdminNewsItem {
   return {
@@ -473,10 +474,11 @@ export default function AdminContentManagement() {
         <section className="admin-content-tabs admin-final-card" aria-label="بخش‌های محتوا">
           <button className={`admin-content-tab${tab === "news" ? " is-active" : ""}`} type="button" onClick={() => { setTab("news"); setMessage(""); }}>اخبار و رویدادها</button>
           <button className={`admin-content-tab${tab === "hero" ? " is-active" : ""}`} type="button" onClick={() => { setTab("hero"); setMessage(""); }}>ویدئوی هیرو</button>
+          <button className={`admin-content-tab${tab === "companies" ? " is-active" : ""}`} type="button" onClick={() => { setTab("companies"); setMessage(""); }}>شرکت‌های همراه</button>
           <span className="admin-content-auto">{backendReady ? "CMS Backend: متصل" : "CMS: fallback توسعه"}</span>
         </section>
 
-        {tab === "news" ? (
+        {tab === "companies" ? <TrustedCompaniesEditor /> : tab === "news" ? (
           <section className="admin-content-row">
             <article className="admin-content-editor admin-final-card">
               <h2>{creatingNews ? "خبر جدید" : "ویرایش خبر"}</h2><p>{creatingNews ? "عنوان، خلاصه، عکس و وضعیت انتشار خبر جدید را وارد کنید." : "عنوان، خلاصه، عکس و وضعیت انتشار را تغییر دهید."}</p>
