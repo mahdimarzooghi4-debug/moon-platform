@@ -3,3 +3,12 @@ dist/
 .vs/
 .env.local
 .DS_Store
+
+# Local/private deployment assets (never commit credentials or backups)
+.env
+.env.*
+!.env.example
+**/*.dump
+**/*.backup
+**/*.pem
+**/*.key
