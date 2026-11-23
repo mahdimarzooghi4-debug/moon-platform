@@ -847,3 +847,136 @@ html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) a[href^="tel
     font-size: 11px !important;
   }
 }
+
+/* Specificity guard for the generated Figma rules above. */
+@media (max-width: 768px) {
+  html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) > div:first-child {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    flex-wrap: nowrap !important;
+    gap: 12px !important;
+  }
+
+  html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) > div:first-child > div:nth-child(2) {
+    order: 1 !important;
+    display: grid !important;
+    grid-template-areas: "brand" "menu" !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 8px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    direction: rtl !important;
+  }
+
+  html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) > div:first-child [class~="z-[16]"] {
+    grid-area: brand !important;
+    justify-self: end !important;
+    width: 120px !important;
+    height: 42px !important;
+    background-position: right center !important;
+    background-size: contain !important;
+  }
+
+  html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) > div:first-child [class~="z-[9]"] {
+    grid-area: menu !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+    gap: 16px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    padding: 2px 0 6px !important;
+    direction: rtl !important;
+  }
+
+  html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) > div:first-child [class~="z-[9]"] > span {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
+    white-space: nowrap !important;
+  }
+
+  html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) > div:first-child > div:first-child {
+    order: 2 !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: stretch !important;
+    gap: 8px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) > div:first-child [class~="z-[2]"],
+  html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) > div:first-child [class~="z-[4]"],
+  html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) > div:first-child [class~="z-[6]"] {
+    flex: 1 1 0 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    height: 42px !important;
+    padding: 8px 5px !important;
+  }
+
+  html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) > div:first-child [class~="z-[2]"] span,
+  html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) > div:first-child [class~="z-[4]"] span,
+  html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) > div:first-child [class~="z-[6]"] span {
+    width: auto !important;
+    height: auto !important;
+    font-size: 12px !important;
+    line-height: 1.5 !important;
+    white-space: nowrap !important;
+  }
+
+  html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[18]"] {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 24px !important;
+    direction: rtl !important;
+  }
+
+  html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[19]"],
+  html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[25]"],
+  html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[26]"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    flex: 1 1 auto !important;
+  }
+
+  html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[25]"] {
+    align-items: stretch !important;
+    gap: 16px !important;
+    direction: rtl !important;
+    text-align: right !important;
+  }
+
+  html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[27]"] {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100% !important;
+    font-size: clamp(24px, 6vw, 32px) !important;
+    line-height: 1.6 !important;
+    text-align: right !important;
+    direction: rtl !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[28]"] {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[28]"] > button,
+  html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) [class~="z-[28]"] > div {
+    flex: 1 1 145px !important;
+    width: auto !important;
+    min-width: 0 !important;
+  }
+}
