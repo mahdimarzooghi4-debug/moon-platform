@@ -599,3 +599,251 @@ html[dir="rtl"] body .main-container:has([class*="4T7A4AiY30.png"]) a[href^="tel
     max-width: 100%;
   }
 }
+
+
+/* Mobile repair: keep the landing page within the device viewport and make the
+   brand, navigation, and actions occupy intentional rows. */
+@media (max-width: 768px) {
+  html,
+  body,
+  #app {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  .main-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-inline: 0 !important;
+    overflow-x: clip !important;
+  }
+
+  .main-container > div {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .main-container > div:first-child {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+    width: 100% !important;
+    padding: 12px 16px !important;
+  }
+
+  /* Brand first, then a single-line scrollable menu, then action buttons. */
+  .main-container > div:first-child > div:nth-child(2) {
+    order: 1 !important;
+    display: grid !important;
+    grid-template-areas: "brand" "menu" !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 8px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    direction: rtl !important;
+  }
+
+  .main-container > div:first-child [class~="z-[16]"] {
+    grid-area: brand !important;
+    justify-self: end !important;
+    width: 120px !important;
+    height: 42px !important;
+    background-position: right center !important;
+    background-size: contain !important;
+  }
+
+  .main-container > div:first-child [class~="z-[9]"] {
+    grid-area: menu !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+    gap: 16px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    padding: 2px 0 6px !important;
+    direction: rtl !important;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .main-container > div:first-child [class~="z-[9]"]::-webkit-scrollbar {
+    display: none;
+  }
+
+  .main-container > div:first-child [class~="z-[9]"] > span {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
+    white-space: nowrap !important;
+  }
+
+  .main-container > div:first-child > div:first-child {
+    order: 2 !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: stretch !important;
+    gap: 8px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .main-container > div:first-child [class~="z-[2]"],
+  .main-container > div:first-child [class~="z-[4]"],
+  .main-container > div:first-child [class~="z-[6]"] {
+    flex: 1 1 0 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    height: 42px !important;
+    padding: 8px 5px !important;
+  }
+
+  .main-container > div:first-child [class~="z-[2]"] span,
+  .main-container > div:first-child [class~="z-[4]"] span,
+  .main-container > div:first-child [class~="z-[6]"] span {
+    width: auto !important;
+    max-width: 100% !important;
+    height: auto !important;
+    font-size: 12px !important;
+    line-height: 1.5 !important;
+    white-space: nowrap !important;
+  }
+
+  /* Apply consistent mobile gutters to each landing section. */
+  .main-container > div:not(:first-child) {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .main-container > div[class*="pt-[96px]"],
+  .main-container > div[class*="pt-[80px]"] {
+    padding-top: 32px !important;
+    padding-bottom: 36px !important;
+  }
+
+  .main-container [class~="z-[18]"] {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 24px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    direction: rtl !important;
+  }
+
+  .main-container [class~="z-[19]"],
+  .main-container [class~="z-[25]"],
+  .main-container [class~="z-[26]"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    flex: 1 1 auto !important;
+  }
+
+  .main-container [class~="z-20"] {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    aspect-ratio: 16 / 9 !important;
+    border-radius: 20px !important;
+    background-position: center !important;
+  }
+
+  .main-container [class~="z-[25]"] {
+    align-items: stretch !important;
+    gap: 16px !important;
+    direction: rtl !important;
+    text-align: right !important;
+  }
+
+  .main-container [class~="z-[26]"] {
+    align-items: stretch !important;
+    gap: 10px !important;
+    direction: rtl !important;
+  }
+
+  .main-container [class~="z-[27]"] {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100% !important;
+    font-size: clamp(24px, 6vw, 32px) !important;
+    line-height: 1.6 !important;
+    text-align: right !important;
+    direction: rtl !important;
+    overflow-wrap: anywhere;
+  }
+
+  .main-container [class~="z-[26]"] > span:last-child {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100% !important;
+    text-align: right !important;
+    line-height: 1.9 !important;
+  }
+
+  .main-container [class~="z-[28]"] {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .main-container [class~="z-[28]"] > button,
+  .main-container [class~="z-[28]"] > div {
+    flex: 1 1 145px !important;
+    width: auto !important;
+    min-width: 0 !important;
+    justify-content: center !important;
+    padding: 10px 8px !important;
+  }
+
+  .main-container [class~="z-[28]"] span {
+    width: auto !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+    text-align: center !important;
+  }
+
+  .main-container [class~="z-[38]"] {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    width: 100% !important;
+    padding: 12px 0 !important;
+  }
+
+  .main-container img,
+  .main-container video {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 380px) {
+  .main-container > div:first-child {
+    padding-inline: 12px !important;
+  }
+
+  .main-container > div:not(:first-child) {
+    padding-inline: 12px !important;
+  }
+
+  .main-container > div:first-child [class~="z-[9]"] {
+    gap: 12px !important;
+  }
+
+  .main-container > div:first-child [class~="z-[2]"] span,
+  .main-container > div:first-child [class~="z-[4]"] span,
+  .main-container > div:first-child [class~="z-[6]"] span {
+    font-size: 11px !important;
+  }
+}
