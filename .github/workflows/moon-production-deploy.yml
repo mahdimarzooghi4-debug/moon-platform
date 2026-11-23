@@ -18,7 +18,7 @@ jobs:
     # Only deploy reviewed code from main. A manual run from another branch is rejected.
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
         with:
