@@ -4,3 +4,13 @@ dist
 .github
 backend
 *.md
+
+# Never bake local runtime secrets, backups or SSH/TLS keys into a web image
+.env
+.env.*
+**/.env
+**/.env.*
+*.pem
+*.key
+*.dump
+*.backup
