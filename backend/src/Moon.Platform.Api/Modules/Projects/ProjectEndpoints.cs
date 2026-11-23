@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Security.Claims;
 
 namespace Moon.Platform.Api.Modules.Projects;
@@ -7,13 +8,15 @@ public sealed record CreateProjectRequest(
     string Title,
     string Description,
     long? FundingTargetMinor = null,
-    string? FundingTargetCurrency = null);
+    string? FundingTargetCurrency = null,
+    JsonElement? ProposalData = null);
 
 public sealed record CreateProjectVersionRequest(
     string Title,
     string Description,
     long? FundingTargetMinor = null,
-    string? FundingTargetCurrency = null);
+    string? FundingTargetCurrency = null,
+    JsonElement? ProposalData = null);
 
 public static class ProjectEndpoints
 {
@@ -37,9 +40,29 @@ public static class ProjectEndpoints
                 RequireActor(principal),
                 context.TraceIdentifier,
                 context.Connection.RemoteIpAddress?.ToString(),
-                cancellationToken);
+                cancellationToken,
+                request.ProposalData?.GetRawText());
 
             return ToHttpResult(result, context, created: true);
+        });
+
+        group.MapGet("/organization/{organizationId:guid}", async Task<IResult> (
+            Guid organizationId,
+            ClaimsPrincipal principal,
+            IProjectService projectService,
+            CancellationToken cancellationToken) =>
+        {
+            try
+            {
+                return Results.Ok(await projectService.ListForOrganizationAsync(
+                    organizationId,
+                    RequireActor(principal),
+                    cancellationToken));
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Results.Forbid();
+            }
         });
 
         group.MapGet("/{projectId:guid}", async Task<IResult> (
@@ -74,7 +97,8 @@ public static class ProjectEndpoints
                 RequireActor(principal),
                 context.TraceIdentifier,
                 context.Connection.RemoteIpAddress?.ToString(),
-                cancellationToken);
+                cancellationToken,
+                request.ProposalData?.GetRawText());
 
             return ToHttpResult(result, context);
         });

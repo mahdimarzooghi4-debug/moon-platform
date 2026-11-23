@@ -1,7 +1,15 @@
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { StartupSidebar } from "../components/StartupSidebar";
+import {
+  createStartupProject,
+  getStartupOrganizationId,
+  getStartupProject,
+  saveStartupProjectVersion,
+  submitStartupProject,
+} from "../projects/api";
+import type { ProjectDraftInput } from "../projects/api";
 import "../index.css";
 import "./index.css";
 
@@ -27,7 +35,7 @@ function currentStep(pathname: string) {
   return 1;
 }
 
-function ProjectStepper({ activeStep }: { activeStep: number }) {
+function ProjectStepper({ activeStep, onNavigate }: { activeStep: number; onNavigate: () => void }) {
   return (
     <section className="startup-create-stepper" data-name="project-registration-stepper">
       {steps.map((step, index) => {
@@ -36,6 +44,7 @@ function ProjectStepper({ activeStep }: { activeStep: number }) {
           <Link
             key={step.path}
             to={step.path}
+            onClick={onNavigate}
             className={`startup-create-step${activeStep === stepNumber ? " is-active" : ""}`}
           >
             <span className="startup-create-step-number">{step.number}</span>
@@ -54,7 +63,7 @@ function Field({ label, placeholder }: { label: string; placeholder: string }) {
   return (
     <label className="startup-create-field">
       <span>{label}</span>
-      <input type="text" placeholder={placeholder} />
+      <input type="text" name={label} placeholder={placeholder} />
     </label>
   );
 }
@@ -120,7 +129,7 @@ function StepOne() {
         <label className="startup-create-textarea startup-create-problem">
           <strong>مسئله مشخص</strong>
           <small>چالش اجتماعی واضح و ریشه‌دار در یک منطقه یا جامعه هدف مشخص را شرح دهید.</small>
-          <textarea placeholder="شرح مسئله اجتماعی، وضعیت موجود و نیازی که پروژه برای حل آن تعریف می‌شود…" />
+          <textarea name="مسئله مشخص" placeholder="شرح مسئله اجتماعی، وضعیت موجود و نیازی که پروژه برای حل آن تعریف می‌شود…" />
         </label>
 
         <div className="startup-create-project-image" data-name="project-cover-image">
@@ -179,7 +188,7 @@ function StepTwo() {
       <label className="startup-create-textarea startup-create-solution">
         <strong>راهکار اجرایی</strong>
         <small>نقشه مسیر شفاف برای اجرای گام‌به‌گام و تکرارپذیر راهکار را شرح دهید.</small>
-        <textarea placeholder="شرح راهکار، مراحل اجرای آن و نحوه رسیدن از مسئله به نتیجه مورد انتظار…" />
+        <textarea name="راهکار اجرایی" placeholder="شرح راهکار، مراحل اجرای آن و نحوه رسیدن از مسئله به نتیجه مورد انتظار…" />
       </label>
 
       <div className="startup-create-section-title">
@@ -265,7 +274,7 @@ function StepFour() {
       <label className="startup-create-textarea startup-create-risk">
         <strong>ریسک‌های اصلی و راهکار کاهش</strong>
         <small>ریسک‌های مهم اجرای پروژه و اقدام پیشگیرانه یا اصلاحی برای هرکدام را شرح دهید.</small>
-        <textarea placeholder="ریسک‌های اجرایی، عملیاتی یا مرتبط با جامعه هدف و نحوه مدیریت آن‌ها…" />
+        <textarea name="ریسک‌های اصلی و راهکار کاهش" placeholder="ریسک‌های اجرایی، عملیاتی یا مرتبط با جامعه هدف و نحوه مدیریت آن‌ها…" />
       </label>
 
       <div className="startup-create-section-title">
@@ -282,7 +291,7 @@ function StepFour() {
         <div>
           <strong>مستندات پشتیبان پروژه</strong>
           <h3>فایل‌های مرتبط با برنامه اجرا و مستندات پشتیبان پروژه</h3>
-          <p>فایل‌های بارگذاری‌شده همراه پروژه برای بررسی در دسترس ارزیاب قرار می‌گیرند.</p>
+          <p>در حال حاضر بارگذاری فایل در سرور فعال نیست و فایل انتخاب‌شده ذخیره نمی‌شود؛ اتصال فضای ذخیره‌سازی در مرحله بعد انجام می‌شود.</p>
         </div>
         <label className="startup-create-outline-action startup-create-file-action">
           افزودن فایل
@@ -307,9 +316,173 @@ function StepContent({ step }: { step: number }) {
 
 export default function StartupProjectCreate() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const requestedProjectId = searchParams.get("projectId") ?? "";
+  const formRef = useRef<HTMLElement>(null);
+  const [organizationId, setOrganizationId] = useState("");
+  const [accessToken, setAccessToken] = useState("");
+  const [projectId, setProjectId] = useState("");
+  const [draftSteps, setDraftSteps] = useState<Record<string, Record<string, string[]>>>({});
+  const [statusMessage, setStatusMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [busy, setBusy] = useState(false);
   const step = currentStep(location.pathname);
   const previous = step > 1 ? steps[step - 2].path : "/panel/startup/projects";
   const next = step < 4 ? steps[step].path : null;
+
+  const storageKey = organizationId ? `moon.startup.projectDraft.v1:${organizationId}` : "";
+
+  useEffect(() => {
+    let cancelled = false;
+    getStartupOrganizationId()
+      .then(({ organizationId: orgId, accessToken: token }) => {
+        if (cancelled) return;
+        setOrganizationId(orgId);
+        setAccessToken(token);
+      })
+      .catch(() => {
+        if (!cancelled) setErrorMessage("برای ثبت پروژه، با حساب استارتاپ وارد شوید و عضویت فعال استارتاپ داشته باشید.");
+      });
+    return () => { cancelled = true; };
+  }, []);
+
+  const readDraft = useCallback(() => {
+    if (!storageKey) return { projectId: "", steps: {} as Record<string, Record<string, string[]>> };
+    try {
+      const parsed = JSON.parse(sessionStorage.getItem(storageKey) ?? "{}") as {
+        projectId?: string;
+        steps?: Record<string, Record<string, string[]>>;
+      };
+      return { projectId: parsed.projectId ?? "", steps: parsed.steps ?? {} };
+    } catch {
+      return { projectId: "", steps: {} as Record<string, Record<string, string[]>> };
+    }
+  }, [storageKey]);
+
+  useEffect(() => {
+    if (!storageKey) return;
+    const saved = readDraft();
+    const resumeProjectId = requestedProjectId || saved.projectId;
+    setDraftSteps(saved.steps);
+    setProjectId(resumeProjectId);
+    if (resumeProjectId && accessToken) {
+      getStartupProject(resumeProjectId, accessToken).then((project) => {
+        const version = project.versions.find((item) => item.versionNumber === project.currentVersionNumber);
+        const stepsData = version?.proposalData?.steps;
+        if (stepsData && typeof stepsData === "object") {
+          const merged = stepsData as Record<string, Record<string, string[]>>;
+          setDraftSteps(merged);
+          sessionStorage.setItem(storageKey, JSON.stringify({ projectId: resumeProjectId, steps: merged }));
+        }
+      }).catch(() => {
+        setErrorMessage("بازیابی پیش‌نویس از سرور انجام نشد. اطلاعات محلی این مرورگر حفظ شده است.");
+      });
+    }
+  }, [storageKey, accessToken, readDraft, requestedProjectId]);
+
+  const collectStep = useCallback((stepNumber: number) => {
+    const root = formRef.current;
+    const values: Record<string, string[]> = {};
+    root?.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("input[name], textarea[name]").forEach((field) => {
+      if (field instanceof HTMLInputElement && field.type === "file") return;
+      (values[field.name] ??= []).push(field.value.trim());
+    });
+    return values;
+  }, []);
+
+  const storeCurrentStep = useCallback(() => {
+    if (!storageKey) return draftSteps;
+    const nextSteps = { ...draftSteps, [String(step)]: collectStep(step) };
+    setDraftSteps(nextSteps);
+    sessionStorage.setItem(storageKey, JSON.stringify({ projectId, steps: nextSteps }));
+    return nextSteps;
+  }, [storageKey, draftSteps, step, collectStep, projectId]);
+
+  useEffect(() => {
+    const values = draftSteps[String(step)];
+    const root = formRef.current;
+    if (!values || !root) return;
+    const getNamedFields = (name: string) => Array.from(root.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("input[name], textarea[name]")).filter((field) => field.name === name && !(field instanceof HTMLInputElement && field.type === "file"));
+    const ensureRows = (name: string, count: number) => {
+      const fields = getNamedFields(name);
+      if (fields.length >= count || !fields.length) return;
+      const addLabel = step === 2 ? "افزودن فاز" : name.startsWith("عنوان شاخص") ? "افزودن شاخص" : "افزودن ردیف هزینه";
+      const addButton = Array.from(root.querySelectorAll<HTMLButtonElement>("button.startup-create-outline-action")).find((button) => button.textContent?.trim() === addLabel);
+      for (let i = fields.length; i < count; i += 1) addButton?.click();
+    };
+    Object.entries(values).forEach(([name, entries]) => ensureRows(name, entries.length));
+    requestAnimationFrame(() => {
+      Object.entries(values).forEach(([name, entries]) => {
+        getNamedFields(name).forEach((field, index) => { field.value = entries[index] ?? ""; });
+      });
+    });
+  }, [step, draftSteps]);
+
+  const makeInput = (allSteps: Record<string, Record<string, string[]>>): ProjectDraftInput => {
+    const first = allSteps["1"] ?? {};
+    const title = first["عنوان پروژه"]?.[0]?.trim() ?? "";
+    const problem = first["مسئله مشخص"]?.[0]?.trim() ?? "";
+    const solution = allSteps["2"]?.["راهکار اجرایی"]?.[0]?.trim() ?? "";
+    const description = [problem && `مسئله: ${problem}`, solution && `راهکار: ${solution}`].filter(Boolean).join("\n\n");
+    const rawBudget = (allSteps["3"]?.["بودجه کل پروژه (تومان)"]?.[0] ?? "").replace(/[۰-۹٠-٩,٬\s]/g, (digit) => {
+      const persian = "۰۱۲۳۴۵۶۷۸۹".indexOf(digit);
+      const arabic = "٠١٢٣٤٥٦٧٨٩".indexOf(digit);
+      if (persian >= 0) return String(persian);
+      if (arabic >= 0) return String(arabic);
+      return "";
+    });
+    const toman = Number(rawBudget);
+    return {
+      title,
+      description,
+      fundingTargetMinor: Number.isFinite(toman) && toman > 0 ? Math.round(toman * 10) : null,
+      fundingTargetCurrency: Number.isFinite(toman) && toman > 0 ? "IRR" : null,
+      proposalData: { steps: allSteps },
+    };
+  };
+
+  const persistDraft = async (allSteps: Record<string, Record<string, string[]>>) => {
+    if (!organizationId || !accessToken) throw new Error("startup_organization_membership_required");
+    const input = makeInput(allSteps);
+    if (!input.title || !input.description) throw new Error("required_project_fields");
+    const project = projectId
+      ? await saveStartupProjectVersion(projectId, input, accessToken)
+      : await createStartupProject(organizationId, input, accessToken);
+    setProjectId(project.projectId);
+    sessionStorage.setItem(storageKey, JSON.stringify({ projectId: project.projectId, steps: allSteps }));
+    return project.projectId;
+  };
+
+  const handleSave = async () => {
+    setErrorMessage(""); setStatusMessage("");
+    const allSteps = storeCurrentStep();
+    setBusy(true);
+    try {
+      await persistDraft(allSteps);
+      setStatusMessage("پیش‌نویس پروژه در سرور ذخیره شد.");
+    } catch (error) {
+      setErrorMessage(error instanceof Error && error.message === "required_project_fields"
+        ? "برای ذخیره در سرور، عنوان پروژه و شرح مسئله یا راهکار را وارد کنید. سایر اطلاعات این مرحله در همین مرورگر نگه داشته شد."
+        : "ذخیره پروژه انجام نشد. اتصال و دسترسی حساب استارتاپ را بررسی کنید و دوباره تلاش کنید.");
+    } finally { setBusy(false); }
+  };
+
+  const handleSubmit = async () => {
+    setErrorMessage(""); setStatusMessage("");
+    const allSteps = storeCurrentStep();
+    setBusy(true);
+    try {
+      const id = await persistDraft(allSteps);
+      await submitStartupProject(id, accessToken);
+      sessionStorage.removeItem(storageKey);
+      navigate("/panel/startup/projects/submitted");
+    } catch (error) {
+      setErrorMessage(error instanceof Error && error.message === "required_project_fields"
+        ? "عنوان پروژه و شرح مسئله یا راهکار را کامل کنید؛ سپس پروژه را ارسال کنید."
+        : "ارسال پروژه انجام نشد. اگر پروژه قبلاً ارسال شده، از فهرست پروژه‌ها وضعیت آن را ببینید.");
+    } finally { setBusy(false); }
+  };
 
   return (
     <div className="startup-panel-page" data-node-id={nodeIds[step - 1]} data-name={nodeNames[step - 1]}>
@@ -318,29 +491,31 @@ export default function StartupProjectCreate() {
       <main className="startup-dashboard-content startup-create-content">
         <header className="startup-topbar">
           <div className="startup-page-title">
-            <h1>ثبت پروژه جدید</h1>
+            <h1>{projectId ? "ویرایش پیش‌نویس پروژه" : "ثبت پروژه جدید"}</h1>
             <p>تدوین پروژه بر اساس معیارهای ارزیابی اثر اجتماعی</p>
           </div>
           <div className="startup-top-actions startup-create-actions">
-            <Link className="startup-button startup-button-secondary startup-create-back-projects" to="/panel/startup/projects">
+            <Link className="startup-button startup-button-secondary startup-create-back-projects" to="/panel/startup/projects" onClick={storeCurrentStep}>
               بازگشت به پروژه‌ها
             </Link>
-            <button className="startup-button startup-button-primary startup-create-save" type="button">ذخیره پیش‌نویس</button>
+            <button className="startup-button startup-button-primary startup-create-save" type="button" onClick={handleSave} disabled={busy}>{busy ? "در حال ذخیره…" : projectId ? "ذخیره تغییرات" : "ذخیره پیش‌نویس"}</button>
           </div>
         </header>
 
-        <ProjectStepper activeStep={step} />
+        {statusMessage ? <p role="status" className="startup-create-feedback is-success">{statusMessage}</p> : null}
+        {errorMessage ? <p role="alert" className="startup-create-feedback is-error">{errorMessage}</p> : null}
+        <ProjectStepper activeStep={step} onNavigate={storeCurrentStep} />
 
-        <section className={`startup-create-card is-step-${step}`}>
+        <section ref={formRef} className={`startup-create-card is-step-${step}`}>
           <StepContent step={step} />
           <div className="startup-create-footer">
-            <Link className="startup-create-footer-secondary" to={previous}>{step === 1 ? "انصراف" : "مرحله قبل"}</Link>
+            <Link className="startup-create-footer-secondary" to={previous} onClick={storeCurrentStep}>{step === 1 ? "انصراف" : "مرحله قبل"}</Link>
             {next ? (
-              <Link className="startup-create-footer-primary" to={next}>
+              <Link className="startup-create-footer-primary" to={next} onClick={storeCurrentStep}>
                 {step === 1 ? "ادامه: راهکار و زمان‌بندی" : step === 2 ? "ادامه: KPI و بودجه" : "ادامه: ریسک و مستندات"}
               </Link>
             ) : (
-              <button className="startup-create-footer-primary startup-create-submit" type="button">ارسال پروژه برای ارزیابی</button>
+              <button className="startup-create-footer-primary startup-create-submit" type="button" onClick={handleSubmit} disabled={busy}>{busy ? "در حال ارسال…" : "ارسال پروژه برای ارزیابی"}</button>
             )}
           </div>
         </section>

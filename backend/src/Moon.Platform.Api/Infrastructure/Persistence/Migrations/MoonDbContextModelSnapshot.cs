@@ -1511,6 +1511,9 @@ namespace Moon.Platform.Api.Infrastructure.Persistence.Migrations
                         .HasMaxLength(8000)
                         .HasColumnType("character varying(8000)");
 
+                    b.Property<string>("ProposalDataJson")
+                        .HasColumnType("jsonb");
+
                     b.Property<string>("FundingTargetCurrency")
                         .HasMaxLength(3)
                         .HasColumnType("character varying(3)");

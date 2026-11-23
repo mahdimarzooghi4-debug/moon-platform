@@ -1,5 +1,13 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { StartupSidebar } from "../components/StartupSidebar";
+import {
+  currentProjectVersion,
+  formatProjectStatus,
+  getStartupOrganizationId,
+  listStartupProjects,
+} from "./api";
+import type { StartupProject } from "./api";
 import "../index.css";
 import "./index.css";
 
@@ -15,7 +23,25 @@ const lifecycleSteps = [
   { number: "۷", title: "انتشار گزارش اثر" },
 ];
 
+const faNumber = (value: number) => new Intl.NumberFormat("fa-IR").format(value);
+
 export default function StartupMyProjects() {
+  const [projects, setProjects] = useState<StartupProject[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+    getStartupOrganizationId()
+      .then(({ organizationId, accessToken }) => listStartupProjects(organizationId, accessToken))
+      .then((items) => { if (!cancelled) setProjects(items); })
+      .catch(() => { if (!cancelled) setError("دریافت فهرست پروژه‌ها انجام نشد. ورود و دسترسی حساب استارتاپ را بررسی کنید."); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, []);
+
+  const newest = projects[0];
+
   return (
     <div className="startup-panel-page" data-node-id="1973:2" data-name="startup-my-projects">
       <StartupSidebar active="projects" />
@@ -39,47 +65,50 @@ export default function StartupMyProjects() {
         <section className="startup-projects-summary" data-node-id="1973:171" data-name="projects-summary">
           <div>
             <h2>پروژه‌های من</h2>
-            <p>پروژه ثبت‌شده و وضعیت ارزیابی، اجرای مراحل، گزارش‌ها و تأمین مالی آن از این بخش پیگیری می‌شود.</p>
-            <small>۱ پروژه فعال&nbsp;&nbsp;•&nbsp;&nbsp;آخرین وضعیت: مرحله دوم تأمین مالی</small>
+            <p>پروژه‌های ثبت‌شده و وضعیت ارزیابی، اجرا و تأمین مالی از این بخش پیگیری می‌شود.</p>
+            <small>
+              {loading ? "در حال دریافت اطلاعات…" : error || (newest ? `آخرین وضعیت: ${formatProjectStatus(newest.status)}` : "هنوز پروژه‌ای ثبت نشده است.")}
+            </small>
           </div>
-          <span>۱ پروژه</span>
+          <span>{loading ? "—" : `${faNumber(projects.length)} پروژه`}</span>
         </section>
 
-        <section className="startup-project-list-card" data-node-id="1973:177" data-name="projects-list">
-          <div className="startup-project-list-header">
-            <div className="startup-project-list-title">
-              <h2>اشتغال زنان روستایی</h2>
-              <p>کسب‌وکار و اشتغال&nbsp;&nbsp;•&nbsp;&nbsp;گلستان</p>
-            </div>
-            <span className="startup-project-stage-chip">مرحله دوم تأمین مالی</span>
-          </div>
+        {error ? <p className="startup-projects-message is-error" role="alert">{error}</p> : null}
 
-          <div className="startup-project-impact-metrics" data-node-id="1984:6" data-name="project-metrics">
-            <strong>اثر پروژه</strong>
-            <div>
-              <span>۱۲۰ فرصت شغلی</span>
-              <span>۴۵۰ فرد بهره‌مند</span>
-              <span>۲۵ روستا</span>
-            </div>
-          </div>
+        {projects.map((project) => {
+          const version = currentProjectVersion(project);
+          if (!version) return null;
+          return (
+            <section className="startup-project-list-card" data-name="projects-list-item" key={project.projectId}>
+              <div className="startup-project-list-header">
+                <div className="startup-project-list-title">
+                  <h2>{version.title}</h2>
+                  <p>نسخه {faNumber(version.versionNumber)} · {new Date(project.createdAtUtc).toLocaleDateString("fa-IR")}</p>
+                </div>
+                <span className="startup-project-stage-chip">{formatProjectStatus(project.status)}</span>
+              </div>
+              <p className="startup-project-description">{version.description}</p>
+              <div className="startup-project-funding">
+                <div className="startup-project-funding-main">
+                  <strong>وضعیت ثبت پروژه</strong>
+                  <span>{project.submittedAtUtc ? `ارسال‌شده در ${new Date(project.submittedAtUtc).toLocaleDateString("fa-IR")}` : "پیش‌نویس در سامانه ذخیره شده است"}</span>
+                </div>
+                <div className="startup-project-actions">
+                  <Link className="startup-project-detail-button" to={`/panel/startup/projects/${project.projectId}`}>مشاهده جزئیات</Link>
+                  {project.status === "draft" ? <Link className="startup-project-detail-button is-edit" to={`/panel/startup/projects/new?projectId=${encodeURIComponent(project.projectId)}`}>ادامه و ویرایش</Link> : null}
+                </div>
+              </div>
+            </section>
+          );
+        })}
 
-          <div className="startup-project-funding" data-node-id="1984:12" data-name="funding-progress">
-            <div className="startup-project-funding-main">
-              <div className="startup-project-funding-heading">
-                <strong>پیشرفت تأمین مالی</strong>
-                <span>۵۸٪</span>
-              </div>
-              <div className="startup-project-funding-row">
-                <span className="startup-funding-current">۲۳۲ میلیون تومان</span>
-                <div className="startup-list-progress-track"><span /></div>
-                <span className="startup-funding-target">هدف: ۴۰۰ میلیون تومان</span>
-              </div>
-            </div>
-            <Link className="startup-project-detail-button" to="/panel/startup/projects/1">
-              مشاهده جزئیات پروژه
-            </Link>
-          </div>
-        </section>
+        {!loading && !error && projects.length === 0 ? (
+          <section className="startup-projects-empty" data-name="projects-empty-state">
+            <h2>هنوز پروژه‌ای ثبت نکرده‌اید</h2>
+            <p>پروژه واقعی استارتاپ را ثبت کنید تا پس از ارسال، در همین فهرست پیگیری شود.</p>
+            <Link className="startup-button startup-button-primary" to="/panel/startup/projects/new">ثبت اولین پروژه</Link>
+          </section>
+        ) : null}
 
         <section className="startup-lifecycle-guide" data-node-id="1973:188" data-name="project-lifecycle-guide">
           <div className="startup-lifecycle-heading">
@@ -88,18 +117,15 @@ export default function StartupMyProjects() {
           </div>
 
           <div className="startup-lifecycle-steps">
-            {lifecycleSteps.map((step, index) => {
+            {lifecycleSteps.map((item, index) => {
               const active = index === 0;
               return (
-                <div className={`startup-lifecycle-step${active ? " is-active" : ""}`} key={step.number}>
+                <div className={`startup-lifecycle-step${active ? " is-active" : ""}`} key={item.number}>
                   <span className="startup-lifecycle-number">
-                    <img
-                      src={`${ASSET_ROOT}/${active ? "lifecycle-active.svg" : "lifecycle-default.svg"}`}
-                      alt=""
-                    />
-                    <b>{step.number}</b>
+                    <img src={`${ASSET_ROOT}/${active ? "lifecycle-active.svg" : "lifecycle-default.svg"}`} alt="" />
+                    <b>{item.number}</b>
                   </span>
-                  <strong>{step.title}</strong>
+                  <strong>{item.title}</strong>
                 </div>
               );
             })}

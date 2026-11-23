@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 namespace Moon.Platform.Api.Modules.Projects;
 
 public static class ProjectStatuses
@@ -35,6 +37,7 @@ public sealed class ProjectVersion
     public int VersionNumber { get; init; }
     public string Title { get; init; } = string.Empty;
     public string Description { get; init; } = string.Empty;
+    public string? ProposalDataJson { get; init; }
     public long? FundingTargetMinor { get; init; }
     public string? FundingTargetCurrency { get; init; }
     public bool IsLocked { get; set; }
@@ -48,6 +51,7 @@ public sealed record ProjectVersionView(
     int VersionNumber,
     string Title,
     string Description,
+    JsonElement? ProposalData,
     long? FundingTargetMinor,
     string? FundingTargetCurrency,
     bool IsLocked,

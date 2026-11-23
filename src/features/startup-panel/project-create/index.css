@@ -520,6 +520,31 @@
   line-height: 24px;
 }
 
+.startup-create-feedback {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.8;
+  text-align: right;
+}
+
+.startup-create-feedback.is-success {
+  background: #eef9f1;
+  color: #16733b;
+}
+
+.startup-create-feedback.is-error {
+  background: #fff1f0;
+  color: #b42318;
+}
+
+.startup-create-save:disabled,
+.startup-create-submit:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
 @media (max-width: 1240px) {
   .startup-create-stepper,
   .startup-create-card {
