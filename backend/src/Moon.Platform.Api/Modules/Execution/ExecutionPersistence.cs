@@ -73,6 +73,15 @@ public sealed class MoonExecutionModelCustomizer(ModelCustomizerDependencies dep
         hero.Property(x => x.FileName).HasMaxLength(240).IsRequired();
         hero.Property(x => x.ContentType).HasMaxLength(120).IsRequired();
         hero.Property(x => x.Data).IsRequired();
+
+        var trustedCompany = modelBuilder.Entity<AdminTrustedCompany>();
+        trustedCompany.ToTable("admin_trusted_companies", "moon");
+        trustedCompany.HasKey(x => x.Id);
+        trustedCompany.Property(x => x.Id).ValueGeneratedOnAdd();
+        trustedCompany.Property(x => x.Name).HasMaxLength(200).IsRequired();
+        trustedCompany.Property(x => x.LogoFileName).HasMaxLength(240);
+        trustedCompany.Property(x => x.LogoContentType).HasMaxLength(120);
+        trustedCompany.HasIndex(x => new { x.IsPublished, x.SortOrder });
     }
 
     private static void ConfigureStage(EntityTypeBuilder<ExecutionStage> entity)

@@ -46,6 +46,19 @@ public sealed class AdminHeroVideo
     public DateTimeOffset UpdatedAtUtc { get; set; } = DateTimeOffset.UtcNow;
 }
 
+public sealed class AdminTrustedCompany
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public int SortOrder { get; set; }
+    public bool IsPublished { get; set; } = true;
+    public string? LogoFileName { get; set; }
+    public string? LogoContentType { get; set; }
+    public long? LogoSize { get; set; }
+    public byte[]? LogoData { get; set; }
+    public DateTimeOffset UpdatedAtUtc { get; set; } = DateTimeOffset.UtcNow;
+}
+
 public sealed record AdminOrganizationProfileView(
     Guid OrganizationId,
     string Name,
@@ -84,6 +97,35 @@ public sealed record AdminHeroVideoMetaView(
     string ContentType,
     long Size,
     DateTimeOffset UpdatedAtUtc);
+
+public sealed record AdminTrustedCompanyView(
+    int Id,
+    string Name,
+    int SortOrder,
+    bool IsPublished,
+    bool HasLogo,
+    DateTimeOffset UpdatedAtUtc);
+
+public sealed record PublicTrustedCompanyView(
+    int Id,
+    string Name,
+    int SortOrder,
+    bool HasLogo);
+
+public sealed record AdminTrustedCompanyLogo(
+    string FileName,
+    string ContentType,
+    long Size,
+    byte[] Data);
+
+public sealed record AdminTrustedCompanyLogoMeta(
+    int CompanyId,
+    string FileName,
+    string ContentType,
+    long Size,
+    DateTimeOffset UpdatedAtUtc);
+
+public sealed record SaveAdminTrustedCompanyRequest(string Name, int SortOrder, bool IsPublished);
 
 public sealed record SaveAdminOrganizationProfileRequest(
     string Name,

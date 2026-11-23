@@ -20,6 +20,12 @@ public interface IAdminManagementService
     Task<AdminHeroVideo?> GetHeroAsync(CancellationToken cancellationToken = default);
     Task<AdminHeroVideoMetaView> SaveHeroAsync(string fileName, string contentType, byte[] data, string actorSubject, string correlationId, string? ipAddress, CancellationToken cancellationToken = default);
     Task<bool> DeleteHeroAsync(string actorSubject, string correlationId, string? ipAddress, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<AdminTrustedCompanyView>> ListTrustedCompaniesAsync(bool publishedOnly, CancellationToken cancellationToken = default);
+    Task<AdminTrustedCompanyView> SaveTrustedCompanyAsync(int? id, SaveAdminTrustedCompanyRequest request, string actorSubject, string correlationId, string? ipAddress, CancellationToken cancellationToken = default);
+    Task<bool> DeleteTrustedCompanyAsync(int id, string actorSubject, string correlationId, string? ipAddress, CancellationToken cancellationToken = default);
+    Task<AdminTrustedCompanyLogoMeta> SaveTrustedCompanyLogoAsync(int id, string fileName, string contentType, byte[] data, string actorSubject, string correlationId, string? ipAddress, CancellationToken cancellationToken = default);
+    Task<AdminTrustedCompanyLogo?> GetTrustedCompanyLogoAsync(int id, bool publishedOnly, CancellationToken cancellationToken = default);
+    Task<bool> DeleteTrustedCompanyLogoAsync(int id, string actorSubject, string correlationId, string? ipAddress, CancellationToken cancellationToken = default);
 }
 
 public sealed class AdminManagementService(MoonDbContext dbContext, IAuditWriter auditWriter) : IAdminManagementService
@@ -28,6 +34,7 @@ public sealed class AdminManagementService(MoonDbContext dbContext, IAuditWriter
     private DbSet<AdminManagedProject> ManagedProjects => dbContext.Set<AdminManagedProject>();
     private DbSet<AdminNewsArticle> NewsArticles => dbContext.Set<AdminNewsArticle>();
     private DbSet<AdminHeroVideo> HeroVideos => dbContext.Set<AdminHeroVideo>();
+    private DbSet<AdminTrustedCompany> TrustedCompanies => dbContext.Set<AdminTrustedCompany>();
 
     private static readonly AdminManagedProject[] ProjectSeed =
     [
@@ -199,6 +206,83 @@ public sealed class AdminManagementService(MoonDbContext dbContext, IAuditWriter
         return true;
     }
 
+    public async Task<IReadOnlyList<AdminTrustedCompanyView>> ListTrustedCompaniesAsync(bool publishedOnly, CancellationToken cancellationToken = default)
+    {
+        var query = TrustedCompanies.AsNoTracking().AsQueryable();
+        if (publishedOnly) query = query.Where(x => x.IsPublished);
+        return await query.OrderBy(x => x.SortOrder).ThenBy(x => x.Id).Select(x => ToTrustedCompanyView(x)).ToListAsync(cancellationToken);
+    }
+
+    public async Task<AdminTrustedCompanyView> SaveTrustedCompanyAsync(int? id, SaveAdminTrustedCompanyRequest request, string actorSubject, string correlationId, string? ipAddress, CancellationToken cancellationToken = default)
+    {
+        var item = id is null ? null : await TrustedCompanies.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+        if (id is not null && item is null) throw new KeyNotFoundException("Trusted company was not found.");
+        var before = item is null ? null : JsonSerializer.Serialize(ToTrustedCompanyView(item));
+        if (item is null)
+        {
+            item = new AdminTrustedCompany();
+            TrustedCompanies.Add(item);
+        }
+        item.Name = Required(request.Name, 200, nameof(request.Name));
+        item.SortOrder = Math.Clamp(request.SortOrder, 0, 10000);
+        item.IsPublished = request.IsPublished;
+        item.UpdatedAtUtc = DateTimeOffset.UtcNow;
+        await dbContext.SaveChangesAsync(cancellationToken);
+        var view = ToTrustedCompanyView(item);
+        await AuditAsync("admin.content.trusted-company.save", "trusted_company", item.Id.ToString(), actorSubject, correlationId, ipAddress, before, JsonSerializer.Serialize(view), null, null, cancellationToken);
+        return view;
+    }
+
+    public async Task<bool> DeleteTrustedCompanyAsync(int id, string actorSubject, string correlationId, string? ipAddress, CancellationToken cancellationToken = default)
+    {
+        var item = await TrustedCompanies.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+        if (item is null) return false;
+        var before = JsonSerializer.Serialize(ToTrustedCompanyView(item));
+        TrustedCompanies.Remove(item);
+        await dbContext.SaveChangesAsync(cancellationToken);
+        await AuditAsync("admin.content.trusted-company.delete", "trusted_company", id.ToString(), actorSubject, correlationId, ipAddress, before, null, null, null, cancellationToken);
+        return true;
+    }
+
+    public async Task<AdminTrustedCompanyLogoMeta> SaveTrustedCompanyLogoAsync(int id, string fileName, string contentType, byte[] data, string actorSubject, string correlationId, string? ipAddress, CancellationToken cancellationToken = default)
+    {
+        var item = await TrustedCompanies.SingleOrDefaultAsync(x => x.Id == id, cancellationToken)
+            ?? throw new KeyNotFoundException("Trusted company was not found.");
+        var before = item.LogoFileName is null ? null : JsonSerializer.Serialize(ToTrustedCompanyLogoMeta(item));
+        item.LogoFileName = Required(fileName, 240, nameof(fileName));
+        item.LogoContentType = Required(contentType, 120, nameof(contentType));
+        item.LogoSize = data.LongLength;
+        item.LogoData = data;
+        item.UpdatedAtUtc = DateTimeOffset.UtcNow;
+        await dbContext.SaveChangesAsync(cancellationToken);
+        var meta = ToTrustedCompanyLogoMeta(item);
+        await AuditAsync("admin.content.trusted-company.logo.save", "trusted_company", id.ToString(), actorSubject, correlationId, ipAddress, before, JsonSerializer.Serialize(meta), null, null, cancellationToken);
+        return meta;
+    }
+
+    public async Task<AdminTrustedCompanyLogo?> GetTrustedCompanyLogoAsync(int id, bool publishedOnly, CancellationToken cancellationToken = default)
+    {
+        var item = await TrustedCompanies.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id && (!publishedOnly || x.IsPublished), cancellationToken);
+        return item?.LogoData is null || item.LogoContentType is null || item.LogoFileName is null
+            ? null
+            : new AdminTrustedCompanyLogo(item.LogoFileName, item.LogoContentType, item.LogoSize ?? item.LogoData.LongLength, item.LogoData);
+    }
+
+    public async Task<bool> DeleteTrustedCompanyLogoAsync(int id, string actorSubject, string correlationId, string? ipAddress, CancellationToken cancellationToken = default)
+    {
+        var item = await TrustedCompanies.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+        if (item?.LogoData is null) return false;
+        var before = JsonSerializer.Serialize(ToTrustedCompanyLogoMeta(item));
+        item.LogoFileName = null;
+        item.LogoContentType = null;
+        item.LogoSize = null;
+        item.LogoData = null;
+        item.UpdatedAtUtc = DateTimeOffset.UtcNow;
+        await dbContext.SaveChangesAsync(cancellationToken);
+        await AuditAsync("admin.content.trusted-company.logo.delete", "trusted_company", id.ToString(), actorSubject, correlationId, ipAddress, before, null, null, null, cancellationToken);
+        return true;
+    }
+
     private async Task EnsureProjectSeedAsync(CancellationToken cancellationToken)
     {
         if (await ManagedProjects.AnyAsync(cancellationToken)) return;
@@ -244,4 +328,6 @@ public sealed class AdminManagementService(MoonDbContext dbContext, IAuditWriter
     private static AdminManagedProjectView ToView(AdminManagedProject x) => new(x.Id, x.Name, x.Province, x.Track, x.FundingPercent, x.FundingTarget, x.Status, x.Stage, x.UpdatedAtUtc);
     private static AdminNewsArticleView ToView(AdminNewsArticle x) => new(x.Id, x.Title, x.Summary, x.Status, x.UpdatedAtUtc);
     private static AdminHeroVideoMetaView ToMeta(AdminHeroVideo x) => new(x.FileName, x.ContentType, x.Size, x.UpdatedAtUtc);
+    private static AdminTrustedCompanyView ToTrustedCompanyView(AdminTrustedCompany x) => new(x.Id, x.Name, x.SortOrder, x.IsPublished, x.LogoData is not null, x.UpdatedAtUtc);
+    private static AdminTrustedCompanyLogoMeta ToTrustedCompanyLogoMeta(AdminTrustedCompany x) => new(x.Id, x.LogoFileName ?? string.Empty, x.LogoContentType ?? "", x.LogoSize ?? 0, x.UpdatedAtUtc);
 }

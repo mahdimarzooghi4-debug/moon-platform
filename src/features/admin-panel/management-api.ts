@@ -47,6 +47,17 @@ export type AdminHeroVideoMeta = {
   updatedAtUtc: string;
 };
 
+export type AdminTrustedCompany = {
+  id: number;
+  name: string;
+  sortOrder: number;
+  isPublished: boolean;
+  hasLogo: boolean;
+  updatedAtUtc: string;
+};
+
+export type PublicTrustedCompany = Pick<AdminTrustedCompany, "id" | "name" | "sortOrder" | "hasLogo">;
+
 async function authorizedRequest<T>(path: string, init?: RequestInit): Promise<T> {
   const session = getSession();
   if (!session) throw new Error("missing_session");
@@ -183,6 +194,50 @@ export function saveAdminHeroVideo(file: File) {
 
 export function deleteAdminHeroVideo() {
   return authorizedRequest<void>("/api/v1/admin/management/content/hero", { method: "DELETE" });
+}
+
+export function listAdminTrustedCompanies() {
+  return authorizedRequest<AdminTrustedCompany[]>("/api/v1/admin/management/content/trusted-companies");
+}
+
+export function saveAdminTrustedCompany(
+  id: number | null,
+  input: Pick<AdminTrustedCompany, "name" | "sortOrder" | "isPublished">,
+) {
+  return authorizedRequest<AdminTrustedCompany>(
+    id === null ? "/api/v1/admin/management/content/trusted-companies" : `/api/v1/admin/management/content/trusted-companies/${id}`,
+    { method: id === null ? "POST" : "PUT", body: JSON.stringify(input) },
+  );
+}
+
+export function deleteAdminTrustedCompany(id: number) {
+  return authorizedRequest<void>(`/api/v1/admin/management/content/trusted-companies/${id}`, { method: "DELETE" });
+}
+
+export function saveAdminTrustedCompanyLogo(id: number, file: File) {
+  const body = new FormData();
+  body.append("file", file, file.name);
+  return authorizedRequest<{ companyId: number; fileName: string; contentType: string; size: number; updatedAtUtc: string }>(
+    `/api/v1/admin/management/content/trusted-companies/${id}/logo`, { method: "PUT", body },
+  );
+}
+
+export function loadAdminTrustedCompanyLogo(id: number) {
+  return authorizedBlobRequest(`/api/v1/admin/management/content/trusted-companies/${id}/logo`);
+}
+
+export function deleteAdminTrustedCompanyLogo(id: number) {
+  return authorizedRequest<void>(`/api/v1/admin/management/content/trusted-companies/${id}/logo`, { method: "DELETE" });
+}
+
+export async function listPublicTrustedCompanies(): Promise<PublicTrustedCompany[]> {
+  const response = await fetch(`${apiBaseUrl}/api/v1/public/content/trusted-companies`, { headers: { Accept: "application/json" } });
+  if (!response.ok) throw new Error(`public_trusted_companies_${response.status}`);
+  return response.json() as Promise<PublicTrustedCompany[]>;
+}
+
+export function publicTrustedCompanyLogoUrl(id: number) {
+  return `${apiBaseUrl}/api/v1/public/content/trusted-companies/${id}/logo`;
 }
 
 export async function loadPublicHeroVideo(): Promise<Blob | null> {
