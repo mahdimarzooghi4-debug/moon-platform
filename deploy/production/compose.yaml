@@ -1,0 +1,155 @@
+# Moon single-host Ubuntu 24.04 topology. DO NOT run until reviewed and approved.
+# Only 80/443 are published. PostgreSQL, API and Keycloak are container-only.
+# Values supplied through a protected .env.production, never committed.
+name: moon-platform
+
+services:
+  gateway:
+    image: public.ecr.aws/docker/library/caddy:2.10.2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      MOON_PUBLIC_DOMAIN: ${MOON_PUBLIC_DOMAIN:?set moon public DNS host}
+      TLS_CONTACT_EMAIL: ${TLS_CONTACT_EMAIL:?set TLS contact email}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - moon-caddy-data:/data
+      - moon-caddy-config:/config
+    depends_on:
+      - web
+      - api
+      - keycloak
+    networks:
+      frontend:
+        ipv4_address: 172.30.88.10
+
+  web:
+    image: moon-platform/web:${MOON_IMAGE_TAG:?set immutable image SHA}
+    restart: unless-stopped
+    expose:
+      - "8080"
+    networks:
+      - frontend
+
+  api:
+    image: moon-platform/api:${MOON_IMAGE_TAG:?set immutable image SHA}
+    restart: unless-stopped
+    environment: &moon_api_environment
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__Postgres: Host=moon-db;Port=5432;Database=moon;Username=moon;Pooling=true
+      ConnectionStrings__PostgresPassword: ${MOON_DB_PASSWORD:?set unique moon DB password}
+      Authentication__Authority: https://${MOON_PUBLIC_DOMAIN:?set public host}/identity/realms/moon
+      Authentication__Audience: moon-api
+      Authentication__RequireHttpsMetadata: "true"
+      ReverseProxy__TrustedProxyIp: 172.30.88.10
+      Cors__AllowedOrigins__0: https://${MOON_PUBLIC_DOMAIN:?set public host}
+      Database__MigrateOnStartup: "false"
+      Messaging__OutboxDispatchEnabled: "false"
+      ExternalServices__Sms__Provider: Disabled
+      ExternalServices__Payment__Provider: Disabled
+      MehradSso__Enabled: "false"
+    expose:
+      - "8080"
+    # Reach the public, HTTPS Keycloak issuer through the local TLS gateway.
+    # Public JWT issuer and TLS checks remain strict; do NOT disable HTTPS.
+    extra_hosts:
+      - "${MOON_PUBLIC_DOMAIN:?set public host}:172.30.88.10"
+    depends_on:
+      moon-db:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+    networks:
+      - frontend
+      - private
+
+  migrate:
+    profiles: ["migrations"]
+    image: moon-platform/api:${MOON_IMAGE_TAG:?set immutable image SHA}
+    restart: "no"
+    environment:
+      <<: *moon_api_environment
+      Database__MigrateOnly: "true"
+    depends_on:
+      moon-db:
+        condition: service_healthy
+    networks:
+      - frontend
+      - private
+
+  moon-db:
+    image: public.ecr.aws/docker/library/postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: moon
+      POSTGRES_USER: moon
+      POSTGRES_PASSWORD: ${MOON_DB_PASSWORD:?set unique moon DB password}
+    volumes:
+      - moon-postgres:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U moon -d moon"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - private
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.7.3
+    restart: unless-stopped
+    command: ["start", "--import-realm"]
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD:?set unique Keycloak DB password}
+      KC_HTTP_ENABLED: "true"
+      KC_HTTP_RELATIVE_PATH: /identity
+      KC_HOSTNAME: https://${MOON_PUBLIC_DOMAIN:?set public host}/identity
+      KC_HOSTNAME_STRICT: "true"
+      KC_PROXY_HEADERS: xforwarded
+      KC_HEALTH_ENABLED: "true"
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN_USERNAME:?set bootstrap admin username}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:?set bootstrap admin password}
+    volumes:
+      - ../../backend/keycloak/moon-realm-production.json:/opt/keycloak/data/import/moon-realm-production.json:ro
+    depends_on:
+      keycloak-db:
+        condition: service_healthy
+    networks:
+      - frontend
+      - private
+
+  keycloak-db:
+    image: public.ecr.aws/docker/library/postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD:?set unique Keycloak DB password}
+    volumes:
+      - moon-keycloak-postgres:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keycloak -d keycloak"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - private
+
+networks:
+  frontend:
+    ipam:
+      config:
+        - subnet: 172.30.88.0/24
+  private:
+    internal: true
+
+volumes:
+  moon-postgres:
+  moon-keycloak-postgres:
+  moon-caddy-data:
+  moon-caddy-config:
