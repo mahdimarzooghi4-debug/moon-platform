@@ -18,6 +18,30 @@ public sealed class AppUser
     public DateTimeOffset CreatedAtUtc { get; set; } = DateTimeOffset.UtcNow;
 }
 
+/// <summary>Immutable provider-to-Moon account link. PII is not a linking key.</summary>
+public sealed class MehradIdentityLink
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid MerchantId { get; set; }
+    public Guid MehradSubject { get; set; }
+    public Guid UserId { get; set; }
+    public DateTimeOffset LinkedAtUtc { get; set; } = DateTimeOffset.UtcNow;
+}
+
+/// <summary>
+/// Transient login-handoff proof. Never serves as a Moon authentication session.
+/// </summary>
+public sealed class MehradSsoHandoff
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid MerchantId { get; set; }
+    public Guid MehradSubject { get; set; }
+    public string ProofSha256 { get; set; } = string.Empty;
+    public DateTimeOffset CreatedAtUtc { get; set; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset ExpiresAtUtc { get; set; }
+    public DateTimeOffset? ConsumedAtUtc { get; set; }
+}
+
 public sealed class Role
 {
     public Guid Id { get; set; } = Guid.NewGuid();

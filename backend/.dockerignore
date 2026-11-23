@@ -5,3 +5,13 @@
 TestResults
 *.user
 *.suo
+
+# Server-only secrets and credential files must not enter API image
+.env
+.env.*
+**/.env
+**/.env.*
+*.pem
+*.key
+*.dump
+*.backup

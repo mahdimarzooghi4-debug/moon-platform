@@ -7,16 +7,55 @@ on:
   workflow_dispatch:
 
 jobs:
+  production-deployment-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate production Compose config WITHOUT deploying
+        run: docker compose --env-file deploy/production/env.example -f deploy/production/compose.yaml config --quiet
+      - name: Validate private operator scripts and production Keycloak realm
+        run: |
+          bash -n deploy/production/preflight.sh
+          bash -n deploy/production/backup-databases.sh
+          python3 -m json.tool backend/keycloak/moon-realm-production.json >/dev/null
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          realm = json.loads(Path("backend/keycloak/moon-realm-production.json").read_text())
+          assert realm["realm"] == "moon" and not realm["registrationAllowed"]
+          web = next(c for c in realm["clients"] if c["clientId"] == "moon-web")
+          assert web["redirectUris"] == ["https://mahcsr.ir/auth/callback"]
+          assert web["webOrigins"] == ["https://mahcsr.ir"]
+          config = Path("deploy/production/Caddyfile").read_text()
+          assert "reverse_proxy api:8080" in config
+          assert "reverse_proxy keycloak:8080" in config
+          assert "access_log" not in config and "log {" not in config
+          # Server-verified registry sources. Never silently switch back to
+          # Docker Hub, which returned 403 from the Ubuntu host.
+          compose = Path("deploy/production/compose.yaml").read_text()
+          dockerfile = Path("Dockerfile").read_text()
+          for name in ("postgres:18-alpine", "caddy:2.10.2-alpine"):
+              assert "public.ecr.aws/docker/library/" + name in compose
+          assert "image: postgres:" not in compose and "image: caddy:" not in compose
+          assert "FROM public.ecr.aws/docker/library/node:22-alpine AS build" in dockerfile
+          assert "FROM public.ecr.aws/nginx/nginx-unprivileged:stable-alpine AS runtime" in dockerfile
+
+          PY
   frontend:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: npm
       - run: npm ci --no-audit --no-fund
+      - run: npm run test:auth
       - run: npm run build
+        env:
+          # Vite bundles the full Moon web; the default Node heap (about 2 GiB)
+          # exhausted in Release Verify #89 despite successful dependency install.
+          NODE_OPTIONS: --max-old-space-size=5120
 
   backend:
     runs-on: ubuntu-latest
@@ -65,3 +104,39 @@ jobs:
         run: dotnet ef migrations has-pending-model-changes --project src/Moon.Platform.Api/Moon.Platform.Api.csproj --startup-project src/Moon.Platform.Api/Moon.Platform.Api.csproj
       - working-directory: backend
         run: dotnet test Moon.Platform.slnx -c Release --no-build --no-restore --logger "console;verbosity=normal"
+
+  # Manual, branch-pinned image bundle for the dedicated host. This never deploys.
+  server-images:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/feat/mehrad-sso-integration'
+    needs: [production-deployment-contract, frontend, backend]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build frontend image
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: docker build --build-arg VITE_OIDC_AUTHORITY=https://mahcsr.ir/identity/realms/moon --build-arg VITE_OIDC_CLIENT_ID=moon-web --build-arg VITE_API_BASE_URL=https://mahcsr.ir --build-arg NODE_OPTIONS=--max-old-space-size=5120 --tag "moon-platform/web:${IMAGE_TAG}" .
+      - name: Build API image
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: docker build --tag "moon-platform/api:${IMAGE_TAG}" --file backend/Dockerfile backend
+      - name: Save and checksum immutable images
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          archive="moon-platform-images-${IMAGE_TAG}.tar.gz"
+          docker save "moon-platform/web:${IMAGE_TAG}" "moon-platform/api:${IMAGE_TAG}" | gzip -1 > "$archive"
+          sha256sum "$archive" > "$archive.sha256"
+          echo "Built image tag: \`${IMAGE_TAG}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "The tarball contains only the frontend and API images; it contains no deployment secrets." >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: moon-platform-images-${{ github.sha }}
+          path: |
+            moon-platform-images-${{ github.sha }}.tar.gz
+            moon-platform-images-${{ github.sha }}.tar.gz.sha256
+          if-no-files-found: error
+          retention-days: 7

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
+import MehradConfirmPage from "./MehradConfirmPage";
 import {
   getCurrentIdentity,
   panelRolesFromIdentity,
@@ -75,6 +76,13 @@ function CallbackScreen() {
 
         const panelRoles = panelRolesFromIdentity(identity);
         setSessionPanelRoles(panelRoles);
+
+        // The only specifically permitted non-panel post-OIDC return path.
+        // This does not link accounts; the user must explicitly confirm.
+        if (pending.returnTo === "/mehrad/confirm") {
+          window.location.replace("/mehrad/confirm");
+          return;
+        }
 
         const accountRoles = rolesForAccountType(panelRoles, pending.accountType);
         const requested = pending.returnTo;
@@ -152,6 +160,10 @@ function ProtectedPanelGate({ children, pathname }: { children: ReactNode; pathn
 
 export function AuthGate({ children }: { children: ReactNode }) {
   const pathname = window.location.pathname;
+
+  if (pathname === "/mehrad/confirm") {
+    return <MehradConfirmPage />;
+  }
 
   if (pathname === "/auth/callback") {
     return <CallbackScreen />;

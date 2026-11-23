@@ -238,6 +238,18 @@ feat/ui-ux-polish
 
 The immediate focus is manual product review across authentication, dashboard/navigation, projects, impact views, admin workflows, responsive behavior, RTL presentation, loading/error/empty states, consistency, and accessibility.
 
+## Dedicated Ubuntu 24.04 production-server preparation
+
+The target infrastructure for Moon is now the owner's dedicated Ubuntu 24.04
+server, **not Render**. See
+[`deploy/production/README.md`](deploy/production/README.md) for the
+explicitly gated single-host HTTPS / Moon API / Keycloak / separate PostgreSQL
+deployment contract, operator-controlled migration, backup and release gates.
+
+This is a **Draft infrastructure plan**, not evidence of a live server, SSO,
+SMS, payments, completed QA or Production authorization. Existing Render
+services and DNS remain unchanged until a separately approved cutover.
+
 ## Production readiness
 
 The codebase is accepted, but production go-live is intentionally still open. Before launch, the remaining operational work includes production infrastructure, protected environment variables/secrets, deployment promotion, domain/TLS configuration, observability, backup/restore, runbooks, real SMS credentials, and payment-provider selection/activation.

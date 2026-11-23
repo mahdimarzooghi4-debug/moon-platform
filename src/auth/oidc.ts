@@ -1,3 +1,5 @@
+import { checkOidcTokenBinding, parseOidcCallback } from "./oidcCallbackGuard.mjs";
+
 export type AccountType = "company" | "startup" | "internal";
 
 export type AuthSession = {
@@ -12,6 +14,11 @@ export type AuthSession = {
 type JwtPayload = {
   sub?: string;
   exp?: number;
+  iat?: number;
+  iss?: string;
+  aud?: string | string[];
+  azp?: string;
+  nbf?: number;
   nonce?: string;
   roles?: string[];
   realm_access?: { roles?: string[] };
@@ -118,18 +125,38 @@ export async function beginLogin(options: {
   window.location.assign(`${authority}/protocol/openid-connect/auth?${params.toString()}`);
 }
 
-export async function completeLogin(search: string) {
-  const query = new URLSearchParams(search);
-  const code = query.get("code");
-  const returnedState = query.get("state");
-  const error = query.get("error");
-  if (error) throw new Error(error);
-  if (!code || !returnedState) throw new Error("missing_authorization_code");
+type LoginCompletion = { session: AuthSession; pending: PendingLogin };
 
+// React.StrictMode may re-run callback effects. Share the SAME redemption
+// promise without allowing a second token exchange or different callback.
+let completionInFlight: { search: string; promise: Promise<LoginCompletion> } | null = null;
+
+export function completeLogin(search: string): Promise<LoginCompletion> {
+  if (completionInFlight) {
+    return completionInFlight.search === search
+      ? completionInFlight.promise
+      : Promise.reject(new Error("concurrent_login_completion"));
+  }
+  const promise = completeLoginOnce(search);
+  completionInFlight = { search, promise };
+  // Keep successful completion until navigation; React.StrictMode can rerun
+  // the callback effect even after its initial exchange resolved.
+  // A failed attempt needs a fresh authorization request.
+  void promise.catch(() => {
+    if (completionInFlight?.promise === promise) completionInFlight = null;
+  });
+  return promise;
+}
+
+async function completeLoginOnce(search: string): Promise<LoginCompletion> {
   const rawPending = sessionStorage.getItem(PENDING_KEY);
   if (!rawPending) throw new Error("missing_login_state");
   const pending = JSON.parse(rawPending) as PendingLogin;
-  if (pending.state !== returnedState) throw new Error("invalid_login_state");
+  const code = parseOidcCallback(search, pending);
+
+  // A callback attempt may redeem its code only once per browser tab.
+  // A failed exchange requires a fresh Keycloak authorization flow.
+  sessionStorage.removeItem(PENDING_KEY);
 
   const redirectUri = `${window.location.origin}/auth/callback`;
   const body = new URLSearchParams({
@@ -153,15 +180,22 @@ export async function completeLogin(search: string) {
     expires_in?: number;
   };
 
-  const accessPayload = decodeJwt(tokens.access_token);
-  if (tokens.id_token) {
-    const idPayload = decodeJwt(tokens.id_token);
-    if (idPayload.nonce && idPayload.nonce !== pending.nonce) throw new Error("invalid_nonce");
+  // Keycloak OIDC code+PKCE must return BOTH tokens. Decoded claims below
+  // are app-level callback checks, not browser-side signature verification;
+  // the Moon API independently validates the Keycloak bearer token.
+  if (!tokens.access_token || !tokens.id_token) {
+    throw new Error("missing_oidc_tokens");
   }
-
-  const expiresAt = accessPayload.exp
-    ? accessPayload.exp * 1000
-    : Date.now() + (tokens.expires_in ?? 300) * 1000;
+  const accessPayload = decodeJwt(tokens.access_token);
+  const idPayload = decodeJwt(tokens.id_token);
+  checkOidcTokenBinding({
+    accessClaims: accessPayload,
+    idClaims: idPayload,
+    expectedNonce: pending.nonce,
+    expectedIssuer: authority,
+    expectedClientId: clientId,
+  });
+  const expiresAt = accessPayload.exp! * 1000;
 
   const session: AuthSession = {
     accessToken: tokens.access_token,
@@ -172,7 +206,6 @@ export async function completeLogin(search: string) {
   };
 
   sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
-  sessionStorage.removeItem(PENDING_KEY);
   return { session, pending };
 }
 
