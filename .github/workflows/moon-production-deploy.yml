@@ -34,8 +34,8 @@ jobs:
           test -n "$DEPLOY_KEY" || { echo "Missing MOON_DEPLOY_SSH_KEY"; exit 1; }
           test -n "$KNOWN_HOSTS" || { echo "Missing MOON_DEPLOY_KNOWN_HOSTS"; exit 1; }
           install -m 700 -d "$HOME/.ssh"
-          printf '%s\\n' "$DEPLOY_KEY" > "$HOME/.ssh/moon_deploy"
-          printf '%s\\n' "$KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          printf '%s\n' "$DEPLOY_KEY" > "$HOME/.ssh/moon_deploy"
+          printf '%s\n' "$KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
           chmod 600 "$HOME/.ssh/moon_deploy" "$HOME/.ssh/known_hosts"
       - name: Build and deploy on server
         env:
@@ -57,7 +57,7 @@ jobs:
           if grep -q '^MOON_IMAGE_TAG=' deploy/production/.env.production; then
             sed -i "s/^MOON_IMAGE_TAG=.*/MOON_IMAGE_TAG=$IMAGE_TAG/" deploy/production/.env.production
           else
-            printf '\\nMOON_IMAGE_TAG=%s\\n' "$IMAGE_TAG" >> deploy/production/.env.production
+            printf '\nMOON_IMAGE_TAG=%s\n' "$IMAGE_TAG" >> deploy/production/.env.production
           fi
           chmod 600 deploy/production/.env.production
           bash deploy/production/preflight.sh
