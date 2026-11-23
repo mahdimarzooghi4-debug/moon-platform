@@ -79,8 +79,60 @@
 
 .startup-project-list-card {
   position: relative;
-  height: 252px;
+  min-height: 252px;
+  height: auto;
   padding: 22px 24px 22px;
+}
+
+.startup-project-description {
+  max-width: 720px;
+  margin: 12px 0;
+  color: var(--startup-muted);
+  font-size: 12px;
+  line-height: 1.9;
+  text-align: right;
+}
+
+.startup-project-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.startup-project-detail-button.is-edit {
+  background: #fff;
+  color: var(--startup-blue);
+}
+
+.startup-projects-empty,
+.startup-projects-message {
+  width: 100%;
+  border: 1px solid var(--startup-border);
+  border-radius: 14px;
+  background: #fff;
+  padding: 24px;
+  text-align: right;
+}
+
+.startup-projects-empty h2,
+.startup-projects-empty p {
+  margin: 0 0 12px;
+}
+
+.startup-projects-empty h2 {
+  color: var(--startup-navy);
+  font-size: 18px;
+}
+
+.startup-projects-empty p,
+.startup-projects-message {
+  color: var(--startup-muted);
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+.startup-projects-message.is-error {
+  color: #b42318;
+  background: #fff1f0;
 }
 
 .startup-project-list-header {

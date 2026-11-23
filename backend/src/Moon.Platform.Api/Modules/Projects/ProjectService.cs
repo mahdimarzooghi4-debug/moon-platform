@@ -26,7 +26,8 @@ public interface IProjectService
         string actorSubject,
         string correlationId,
         string? ipAddress,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default,
+        string? proposalDataJson = null);
 
     Task<ProjectOperationResult> AddVersionAsync(
         Guid projectId,
@@ -46,6 +47,12 @@ public interface IProjectService
         string actorSubject,
         string correlationId,
         string? ipAddress,
+        CancellationToken cancellationToken = default,
+        string? proposalDataJson = null);
+
+    Task<IReadOnlyList<ProjectView>> ListForOrganizationAsync(
+        Guid organizationId,
+        string actorSubject,
         CancellationToken cancellationToken = default);
 
     Task<ProjectOperationResult> SubmitAsync(
@@ -98,7 +105,8 @@ public sealed class ProjectService(MoonDbContext dbContext, IAuditWriter auditWr
         string actorSubject,
         string correlationId,
         string? ipAddress,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        string? proposalDataJson = null)
     {
         var validation = ValidateVersionInput(title, description, fundingTargetMinor, fundingTargetCurrency, out var normalizedCurrency);
         if (validation is not null)
@@ -124,6 +132,7 @@ public sealed class ProjectService(MoonDbContext dbContext, IAuditWriter auditWr
             VersionNumber = 1,
             Title = title.Trim(),
             Description = description.Trim(),
+            ProposalDataJson = proposalDataJson,
             FundingTargetMinor = fundingTargetMinor,
             FundingTargetCurrency = normalizedCurrency,
             CreatedBySubject = actorSubject
@@ -186,7 +195,8 @@ public sealed class ProjectService(MoonDbContext dbContext, IAuditWriter auditWr
         string actorSubject,
         string correlationId,
         string? ipAddress,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        string? proposalDataJson = null)
     {
         var validation = ValidateVersionInput(title, description, fundingTargetMinor, fundingTargetCurrency, out var normalizedCurrency);
         if (validation is not null)
@@ -229,6 +239,7 @@ public sealed class ProjectService(MoonDbContext dbContext, IAuditWriter auditWr
             VersionNumber = nextVersionNumber,
             Title = title.Trim(),
             Description = description.Trim(),
+            ProposalDataJson = proposalDataJson,
             FundingTargetMinor = fundingTargetMinor,
             FundingTargetCurrency = normalizedCurrency,
             CreatedBySubject = actorSubject
@@ -433,6 +444,31 @@ public sealed class ProjectService(MoonDbContext dbContext, IAuditWriter auditWr
         return ProjectOperationResult.Success(await BuildViewAsync(project, cancellationToken));
     }
 
+
+    public async Task<IReadOnlyList<ProjectView>> ListForOrganizationAsync(
+        Guid organizationId,
+        string actorSubject,
+        CancellationToken cancellationToken = default)
+    {
+        if (!await HasActiveOrganizationAccessAsync(actorSubject, organizationId, cancellationToken))
+        {
+            throw new UnauthorizedAccessException("Active organization membership is required.");
+        }
+
+        var projects = await dbContext.Projects.AsNoTracking()
+            .Where(x => x.OrganizationId == organizationId)
+            .OrderByDescending(x => x.CreatedAtUtc)
+            .ToListAsync(cancellationToken);
+
+        var result = new List<ProjectView>(projects.Count);
+        foreach (var project in projects)
+        {
+            result.Add(await BuildViewAsync(project, cancellationToken));
+        }
+
+        return result;
+    }
+
     private async Task<bool> HasActiveOrganizationAccessAsync(
         string actorSubject,
         Guid organizationId,
@@ -453,21 +489,22 @@ public sealed class ProjectService(MoonDbContext dbContext, IAuditWriter auditWr
 
     private async Task<ProjectView> BuildViewAsync(Project project, CancellationToken cancellationToken)
     {
-        var versions = await dbContext.ProjectVersions.AsNoTracking()
+        var versionRows = await dbContext.ProjectVersions.AsNoTracking()
             .Where(x => x.ProjectId == project.Id)
             .OrderBy(x => x.VersionNumber)
-            .Select(x => new ProjectVersionView(
-                x.Id,
-                x.VersionNumber,
-                x.Title,
-                x.Description,
-                x.FundingTargetMinor,
-                x.FundingTargetCurrency,
-                x.IsLocked,
-                x.CreatedBySubject,
-                x.CreatedAtUtc,
-                x.LockedAtUtc))
             .ToListAsync(cancellationToken);
+        var versions = versionRows.Select(x => new ProjectVersionView(
+            x.Id,
+            x.VersionNumber,
+            x.Title,
+            x.Description,
+            ParseProposalData(x.ProposalDataJson),
+            x.FundingTargetMinor,
+            x.FundingTargetCurrency,
+            x.IsLocked,
+            x.CreatedBySubject,
+            x.CreatedAtUtc,
+            x.LockedAtUtc)).ToList();
 
         return new ProjectView(
             project.Id,
@@ -481,6 +518,13 @@ public sealed class ProjectService(MoonDbContext dbContext, IAuditWriter auditWr
             project.PublishedBySubject,
             project.PublishedAtUtc,
             versions);
+    }
+
+    private static JsonElement? ParseProposalData(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value)) return null;
+        using var document = JsonDocument.Parse(value);
+        return document.RootElement.Clone();
     }
 
     private static ProjectOperationResult? ValidateVersionInput(

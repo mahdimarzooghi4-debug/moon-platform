@@ -120,6 +120,7 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
             entity.HasKey(x => x.Id);
             entity.Property(x => x.Title).HasMaxLength(200).IsRequired();
             entity.Property(x => x.Description).HasMaxLength(8000).IsRequired();
+            entity.Property(x => x.ProposalDataJson).HasColumnType("jsonb");
             entity.Property(x => x.FundingTargetCurrency).HasMaxLength(3);
             entity.Property(x => x.CreatedBySubject).HasMaxLength(200).IsRequired();
             entity.HasIndex(x => new { x.ProjectId, x.VersionNumber }).IsUnique();
