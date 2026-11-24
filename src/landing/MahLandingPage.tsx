@@ -2,10 +2,11 @@ import React from "react";
 import "./index.css";
 import MoonIntroDialog from "./MoonIntroDialog";
 import { getPublicLandingKpis } from "../impact/api";
-import { listPublicTrustedCompanies, publicTrustedCompanyLogoUrl, type PublicTrustedCompany } from "../features/admin-panel/management-api";
+import { listPublicNews, listPublicTrustedCompanies, publicNewsImageUrl, publicTrustedCompanyLogoUrl, type PublicTrustedCompany } from "../features/admin-panel/management-api";
 
 const integerFormatter = new Intl.NumberFormat("fa-IR", { maximumFractionDigits: 0 });
 const decimalFormatter = new Intl.NumberFormat("fa-IR", { maximumFractionDigits: 1 });
+const newsDateFormatter = new Intl.DateTimeFormat("fa-IR", { year: "numeric", month: "long", day: "numeric" });
 
 type LandingKpiView = {
   startupCount: number;
@@ -19,6 +20,7 @@ export default function Main() {
   const [introOpen, setIntroOpen] = React.useState(false);
   const [landingKpis, setLandingKpis] = React.useState<LandingKpiView | null>(null);
   const [trustedCompanies, setTrustedCompanies] = React.useState<PublicTrustedCompany[]>([]);
+  const [news, setNews] = React.useState<Awaited<ReturnType<typeof listPublicNews>>>([]);
 
   React.useEffect(() => {
     let cancelled = false;
@@ -52,6 +54,14 @@ export default function Main() {
     listPublicTrustedCompanies()
       .then((items) => { if (!cancelled) setTrustedCompanies(items); })
       .catch(() => { if (!cancelled) setTrustedCompanies([]); });
+    return () => { cancelled = true; };
+  }, []);
+
+  React.useEffect(() => {
+    let cancelled = false;
+    listPublicNews()
+      .then((items) => { if (!cancelled) setNews(items); })
+      .catch(() => { if (!cancelled) setNews([]); });
     return () => { cancelled = true; };
   }, []);
   return (
@@ -650,91 +660,24 @@ export default function Main() {
             </span>
           </div>
         </div>
-        <div className="flex gap-[24px] items-start self-stretch shrink-0 flex-nowrap relative z-[269]">
-          <div className="flex w-[384px] h-[421px] flex-col items-start shrink-0 flex-nowrap bg-[#fff] rounded-[16px] border-solid border border-[#e4ebf1] relative overflow-hidden shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[270]">
-            <div className="flex h-[180px] flex-col items-start self-stretch shrink-0 flex-nowrap bg-[url(/assets/codia/U7kc1wKsyS.png)] bg-cover bg-no-repeat relative overflow-hidden z-[271]" />
-            <div className="flex h-[241px] pt-[24px] pr-[24px] pb-[24px] pl-[24px] flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[272]">
-              <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[273]">
-                <span className="flex w-[71px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#60758a] relative text-right whitespace-nowrap z-[274]">
-                  ۲۰ مرداد ۱۴۰۵
-                </span>
-                <div className="flex w-[56px] pt-[4px] pr-[10px] pb-[4px] pl-[10px] justify-center items-center shrink-0 flex-nowrap bg-[#e0f2fe] rounded-[12px] relative z-[275]">
-                  <span className="flex w-[36px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-bold leading-[18.75px] text-[#2094e3] relative text-right whitespace-nowrap z-[276]">
-                    پروژه‌ها
-                  </span>
+        <div className="mah-home-news-grid" aria-live="polite">
+          {news.slice(0, 3).map((item) => (
+            <article className="mah-home-news-card" key={item.id}>
+              <div className="mah-home-news-image">
+                <img src={publicNewsImageUrl(item.id)} alt="" onError={(event) => { event.currentTarget.style.display = "none"; }} />
+              </div>
+              <div className="mah-home-news-content">
+                <div className="mah-home-news-meta">
+                  <span>{newsDateFormatter.format(new Date(item.updatedAtUtc))}</span>
+                  <span className="mah-home-news-category">خبر</span>
                 </div>
+                <h3>{item.title}</h3>
+                <p>{item.summary}</p>
+                <a href="/news" aria-label={"مطالعه خبر: " + item.title}>مطالعه خبر</a>
               </div>
-              <span className="flex w-[336px] h-[56px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[18px] font-bold leading-[28.125px] text-[#17324d] relative text-right overflow-hidden z-[277]">
-                آغاز مرحله دوم تأمین مالی پروژه اشتغال زنان روستایی
-              </span>
-              <span className="flex w-[336px] h-[44px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right overflow-hidden z-[278]">
-                پس از تأیید تحقق KPIهای مرحله نخست، تأمین مالی مرحله دوم این
-                پروژه آغاز شد.
-              </span>
-              <div className="self-stretch grow shrink-0 basis-0 relative overflow-hidden z-[279]" />
-              <div className="flex pt-[8px] pr-0 pb-0 pl-0 gap-[8px] justify-end items-center self-stretch shrink-0 flex-nowrap relative z-[280]">
-                <span className="flex w-[65px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#2094e3] relative text-right whitespace-nowrap z-[281]">
-                  مطالعه خبر
-                </span>
-              </div>
-            </div>
-          </div>
-          <div className="flex w-[384px] h-[421px] flex-col items-start shrink-0 flex-nowrap bg-[#fff] rounded-[16px] border-solid border border-[#e4ebf1] relative overflow-hidden shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[282]">
-            <div className="flex h-[180px] flex-col items-start self-stretch shrink-0 flex-nowrap bg-[url(/assets/codia/nyuUTPfEvr.png)] bg-cover bg-no-repeat relative overflow-hidden z-[283]" />
-            <div className="flex h-[241px] pt-[24px] pr-[24px] pb-[24px] pl-[24px] flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[284]">
-              <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[285]">
-                <span className="flex w-[68px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#60758a] relative text-right whitespace-nowrap z-[286]">
-                  ۱۶ مرداد ۱۴۰۵
-                </span>
-                <div className="flex w-[82px] pt-[4px] pr-[10px] pb-[4px] pl-[10px] justify-center items-center shrink-0 flex-nowrap bg-[#eaf8f0] rounded-[12px] relative z-[287]">
-                  <span className="flex w-[62px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-bold leading-[18.75px] text-[#159455] relative text-right whitespace-nowrap z-[288]">
-                    همراهان ماه
-                  </span>
-                </div>
-              </div>
-              <span className="flex w-[336px] h-[56px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[18px] font-bold leading-[28.125px] text-[#17324d] relative text-right overflow-hidden z-[289]">
-                پیوستن سه شرکت جدید به شبکه همراهان سازمانی ماه
-              </span>
-              <span className="flex w-[336px] h-[44px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right overflow-hidden z-[290]">
-                سه مجموعه جدید برای سرمایه‌گذاری شفاف در پروژه‌های دارای اثر اجتماعی
-                به سامانه ماه پیوستند.
-              </span>
-              <div className="self-stretch grow shrink-0 basis-0 relative overflow-hidden z-[291]" />
-              <div className="flex pt-[8px] pr-0 pb-0 pl-0 gap-[8px] justify-end items-center self-stretch shrink-0 flex-nowrap relative z-[292]">
-                <span className="flex w-[65px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#2094e3] relative text-right whitespace-nowrap z-[293]">
-                  مطالعه خبر
-                </span>
-              </div>
-            </div>
-          </div>
-          <div className="flex w-[384px] h-[421px] flex-col items-end shrink-0 flex-nowrap bg-[#fff] rounded-[16px] border-solid border border-[#e4ebf1] relative overflow-hidden shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[294]">
-            <div className="flex h-[180px] flex-col items-start self-stretch shrink-0 flex-nowrap bg-[url(/assets/codia/0tm5EFTw1E.png)] bg-cover bg-no-repeat relative overflow-hidden z-[295]" />
-            <div className="flex h-[241px] pt-[24px] pr-[24px] pb-[24px] pl-[24px] flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[296]">
-              <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[297]">
-                <span className="flex w-[67px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#60758a] relative text-right whitespace-nowrap z-[298]">
-                  ۱۰ مرداد ۱۴۰۵
-                </span>
-                <div className="flex w-[66px] pt-[4px] pr-[10px] pb-[4px] pl-[10px] justify-center items-center shrink-0 flex-nowrap bg-[#fff6e5] rounded-[12px] relative z-[299]">
-                  <span className="flex w-[46px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-bold leading-[18.75px] text-[#c5a056] relative text-right whitespace-nowrap z-[300]">
-                    گزارش اثر
-                  </span>
-                </div>
-              </div>
-              <span className="h-[28px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[18px] font-bold leading-[28px] text-[#17324d] relative text-right overflow-hidden whitespace-nowrap z-[301]">
-                انتشار گزارش اثر اجتماعی فصل بهار ۱۴۰۵
-              </span>
-              <span className="flex w-[336px] h-[44px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right overflow-hidden z-[302]">
-                نتایج اشتغال، آموزش، سلامت و توانمندسازی پروژه‌های فعال ماه
-                منتشر شد.
-              </span>
-              <div className="self-stretch grow shrink-0 basis-0 relative overflow-hidden z-[303]" />
-              <div className="flex pt-[8px] pr-0 pb-0 pl-0 gap-[8px] justify-end items-center self-stretch shrink-0 flex-nowrap relative z-[304]">
-                <span className="flex w-[65px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#2094e3] relative text-right whitespace-nowrap z-[305]">
-                  مطالعه خبر
-                </span>
-              </div>
-            </div>
-          </div>
+            </article>
+          ))}
+          {news.length === 0 ? <p className="mah-home-news-empty">هنوز خبری برای انتشار ثبت نشده است.</p> : null}
         </div>
         <div className="flex w-[155px] gap-[8px] items-center shrink-0 flex-nowrap relative z-[306]">
           <div className="w-[16px] h-[16px] shrink-0 bg-[url(/assets/codia/6mrr4HWzfu.png)] bg-cover bg-no-repeat relative overflow-hidden z-[307]" />
