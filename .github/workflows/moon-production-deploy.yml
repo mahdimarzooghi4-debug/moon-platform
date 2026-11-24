@@ -25,6 +25,10 @@ jobs:
           ref: ${{ github.sha }}
       - name: Validate production Compose
         run: docker compose --env-file deploy/production/env.example -f deploy/production/compose.yaml config --quiet
+      - name: Build API image
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: docker build --tag "moon-platform/api:$IMAGE_TAG" --file backend/Dockerfile backend
       - name: Configure SSH
         env:
           DEPLOY_KEY: ${{ secrets.MOON_DEPLOY_SSH_KEY }}
@@ -37,6 +41,15 @@ jobs:
           printf '%s\n' "$DEPLOY_KEY" > "$HOME/.ssh/moon_deploy"
           printf '%s\n' "$KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
           chmod 600 "$HOME/.ssh/moon_deploy" "$HOME/.ssh/known_hosts"
+      - name: Transfer API image
+        env:
+          DEPLOY_HOST: ${{ secrets.MOON_DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.MOON_DEPLOY_USER }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          docker save "moon-platform/api:$IMAGE_TAG" | gzip -1 |
+            ssh -i "$HOME/.ssh/moon_deploy" -o BatchMode=yes -o ConnectTimeout=15 -o ServerAliveInterval=30 -o ServerAliveCountMax=4 "$DEPLOY_USER@$DEPLOY_HOST" 'docker load'
       - name: Build and deploy on server
         env:
           DEPLOY_HOST: ${{ secrets.MOON_DEPLOY_HOST }}
@@ -68,10 +81,6 @@ jobs:
             --build-arg VITE_API_BASE_URL=https://mahcsr.ir \
             --build-arg NODE_OPTIONS=--max-old-space-size=5120 \
             --tag "moon-platform/web:$IMAGE_TAG" .
-          docker build \
-            --tag "moon-platform/api:$IMAGE_TAG" \
-            --file backend/Dockerfile backend
-
           docker compose --profile migrations --env-file deploy/production/.env.production -f deploy/production/compose.yaml run --rm migrate
           docker compose --env-file deploy/production/.env.production -f deploy/production/compose.yaml up -d --remove-orphans
           docker compose --env-file deploy/production/.env.production -f deploy/production/compose.yaml ps
