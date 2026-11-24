@@ -8,7 +8,7 @@ import {
   type AdminOrganization,
   type AdminRole,
 } from "../api";
-import { createAdminProvisioningRecord } from "../provisioning-store";
+import { provisionAdminUser } from "../management-api";
 import {
   readApprovedStartupAccessQueue,
   removeApprovedStartupAccess,
@@ -30,8 +30,9 @@ function normalizeMobile(value: string) {
 
 function organizationMatchesRole(organization: AdminOrganization, roleCode: string) {
   if (!roleCode) return true;
+  if (roleCode === "startup") return organization.type === "startup";
   if (roleCode === "company") return organization.type === "company";
-  if (roleCode === "product_owner") return organization.type === "creative_house";
+  if (roleCode === "product_owner" || roleCode === "evaluator") return organization.type === "creative_house";
   if (roleCode === "supervisor") return organization.type === "emdad" || organization.type === "supervisor";
   if (roleCode === "finance") return organization.type === "fund" || organization.type === "fund_manager";
   if (roleCode === "system_admin") return organization.type === "platform";
@@ -48,10 +49,9 @@ export default function AdminAddUser() {
   const [displayName, setDisplayName] = useState("");
   const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
+  const [temporaryPassword, setTemporaryPassword] = useState("");
   const [roleCode, setRoleCode] = useState("");
   const [organizationId, setOrganizationId] = useState("");
-  const [startupName, setStartupName] = useState("");
-  const [activityArea, setActivityArea] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -65,8 +65,6 @@ export default function AdminAddUser() {
         setApprovedStartup(queueItem);
         setDisplayName(queueItem.managerName);
         setRoleCode("startup");
-        setStartupName(queueItem.startupName);
-        setActivityArea(queueItem.activityArea);
       } else {
         setError("این استارتاپ دیگر در صف تأییدهای خانه خلاق نیست.");
       }
@@ -79,7 +77,7 @@ export default function AdminAddUser() {
           setOrganizations(organizationsResult.value.filter((item) => item.status === "active"));
         }
         if (rolesResult.status === "fulfilled") {
-          setRoles(rolesResult.value);
+          setRoles(rolesResult.value.filter((role) => ["product_owner", "evaluator", "supervisor", "finance", "company", "startup"].includes(role.code)));
         }
         if (rolesResult.status === "rejected") {
           setError("دریافت نقش‌های سامانه ناموفق بود.");
@@ -112,34 +110,39 @@ export default function AdminAddUser() {
     displayName.trim() &&
       mobileIsValid &&
       selectedRole &&
-      (isStartupRole ? startupName.trim() : selectedOrganization),
+      (isStartupRole ? selectedOrganization?.type === "startup" : selectedOrganization) &&
+      email.trim() && temporaryPassword.length >= 12,
   );
 
-  const submitUser = (event: FormEvent<HTMLFormElement>) => {
+  const submitUser = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!formIsValid || !selectedRole || saving) return;
 
     setSaving(true);
     setError("");
 
-    const organizationName = isStartupRole ? startupName.trim() : selectedOrganization?.name ?? "";
-    const organizationType = isStartupRole ? "startup" : selectedOrganization?.type ?? "";
-    const finalOrganizationId = isStartupRole
-      ? `pending-startup:${startupName.trim().replace(/\s+/g, "-").toLocaleLowerCase("fa")}`
-      : selectedOrganization?.organizationId ?? "";
+    if (!selectedOrganization) {
+      setSaving(false);
+      return;
+    }
 
-    createAdminProvisioningRecord({
-      displayName: displayName.trim(),
-      mobile,
-      email: email.trim(),
-      roleCode: selectedRole.code,
-      roleName: selectedRole.name,
-      organizationId: finalOrganizationId,
-      organizationName,
-      organizationType,
-      startupName: isStartupRole ? startupName.trim() : "",
-      activityArea: isStartupRole ? activityArea.trim() : "",
-    });
+    try {
+      await provisionAdminUser({
+        displayName: displayName.trim(),
+        mobile,
+        email: email.trim(),
+        temporaryPassword,
+        roleCode: selectedRole.code,
+        organizationId: selectedOrganization.organizationId,
+      });
+    } catch (failure) {
+      const message = failure instanceof Error ? failure.message : "";
+      setError(message === "account_exists_or_pending"
+        ? "برای این شماره حساب موجود است یا ساخت آن کامل نشده است."
+        : "ساخت حساب کامل نشد. اطلاعات حساب و تنظیمات سرویس هویت را بررسی کنید.");
+      setSaving(false);
+      return;
+    }
 
     if (approvedStartup && isStartupRole) {
       removeApprovedStartupAccess(approvedStartup.startupName, approvedStartup.managerName);
@@ -184,12 +187,15 @@ export default function AdminAddUser() {
                 {mobile && !mobileIsValid ? <small className="admin-field-error">شماره موبایل باید ۱۱ رقم و با 09 شروع شود.</small> : null}
               </div>
               <div className="admin-form-field">
-                <label htmlFor="admin-person-email">ایمیل (اختیاری)</label>
-                <input id="admin-person-email" className="admin-form-input" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="name@example.com" type="email" dir="ltr" disabled={saving} />
+                <label htmlFor="admin-person-email">ایمیل</label>
+                <input id="admin-person-email" className="admin-form-input" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="name@example.com" type="email" dir="ltr" disabled={saving} required />
               </div>
               <div className="admin-form-field">
-                <label>وضعیت دعوت</label>
-                <div className="admin-detail-value">پس از ثبت، حساب در وضعیت دعوت‌شده قرار می‌گیرد و اعلان برای ارسال آماده می‌شود.</div>
+                <label htmlFor="admin-person-password">رمز موقت (حداقل ۱۲ کاراکتر)</label>
+                <input id="admin-person-password" className="admin-form-input" type="password"
+                  autoComplete="new-password" value={temporaryPassword}
+                  onChange={(event) => setTemporaryPassword(event.target.value)}
+                  minLength={12} maxLength={128} disabled={saving} required />
               </div>
             </div>
 
@@ -228,7 +234,6 @@ export default function AdminAddUser() {
                 </select>
               </div>
 
-              {!isStartupRole ? (
                 <div className="admin-form-field">
                   <label htmlFor="admin-user-org">سازمان / مجموعه</label>
                   <select id="admin-user-org" className="admin-form-input" value={organizationId} onChange={(event) => setOrganizationId(event.target.value)} disabled={loading || saving} required>
@@ -238,31 +243,12 @@ export default function AdminAddUser() {
                     ))}
                   </select>
                 </div>
-              ) : (
-                <>
-                  <div className="admin-form-field">
-                    <label htmlFor="admin-startup-name">نام استارتاپ</label>
-                    <input id="admin-startup-name" className="admin-form-input" value={startupName} onChange={(event) => setStartupName(event.target.value)} placeholder="نام استارتاپ" disabled={saving} required />
-                  </div>
-                  <div className="admin-form-field">
-                    <label htmlFor="admin-startup-area">حوزه فعالیت</label>
-                    <input id="admin-startup-area" className="admin-form-input" value={activityArea} onChange={(event) => setActivityArea(event.target.value)} placeholder="مثلاً سلامت و بهداشت" disabled={saving} />
-                  </div>
-                </>
-              )}
             </div>
-
-            {isStartupRole ? (
-              <div className="admin-startup-direct-note">
-                <strong>{approvedStartup ? "استارتاپ تأییدشده خانه خلاق" : "ساخت استارتاپ از همین صفحه"}</strong>
-                <span>{approvedStartup ? "مشخصات استارتاپ از صف خانه خلاق وارد شده است. مدیر سامانه مشخصات شخص و شماره موبایل را تکمیل می‌کند و با ثبت فرم، این مورد از صف ایجاد دسترسی خارج می‌شود." : "مدیر سامانه مشخصات شخص و استارتاپ را وارد می‌کند؛ رکورد دعوت و دسترسی اولیه ساخته می‌شود و اعلان ورود برای شخص آماده خواهد شد."}</span>
-              </div>
-            ) : null}
 
             {error ? <p className="admin-form-actions-note">{error}</p> : null}
           </section>
 
-          <aside className="admin-info-note admin-info-note-tall">Backend فعلی ایجاد هویت جدید در Keycloak و ارسال واقعی SMS را هنوز پیاده نکرده است؛ بنابراین این فرم رکورد دعوت را ثبت می‌کند و تا اتصال سرویس هویت/پیامک، وضعیت اعلان به‌صورت «در انتظار اتصال سرویس» نمایش داده می‌شود.</aside>
+          <aside className="admin-info-note admin-info-note-tall">کاربر در اولین ورود باید رمز موقت را تغییر دهد. رمز موقت را از طریق یک مسیر امن به کاربر برسانید.</aside>
 
           <section className="admin-form-actions">
             <button className="admin-users-button admin-users-button-primary" type="submit" disabled={loading || saving || !formIsValid}>{saving ? "در حال ثبت…" : approvedStartup ? "ایجاد دسترسی استارتاپ" : "ساخت حساب و ثبت نقش"}</button>
