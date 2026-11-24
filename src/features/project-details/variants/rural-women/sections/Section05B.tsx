@@ -22,7 +22,7 @@ import { Section05B21 } from "./Section05B21";
 
 export function Section05B() {
   return (
-    <div className="flex w-[798px] flex-col gap-[48px] items-end shrink-0 flex-nowrap relative z-[124]">
+    <div className="mah-project-story flex w-[798px] flex-col gap-[48px] items-end shrink-0 flex-nowrap relative z-[124]">
       <Section05B01 />
       <Section05B02 />
       <Section05B03 />
