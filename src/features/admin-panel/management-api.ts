@@ -252,3 +252,17 @@ export async function listPublicNews(): Promise<AdminManagedNews[]> {
   if (!response.ok) throw new Error(`public_news_${response.status}`);
   return response.json() as Promise<AdminManagedNews[]>;
 }
+
+export function provisionAdminUser(input: {
+  organizationId: string;
+  roleCode: string;
+  mobile: string;
+  displayName: string;
+  email: string;
+  temporaryPassword: string;
+}) {
+  return authorizedRequest<void>("/api/v1/admin/management/users", {
+    method: "POST",
+    body: JSON.stringify(input),
+  });
+}
