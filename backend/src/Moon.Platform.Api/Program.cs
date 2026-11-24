@@ -213,6 +213,7 @@ builder.Services.AddAuthorization(options =>
 });
 
 builder.Services.AddScoped<ISmsProvider, DisabledSmsProvider>();
+builder.Services.AddHttpClient<KeycloakAccountClient>(client => client.Timeout = TimeSpan.FromSeconds(15));
 builder.Services.AddScoped<IPaymentGateway, DisabledPaymentGateway>();
 
 var otlpEndpoint = builder.Configuration["OpenTelemetry:OtlpEndpoint"];
