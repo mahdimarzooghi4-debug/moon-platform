@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Moon.Platform.Api.Infrastructure.Persistence;
 using System.Security.Claims;
 using Moon.Platform.Api.Modules.Identity;
 
@@ -13,6 +15,61 @@ public static class AdminManagementEndpoints
         var admin = endpoints
             .MapGroup("/api/v1/admin/management")
             .RequireAuthorization(AdminAccessPolicies.SystemAdmin);
+
+        admin.MapPost("/users", async Task<IResult> (
+            ProvisionAdminUser request,
+            KeycloakAccountClient keycloak,
+            MoonDbContext database,
+            CancellationToken cancellationToken) =>
+        {
+            var organization = await database.Organizations.AsNoTracking()
+                .SingleOrDefaultAsync(item => item.Id == request.OrganizationId && item.Status == "active", cancellationToken);
+
+            if (organization is null)
+                return Results.BadRequest(new { code = "active_organization_required" });
+
+            var allowed = request.RoleCode switch
+            {
+                SystemRoles.ProductOwner or SystemRoles.Evaluator => organization.Type == "creative_house",
+                SystemRoles.Supervisor => organization.Type is "emdad" or "supervisor",
+                SystemRoles.Finance => organization.Type is "fund" or "fund_manager",
+                SystemRoles.Company => organization.Type == "company",
+                SystemRoles.Startup => organization.Type == "startup",
+                _ => false
+            };
+
+            if (!allowed)
+                return Results.BadRequest(new { code = "role_organization_mismatch" });
+
+            if (!System.Text.RegularExpressions.Regex.IsMatch(request.Mobile ?? "", @"\A09[0-9]{9}\z") ||
+                string.IsNullOrWhiteSpace(request.DisplayName) || request.DisplayName.Length > 120 ||
+                !System.Net.Mail.MailAddress.TryCreate(request.Email, out var address) ||
+                address.Address != request.Email ||
+                request.TemporaryPassword is not { Length: >= 12 and <= 128 })
+                return Results.BadRequest(new { code = "invalid_account_details" });
+
+            var role = await database.Roles.SingleAsync(item => item.Code == request.RoleCode, cancellationToken);
+            var names = request.DisplayName.Trim().Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
+            if (names.Length != 2)
+                return Results.BadRequest(new { code = "full_name_required" });
+
+            var subject = await keycloak.CreateDisabledAsync(
+                request.Mobile, names[0], names[1], address.Address, request.TemporaryPassword, cancellationToken);
+            if (subject is null)
+                return Results.Conflict(new { code = "account_exists_or_pending" });
+
+            var user = new AppUser { ExternalSubject = subject, DisplayName = request.DisplayName.Trim() };
+            database.Users.Add(user);
+            database.Memberships.Add(new Membership
+            {
+                UserId = user.Id,
+                OrganizationId = organization.Id,
+                RoleId = role.Id
+            });
+            await database.SaveChangesAsync(cancellationToken);
+            await keycloak.EnableAsync(subject, cancellationToken);
+            return Results.NoContent();
+        });
 
         admin.MapGet("/organization-profiles", async Task<IResult> (
             IAdminManagementService service,
@@ -351,3 +408,5 @@ public static class AdminManagementEndpoints
         return actor;
     }
 }
+
+public sealed record ProvisionAdminUser(Guid OrganizationId, string RoleCode, string Mobile, string DisplayName, string Email, string TemporaryPassword);
