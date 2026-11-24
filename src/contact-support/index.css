@@ -239,3 +239,41 @@ button {
   text-align: left !important;
   unicode-bidi: isolate !important;
 }
+
+/* Put the brand, search and request form on the leading edge of the RTL page. */
+.mah-contact-page > .mah-contact-nav,
+.mah-contact-page > .mah-contact-nav > div:last-child,
+.mah-contact-page > .mah-contact-nav > div:last-child > div:first-child {
+  direction: rtl !important;
+  flex-direction: row-reverse;
+}
+.mah-contact-page > .mah-contact-nav > div:last-child,
+.mah-contact-page > .mah-contact-nav > div:last-child > div:first-child {
+  justify-content: flex-end !important;
+}
+.mah-contact-page .mah-contact-hero .text-center {
+  justify-content: flex-start !important;
+  text-align: right !important;
+  white-space: normal;
+  height: auto;
+}
+.mah-contact-page .mah-contact-search {
+  align-self: flex-start;
+  max-width: 100%;
+}
+.mah-contact-page .mah-contact-search-topics {
+  justify-content: flex-start;
+  max-width: 100%;
+}
+.mah-contact-page .mah-contact-search-topics > span:last-child,
+.mah-contact-page .mah-contact-quick-links > div > span:last-child {
+  order: -1;
+}
+.mah-contact-page .mah-contact-quick-links > div {
+  justify-content: flex-start !important;
+  flex-wrap: wrap;
+}
+.mah-contact-page .mah-contact-details {
+  direction: rtl !important;
+  flex-direction: row-reverse;
+}
