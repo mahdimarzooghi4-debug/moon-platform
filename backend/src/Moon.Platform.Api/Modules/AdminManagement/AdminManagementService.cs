@@ -43,12 +43,7 @@ public sealed class AdminManagementService(MoonDbContext dbContext, IAuditWriter
         new() { Id = "3", Name = "اشتغال زنان روستایی", Province = "گلستان", Track = "اشتغال و معیشت", FundingPercent = 58, FundingTarget = "۴۰۰ میلیون تومان", Status = "در انتظار گزارش", Stage = "در حال اجرا" }
     ];
 
-    private static readonly AdminNewsArticle[] NewsSeed =
-    [
-        new() { Id = "news-impact-1404", Title = "گزارش اثر اجتماعی سامانه ماه در سال ۱۴۰۴ منتشر شد", Summary = "نتایج پروژه‌های تأییدشده سامانه ماه در حوزه اشتغال، آموزش، سلامت و معیشت پایدار منتشر شد.", Status = "published", UpdatedAtUtc = DateTimeOffset.Parse("2026-08-19T09:00:00Z") },
-        new() { Id = "news-startups", Title = "پذیرش دوره جدید استارتاپ‌های اجتماعی", Summary = "فرایند معرفی و ارزیابی استارتاپ‌های اجتماعی برای دوره جدید آغاز شده است.", Status = "published", UpdatedAtUtc = DateTimeOffset.Parse("2026-09-02T10:30:00Z") },
-        new() { Id = "news-funding", Title = "به‌روزرسانی روند تأمین مالی پروژه‌ها", Summary = "گزارش جدید وضعیت تأمین مالی پروژه‌های فعال برای انتشار آماده شده است.", Status = "draft", UpdatedAtUtc = DateTimeOffset.Parse("2026-09-10T08:00:00Z") }
-    ];
+    private static readonly string[] SampleNewsIds = ["news-impact-1404", "news-startups", "news-funding"];
 
     public async Task<IReadOnlyList<AdminOrganizationProfileView>> ListOrganizationProfilesAsync(CancellationToken cancellationToken = default) =>
         await OrganizationProfiles.AsNoTracking()
@@ -125,7 +120,14 @@ public sealed class AdminManagementService(MoonDbContext dbContext, IAuditWriter
 
     public async Task<IReadOnlyList<AdminNewsArticleView>> ListNewsAsync(bool publishedOnly, CancellationToken cancellationToken = default)
     {
-        await EnsureNewsSeedAsync(cancellationToken);
+        var sampleArticles = await NewsArticles
+            .Where(x => SampleNewsIds.Contains(x.Id))
+            .ToListAsync(cancellationToken);
+        if (sampleArticles.Count > 0)
+        {
+            NewsArticles.RemoveRange(sampleArticles);
+            await dbContext.SaveChangesAsync(cancellationToken);
+        }
         var query = NewsArticles.AsNoTracking().AsQueryable();
         if (publishedOnly) query = query.Where(x => x.Status == "published");
         return await query.OrderByDescending(x => x.UpdatedAtUtc).Select(x => ToView(x)).ToListAsync(cancellationToken);
@@ -290,16 +292,6 @@ public sealed class AdminManagementService(MoonDbContext dbContext, IAuditWriter
         {
             Id = x.Id, Name = x.Name, Province = x.Province, Track = x.Track, FundingPercent = x.FundingPercent,
             FundingTarget = x.FundingTarget, Status = x.Status, Stage = x.Stage, UpdatedAtUtc = DateTimeOffset.UtcNow
-        }));
-        await dbContext.SaveChangesAsync(cancellationToken);
-    }
-
-    private async Task EnsureNewsSeedAsync(CancellationToken cancellationToken)
-    {
-        if (await NewsArticles.AnyAsync(cancellationToken)) return;
-        NewsArticles.AddRange(NewsSeed.Select(x => new AdminNewsArticle
-        {
-            Id = x.Id, Title = x.Title, Summary = x.Summary, Status = x.Status, UpdatedAtUtc = x.UpdatedAtUtc
         }));
         await dbContext.SaveChangesAsync(cancellationToken);
     }

@@ -18,29 +18,7 @@ export const ADMIN_NEWS_CHANGED = "mah:admin-news-changed";
 export const HERO_VIDEO_META_KEY = "mah.admin.heroVideoMeta.v1";
 export const HERO_VIDEO_CHANGED = "mah:admin-hero-video-changed";
 
-const defaultNews: AdminNewsItem[] = [
-  {
-    id: "news-impact-1404",
-    title: "گزارش اثر اجتماعی سامانه ماه در سال ۱۴۰۴ منتشر شد",
-    summary: "نتایج پروژه‌های تأییدشده سامانه ماه در حوزه اشتغال، آموزش، سلامت و معیشت پایدار منتشر شد.",
-    status: "published",
-    updatedAt: "2026-08-19T09:00:00Z",
-  },
-  {
-    id: "news-startups",
-    title: "پذیرش دوره جدید استارتاپ‌های اجتماعی",
-    summary: "فرایند معرفی و ارزیابی استارتاپ‌های اجتماعی برای دوره جدید آغاز شده است.",
-    status: "published",
-    updatedAt: "2026-09-02T10:30:00Z",
-  },
-  {
-    id: "news-funding",
-    title: "به‌روزرسانی روند تأمین مالی پروژه‌ها",
-    summary: "گزارش جدید وضعیت تأمین مالی پروژه‌های فعال برای انتشار آماده شده است.",
-    status: "draft",
-    updatedAt: "2026-09-10T08:00:00Z",
-  },
-];
+const sampleNewsIds = new Set(["news-impact-1404", "news-startups", "news-funding"]);
 
 function validNews(value: unknown): value is AdminNewsItem {
   if (!value || typeof value !== "object") return false;
@@ -57,12 +35,12 @@ function validNews(value: unknown): value is AdminNewsItem {
 export function readAdminNews(): AdminNewsItem[] {
   try {
     const raw = localStorage.getItem(ADMIN_NEWS_KEY);
-    if (raw === null) return defaultNews;
+    if (raw === null) return [];
     const parsed = JSON.parse(raw) as unknown;
-    if (!Array.isArray(parsed)) return defaultNews;
-    return parsed.filter(validNews);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(validNews).filter((item) => !sampleNewsIds.has(item.id));
   } catch {
-    return defaultNews;
+    return [];
   }
 }
 
