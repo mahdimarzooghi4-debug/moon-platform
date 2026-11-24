@@ -39,8 +39,7 @@ services:
     environment: &moon_api_environment
       ASPNETCORE_ENVIRONMENT: Production
       ASPNETCORE_URLS: http://+:8080
-      ConnectionStrings__Postgres: Host=moon-db;Port=5432;Database=moon;Username=moon;Pooling=true
-      ConnectionStrings__PostgresPassword: ${MOON_DB_PASSWORD:?set unique moon DB password}
+      ConnectionStrings__Postgres: Host=moon-db;Port=5432;Database=moon;Username=moon;Password=${MOON_DB_PASSWORD:?set unique moon DB password};Pooling=true
       Authentication__Authority: https://${MOON_PUBLIC_DOMAIN:?set public host}/identity/realms/moon
       Authentication__Audience: moon-api
       Authentication__RequireHttpsMetadata: "true"
