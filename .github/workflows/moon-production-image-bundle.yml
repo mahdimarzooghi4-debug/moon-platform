@@ -1,6 +1,10 @@
 name: Moon Production Image Bundle
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/moon-production-image-bundle.yml'
 permissions:
   contents: read
 jobs:
