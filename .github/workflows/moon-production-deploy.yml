@@ -48,8 +48,18 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           set -euo pipefail
-          docker save "moon-platform/api:$IMAGE_TAG" | gzip -1 |
-            ssh -i "$HOME/.ssh/moon_deploy" -o BatchMode=yes -o ConnectTimeout=15 -o ServerAliveInterval=30 -o ServerAliveCountMax=4 "$DEPLOY_USER@$DEPLOY_HOST" 'docker load'
+          archive="$RUNNER_TEMP/moon-api-$IMAGE_TAG.tar.gz"
+          remote_archive="/opt/moon/.moon-api-$IMAGE_TAG.tar.gz"
+          docker save "moon-platform/api:$IMAGE_TAG" | gzip -1 > "$archive"
+          du -h "$archive"
+          ssh_args=(-i "$HOME/.ssh/moon_deploy" -o BatchMode=yes -o ConnectTimeout=15 -o ServerAliveInterval=30 -o ServerAliveCountMax=4)
+          target="$DEPLOY_USER@$DEPLOY_HOST"
+          ssh "${ssh_args[@]}" "$target" 'command -v rsync >/dev/null'
+          rsync --partial --info=progress2 --outbuf=L --timeout=180 \
+            -e "ssh -i $HOME/.ssh/moon_deploy -o BatchMode=yes -o ConnectTimeout=15 -o ServerAliveInterval=30 -o ServerAliveCountMax=4" \
+            "$archive" "$target:$remote_archive"
+          echo "Transfer complete; loading image on server"
+          ssh "${ssh_args[@]}" "$target" "docker load -i '$remote_archive' && rm -f -- '$remote_archive'"
       - name: Build and deploy on server
         env:
           DEPLOY_HOST: ${{ secrets.MOON_DEPLOY_HOST }}
