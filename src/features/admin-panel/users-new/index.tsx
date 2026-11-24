@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { AdminSidebar } from "../components/AdminSidebar";
 import {
+  createAdminOrganization,
   listAdminOrganizations,
   listAdminRoles,
   type AdminOrganization,
@@ -53,6 +54,8 @@ export default function AdminAddUser() {
   const [roleCode, setRoleCode] = useState("");
   const [organizationId, setOrganizationId] = useState("");
   const [loading, setLoading] = useState(true);
+  const [organizationName, setOrganizationName] = useState("");
+  const [creatingOrganization, setCreatingOrganization] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -113,6 +116,29 @@ export default function AdminAddUser() {
       (isStartupRole ? selectedOrganization?.type === "startup" : selectedOrganization) &&
       email.trim() && temporaryPassword.length >= 12,
   );
+
+  const newOrganizationType = roleCode === "product_owner" || roleCode === "evaluator"
+    ? "creative_house"
+    : roleCode === "supervisor" ? "supervisor" : roleCode === "finance" ? "fund_manager" : null;
+
+  async function addOrganization() {
+    if (!newOrganizationType || !organizationName.trim() || creatingOrganization) return;
+    setCreatingOrganization(true);
+    setError("");
+    try {
+      const organization = await createAdminOrganization({
+        name: organizationName.trim(),
+        type: newOrganizationType,
+      });
+      setOrganizations((items) => [...items, organization]);
+      setOrganizationId(organization.organizationId);
+      setOrganizationName("");
+    } catch {
+      setError("ثبت سازمان انجام نشد. دوباره وارد پنل شوید یا وضعیت سرویس را بررسی کنید.");
+    } finally {
+      setCreatingOrganization(false);
+    }
+  }
 
   const submitUser = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -242,6 +268,22 @@ export default function AdminAddUser() {
                       <option value={organization.organizationId} key={organization.organizationId}>{organization.name}</option>
                     ))}
                   </select>
+                  {!loading && organizationOptions.length === 0 && (
+                    <small>برای این نقش سازمان فعالی در فهرست نیست.</small>
+                  )}
+                  {!loading && newOrganizationType && (
+                    <>
+                      <label htmlFor="admin-new-organization">نام سازمان جدید برای این نقش</label>
+                      <input id="admin-new-organization" className="admin-form-input"
+                        value={organizationName} onChange={(event) => setOrganizationName(event.target.value)}
+                        disabled={saving || creatingOrganization} />
+                      <button type="button" className="admin-users-button"
+                        disabled={saving || creatingOrganization || !organizationName.trim()}
+                        onClick={addOrganization}>
+                        {creatingOrganization ? "در حال ثبت…" : "افزودن سازمان"}
+                      </button>
+                    </>
+                  )}
                 </div>
             </div>
 
