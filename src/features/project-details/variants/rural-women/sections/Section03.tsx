@@ -29,7 +29,7 @@ export function Section03() {
                 </div>
               </div>
             </div>
-            <div className="flex w-[632px] flex-col gap-[20px] items-end shrink-0 flex-nowrap relative z-[35]">
+            <div className="mah-project-summary flex w-[632px] flex-col gap-[20px] items-end shrink-0 flex-nowrap relative z-[35]">
               <div className="flex w-[112px] gap-[8px] items-start shrink-0 flex-nowrap relative z-[36]">
                 <div className="flex w-[112px] pt-[6px] pr-[12px] pb-[6px] pl-[12px] items-start shrink-0 flex-nowrap bg-[#111e30] rounded-[12px] relative z-[37]">
                   <span dir="rtl" className="flex w-[88px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-bold leading-[18.75px] text-[#fff] relative text-right whitespace-nowrap z-[38]">
@@ -44,7 +44,7 @@ export function Section03() {
                 توانمندسازی زنان روستایی استان گلستان از طریق آموزش، تجهیز، توسعه
                 محصول و اتصال پایدار به بازار فروش جهت خلق اثر اجتماعی پایدار.
               </span>
-              <div className="flex flex-col gap-[12px] items-end self-stretch shrink-0 flex-nowrap relative z-[41]">
+              <div className="flex flex-col gap-[12px] items-end self-stretch shrink-0 flex-nowrap mah-project-facts relative z-[41]">
                 <div className="flex gap-[24px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[42]">
                   <div className="flex flex-col gap-[4px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[43]">
                     <span dir="rtl" className="flex w-[26px] h-[17px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[11px] font-normal leading-[17px] text-[#60758a] relative text-right whitespace-nowrap z-[44]">
