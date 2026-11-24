@@ -1,0 +1,35 @@
+name: Moon Production Image Bundle
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and package production images
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          docker build --tag "moon-platform/api:$IMAGE_TAG" --file backend/Dockerfile backend
+          docker build \
+            --build-arg VITE_OIDC_AUTHORITY=https://mahcsr.ir/identity/realms/moon \
+            --build-arg VITE_OIDC_CLIENT_ID=moon-web \
+            --build-arg VITE_API_BASE_URL=https://mahcsr.ir \
+            --build-arg NODE_OPTIONS=--max-old-space-size=5120 \
+            --tag "moon-platform/web:$IMAGE_TAG" .
+          mkdir -p bundle
+          cd bundle
+          archive="moon-platform-images-$IMAGE_TAG.tar.gz"
+          docker save "moon-platform/api:$IMAGE_TAG" "moon-platform/web:$IMAGE_TAG" | gzip -1 > "$archive"
+          sha256sum "$archive" > "$archive.sha256"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: moon-platform-images-${{ github.sha }}
+          path: bundle/
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 7
