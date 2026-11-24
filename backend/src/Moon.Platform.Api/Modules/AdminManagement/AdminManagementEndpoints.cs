@@ -41,7 +41,9 @@ public static class AdminManagementEndpoints
             if (!allowed)
                 return Results.BadRequest(new { code = "role_organization_mismatch" });
 
-            if (!System.Text.RegularExpressions.Regex.IsMatch(request.Mobile ?? "", @"\A09[0-9]{9}\z") ||
+            var mobile = request.Mobile;
+            if (string.IsNullOrEmpty(mobile) ||
+                !System.Text.RegularExpressions.Regex.IsMatch(mobile, @"\A09[0-9]{9}\z") ||
                 string.IsNullOrWhiteSpace(request.DisplayName) || request.DisplayName.Length > 120 ||
                 !System.Net.Mail.MailAddress.TryCreate(request.Email, out var address) ||
                 address.Address != request.Email ||
@@ -54,7 +56,7 @@ public static class AdminManagementEndpoints
                 return Results.BadRequest(new { code = "full_name_required" });
 
             var subject = await keycloak.CreateDisabledAsync(
-                request.Mobile, names[0], names[1], address.Address, request.TemporaryPassword, cancellationToken);
+                mobile, names[0], names[1], address.Address, request.TemporaryPassword, cancellationToken);
             if (subject is null)
                 return Results.Conflict(new { code = "account_exists_or_pending" });
 
