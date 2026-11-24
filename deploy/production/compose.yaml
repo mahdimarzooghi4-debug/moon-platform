@@ -42,6 +42,8 @@ services:
       ConnectionStrings__Postgres: Host=moon-db;Port=5432;Database=moon;Username=moon;Password=${MOON_DB_PASSWORD:?set unique moon DB password};Pooling=true
       Authentication__Authority: https://${MOON_PUBLIC_DOMAIN:?set public host}/identity/realms/moon
       Authentication__Audience: moon-api
+      KeycloakProvisioning__Authority: http://keycloak:8080/identity/realms/moon
+      KeycloakProvisioning__ClientSecret: ${MOON_KEYCLOAK_PROVISIONING_SECRET:-}
       Authentication__RequireHttpsMetadata: "true"
       ReverseProxy__TrustedProxyIp: 172.30.88.10
       Cors__AllowedOrigins__0: https://${MOON_PUBLIC_DOMAIN:?set public host}
