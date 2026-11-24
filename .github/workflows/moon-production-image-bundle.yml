@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/moon-production-image-bundle.yml'
+      - 'src/features/admin-panel/users-new/index.tsx'
 permissions:
   contents: read
 jobs:
