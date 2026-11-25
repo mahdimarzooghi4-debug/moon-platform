@@ -73,6 +73,8 @@ services:
     restart: "no"
     environment:
       <<: *moon_api_environment
+      # Production tracks EF migrations in public, while application tables use schema moon.
+      ConnectionStrings__Postgres: Host=moon-db;Port=5432;Database=moon;Username=moon;Password=${MOON_DB_PASSWORD:?set unique moon DB password};Pooling=true;Search Path=public,moon
       Database__MigrateOnly: "true"
     depends_on:
       moon-db:
