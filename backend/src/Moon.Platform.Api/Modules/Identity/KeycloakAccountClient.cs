@@ -44,6 +44,51 @@ public sealed class KeycloakAccountClient(HttpClient client, IConfiguration conf
         response.EnsureSuccessStatusCode();
     }
 
+    public async Task<IReadOnlyDictionary<string, string>> GetRegisteredMobilesAsync(
+        IEnumerable<string> subjects, CancellationToken cancellationToken)
+    {
+        var ids = subjects.Where(subject => Guid.TryParseExact(subject, "D", out _)).Distinct().ToArray();
+        var mobiles = new System.Collections.Concurrent.ConcurrentDictionary<string, string>(StringComparer.Ordinal);
+        if (ids.Length == 0 || string.IsNullOrWhiteSpace(configuration["KeycloakProvisioning:ClientSecret"]))
+            return mobiles;
+
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeout.CancelAfter(TimeSpan.FromSeconds(4));
+        try
+        {
+            var (usersUrl, token) = await AuthenticateAsync(timeout.Token);
+            await Parallel.ForEachAsync(ids, new ParallelOptions
+            {
+                MaxDegreeOfParallelism = 4,
+                CancellationToken = timeout.Token
+            }, async (subject, ct) =>
+            {
+                using var request = new HttpRequestMessage(HttpMethod.Get, $"{usersUrl}/{subject}");
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                using var response = await client.SendAsync(request, ct);
+                if (!response.IsSuccessStatusCode)
+                    return;
+
+                using var account = await response.Content.ReadFromJsonAsync<JsonDocument>(ct);
+                if (account is not null && account.RootElement.TryGetProperty("username", out var username)
+                    && username.ValueKind == JsonValueKind.String && NormalizeMobile(username.GetString()) is { } mobile)
+                    mobiles.TryAdd(subject, mobile);
+            });
+        }
+        catch (Exception exception) when (!cancellationToken.IsCancellationRequested
+            && exception is HttpRequestException or OperationCanceledException or JsonException or InvalidOperationException)
+        {
+            // Account lookup is optional enrichment of the existing admin data.
+        }
+
+        return mobiles;
+    }
+
+    internal static string? NormalizeMobile(string? value) =>
+        value is not null && System.Text.RegularExpressions.Regex.IsMatch(value, @"\A09[0-9]{9}\z")
+            ? value
+            : null;
+
     private async Task<(string UsersUrl, string Token)> AuthenticateAsync(CancellationToken cancellationToken)
     {
         var authority = configuration["KeycloakProvisioning:Authority"]?.TrimEnd('/')
