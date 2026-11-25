@@ -1,6 +1,6 @@
 export function QuickLinksSection() {
   return (
-    <div className="flex pt-[16px] pr-[120px] pb-[16px] pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] border-solid border-t border-t-[#e4ebf1] border-solid border-b border-b-[#e4ebf1] relative z-[66]">
+    <div className="mah-contact-quick-links flex pt-[16px] pr-[120px] pb-[16px] pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#eaf5fd] border-solid border-t border-t-[#e4ebf1] border-solid border-b border-b-[#e4ebf1] relative z-[66]">
       <div className="flex gap-[16px] justify-end items-start grow shrink-0 basis-0 flex-nowrap relative z-[67]">
         <div className="flex w-[143px] pt-[8px] pr-[16px] pb-[8px] pl-[16px] items-center shrink-0 flex-nowrap bg-[#fff] rounded-[10px] border-solid border border-[#e4ebf1] relative z-[68]">
           <span className="flex w-[111px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-medium leading-[20px] text-[#2094e3] relative text-right whitespace-nowrap z-[69]">
