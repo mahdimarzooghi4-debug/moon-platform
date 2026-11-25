@@ -1,5 +1,6 @@
 import React from "react";
 import "./index.css";
+import "./project-rtl.css";
 import ProjectContributionForm from "./ProjectContributionForm";
 
 const PROJECT_GALLERY = [
@@ -17,7 +18,7 @@ export default function Main() {
   const moveGallery = (step: number) =>
     setGalleryIndex((current) => (current + step + PROJECT_GALLERY.length) % PROJECT_GALLERY.length);
   return (
-    <div className="main-container flex w-[1440px] flex-col items-center flex-nowrap bg-[#fcfbf8] relative overflow-hidden mx-auto my-0">
+    <div className="mah-public-project main-container flex w-[1440px] flex-col items-center flex-nowrap bg-[#fcfbf8] relative overflow-hidden mx-auto my-0">
       <div className="flex pt-[16px] pr-[120px] pb-[16px] pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] border-solid border-t border-t-[#e4ebf1] relative">
         <div className="flex w-[384px] gap-[12px] justify-end items-center shrink-0 flex-nowrap relative z-[1]">
           <div className="flex w-[120px] h-[44px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border-[1.5px] border-[#2094e3] relative overflow-hidden z-[2]">
@@ -66,7 +67,7 @@ export default function Main() {
           />
         </div>
       </div>
-      <div className="flex pt-[24px] pr-[120px] pb-[8px] pl-[120px] flex-col items-end self-stretch shrink-0 flex-nowrap bg-[#fcfbf8] relative z-[17]">
+      <div className="mah-project-breadcrumb flex pt-[24px] pr-[120px] pb-[8px] pl-[120px] flex-col items-end self-stretch shrink-0 flex-nowrap bg-[#fcfbf8] relative z-[17]">
         <div className="flex justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[18]">
           <span className="flex w-[232px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#60758a] relative text-right whitespace-nowrap z-[19]">
             صفحه اصلی / پروژه‌ها / اشتغال زنان روستایی
@@ -101,7 +102,7 @@ export default function Main() {
             </button>
           </div>
         </div>
-        <div className="flex w-[632px] flex-col gap-[20px] items-end shrink-0 flex-nowrap relative z-[35]">
+        <div className="mah-project-summary flex w-[632px] flex-col gap-[20px] items-end shrink-0 flex-nowrap relative z-[35]">
           <div className="flex w-[112px] gap-[8px] items-start shrink-0 flex-nowrap relative z-[36]">
             <div className="flex w-[112px] pt-[6px] pr-[12px] pb-[6px] pl-[12px] items-start shrink-0 flex-nowrap bg-[#111e30] rounded-[12px] relative z-[37]">
               <span className="flex w-[88px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-bold leading-[18.75px] text-[#fff] relative text-right whitespace-nowrap z-[38]">
@@ -116,7 +117,7 @@ export default function Main() {
             توانمندسازی زنان روستایی استان گلستان از طریق آموزش، تجهیز، توسعه
             محصول و اتصال پایدار به بازار فروش جهت خلق اثر اجتماعی پایدار.
           </span>
-          <div className="flex flex-col gap-[12px] items-end self-stretch shrink-0 flex-nowrap relative z-[41]">
+          <div className="flex flex-col gap-[12px] items-end self-stretch shrink-0 flex-nowrap mah-project-facts relative z-[41]">
             <div className="flex gap-[24px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[42]">
               <div className="flex flex-col gap-[4px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[43]">
                 <span className="flex w-[26px] h-[17px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[11px] font-normal leading-[17px] text-[#60758a] relative text-right whitespace-nowrap z-[44]">
@@ -211,7 +212,7 @@ export default function Main() {
                     ۲۳۲ میلیون تومان
                   </span>
                 </div>
-                <div className="flex h-[8px] justify-end items-start self-stretch shrink-0 flex-nowrap bg-[#e4ebf1] rounded-[4px] relative overflow-hidden z-[82]">
+                <div className="flex h-[8px] justify-end items-start self-stretch shrink-0 flex-nowrap bg-[#e4ebf1] rounded-[4px] relative overflow-hidden mah-project-funding-progress z-[82]">
                   <div className="w-[150px] self-stretch shrink-0 bg-[#2094e3] relative z-[83]" />
                 </div>
                 <span className="flex w-[77px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-bold leading-[18.75px] text-[#2094e3] relative text-right whitespace-nowrap z-[84]">
@@ -248,7 +249,7 @@ export default function Main() {
             <ProjectContributionForm />
           </div>
         </div>
-        <div className="flex w-[798px] flex-col gap-[48px] items-end shrink-0 flex-nowrap relative z-[124]">
+        <div className="mah-project-story flex w-[798px] flex-col gap-[48px] items-end shrink-0 flex-nowrap relative z-[124]">
           <div className="flex h-[125px] flex-col gap-[12px] items-end self-stretch shrink-0 flex-nowrap relative z-[125]">
             <span className="h-[31px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[20px] font-bold leading-[31px] text-[#17324d] relative text-right whitespace-nowrap z-[126]">
               درباره پروژه
