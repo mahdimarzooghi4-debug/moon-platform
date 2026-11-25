@@ -20,12 +20,9 @@ public static class AdminAccessEndpoints
         if (!string.Equals(user.ExternalSubject, principal.FindFirstValue("sub"), StringComparison.Ordinal))
             return user;
 
-        var username = principal.FindFirstValue("phone_number") ?? principal.FindFirstValue("preferred_username");
-        var mobile = username is not null &&
-            System.Text.RegularExpressions.Regex.IsMatch(username, @"\A09[0-9]{9}\z")
-            ? username
-            : null;
-        return user with { Mobile = mobile, IsSystemAdmin = true };
+        var mobile = KeycloakAccountClient.NormalizeMobile(principal.FindFirstValue("phone_number"))
+            ?? KeycloakAccountClient.NormalizeMobile(principal.FindFirstValue("preferred_username"));
+        return user with { Mobile = mobile ?? user.Mobile, IsSystemAdmin = true };
     }
 
     public static IEndpointRouteBuilder MapAdminAccessEndpoints(this IEndpointRouteBuilder endpoints)
@@ -37,18 +34,39 @@ public static class AdminAccessEndpoints
         group.MapGet("/users", async Task<IResult> (
             ClaimsPrincipal principal,
             IAdminAccessService adminAccess,
+            KeycloakAccountClient keycloak,
             CancellationToken cancellationToken) =>
-            Results.Ok((await adminAccess.ListUsersAsync(cancellationToken))
-                .Select(user => WithCurrentAdminIdentity(user, principal))));
+        {
+            var users = (await adminAccess.ListUsersAsync(cancellationToken))
+                .Select(user => WithCurrentAdminIdentity(user, principal))
+                .ToArray();
+            var mobiles = await keycloak.GetRegisteredMobilesAsync(
+                users.Where(user => user.Mobile is null).Select(user => user.ExternalSubject), cancellationToken);
+            return Results.Ok(users.Select(user => user with
+            {
+                Mobile = user.Mobile ?? mobiles.GetValueOrDefault(user.ExternalSubject)
+            }));
+        });
 
         group.MapGet("/users/{userId:guid}", async Task<IResult> (
             Guid userId,
             ClaimsPrincipal principal,
             IAdminAccessService adminAccess,
+            KeycloakAccountClient keycloak,
             CancellationToken cancellationToken) =>
         {
             var user = await adminAccess.GetUserAsync(userId, cancellationToken);
-            return user is null ? Results.NotFound() : Results.Ok(WithCurrentAdminIdentity(user, principal));
+            if (user is null)
+                return Results.NotFound();
+
+            user = WithCurrentAdminIdentity(user, principal);
+            if (user.Mobile is null)
+            {
+                var mobiles = await keycloak.GetRegisteredMobilesAsync([user.ExternalSubject], cancellationToken);
+                user = user with { Mobile = mobiles.GetValueOrDefault(user.ExternalSubject) };
+            }
+
+            return Results.Ok(user);
         });
 
         group.MapPatch("/users/{userId:guid}/status", async Task<IResult> (
