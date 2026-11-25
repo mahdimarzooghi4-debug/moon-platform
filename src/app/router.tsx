@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import CompanyRegistrationPage from "../features/company-registration";
-import StartupRegistrationPage from "../features/startup-registration";
+import StartupRegistrationPage from "../features/startup-registration/LiveStartupRegistration";
 import AuthEntryPage from "../page";
 
 const LandingPage = lazy(() => import("../landing/MahLandingPage"));
@@ -58,10 +58,6 @@ const RegistrationTrackNotFoundPage = lazy(() => import("../registration-track/s
 const RegistrationTrackErrorPage = lazy(() => import("../registration-track/states/error"));
 const RegistrationTrackNeedsEditPage = lazy(() => import("../registration-track/states/needs-edit"));
 const RegistrationTrackRejectedPage = lazy(() => import("../registration-track/states/rejected"));
-const StartupRegistrationStep2Page = lazy(() => import("../features/startup-registration/states/step2"));
-const StartupRegistrationStep3Page = lazy(() => import("../features/startup-registration/states/step3"));
-const StartupRegistrationStep4Page = lazy(() => import("../features/startup-registration/states/step4"));
-const StartupRegistrationSuccessPage = lazy(() => import("../features/startup-registration/states/success"));
 const CompanyRegistrationStep2Page = lazy(() => import("../features/company-registration/states/step2"));
 const CompanyRegistrationStep3Page = lazy(() => import("../features/company-registration/states/step3"));
 const CompanyRegistrationStep4Page = lazy(() => import("../features/company-registration/states/step4"));
@@ -139,8 +135,7 @@ const AdminSettingsPage = lazy(() => import("../features/admin-panel/settings"))
 const AdminAccessPolicyPage = lazy(() => import("../features/admin-panel/access-policy"));
 
 const CreativeHouseDashboardPage = lazy(() => import("../panels/creative-house"));
-const CreativeHouseStartupEvaluationsPage = lazy(() => import("../panels/creative-house/startup-evaluations"));
-const CreativeHouseStartupEvaluationDetailPage = lazy(() => import("../panels/creative-house/startup-evaluation-detail"));
+const CreativeHouseStartupEvaluationsPage = lazy(() => import("../panels/creative-house/startup-evaluations/LiveStartupEvaluations"));
 const CreativeHouseProjectEvaluationsPage = lazy(() => import("../panels/creative-house/project-evaluations"));
 const CreativeHouseProjectEvaluationDetailPage = lazy(() => import("../panels/creative-house/project-evaluation-detail"));
 const CreativeHouseMilestoneEvaluationsPage = lazy(() => import("../panels/creative-house/milestone-evaluations"));
@@ -273,10 +268,10 @@ export function AppRouter() {
         <Route path="/register/company/states/success" element={lazyElement(CompanyRegistrationSuccessPage)} />
         <Route path="/register/company/status" element={lazyElement(CompanyRegistrationStatusPage)} />
         <Route path="/register/company" element={<CompanyRegistrationPage />} />
-        <Route path="/register/startup/states/step2" element={lazyElement(StartupRegistrationStep2Page)} />
-        <Route path="/register/startup/states/step3" element={lazyElement(StartupRegistrationStep3Page)} />
-        <Route path="/register/startup/states/step4" element={lazyElement(StartupRegistrationStep4Page)} />
-        <Route path="/register/startup/states/success" element={lazyElement(StartupRegistrationSuccessPage)} />
+        <Route path="/register/startup/states/step2" element={<Navigate to="/register/startup" replace />} />
+        <Route path="/register/startup/states/step3" element={<Navigate to="/register/startup" replace />} />
+        <Route path="/register/startup/states/step4" element={<Navigate to="/register/startup" replace />} />
+        <Route path="/register/startup/states/success" element={<Navigate to="/register/startup" replace />} />
         <Route path="/register/startup" element={<StartupRegistrationPage />} />
 
         <Route path="/panel/startup" element={lazyElement(StartupPanelDashboardPage)} />
@@ -335,7 +330,7 @@ export function AppRouter() {
 
         <Route path="/panel/creative-house" element={lazyElement(CreativeHouseDashboardPage)} />
         <Route path="/panel/creative-house/startup-evaluations" element={lazyElement(CreativeHouseStartupEvaluationsPage)} />
-        <Route path="/panel/creative-house/startup-evaluations/detail" element={lazyElement(CreativeHouseStartupEvaluationDetailPage)} />
+        <Route path="/panel/creative-house/startup-evaluations/detail" element={<Navigate to="/panel/creative-house/startup-evaluations" replace />} />
         <Route path="/panel/creative-house/project-evaluations" element={lazyElement(CreativeHouseProjectEvaluationsPage)} />
         <Route path="/panel/creative-house/project-evaluations/detail" element={lazyElement(CreativeHouseProjectEvaluationDetailPage)} />
         <Route path="/panel/creative-house/milestone-evaluations" element={lazyElement(CreativeHouseMilestoneEvaluationsPage)} />

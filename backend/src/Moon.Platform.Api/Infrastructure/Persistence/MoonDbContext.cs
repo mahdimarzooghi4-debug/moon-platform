@@ -6,12 +6,14 @@ using Moon.Platform.Api.Modules.Evaluations;
 using Moon.Platform.Api.Modules.Execution;
 using Moon.Platform.Api.Modules.Funding;
 using Moon.Platform.Api.Modules.Identity;
+using Moon.Platform.Api.Modules.StartupRegistration;
 using Moon.Platform.Api.Modules.Projects;
 
 namespace Moon.Platform.Api.Infrastructure.Persistence;
 
 public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbContext(options)
 {
+    public DbSet<StartupApplication> StartupApplications => Set<StartupApplication>();
     public DbSet<Organization> Organizations => Set<Organization>();
     public DbSet<AppUser> Users => Set<AppUser>();
     public DbSet<Role> Roles => Set<Role>();
@@ -62,6 +64,11 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("moon");
+        modelBuilder.Entity<StartupApplication>(entity =>
+        {
+            entity.ToTable("startup_applications");
+            entity.HasIndex(application => application.TrackingCode).IsUnique();
+        });
 
         modelBuilder.Entity<Organization>(entity =>
         {
