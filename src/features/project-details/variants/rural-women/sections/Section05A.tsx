@@ -16,7 +16,7 @@ export function Section05A() {
                             ۲۳۲ میلیون تومان
                           </span>
                         </div>
-                        <div className="flex h-[8px] justify-end items-start self-stretch shrink-0 flex-nowrap bg-[#e4ebf1] rounded-[4px] relative overflow-hidden z-[82]">
+                        <div className="flex h-[8px] justify-end items-start self-stretch shrink-0 flex-nowrap bg-[#e4ebf1] rounded-[4px] relative overflow-hidden mah-project-funding-progress z-[82]">
                           <div className="w-[150px] self-stretch shrink-0 bg-[#2094e3] relative z-[83]" />
                         </div>
                         <span dir="rtl" className="flex w-[77px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-bold leading-[18.75px] text-[#2094e3] relative text-right whitespace-nowrap z-[84]">
