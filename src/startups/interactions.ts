@@ -14,7 +14,6 @@ const ACTION_ROUTES: Record<string, string> = {
   "ثبت‌نام استارتاپ": "/register/startup",
   "شروع ثبت‌نام استارتاپ": "/register/startup",
   "پیگیری ثبت‌نام قبلی": "/registration/track",
-  "مشاهده استارتاپ‌های تأییدشده": "/startups-directory",
   "مشاهده جزئیات": "/startups/rahkar-sabz",
   "مشاهده جزئیات کامل پروژه": "/projects/sustainable-agriculture",
   "مشاهده همه سؤالات متداول": "/faq",
