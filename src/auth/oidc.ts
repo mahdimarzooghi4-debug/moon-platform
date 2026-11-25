@@ -3,6 +3,7 @@ export type AccountType = "company" | "startup" | "internal";
 export type AuthSession = {
   accessToken: string;
   idToken?: string;
+  refreshToken?: string;
   expiresAt: number;
   roles: string[];
   panelRoles?: string[];
@@ -150,6 +151,7 @@ export async function completeLogin(search: string) {
   const tokens = (await response.json()) as {
     access_token: string;
     id_token?: string;
+    refresh_token?: string;
     expires_in?: number;
   };
 
@@ -166,6 +168,7 @@ export async function completeLogin(search: string) {
   const session: AuthSession = {
     accessToken: tokens.access_token,
     idToken: tokens.id_token,
+    refreshToken: tokens.refresh_token,
     expiresAt,
     roles: rolesFromPayload(accessPayload),
     subject: accessPayload.sub,
@@ -176,24 +179,83 @@ export async function completeLogin(search: string) {
   return { session, pending };
 }
 
-export function getSession(): AuthSession | null {
-  const raw = sessionStorage.getItem(SESSION_KEY);
-  if (!raw) return null;
+function readStoredSession(): AuthSession | null {
   try {
-    const session = JSON.parse(raw) as AuthSession;
-    if (!session.accessToken || session.expiresAt <= Date.now() + 15_000) {
-      clearSession();
-      return null;
-    }
-    return session;
+    const raw = sessionStorage.getItem(SESSION_KEY);
+    return raw ? JSON.parse(raw) as AuthSession : null;
   } catch {
     clearSession();
     return null;
   }
 }
 
+let refreshing: Promise<AuthSession | null> | undefined;
+
+export async function getValidSession(): Promise<AuthSession | null> {
+  const session = readStoredSession();
+  if (!session?.accessToken) return null;
+  if (session.expiresAt > Date.now() + 15_000) return session;
+  if (!session.refreshToken) {
+    if (session.expiresAt > Date.now()) return session;
+    clearSession();
+    return null;
+  }
+
+  if (!refreshing) {
+    refreshing = refreshSession(session, session.refreshToken).finally(() => {
+      refreshing = undefined;
+    });
+  }
+  return refreshing;
+}
+
+async function refreshSession(session: AuthSession, refreshToken: string): Promise<AuthSession | null> {
+  const isSameSession = () => readStoredSession()?.refreshToken === refreshToken;
+  try {
+    const response = await fetch(`${authority}/protocol/openid-connect/token`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        grant_type: "refresh_token",
+        client_id: clientId,
+        refresh_token: refreshToken,
+      }),
+      signal: AbortSignal.timeout(15_000),
+    });
+    if (!response.ok) {
+      const failure = await response.json().catch(() => null);
+      if (failure?.error === "invalid_grant" && isSameSession()) clearSession();
+      return null;
+    }
+    const tokens = (await response.json()) as {
+      access_token?: string;
+      id_token?: string;
+      refresh_token?: string;
+      expires_in?: number;
+    };
+    if (!tokens.access_token || !isSameSession()) return null;
+
+    const payload = decodeJwt(tokens.access_token);
+    if (!payload.sub || payload.sub !== session.subject) return null;
+    const latest = readStoredSession();
+    const next: AuthSession = {
+      ...session,
+      panelRoles: latest?.panelRoles,
+      accessToken: tokens.access_token,
+      refreshToken: tokens.refresh_token ?? refreshToken,
+      idToken: tokens.id_token ?? session.idToken,
+      expiresAt: payload.exp ? payload.exp * 1000 : Date.now() + (tokens.expires_in ?? 300) * 1000,
+      roles: rolesFromPayload(payload),
+    };
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(next));
+    return next;
+  } catch {
+    return isSameSession() && session.expiresAt > Date.now() ? session : null;
+  }
+}
+
 export function setSessionPanelRoles(panelRoles: string[]) {
-  const session = getSession();
+  const session = readStoredSession();
   if (!session) return null;
 
   const next: AuthSession = {
