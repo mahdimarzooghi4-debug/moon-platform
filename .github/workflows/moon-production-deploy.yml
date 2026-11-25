@@ -25,10 +25,6 @@ jobs:
           ref: ${{ github.sha }}
       - name: Validate production Compose
         run: docker compose --env-file deploy/production/env.example -f deploy/production/compose.yaml config --quiet
-      - name: Build API image
-        env:
-          IMAGE_TAG: ${{ github.sha }}
-        run: docker build --tag "moon-platform/api:$IMAGE_TAG" --file backend/Dockerfile backend
       - name: Configure SSH
         env:
           DEPLOY_KEY: ${{ secrets.MOON_DEPLOY_SSH_KEY }}
@@ -41,7 +37,33 @@ jobs:
           printf '%s\n' "$DEPLOY_KEY" > "$HOME/.ssh/moon_deploy"
           printf '%s\n' "$KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
           chmod 600 "$HOME/.ssh/moon_deploy" "$HOME/.ssh/known_hosts"
+      - name: Compare API with the running release
+        id: api_release
+        env:
+          DEPLOY_HOST: ${{ secrets.MOON_DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.MOON_DEPLOY_USER }}
+        run: |
+          set -euo pipefail
+          image=$(ssh -i "$HOME/.ssh/moon_deploy" -o BatchMode=yes -o ConnectTimeout=15 "$DEPLOY_USER@$DEPLOY_HOST" \
+            "docker inspect --format '{{.State.Running}} {{.Config.Image}}' moon-platform-api-1 2>/dev/null || true")
+          api_tag="$GITHUB_SHA"
+          update=true
+          if [[ "$image" =~ ^true[[:blank:]]moon-platform/api:([a-f0-9]{40})$ ]]; then
+            running_tag="${BASH_REMATCH[1]}"
+            if git fetch --depth=1 origin "$running_tag" &&
+              git diff --quiet "$running_tag" "$GITHUB_SHA" -- backend deploy/production; then
+              api_tag="$running_tag"
+              update=false
+            fi
+          fi
+          printf 'tag=%s\nupdate=%s\n' "$api_tag" "$update" >> "$GITHUB_OUTPUT"
+      - name: Build API image
+        if: steps.api_release.outputs.update == 'true'
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: docker build --tag "moon-platform/api:$IMAGE_TAG" --file backend/Dockerfile backend
       - name: Transfer API image
+        if: steps.api_release.outputs.update == 'true'
         env:
           DEPLOY_HOST: ${{ secrets.MOON_DEPLOY_HOST }}
           DEPLOY_USER: ${{ secrets.MOON_DEPLOY_USER }}
@@ -65,24 +87,24 @@ jobs:
           DEPLOY_HOST: ${{ secrets.MOON_DEPLOY_HOST }}
           DEPLOY_USER: ${{ secrets.MOON_DEPLOY_USER }}
           IMAGE_TAG: ${{ github.sha }}
+          API_TAG: ${{ steps.api_release.outputs.tag }}
+          UPDATE_API: ${{ steps.api_release.outputs.update }}
         run: |
           set -euo pipefail
           test -n "$DEPLOY_HOST" || { echo "Missing MOON_DEPLOY_HOST"; exit 1; }
           test -n "$DEPLOY_USER" || { echo "Missing MOON_DEPLOY_USER"; exit 1; }
-          ssh -i "$HOME/.ssh/moon_deploy" -o BatchMode=yes "$DEPLOY_USER@$DEPLOY_HOST" "IMAGE_TAG='$IMAGE_TAG' bash -s" <<'REMOTE'
+          ssh -i "$HOME/.ssh/moon_deploy" -o BatchMode=yes "$DEPLOY_USER@$DEPLOY_HOST" "IMAGE_TAG='$IMAGE_TAG' MOON_API_IMAGE_TAG='$API_TAG' UPDATE_API='$UPDATE_API' bash -s" <<'REMOTE'
           set -euo pipefail
           cd /opt/moon/app
           test -f deploy/production/.env.production
           git fetch --depth=1 origin main
+          test "$(git rev-parse FETCH_HEAD)" = "$IMAGE_TAG"
           git switch -C moon-production FETCH_HEAD
-          test "$(git rev-parse HEAD)" = "$IMAGE_TAG"
-
-          if grep -q '^MOON_IMAGE_TAG=' deploy/production/.env.production; then
-            sed -i "s/^MOON_IMAGE_TAG=.*/MOON_IMAGE_TAG=$IMAGE_TAG/" deploy/production/.env.production
-          else
-            printf '\nMOON_IMAGE_TAG=%s\n' "$IMAGE_TAG" >> deploy/production/.env.production
+          if [ "$UPDATE_API" = false ]; then
+            test "$(docker inspect --format '{{.State.Running}} {{.Config.Image}}' moon-platform-api-1)" = "true moon-platform/api:$MOON_API_IMAGE_TAG"
           fi
-          chmod 600 deploy/production/.env.production
+          export MOON_IMAGE_TAG="$IMAGE_TAG"
+
           bash deploy/production/preflight.sh
 
           docker build \
@@ -91,7 +113,14 @@ jobs:
             --build-arg VITE_API_BASE_URL=https://mahcsr.ir \
             --build-arg NODE_OPTIONS=--max-old-space-size=5120 \
             --tag "moon-platform/web:$IMAGE_TAG" .
-          docker compose --profile migrations --env-file deploy/production/.env.production -f deploy/production/compose.yaml run --rm migrate
-          docker compose --env-file deploy/production/.env.production -f deploy/production/compose.yaml up -d --remove-orphans
+          if [ "$UPDATE_API" = true ]; then
+            docker compose --profile migrations --env-file deploy/production/.env.production -f deploy/production/compose.yaml run --rm migrate
+            docker compose --env-file deploy/production/.env.production -f deploy/production/compose.yaml up -d --remove-orphans
+          else
+            docker compose --env-file deploy/production/.env.production -f deploy/production/compose.yaml up -d --no-deps --no-build --pull never web
+          fi
+          env_file=deploy/production/.env.production
+          sed -i -e '/^MOON_IMAGE_TAG=/d' -e '/^MOON_API_IMAGE_TAG=/d' "$env_file"
+          printf '\nMOON_IMAGE_TAG=%s\nMOON_API_IMAGE_TAG=%s\n' "$IMAGE_TAG" "$MOON_API_IMAGE_TAG" >> "$env_file"
           docker compose --env-file deploy/production/.env.production -f deploy/production/compose.yaml ps
           REMOTE

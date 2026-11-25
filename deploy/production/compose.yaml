@@ -34,7 +34,7 @@ services:
       - frontend
 
   api:
-    image: moon-platform/api:${MOON_IMAGE_TAG:?set immutable image SHA}
+    image: moon-platform/api:${MOON_API_IMAGE_TAG:-${MOON_IMAGE_TAG:?set immutable image SHA}}
     restart: unless-stopped
     environment: &moon_api_environment
       ASPNETCORE_ENVIRONMENT: Production
@@ -69,7 +69,7 @@ services:
 
   migrate:
     profiles: ["migrations"]
-    image: moon-platform/api:${MOON_IMAGE_TAG:?set immutable image SHA}
+    image: moon-platform/api:${MOON_API_IMAGE_TAG:-${MOON_IMAGE_TAG:?set immutable image SHA}}
     restart: "no"
     environment:
       <<: *moon_api_environment
