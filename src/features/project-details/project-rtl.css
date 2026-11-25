@@ -1,0 +1,31 @@
+/* Preserve the outer gallery and contribution layout while aligning Persian copy. */
+.mah-public-project .mah-project-breadcrumb,
+.mah-public-project .mah-project-summary,
+.mah-public-project .mah-project-story {
+  direction: rtl;
+  text-align: right;
+}
+
+.mah-public-project .mah-project-breadcrumb > div,
+.mah-public-project .mah-project-breadcrumb span,
+.mah-public-project .mah-project-summary span,
+.mah-public-project .mah-project-story > div > span:first-child {
+  justify-content: flex-start !important;
+  text-align: right !important;
+}
+
+.mah-public-project .mah-project-summary,
+.mah-public-project .mah-project-summary .flex-col,
+.mah-public-project .mah-project-story,
+.mah-public-project .mah-project-story > div {
+  align-items: flex-start !important;
+}
+
+.mah-public-project .mah-project-facts > div {
+  flex-direction: row-reverse;
+}
+
+.mah-public-project .mah-project-funding-progress {
+  direction: rtl;
+  justify-content: flex-start !important;
+}
