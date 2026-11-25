@@ -79,9 +79,6 @@ export default function MahForStartups() {
               </div>
             </div>
             <div className="mah-startups-hero-secondary flex flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-30">
-              <span className="flex w-[190px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#2094e3] relative text-right whitespace-nowrap z-[31]">
-                مشاهده استارتاپ‌های تأییدشده ←
-              </span>
               <span className="flex w-[387px] h-[17px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[11px] font-normal leading-[17px] text-[#60758a] relative text-right whitespace-nowrap z-[32]">
                 * ثبت‌نام اولیه در سامانه به معنای تأیید قطعی حساب یا پذیرش
                 نهایی پروژه‌ها نخواهد بود.
