@@ -239,3 +239,43 @@ button {
   text-align: left !important;
   unicode-bidi: isolate !important;
 }
+
+.mah-contact-page .mah-contact-hero {
+  padding-inline: clamp(16px, 8.33vw, 120px);
+}
+
+.mah-contact-page .mah-contact-hero > :first-child > span {
+  justify-content: flex-start;
+  height: auto;
+  white-space: normal;
+  text-align: right !important;
+}
+
+.mah-contact-page .mah-contact-search {
+  align-self: flex-start;
+  max-width: 100%;
+}
+
+.mah-contact-page .mah-contact-search-suggestions {
+  justify-content: flex-start;
+  max-width: 100%;
+}
+
+.mah-contact-page .mah-contact-search-suggestions > :last-child {
+  order: -1;
+}
+
+.mah-contact-page .mah-contact-quick-links {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.mah-contact-page .mah-contact-quick-links > :first-child {
+  justify-content: flex-start !important;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+}
+
+.mah-contact-page .mah-contact-quick-links > :last-child {
+  order: -1;
+}
