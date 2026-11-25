@@ -55,8 +55,9 @@ export default function AdminUserDetail() {
     return [
       ["نام نمایشی", user.displayName || "ثبت نشده"],
       ["شناسه هویتی Keycloak", user.externalSubject],
+      ["شماره موبایل", user.mobile ?? "در دسترس نیست"],
       ["سازمان‌های فعال", activeMemberships.map((membership) => membership.organizationName).join("، ") || "بدون سازمان"],
-      ["نقش‌های فعال", activeMemberships.map((membership) => membership.roleName).join("، ") || "بدون نقش"],
+      ["نقش‌های فعال", [...(user.isSystemAdmin ? ["مدیر سامانه"] : []), ...activeMemberships.map((membership) => membership.roleName)].join("، ") || "بدون نقش سازمانی"],
       ["تعداد Membership", String(user.memberships.length)],
       ["وضعیت حساب", user.isActive ? "فعال" : "غیرفعال"],
     ] as const;

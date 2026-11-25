@@ -15,6 +15,19 @@ public sealed record SetMembershipActiveRequest(bool IsActive);
 
 public static class AdminAccessEndpoints
 {
+    private static AdminUser WithCurrentAdminIdentity(AdminUser user, ClaimsPrincipal principal)
+    {
+        if (!string.Equals(user.ExternalSubject, principal.FindFirstValue("sub"), StringComparison.Ordinal))
+            return user;
+
+        var username = principal.FindFirstValue("phone_number") ?? principal.FindFirstValue("preferred_username");
+        var mobile = username is not null &&
+            System.Text.RegularExpressions.Regex.IsMatch(username, @"\A09[0-9]{9}\z")
+            ? username
+            : null;
+        return user with { Mobile = mobile, IsSystemAdmin = true };
+    }
+
     public static IEndpointRouteBuilder MapAdminAccessEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints
@@ -22,17 +35,20 @@ public static class AdminAccessEndpoints
             .RequireAuthorization(AdminAccessPolicies.SystemAdmin);
 
         group.MapGet("/users", async Task<IResult> (
+            ClaimsPrincipal principal,
             IAdminAccessService adminAccess,
             CancellationToken cancellationToken) =>
-            Results.Ok(await adminAccess.ListUsersAsync(cancellationToken)));
+            Results.Ok((await adminAccess.ListUsersAsync(cancellationToken))
+                .Select(user => WithCurrentAdminIdentity(user, principal))));
 
         group.MapGet("/users/{userId:guid}", async Task<IResult> (
             Guid userId,
+            ClaimsPrincipal principal,
             IAdminAccessService adminAccess,
             CancellationToken cancellationToken) =>
         {
             var user = await adminAccess.GetUserAsync(userId, cancellationToken);
-            return user is null ? Results.NotFound() : Results.Ok(user);
+            return user is null ? Results.NotFound() : Results.Ok(WithCurrentAdminIdentity(user, principal));
         });
 
         group.MapPatch("/users/{userId:guid}/status", async Task<IResult> (

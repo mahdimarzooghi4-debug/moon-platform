@@ -21,7 +21,9 @@ public sealed record AdminUser(
     string? DisplayName,
     bool IsActive,
     DateTimeOffset CreatedAtUtc,
-    IReadOnlyList<AdminMembership> Memberships);
+    IReadOnlyList<AdminMembership> Memberships,
+    string? Mobile = null,
+    bool IsSystemAdmin = false);
 
 public sealed record AdminOrganization(
     Guid OrganizationId,

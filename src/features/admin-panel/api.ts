@@ -14,6 +14,8 @@ export type AdminMembership = {
 export type AdminUser = {
   userId: string;
   externalSubject: string;
+  mobile?: string | null;
+  isSystemAdmin?: boolean;
   displayName?: string | null;
   isActive: boolean;
   createdAtUtc: string;
