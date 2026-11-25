@@ -11,7 +11,7 @@ import {
   clearSession,
   completeLogin,
   defaultPanelForRoles,
-  getSession,
+  getValidSession,
   setSessionPanelRoles,
 } from "./oidc";
 
@@ -111,19 +111,18 @@ function ProtectedPanelGate({ children, pathname }: { children: ReactNode; pathn
 
   useEffect(() => {
     let active = true;
-    const session = getSession();
-
-    if (!session) {
-      const returnTo = `${window.location.pathname}${window.location.search}`;
-      window.location.replace(`/auth?returnTo=${encodeURIComponent(returnTo)}`);
-      return () => {
-        active = false;
-      };
-    }
-
-    getCurrentIdentity(session)
+    getValidSession()
+      .then((session) => {
+        if (!active) return null;
+        if (!session) {
+          const returnTo = `${window.location.pathname}${window.location.search}`;
+          window.location.replace(`/auth?returnTo=${encodeURIComponent(returnTo)}`);
+          return null;
+        }
+        return getCurrentIdentity(session);
+      })
       .then((identity) => {
-        if (!active) return;
+        if (!active || !identity) return;
 
         const panelRoles = panelRolesFromIdentity(identity);
         setSessionPanelRoles(panelRoles);

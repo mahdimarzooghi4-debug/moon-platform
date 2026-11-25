@@ -1,4 +1,4 @@
-import { getSession } from "../../auth/oidc";
+import { getValidSession } from "../../auth/oidc";
 
 const env = import.meta.env as Record<string, string | undefined>;
 const apiBaseUrl = (env.VITE_API_BASE_URL ?? "").replace(/\/$/, "");
@@ -59,7 +59,7 @@ export type AdminTrustedCompany = {
 export type PublicTrustedCompany = Pick<AdminTrustedCompany, "id" | "name" | "sortOrder" | "hasLogo">;
 
 async function authorizedRequest<T>(path: string, init?: RequestInit): Promise<T> {
-  const session = getSession();
+  const session = await getValidSession();
   if (!session) throw new Error("missing_session");
 
   const isFormData = init?.body instanceof FormData;
@@ -89,7 +89,7 @@ async function authorizedRequest<T>(path: string, init?: RequestInit): Promise<T
 }
 
 async function authorizedBlobRequest(path: string): Promise<Blob | null> {
-  const session = getSession();
+  const session = await getValidSession();
   if (!session) throw new Error("missing_session");
 
   const response = await fetch(`${apiBaseUrl}${path}`, {

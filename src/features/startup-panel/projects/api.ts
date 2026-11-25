@@ -1,5 +1,5 @@
 import { getCurrentIdentity } from "../../../auth/api";
-import { getSession } from "../../../auth/oidc";
+import { getValidSession } from "../../../auth/oidc";
 import { apiRequest } from "../../../lib/api/client";
 
 export type ProjectProposalData = Record<string, unknown>;
@@ -35,7 +35,7 @@ export type ProjectDraftInput = {
 };
 
 export async function getStartupOrganizationId() {
-  const session = getSession();
+  const session = await getValidSession();
   if (!session) throw new Error("missing_session");
 
   const identity = await getCurrentIdentity(session);

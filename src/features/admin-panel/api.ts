@@ -1,4 +1,4 @@
-import { getSession } from "../../auth/oidc";
+import { getValidSession } from "../../auth/oidc";
 
 export type AdminMembership = {
   membershipId: string;
@@ -287,7 +287,7 @@ function developmentFallback<T>(request: Promise<T>, fallback: T): Promise<T> {
 }
 
 async function adminRequest<T>(path: string, init?: RequestInit): Promise<T> {
-  const session = getSession();
+  const session = await getValidSession();
   if (!session) {
     throw new AdminApiError(401, "missing_session");
   }
