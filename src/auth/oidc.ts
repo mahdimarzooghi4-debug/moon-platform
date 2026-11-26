@@ -292,6 +292,8 @@ export function canAccessPanelPath(roles: string[], pathname: string) {
 export function safePanelReturnTo(value?: string): string | undefined {
   if (!value || !value.startsWith("/panel/") || /[\\\u0000-\u0020\u007f]/.test(value)) return undefined;
   try {
+    const rawPath = value.split(/[?#]/, 1)[0];
+    if (/%2f|%5c|%2e/i.test(rawPath) || /(?:^|\/)\.{1,2}(?:\/|$)/.test(rawPath)) return undefined;
     const parsed = new URL(value, "https://moon.invalid");
     if (parsed.origin !== "https://moon.invalid" || parsed.hash ||
         /%2f|%5c|%2e/i.test(parsed.pathname)) return undefined;
