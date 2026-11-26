@@ -1,0 +1,26 @@
+name: Moon SMS Login Verify
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  otp-policy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Compile and test isolated OTP policy
+        run: |
+          set -euo pipefail
+          out=$(mktemp -d)
+          trap 'rm -rf "$out"' EXIT
+          javac -Xlint:all -Werror -d "$out" $(find backend/keycloak/sms-login/src -name '*.java')
+          java -cp "$out" ir.mah.identity.LoginOtpChallengeTest
