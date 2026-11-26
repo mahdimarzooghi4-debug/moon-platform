@@ -1,7 +1,11 @@
+import { useState } from "react";
+import { startupApplicationStatus, trackStartupApplication } from "../../api";
 import React from "react";
 import "./index.css";
 
 export default function Main() {
+  const [status, setStatus] = useState("");
+  const code = sessionStorage.getItem("moon-startup-tracking-code");
   return (
     <div className="main-container flex w-[1440px] h-[900px] flex-col justify-between items-center flex-nowrap bg-[#f7fafc] relative mx-auto my-0">
       <div className="flex h-[80px] pt-0 pr-[120px] pb-0 pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] border-solid border-t border-t-[#e4ebf1] relative">
@@ -41,7 +45,7 @@ export default function Main() {
           <div className="flex flex-col gap-[12px] items-start self-stretch shrink-0 flex-nowrap relative z-[16]">
             <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[17]">
               <span className="flex w-[126px] h-[23px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[15px] font-semibold leading-[23px] text-[#1a202c] relative text-right whitespace-nowrap z-[18]">
-                MAH-S-۱۴۰۵-۰۰۳۸
+                {code ?? "کد پیگیری ثبت نشده است"}
               </span>
               <span className="flex w-[113px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#718096] relative text-right whitespace-nowrap z-[19]">
                 کد پیگیری درخواست
@@ -60,9 +64,7 @@ export default function Main() {
           <div className="flex flex-col gap-[12px] items-start self-stretch shrink-0 flex-nowrap relative z-[24]">
             <div className="flex flex-col gap-[12px] items-start self-stretch shrink-0 flex-nowrap relative z-[25]">
               <div className="flex pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#2094e3] rounded-[12px] relative z-[26]">
-                <span className="flex w-[96px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#fff] relative text-center whitespace-nowrap z-[27]">
-                  پیگیری درخواست
-                </span>
+                <button type="button" className="flex w-[96px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#fff] relative text-center whitespace-nowrap z-[27]" disabled={!code} onClick={async () => { if (!code) return; try { const result = await trackStartupApplication(code); setStatus(result ? startupApplicationStatus(result.status) : "پرونده پیدا نشد."); } catch { setStatus("دریافت وضعیت انجام نشد."); } }}>پیگیری درخواست</button><output className="text-sm text-[#17324d]" role="status">{status}</output>
               </div>
               <div className="flex pt-[12px] pr-0 pb-[12px] pl-0 justify-center items-center self-stretch shrink-0 flex-nowrap relative z-[28]">
                 <span className="flex w-[131px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#2094e3] relative text-right whitespace-nowrap z-[29]">

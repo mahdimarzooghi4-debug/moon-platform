@@ -1,3 +1,22 @@
+import { registrationDraft, registrationFiles } from "../../draft";
+import { submitStartupApplication } from "../../api";
+import { normalizeIranMobile } from "../../../../auth/oidc";
+
+let sending = false;
+
+function showRegistrationError(message: string) {
+  let node = document.querySelector<HTMLElement>("[data-registration-error]");
+  if (!node) {
+    node = document.createElement("p");
+    node.dataset.registrationError = "";
+    node.setAttribute("role", "alert");
+    node.className = "mx-auto w-fit px-4 py-3 text-red-700";
+    document.querySelector(".main-container")?.prepend(node);
+  }
+  node.textContent = message;
+  node.scrollIntoView({ block: "nearest" });
+}
+
 const STARTUP_REGISTER_ROOT = "/register/startup";
 const STEP2_PATH = `${STARTUP_REGISTER_ROOT}/states/step2`;
 const STEP3_PATH = `${STARTUP_REGISTER_ROOT}/states/step3`;
@@ -36,7 +55,6 @@ const routesByPath: Record<string, Record<string, string>> = {
   },
   [SUCCESS_PATH]: {
     ...commonRoutes,
-    "پیگیری درخواست": "/registration/track",
     "ورود به حساب کاربری": "/auth",
     "خروج از سامانه": "/",
   },
@@ -66,7 +84,57 @@ function findAction(target: HTMLElement, routes: Record<string, string>) {
 
 function navigate(path: string) {
   if (window.location.pathname === path) return;
+  if (path.startsWith(STARTUP_REGISTER_ROOT)) {
+    window.history.pushState(null, "", path);
+    window.dispatchEvent(new PopStateEvent("popstate"));
+    window.scrollTo(0, 0);
+    return;
+  }
   window.location.assign(path);
+}
+
+async function continueRegistration(label: string, path: string) {
+  if (label === "ذخیره و ادامه") {
+    for (const field of document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("[data-registration-field]")) {
+      if (!field.reportValidity()) return;
+    }
+    if (path === STEP4_PATH && !registrationFiles.pitchDeck) {
+      showRegistrationError("فایل معرفی استارتاپ را انتخاب کنید.");
+      return;
+    }
+  }
+  if (label === "ارسال درخواست ثبت‌نام") {
+    if (sending) return;
+    if ([...document.querySelectorAll<HTMLInputElement>("[data-registration-consent]")].some(field => !field.checked)) {
+      showRegistrationError("همهٔ تأییدیه‌ها را بررسی و علامت بزنید.");
+      return;
+    }
+    const { pitchDeck } = registrationFiles;
+    if (!pitchDeck || pitchDeck.size > 15 * 1024 * 1024 || !registrationDraft.name || !registrationDraft.team || !registrationDraft.audience) {
+      showRegistrationError("مراحل قبلی را تکمیل و فایل PDF حداکثر ۱۵ مگابایتی انتخاب کنید.");
+      return;
+    }
+    const form = new FormData();
+    for (const key of ["name", "email", "product", "description", "team", "audience"]) {
+      form.set(key, registrationDraft[key] ?? "");
+    }
+    form.set("mobile", normalizeIranMobile(registrationDraft.mobile ?? ""));
+    form.set("contactName", [registrationDraft.firstName, registrationDraft.lastName].join(" ").trim());
+    form.set("pitchDeck", pitchDeck);
+    sending = true;
+    try {
+      const result = await submitStartupApplication(form);
+      sessionStorage.setItem("moon-startup-tracking-code", result.trackingCode);
+      for (const key of Object.keys(registrationDraft)) delete registrationDraft[key];
+      delete registrationFiles.pitchDeck;
+    } catch (error) {
+      showRegistrationError(error instanceof Error ? error.message : "ارسال انجام نشد.");
+      return;
+    } finally {
+      sending = false;
+    }
+  }
+  navigate(path);
 }
 
 function handleClick(event: MouseEvent) {
@@ -80,7 +148,7 @@ function handleClick(event: MouseEvent) {
   if (!action) return;
 
   event.preventDefault();
-  navigate(routes[action.label]);
+  void continueRegistration(action.label, routes[action.label]);
 }
 
 function handleKeydown(event: KeyboardEvent) {
@@ -96,7 +164,7 @@ function handleKeydown(event: KeyboardEvent) {
   if (!action) return;
 
   event.preventDefault();
-  navigate(routes[action.label]);
+  void continueRegistration(action.label, routes[action.label]);
 }
 
 function applyPointerAffordance() {
