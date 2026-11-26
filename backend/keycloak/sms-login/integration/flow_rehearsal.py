@@ -1,5 +1,6 @@
 """Rehearse real client-only activation and rollback against disposable Keycloak."""
 import hashlib
+import importlib.util
 import json
 import os
 import pathlib
@@ -30,6 +31,18 @@ def invoke(action, extra, expect=True):
     assert (result.returncode == 0) == expect, result.stdout + result.stderr
     return result.stdout
 try:
+    # Inspect the same real disposable realm using the production read-only code.
+    spec = importlib.util.spec_from_file_location("readiness", script.with_name("sms-account-readiness.py"))
+    readiness = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(readiness)
+    report = readiness.inspect(readiness.ReadOnlyAdmin(base, token_file), "http://127.0.0.1:18081")
+    assert report["counts"]["total"] == 9
+    assert report["counts"]["enabledDomainRequiredActions"] == 1
+    assert report["counts"]["enabledDomainNoncanonical"] == 0
+    assert report["roles"]["startup"]["disabled"] == 1
+    assert report["roles"]["system_admin"]["enabled"] == 1
+    assert report["humanChecks"]["mobileOwnership"] == "UNVERIFIED"
+    print("Disposable Keycloak read-only account inventory verified.")
     invoke("prepare", [], False)
     invoke("prepare", ["--approve-sha", sha])
     raw = snapshot.read_bytes()

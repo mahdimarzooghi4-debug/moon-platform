@@ -248,3 +248,5 @@ jobs:
         run: python3 deploy/production/test-sms-release-bundle.py
       - name: Verify private immutable runtime baseline and drift rejection
         run: python3 deploy/production/test-sms-runtime-baseline.py
+      - name: Verify aggregate account inventory and fail-closed reporting
+        run: python3 deploy/production/test-sms-account-readiness.py
