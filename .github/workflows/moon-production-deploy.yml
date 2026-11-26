@@ -89,11 +89,23 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
           API_TAG: ${{ steps.api_release.outputs.tag }}
           UPDATE_API: ${{ steps.api_release.outputs.update }}
+          MOON_SMS_DEPLOY_KEY: ${{ secrets.MOON_SMS_IR_API_KEY }}
+          MOON_SMS_DEPLOY_TEMPLATE: ${{ vars.MOON_SMS_IR_STARTUP_TEMPLATE_ID || '743974' }}
+          MOON_SMS_DEPLOY_PARAMETER: ${{ vars.MOON_SMS_IR_STARTUP_CODE_PARAMETER }}
         run: |
           set -euo pipefail
           test -n "$DEPLOY_HOST" || { echo "Missing MOON_DEPLOY_HOST"; exit 1; }
           test -n "$DEPLOY_USER" || { echo "Missing MOON_DEPLOY_USER"; exit 1; }
-          ssh -i "$HOME/.ssh/moon_deploy" -o BatchMode=yes "$DEPLOY_USER@$DEPLOY_HOST" "IMAGE_TAG='$IMAGE_TAG' MOON_API_IMAGE_TAG='$API_TAG' UPDATE_API='$UPDATE_API' bash -s" <<'REMOTE'
+          if [ -n "$MOON_SMS_DEPLOY_KEY" ] && ! [[ "$MOON_SMS_DEPLOY_TEMPLATE" =~ ^[1-9][0-9]*$ ]]; then
+            echo "Set the MOON_SMS_IR_STARTUP_TEMPLATE_ID repository variable before enabling SMS.ir"
+            exit 1
+          fi
+          {
+            if [ -n "$MOON_SMS_DEPLOY_KEY" ]; then
+              printf 'export MOON_SMS_PROVIDER=SmsIr MOON_SMS_IR_API_KEY=%q MOON_SMS_IR_STARTUP_TEMPLATE_ID=%q MOON_SMS_IR_STARTUP_CODE_PARAMETER=%q\n' \
+                "$MOON_SMS_DEPLOY_KEY" "$MOON_SMS_DEPLOY_TEMPLATE" "${MOON_SMS_DEPLOY_PARAMETER:-Code}"
+            fi
+            cat <<'REMOTE'
           set -euo pipefail
           cd /opt/moon/app
           test -f deploy/production/.env.production
@@ -117,10 +129,11 @@ jobs:
             docker compose --profile migrations --env-file deploy/production/.env.production -f deploy/production/compose.yaml run --rm migrate
             docker compose --env-file deploy/production/.env.production -f deploy/production/compose.yaml up -d --remove-orphans
           else
-            docker compose --env-file deploy/production/.env.production -f deploy/production/compose.yaml up -d --no-deps --no-build --pull never web
+            docker compose --env-file deploy/production/.env.production -f deploy/production/compose.yaml up -d --no-deps --no-build --pull never api web
           fi
           env_file=deploy/production/.env.production
           sed -i -e '/^MOON_IMAGE_TAG=/d' -e '/^MOON_API_IMAGE_TAG=/d' "$env_file"
           printf '\nMOON_IMAGE_TAG=%s\nMOON_API_IMAGE_TAG=%s\n' "$IMAGE_TAG" "$MOON_API_IMAGE_TAG" >> "$env_file"
           docker compose --env-file deploy/production/.env.production -f deploy/production/compose.yaml ps
           REMOTE
+          } | ssh -i "$HOME/.ssh/moon_deploy" -o BatchMode=yes "$DEPLOY_USER@$DEPLOY_HOST" "IMAGE_TAG='$IMAGE_TAG' MOON_API_IMAGE_TAG='$API_TAG' UPDATE_API='$UPDATE_API' bash -s"
