@@ -86,7 +86,11 @@ def check_branded_login(page, otp_step):
     assert page.locator(".moon-primary").evaluate("(el) => getComputedStyle(el).backgroundImage").startswith("linear-gradient")
     field = page.locator("#moon-code" if otp_step else "#moon-mobile")
     assert field.is_visible()
-    assert field.evaluate("(el) => getComputedStyle(el).textAlign") == "right"
+    assert field.evaluate("(el) => getComputedStyle(el).textAlign") == ("center" if otp_step else "left")
+    label = page.locator("label[for=moon-code]" if otp_step else "label[for=moon-mobile]")
+    assert label.evaluate("(el) => getComputedStyle(el).textAlign") == "right"
+    assert label.evaluate("(el) => getComputedStyle(el).direction") == "rtl"
+    assert label.is_visible()
     assert field.evaluate("(el) => getComputedStyle(el).direction") == "ltr"
     assert field.get_attribute("maxlength") == ("6" if otp_step else "11")
     if otp_step:
