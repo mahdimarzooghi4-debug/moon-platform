@@ -114,7 +114,8 @@ jobs:
       - run: node tests/moon-oidc-entry.test.mjs
 
   keycloak-browser-integration:
-    runs-on: ubuntu-latest
+    # Playwright 1.51 supports Ubuntu 24.04, not the newer ubuntu-latest image.
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
