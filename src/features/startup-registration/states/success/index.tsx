@@ -7,7 +7,7 @@ export default function Main() {
   const [status, setStatus] = useState("");
   const code = sessionStorage.getItem("moon-startup-tracking-code");
   return (
-    <div className="main-container flex w-[1440px] h-[900px] flex-col justify-between items-center flex-nowrap bg-[#f7fafc] relative mx-auto my-0">
+    <div dir="rtl" className="main-container flex w-[1440px] h-[900px] flex-col justify-between items-center flex-nowrap bg-[#f7fafc] relative mx-auto my-0">
       <div className="flex h-[80px] pt-0 pr-[120px] pb-0 pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] border-solid border-t border-t-[#e4ebf1] relative">
         <div className="flex w-[223px] gap-[20px] items-center shrink-0 flex-nowrap relative z-[1]">
           <span className="flex w-[119px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[21.875px] text-[#718096] relative text-right whitespace-nowrap z-[2]">
@@ -45,7 +45,7 @@ export default function Main() {
           <div className="flex flex-col gap-[12px] items-start self-stretch shrink-0 flex-nowrap relative z-[16]">
             <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[17]">
               <span className="flex w-[126px] h-[23px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[15px] font-semibold leading-[23px] text-[#1a202c] relative text-right whitespace-nowrap z-[18]">
-                {code ?? "کد پیگیری ثبت نشده است"}
+                {code ? <bdi dir="ltr">{code}</bdi> : "کد پیگیری ثبت نشده است"}
               </span>
               <span className="flex w-[113px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#718096] relative text-right whitespace-nowrap z-[19]">
                 کد پیگیری درخواست

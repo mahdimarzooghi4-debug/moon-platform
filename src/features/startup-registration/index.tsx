@@ -149,7 +149,7 @@ export default function Main() {
                   </span>
                 </div>
                 <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[56]">
-                  <input aria-label="نام انگلیسی" maxLength={160} data-registration-detail="نام انگلیسی" data-registration-key="englishName" defaultValue={registrationDraft.englishName ?? ""} onChange={event => { registrationDraft.englishName = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
+                  <input dir="ltr" aria-label="نام انگلیسی" maxLength={160} data-registration-detail="نام انگلیسی" data-registration-key="englishName" defaultValue={registrationDraft.englishName ?? ""} onChange={event => { registrationDraft.englishName = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
                 </div>
               </div>
               <div className="flex w-[450px] flex-col gap-[8px] items-end shrink-0 flex-nowrap relative z-[58]">
@@ -268,7 +268,7 @@ export default function Main() {
                   </span>
                 </div>
                 <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[119]">
-                  <input aria-label="شبکه اجتماعی" maxLength={160} data-registration-detail="شبکه اجتماعی" data-registration-key="social" defaultValue={registrationDraft.social ?? ""} onChange={event => { registrationDraft.social = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
+                  <input dir="ltr" aria-label="شبکه اجتماعی" maxLength={160} data-registration-detail="شبکه اجتماعی" data-registration-key="social" defaultValue={registrationDraft.social ?? ""} onChange={event => { registrationDraft.social = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
                 </div>
               </div>
               <div className="flex w-[450px] flex-col gap-[8px] items-end shrink-0 flex-nowrap relative z-[121]">
@@ -278,7 +278,7 @@ export default function Main() {
                   </span>
                 </div>
                 <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[124]">
-                  <input aria-label="وب‌سایت" maxLength={160} data-registration-detail="وب‌سایت" data-registration-key="website" defaultValue={registrationDraft.website ?? ""} onChange={event => { registrationDraft.website = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
+                  <input dir="ltr" aria-label="وب‌سایت" maxLength={160} data-registration-detail="وب‌سایت" data-registration-key="website" defaultValue={registrationDraft.website ?? ""} onChange={event => { registrationDraft.website = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
                 </div>
               </div>
             </div>
@@ -343,7 +343,7 @@ export default function Main() {
                   </span>
                 </div>
                 <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[154]">
-                  <input aria-label="کد ملی نماینده" inputMode="numeric" required maxLength={10}
+                  <input dir="ltr" aria-label="کد ملی نماینده" inputMode="numeric" required maxLength={10}
                     pattern="[0-9۰-۹٠-٩]{10}" data-registration-field="nationalId"
                     defaultValue={registrationDraft.nationalId ?? ""}
                     onChange={event => { registrationDraft.nationalId = event.target.value; }}
@@ -362,7 +362,7 @@ export default function Main() {
               </div>
               <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[160]">
                 <MobileVerification mobile={mobile} />
-                <input type="tel" required maxLength={16} aria-label="شماره موبایل" data-registration-field="mobile" value={mobile} onChange={event => { registrationDraft.mobile = event.target.value; setMobile(event.target.value); }} className="min-w-0 grow bg-transparent text-right text-sm text-[#1a202c] outline-none" />
+                <input dir="ltr" type="tel" required maxLength={16} aria-label="شماره موبایل" data-registration-field="mobile" value={mobile} onChange={event => { registrationDraft.mobile = event.target.value; setMobile(event.target.value); }} className="min-w-0 grow bg-transparent text-right text-sm text-[#1a202c] outline-none" />
               </div>
             </div>
             <div className="flex flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[164]">

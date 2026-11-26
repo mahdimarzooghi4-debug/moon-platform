@@ -71,7 +71,7 @@ export default function MobileVerification({ mobile: inputMobile }: { mobile: st
           className="fixed inset-0 z-[200] m-auto rounded-xl border border-slate-200 bg-white p-6 shadow-xl">
           <form onSubmit={verify} className="flex flex-col gap-3">
             <label>کد پیامک‌شده
-              <input name="code" required inputMode="numeric" autoComplete="one-time-code" maxLength={6}
+              <input dir="ltr" name="code" required inputMode="numeric" autoComplete="one-time-code" maxLength={6}
                 pattern="[0-9۰-۹٠-٩]{6}" className="block rounded border border-slate-300 p-2" />
             </label>
             {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
