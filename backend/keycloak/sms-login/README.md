@@ -30,3 +30,9 @@ rm -rf "$out"
 ```
 
 The CI PostgreSQL job applies schema.sql to a disposable database and verifies concurrent consumption and shared rate limits. No schema is applied to production.
+
+## SMS transport
+
+The isolated Java transport uses the exact Keycloak 26.7.3 JSON dependency set and the existing Moon SMS.ir verify contract. Production endpoint is fixed; configuration is server-only. Current deployment template is 743974 and parameter CODE; the operator must wire those approved settings and the existing secret into Keycloak at deployment. No live SMS is sent by CI.
+
+LoginOtpService issues a pending challenge, sends once, records provider acceptance before allowing verification, invalidates failed/ambiguous sends, and never returns a code to the caller. Provider acceptance is not proof of handset delivery. The transport and service remain unregistered with Keycloak; the browser authenticator, server secret provisioning, database wiring and runtime tests are still required.

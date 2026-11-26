@@ -65,6 +65,24 @@ public final class PostgresLoginOtpStoreTest {
             check(a.issue(next,"shared-source").isPresent(),"source allowance");
         }
         check(b.issue(binding("session15","subject15","09120000015"),"shared-source").isEmpty(),"source limit across accounts");
+        var serviceBinding=binding("service-session","service-subject","09120000020");
+        var captured=new java.util.concurrent.atomic.AtomicReference<String>();
+        var service=new LoginOtpService(a,(mobile,code)->{
+            captured.set(code);
+            check(mobile.equals(serviceBinding.mobile()),"correct service destination");
+            return LoginSmsSender.Result.ACCEPTED;
+        });
+        var send=service.send(serviceBinding,"service-source");
+        check(send.state()==LoginOtpService.SendState.ACCEPTED && send.challengeId()!=null,"service acknowledgement");
+        check(service.verify(serviceBinding,send.challengeId(),captured.get()),"service verification");
+        check(!service.verify(serviceBinding,send.challengeId(),captured.get()),"service replay");
+        var denied=binding("failed-session","failed-subject","09120000021");
+        var failureService=new LoginOtpService(a,(mobile,code)->LoginSmsSender.Result.NOT_ACCEPTED);
+        var failure=failureService.send(denied,"service-source");
+        check(failure.state()==LoginOtpService.SendState.NOT_AVAILABLE && failure.challengeId()==null,"service failure");
+        var exceptional=binding("exception-session","exception-subject","09120000022");
+        var exceptionalService=new LoginOtpService(a,(mobile,code)->{throw new IllegalStateException("synthetic failure");});
+        check(exceptionalService.send(exceptional,"service-source").state()==LoginOtpService.SendState.NOT_AVAILABLE,"transport exception");
         System.out.println("PostgreSQL OTP integration tests passed");
     }
     private static LoginOtpChallenge.Binding binding(String session,String subject,String mobile) {

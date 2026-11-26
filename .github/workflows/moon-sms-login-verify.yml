@@ -58,3 +58,22 @@ jobs:
           trap 'rm -rf "$out"' EXIT
           javac -Xlint:all -Werror -cp /usr/share/java/postgresql.jar -d "$out" $(find backend/keycloak/sms-login/src -name '*.java')
           java -cp "$out:/usr/share/java/postgresql.jar" ir.mah.identity.PostgresLoginOtpStoreTest
+
+  sms-transport:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Verify SMS.ir protocol with a local HTTP server (no live SMS)
+        run: |
+          set -euo pipefail
+          root=backend/keycloak/sms-login
+          out=$(mktemp -d)
+          trap 'rm -rf "$out"' EXIT
+          mvn -B -q -f "$root/transport/pom.xml" org.apache.maven.plugins:maven-dependency-plugin:3.9.0:build-classpath -Dmdep.outputFile="$out/classpath"
+          cp=$(cat "$out/classpath")
+          javac -Xlint:all -Werror -cp "$cp" -d "$out" $(find "$root/src/main" "$root/transport/src" -name '*.java')
+          java -cp "$out:$cp" ir.mah.identity.SmsIrLoginSenderTest
