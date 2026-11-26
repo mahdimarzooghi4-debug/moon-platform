@@ -213,11 +213,21 @@ jobs:
           "${compose[@]}" up -d moon-login-otp-db
           ready=0
           for _ in $(seq 1 60); do
-            if "${compose[@]}" exec -T moon-login-otp-db psql -U moon_login_otp_owner -d moon_login_otp -Atc 'SELECT 1' >/dev/null 2>&1; then ready=1; break; fi
+            # TCP is unavailable in the temporary init-only PostgreSQL process.
+            # Check the actual restricted runtime login and both initialized tables.
+            if "${compose[@]}" exec -T -e PGPASSWORD="$MOON_LOGIN_OTP_DB_PASSWORD" moon-login-otp-db \
+              psql -h 127.0.0.1 -U moon_login_otp -d moon_login_otp -v ON_ERROR_STOP=1 \
+              -c 'SELECT count(*) FROM moon_login_otp_challenge; SELECT count(*) FROM moon_login_otp_send;' >/dev/null 2>&1; then
+              ready=1; break
+            fi
             sleep 1
           done
-          test "$ready" = 1
-          flags=$("${compose[@]}" exec -T moon-login-otp-db psql -U moon_login_otp_owner -d moon_login_otp -Atc \
+          if [ "$ready" != 1 ]; then
+            echo "OTP DB did not complete initialization with the runtime role" >&2
+            exit 1
+          fi
+          flags=$("${compose[@]}" exec -T -e PGPASSWORD="$MOON_LOGIN_OTP_OWNER_PASSWORD" moon-login-otp-db \
+            psql -h 127.0.0.1 -U moon_login_otp_owner -d moon_login_otp -v ON_ERROR_STOP=1 -Atc \
             "SELECT (NOT rolsuper AND NOT rolcreatedb AND NOT rolcreaterole AND NOT rolbypassrls) FROM pg_roles WHERE rolname='moon_login_otp'")
           test "$flags" = "t"
           if "${compose[@]}" exec -T -e PGPASSWORD="$MOON_LOGIN_OTP_DB_PASSWORD" moon-login-otp-db \

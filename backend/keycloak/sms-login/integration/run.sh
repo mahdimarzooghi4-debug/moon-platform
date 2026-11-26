@@ -63,13 +63,30 @@ for i in $(seq 1 90); do
   sleep 2
 done
 if [ "$ready" != 1 ]; then docker logs --tail 100 moon-ci-keycloak; exit 1; fi
+# Pull the exact approved Caddy version; a registry 429 is transient, not
+# a reason to change versions or bypass the browser test.
+caddy_image=public.ecr.aws/docker/library/caddy:2.10.2-alpine
+for attempt in 1 2 3; do
+  if docker pull "$caddy_image" >"$fixture/caddy-pull.log" 2>&1; then
+    cat "$fixture/caddy-pull.log"
+    break
+  else
+    status=$?
+    cat "$fixture/caddy-pull.log"
+    if [ "$attempt" -eq 3 ] || ! grep -Eqi 'toomanyrequests|rate exceeded|429' "$fixture/caddy-pull.log"; then
+      exit "$status"
+    fi
+    echo "Caddy registry rate limited; retry $((attempt + 1))/3" >&2
+    sleep "$((attempt * 30))"
+  fi
+done
 # Use the actual production Caddyfile with a disposable HTTP-only site address.
 # The private admin port is loopback-only in CI; no public admin route.
-docker run -d --name moon-ci-gateway --network moon-ci-otp --ip 172.30.88.10 \
+docker run --pull never -d --name moon-ci-gateway --network moon-ci-otp --ip 172.30.88.10 \
   -p 127.0.0.1:18081:8080 -e MOON_PUBLIC_DOMAIN=http://:8080 \
   -e TLS_CONTACT_EMAIL=ci@example.invalid \
   -v "$root/../../../deploy/production/Caddyfile:/etc/caddy/Caddyfile:ro" \
-  public.ecr.aws/docker/library/caddy:2.10.2-alpine >/dev/null
+  "$caddy_image" >/dev/null
 ready=0
 for i in $(seq 1 180); do
   if curl -fsS http://127.0.0.1:18081/identity/realms/moon/.well-known/openid-configuration >/dev/null 2>&1; then ready=1; break; fi

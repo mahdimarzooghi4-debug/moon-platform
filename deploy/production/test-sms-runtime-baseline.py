@@ -15,7 +15,10 @@ for i, service in enumerate(baseline.SERVICES, 1):
         imageRef="moon-platform/"+service+":"+sha if service in ("api", "web") else "fixture/"+service+":v1")
 def fake(*args):
     if args[0] == "ps":
-        return rows[args[-1].split("=")[1]]["containerId"]
+        prefix = "label=com.docker.compose.service="
+        assert args[-1].startswith(prefix)
+        assert "label=com.docker.compose.project=" + baseline.PROJECT in args
+        return rows[args[-1].removeprefix(prefix)]["containerId"]
     if args[0] == "inspect":
         item = next(v for v in rows.values() if v["containerId"] == args[-1])
         return "|".join([item["containerId"],item["imageId"],item["imageRef"],"true"])
