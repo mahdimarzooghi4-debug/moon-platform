@@ -1,8 +1,12 @@
 import { FormEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { registrationDraft } from "../../../draft";
 
 const STEP2_PATH = "/register/startup/states/step2";
 
 export default function StartupTeamMemberAddPage() {
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
   const [employmentType, setEmploymentType] = useState<"full-time" | "part-time">("full-time");
@@ -11,23 +15,29 @@ export default function StartupTeamMemberAddPage() {
   const [linkedin, setLinkedin] = useState("");
 
   function goBack() {
-    window.location.assign(STEP2_PATH);
+    navigate(STEP2_PATH);
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const member = {
-      name: name.trim(),
-      role: role.trim(),
-      employmentType,
-      phone: phone.trim(),
-      email: email.trim(),
-      linkedin: linkedin.trim(),
-    };
+    if (!name.trim() || !role.trim()) {
+      setError("نام و نقش عضو تیم را وارد کنید.");
+      return;
+    }
 
-    sessionStorage.setItem("mah-startup-team-member", JSON.stringify(member));
-    window.location.assign(`${STEP2_PATH}?memberAdded=1`);
+    const member = [
+      name.trim(), role.trim(), employmentType === "full-time" ? "تمام‌وقت" : "پاره‌وقت",
+      phone.trim(), email.trim(), linkedin.trim(),
+    ].filter(Boolean).join(" | ");
+    const team = [registrationDraft.team?.trim(), member].filter(Boolean).join("\n");
+    if (team.length > 4000) {
+      setError("توضیحات تیم و اعضا باید حداکثر ۴۰۰۰ کاراکتر باشد.");
+      return;
+    }
+
+    registrationDraft.team = team;
+    navigate(STEP2_PATH);
   }
 
   return (
@@ -120,6 +130,7 @@ export default function StartupTeamMemberAddPage() {
             <button type="button" onClick={goBack} className="h-[44px] rounded-[12px] border border-[#e2e8f0] px-[20px] text-[14px] font-medium text-[#4a5568]">
               انصراف و بازگشت
             </button>
+            {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
             <button type="submit" className="h-[44px] rounded-[12px] bg-[#2094e3] px-[24px] text-[14px] font-medium text-white">
               افزودن عضو به تیم
             </button>
