@@ -19,3 +19,5 @@ CREATE TABLE IF NOT EXISTS moon_login_otp_send (
 CREATE INDEX IF NOT EXISTS moon_login_otp_send_realm_time ON moon_login_otp_send (realm_key, issued_at);
 CREATE INDEX IF NOT EXISTS moon_login_otp_send_scope_time ON moon_login_otp_send (scope_key, issued_at);
 CREATE INDEX IF NOT EXISTS moon_login_otp_send_source_time ON moon_login_otp_send (realm_key, source_key, issued_at);
+
+CREATE INDEX IF NOT EXISTS moon_login_otp_challenge_expiry ON moon_login_otp_challenge (expires_at);

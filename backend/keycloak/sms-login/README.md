@@ -56,3 +56,7 @@ CI builds the unchanged provider JAR and runs Keycloak 26.7.3, PostgreSQL 18, an
 ## Production candidate packaging
 
 See deploy/production/SMS-LOGIN-RELEASE.md. The optimized image and opt-in Compose overlay are prepared without activating the provider or modifying a running realm. Automatic deployment remains deliberately blocked until coordinated activation and rollback are implemented and approved.
+
+## Expired OTP state and reverse proxy
+
+Issuance removes expired challenge rows using the PostgreSQL clock without resetting current rate budgets. The operator-only cleanup-expired.sql removes only expired challenge state and send rows outside the existing one-hour rate window, including when login traffic is idle; it is not an audit purge. No new retention period or automatic maintenance schedule is defined. The browser integration uses the committed Caddyfile with a CI-only HTTP site and the candidate trusted-proxy setting; forged X-Forwarded-For and X-Real-IP across seven distinct test accounts must not bypass the shared five-send source budget. Actual TLS, server topology and upstream proxy trust remain to be verified before activation.

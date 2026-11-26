@@ -9,7 +9,7 @@ import urllib.parse
 import urllib.request
 
 fixture, script = map(pathlib.Path, sys.argv[1:])
-base = "http://127.0.0.1:18081"
+base = "http://127.0.0.1:18083/identity"
 sha = "a" * 40
 # CI-only temporary master administrator; no direct grants enabled on moon-web.
 with urllib.request.urlopen(base + "/realms/master/protocol/openid-connect/token",

@@ -83,6 +83,33 @@ public final class PostgresLoginOtpStoreTest {
         var exceptional=binding("exception-session","exception-subject","09120000022");
         var exceptionalService=new LoginOtpService(a,(mobile,code)->{throw new IllegalStateException("synthetic failure");});
         check(exceptionalService.send(exceptional,"service-source").state()==LoginOtpService.SendState.NOT_AVAILABLE,"transport exception");
+        var expiredPending = binding("cleanup-pending","cleanup-subject-p","09120000030");
+        var expiredReady = binding("cleanup-ready","cleanup-subject-r","09120000031");
+        var retainedReady = binding("cleanup-live","cleanup-subject-l","09120000032");
+        var pending = a.issue(expiredPending,"cleanup-source").orElseThrow();
+        var ready = a.issue(expiredReady,"cleanup-source").orElseThrow();
+        var live = a.issue(retainedReady,"cleanup-source").orElseThrow();
+        check(a.deliveryAccepted(expiredReady,ready.challenge().id()),"cleanup ready setup");
+        check(a.deliveryAccepted(retainedReady,live.challenge().id()),"cleanup live setup");
+        try (var c=ds.getConnection();
+             var s=c.prepareStatement("UPDATE moon_login_otp_challenge SET expires_at=clock_timestamp()-interval '1 second' WHERE challenge_id IN (?,?)")) {
+            s.setObject(1,pending.challenge().id()); s.setObject(2,ready.challenge().id());
+            check(s.executeUpdate()==2,"expired fixture");
+        }
+        check(b.issue(expiredPending,"cleanup-source").isEmpty(),"cleanup does not reset resend cooldown");
+        check(!a.deliveryAccepted(expiredPending,pending.challenge().id()),"late ack after cleanup denied");
+        check(!b.verify(expiredReady,ready.challenge().id(),ready.code()),"expired ready after cleanup denied");
+        try (var c=ds.getConnection();
+             var s=c.prepareStatement("SELECT count(*) FROM moon_login_otp_challenge WHERE challenge_id IN (?,?)")) {
+            s.setObject(1,pending.challenge().id()); s.setObject(2,ready.challenge().id());
+            try(var rows=s.executeQuery()) { check(rows.next() && rows.getInt(1)==0,"expired scopes physically removed"); }
+        }
+        try (var c=ds.getConnection();
+             var s=c.prepareStatement("SELECT count(*) FROM moon_login_otp_send WHERE challenge_id IN (?,?)")) {
+            s.setObject(1,pending.challenge().id()); s.setObject(2,ready.challenge().id());
+            try(var rows=s.executeQuery()) { check(rows.next() && rows.getInt(1)==2,"rate history retained"); }
+        }
+        check(b.verify(retainedReady,live.challenge().id(),live.code()),"unexpired challenge retained");
         System.out.println("PostgreSQL OTP integration tests passed");
     }
     private static LoginOtpChallenge.Binding binding(String session,String subject,String mobile) {

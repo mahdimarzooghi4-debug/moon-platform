@@ -79,6 +79,17 @@ jobs:
           trap 'rm -rf "$out"' EXIT
           javac -Xlint:all -Werror -cp /usr/share/java/postgresql.jar -d "$out" $(find backend/keycloak/sms-login/src -name '*.java')
           java -cp "$out:/usr/share/java/postgresql.jar" ir.mah.identity.PostgresLoginOtpStoreTest
+          PGPASSWORD="$OTP_TEST_PASSWORD" psql -h localhost -U "$OTP_TEST_USER" -d otp_test -v ON_ERROR_STOP=1 <<'SQL'
+          INSERT INTO moon_login_otp_challenge VALUES
+            (repeat('a',64),repeat('b',64),'00000000-0000-0000-0000-000000000001',clock_timestamp()-interval '1 second',repeat('c',64),0,'PENDING_DELIVERY'),
+            (repeat('d',64),repeat('e',64),'00000000-0000-0000-0000-000000000002',clock_timestamp()+interval '120 seconds',repeat('f',64),0,'READY');
+          INSERT INTO moon_login_otp_send VALUES
+            ('00000000-0000-0000-0000-000000000001',repeat('a',64),repeat('b',64),repeat('c',64),clock_timestamp()-interval '3601 seconds'),
+            ('00000000-0000-0000-0000-000000000002',repeat('a',64),repeat('b',64),repeat('c',64),clock_timestamp());
+          SQL
+          PGPASSWORD="$OTP_TEST_PASSWORD" psql -h localhost -U "$OTP_TEST_USER" -d otp_test -v ON_ERROR_STOP=1 -f backend/keycloak/sms-login/cleanup-expired.sql
+          remaining="$(PGPASSWORD="$OTP_TEST_PASSWORD" psql -h localhost -U "$OTP_TEST_USER" -d otp_test -Atc "SELECT (SELECT count(*) FROM moon_login_otp_challenge WHERE challenge_id='00000000-0000-0000-0000-000000000001')=0 AND (SELECT count(*) FROM moon_login_otp_challenge WHERE challenge_id='00000000-0000-0000-0000-000000000002')=1 AND (SELECT count(*) FROM moon_login_otp_send WHERE challenge_id='00000000-0000-0000-0000-000000000001')=0 AND (SELECT count(*) FROM moon_login_otp_send WHERE challenge_id='00000000-0000-0000-0000-000000000002')=1")"
+          test "$remaining" = t
 
   sms-transport:
     runs-on: ubuntu-latest

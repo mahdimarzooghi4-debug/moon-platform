@@ -43,6 +43,9 @@ public final class PostgresLoginOtpStore {
         String scope = scope(binding);
         String origin = hash("source", binding.realmId(), trustedSource);
         return transaction(realm, (c, now) -> {
+            // Expired challenges can never be accepted or resurrected. Keep the
+            // separate issuance ledger for the full existing rate-limit window.
+            execute(c, "DELETE FROM moon_login_otp_challenge WHERE expires_at<=?", Timestamp.from(now));
             // These records are only operational limit state, not an audit trail.
             execute(c, "DELETE FROM moon_login_otp_send WHERE realm_key=? AND issued_at<=?",
                 realm, Timestamp.from(now.minusSeconds(3600)));

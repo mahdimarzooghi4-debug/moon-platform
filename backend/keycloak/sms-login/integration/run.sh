@@ -3,7 +3,7 @@ set -euo pipefail
 root="$(cd "$(dirname "$0")/.." && pwd)"
 fixture="$(mktemp -d)"
 cleanup() {
-  docker rm -f moon-ci-keycloak moon-ci-sms moon-ci-pg >/dev/null 2>&1 || true
+  docker rm -f moon-ci-gateway moon-ci-keycloak moon-ci-sms moon-ci-pg >/dev/null 2>&1 || true
   docker network rm moon-ci-otp >/dev/null 2>&1 || true
   rm -rf "$fixture"
 }
@@ -23,7 +23,7 @@ mvn -B -q -f "$root/pom.xml" -Dmaven.test.skip=true package
 jar="$root/target/moon-sms-login-1.0.0.jar"
 chmod a+r "$jar"
 docker build -t moon-platform/keycloak:ci-browser "$root"
-docker network create moon-ci-otp >/dev/null
+docker network create --subnet 172.30.88.0/24 moon-ci-otp >/dev/null
 docker run -d --name moon-ci-pg --network moon-ci-otp -e POSTGRES_USER=moonci \
   -e POSTGRES_PASSWORD=ci-only-db -e POSTGRES_DB=keycloak postgres:18 >/dev/null
 for i in $(seq 1 60); do
@@ -36,10 +36,11 @@ docker run -d --name moon-ci-sms --network moon-ci-otp --network-alias api.sms.i
   -p 127.0.0.1:18443:443 -v "$fixture:/fixture:ro" python:3.13-alpine \
   python /fixture/mock_sms.py >/dev/null
 hmac="$(openssl rand -base64 32)"
-docker run -d --name moon-ci-keycloak --network moon-ci-otp -p 127.0.0.1:18081:8080 \
+docker run -d --name moon-ci-keycloak --network moon-ci-otp --network-alias keycloak -p 127.0.0.1:18083:8080 \
   -e KC_DB=postgres -e KC_DB_URL=jdbc:postgresql://moon-ci-pg:5432/keycloak \
   -e KC_DB_USERNAME=moonci -e KC_DB_PASSWORD=ci-only-db \
-  -e KC_HOSTNAME=http://127.0.0.1:18081 -e KC_HTTP_ENABLED=true \
+  -e KC_HOSTNAME=http://127.0.0.1:18081/identity -e KC_HTTP_ENABLED=true \
+  -e KC_HTTP_RELATIVE_PATH=/identity -e KC_PROXY_HEADERS=xforwarded -e KC_PROXY_TRUSTED_ADDRESSES=172.30.88.10 \
   -e KC_BOOTSTRAP_ADMIN_USERNAME=ci-admin -e KC_BOOTSTRAP_ADMIN_PASSWORD=ci-only-admin-password \
   -e MOON_LOGIN_OTP_JDBC_URL=jdbc:postgresql://moon-ci-pg:5432/otp \
   -e MOON_LOGIN_OTP_DB_USER=moonci -e MOON_LOGIN_OTP_DB_PASSWORD=ci-only-db \
@@ -50,11 +51,19 @@ docker run -d --name moon-ci-keycloak --network moon-ci-otp -p 127.0.0.1:18081:8
   -v "$fixture/trust.p12:/fixture/trust.p12:ro" \
   -v "$fixture/moon-realm.json:/opt/keycloak/data/import/moon-realm.json:ro" \
   moon-platform/keycloak:ci-browser start --optimized --import-realm >/dev/null
+# Use the actual production Caddyfile with a disposable HTTP-only site address.
+# The private admin port is loopback-only in CI; no public admin route.
+docker run -d --name moon-ci-gateway --network moon-ci-otp --ip 172.30.88.10 \
+  -p 127.0.0.1:18081:8080 -e MOON_PUBLIC_DOMAIN=http://:8080 \
+  -e TLS_CONTACT_EMAIL=ci@example.invalid \
+  -v "$root/../../../deploy/production/Caddyfile:/etc/caddy/Caddyfile:ro" \
+  public.ecr.aws/docker/library/caddy:2.10.2-alpine >/dev/null
 ready=0
 for i in $(seq 1 180); do
-  if curl -fsS http://127.0.0.1:18081/realms/moon/.well-known/openid-configuration >/dev/null 2>&1; then ready=1; break; fi
+  if curl -fsS http://127.0.0.1:18081/identity/realms/moon/.well-known/openid-configuration >/dev/null 2>&1; then ready=1; break; fi
   sleep 2
 done
-if [ "$ready" != 1 ]; then docker logs --tail 100 moon-ci-keycloak; exit 1; fi
+if [ "$ready" != 1 ]; then docker logs --tail 100 moon-ci-keycloak; docker logs --tail 100 moon-ci-gateway; exit 1; fi
+test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:18081/identity/admin/realms/moon)" = 403
 python "$root/integration/flow_rehearsal.py" "$fixture" "$root/../../../deploy/production/sms-client-flow.py"
 python "$root/integration/browser_test.py" "$fixture"

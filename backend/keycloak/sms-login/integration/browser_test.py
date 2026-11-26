@@ -12,7 +12,7 @@ import urllib.request
 from playwright.sync_api import sync_playwright
 
 ROOT = "http://127.0.0.1:18081"
-AUTH = ROOT + "/realms/moon/protocol/openid-connect"
+AUTH = ROOT + "/identity/realms/moon/protocol/openid-connect"
 CALLBACK = ROOT + "/callback"
 MOCK = "https://127.0.0.1:18443"
 fixture = pathlib.Path(sys.argv[1])
@@ -38,8 +38,8 @@ def reset(mode="ok"):
 def b64(data):
     return base64.urlsafe_b64encode(data).rstrip(b"=").decode()
 
-def begin(browser, mobile):
-    ctx = browser.new_context()
+def begin(browser, mobile, headers=None):
+    ctx = browser.new_context(extra_http_headers=headers or {})
     page = ctx.new_page()
     page.route(CALLBACK + "**", lambda route: route.fulfill(status=200, body="CI callback"))
     verifier = secrets.token_urlsafe(64)
@@ -92,7 +92,7 @@ def accept(page, verifier, state, nonce, code, user):
     domain_roles = {r["name"] for r in realm["roles"]["realm"]} | {"auditor"}
     assert actual & domain_roles == expected, "role isolation"
     assert payload(tokens["id_token"])["nonce"] == nonce
-    assert claims["iss"] == ROOT + "/realms/moon"
+    assert claims["iss"] == ROOT + "/identity/realms/moon"
     audience = claims["aud"] if isinstance(claims["aud"], list) else [claims["aud"]]
     assert "moon-api" in audience
 
@@ -153,5 +153,17 @@ with sync_playwright() as p:
     page.locator("input[name=password-new]").wait_for()
     assert not page.url.startswith(CALLBACK), "required action bypass"
     ctx.close()
+    # Each account is different, but the real TCP source is the same.
+    # An attacker must not be able to bypass the five-per-source limit
+    # by supplying a different forwarded address on each request.
+    reset()
+    for i,user in enumerate(realm["users"][:7]):
+        headers = {"X-Forwarded-For": f"192.0.2.{i+1}", "X-Real-IP": f"198.51.100.{i+1}"}
+        ctx,page,*_ = begin(browser,user["username"],headers)
+        ctx.close()
+        assert len(messages()) == min(i+1,5), "forged source bypassed shared limit"
+    sources = subprocess.check_output(["docker","exec","moon-ci-pg","psql","-U","moonci",
+        "-d","otp","-Atc","SELECT count(*) || ':' || count(DISTINCT source_key) FROM moon_login_otp_send"]).decode().strip()
+    assert sources == "5:1", "unexpected source budget fragmentation"
     browser.close()
-print("Real Keycloak/Chromium/PostgreSQL OTP scenarios passed; SMS delivery is simulated.")
+print("Real Caddy/Keycloak/Chromium/PostgreSQL OTP scenarios passed; SMS delivery is simulated.")
