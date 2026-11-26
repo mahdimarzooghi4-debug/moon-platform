@@ -161,32 +161,13 @@ export default function Main() {
                     وضعیت فعلی محصول
                   </span>
                 </div>
-                <div className="flex w-[401px] h-[48px] gap-[12px] items-center shrink-0 flex-wrap relative z-[71]">
-                  <div className="flex w-[78px] gap-[6px] items-center flex-nowrap relative z-[72]">
-                    <span className="flex w-[56px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#1a202c] relative text-right whitespace-nowrap z-[73]">
-                      دارای درآمد
-                    </span>
-                    <div className="w-[16px] h-[16px] shrink-0 bg-[url(/assets/codia/Gw5JMREobZ.svg)] bg-cover bg-no-repeat rounded-[50%] relative z-[74]" />
-                  </div>
-                  <div className="flex w-[88px] gap-[6px] items-center flex-nowrap relative z-[75]">
-                    <span className="flex w-[66px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#4a5568] relative text-right whitespace-nowrap z-[76]">
-                      دارای مشتری
-                    </span>
-                    <div className="w-[16px] h-[16px] shrink-0 bg-[url(/assets/codia/yKSsOMwNWd.svg)] bg-cover bg-no-repeat rounded-[50%] relative z-[77]" />
-                  </div>
-                  <div className="flex w-[92px] gap-[6px] items-center flex-nowrap relative z-[78]">
-                    <span className="flex w-[70px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#4a5568] relative text-right whitespace-nowrap z-[79]">
-                      محصول فعال
-                    </span>
-                    <div className="w-[16px] h-[16px] shrink-0 bg-[url(/assets/codia/yKSsOMwNWd.svg)] bg-cover bg-no-repeat rounded-[50%] relative z-[80]" />
-                  </div>
-                  <div className="flex w-[107px] gap-[6px] items-center flex-nowrap relative z-[81]">
-                    <span className="flex w-[85px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#4a5568] relative text-right whitespace-nowrap z-[82]">
-                      نمونه اولیه آماده
-                    </span>
-                    <div className="w-[16px] h-[16px] shrink-0 bg-[url(/assets/codia/yKSsOMwNWd.svg)] bg-cover bg-no-repeat rounded-[50%] relative z-[83]" />
-                  </div>
-                </div>
+                <select aria-label="وضعیت فعلی محصول" data-registration-field="productStatus" data-registration-detail="وضعیت فعلی محصول" defaultValue={registrationDraft.productStatus ?? ""} onChange={event => { registrationDraft.productStatus = event.target.value; }} className="h-12 w-full rounded-lg border border-slate-300 bg-white px-3 text-right text-sm">
+                  <option value="">انتخاب کنید</option>
+                  <option>دارای درآمد</option>
+                  <option>دارای مشتری</option>
+                  <option>محصول فعال</option>
+                  <option>نمونه اولیه آماده</option>
+                </select>
               </div>
               <div className="flex w-[450px] flex-col gap-[8px] items-end shrink-0 flex-nowrap relative z-[84]">
                 <div className="flex gap-[4px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[85]">

@@ -177,26 +177,12 @@ export default function Main() {
                     وضعیت حقوقی
                   </span>
                 </div>
-                <div className="mah-registration-radio-row flex w-[388px] h-[48px] gap-[16px] items-center shrink-0 flex-nowrap relative z-[79]">
-                  <div className="flex w-[161px] gap-[6px] items-center shrink-0 flex-nowrap relative z-[80]">
-                    <span className="flex w-[139px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#4a5568] relative text-right whitespace-nowrap z-[81]">
-                      تیم استارتاپی فاقد شرکت
-                    </span>
-                    <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-24/rz54b3KJpB.png)] bg-cover bg-no-repeat rounded-[50%] relative z-[82]" />
-                  </div>
-                  <div className="flex w-[86px] gap-[6px] items-center shrink-0 flex-nowrap relative z-[83]">
-                    <span className="flex w-[64px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#4a5568] relative text-right whitespace-nowrap z-[84]">
-                      در حال ثبت
-                    </span>
-                    <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-24/oB1c99JCuj.png)] bg-cover bg-no-repeat rounded-[50%] relative z-[85]" />
-                  </div>
-                  <div className="flex w-[109px] gap-[6px] items-center shrink-0 flex-nowrap relative z-[86]">
-                    <span className="flex w-[87px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[87]">
-                      شرکت ثبت‌شده
-                    </span>
-                    <div className="w-[16px] h-[16px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-24/iDpBYnnfHO.png)] bg-cover bg-no-repeat rounded-[50%] relative z-[88]" />
-                  </div>
-                </div>
+                <select aria-label="وضعیت حقوقی" data-registration-field="legalStatus" data-registration-detail="وضعیت حقوقی" defaultValue={registrationDraft.legalStatus ?? ""} onChange={event => { registrationDraft.legalStatus = event.target.value; }} className="h-12 w-full rounded-lg border border-slate-300 bg-white px-3 text-right text-sm">
+                  <option value="">انتخاب کنید</option>
+                  <option>تیم استارتاپی فاقد شرکت</option>
+                  <option>در حال ثبت</option>
+                  <option>شرکت ثبت‌شده</option>
+                </select>
               </div>
             </div>
             <div className="mah-registration-field-row flex gap-[16px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[89]">
