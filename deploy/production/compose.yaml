@@ -49,7 +49,10 @@ services:
       Cors__AllowedOrigins__0: https://${MOON_PUBLIC_DOMAIN:?set public host}
       Database__MigrateOnStartup: "false"
       Messaging__OutboxDispatchEnabled: "false"
-      ExternalServices__Sms__Provider: Disabled
+      ExternalServices__Sms__Provider: ${MOON_SMS_PROVIDER:-Disabled}
+      ExternalServices__Sms__ApiKey: ${MOON_SMS_IR_API_KEY:-}
+      ExternalServices__Sms__StartupTemplateId: ${MOON_SMS_IR_STARTUP_TEMPLATE_ID:-}
+      ExternalServices__Sms__StartupCodeParameter: ${MOON_SMS_IR_STARTUP_CODE_PARAMETER:-Code}
       ExternalServices__Payment__Provider: Disabled
       MehradSso__Enabled: "false"
     expose:

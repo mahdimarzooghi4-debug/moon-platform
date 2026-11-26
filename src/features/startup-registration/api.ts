@@ -3,6 +3,30 @@ import { getValidSession } from "../../auth/oidc";
 const baseUrl = (import.meta.env.VITE_API_BASE_URL ?? "").replace(/\/$/, "");
 const publicPath = "/api/v1/public/startup-applications";
 
+const mobileVerificationPath = baseUrl + publicPath + "/mobile-verification";
+
+export async function getStartupMobileVerification(signal: AbortSignal): Promise<boolean> {
+  const response = await fetch(mobileVerificationPath, { signal });
+  if (!response.ok) throw new Error("دریافت وضعیت تأیید موبایل انجام نشد.");
+  return Boolean((await response.json()).required);
+}
+
+export async function sendStartupMobileCode(mobile: string) {
+  const response = await fetch(mobileVerificationPath + "/send", {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ mobile }),
+  });
+  if (response.status === 429) throw new Error("برای درخواست کد جدید کمی صبر کنید.");
+  if (!response.ok) throw new Error("ارسال پیامک انجام نشد. دوباره تلاش کنید.");
+}
+
+export async function confirmStartupMobile(mobile: string, code: string): Promise<string> {
+  const response = await fetch(mobileVerificationPath + "/confirm", {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ mobile, code }),
+  });
+  if (!response.ok) throw new Error("کد پیامکی معتبر نیست یا منقضی شده است.");
+  return (await response.json()).token;
+}
+
 export type StartupApplicationInput = {
   name: string;
   contactName: string;
@@ -31,7 +55,12 @@ export async function submitStartupApplication(input: FormData) {
     method: "POST",
     body: input,
   });
-  if (!response.ok) throw new Error(response.status === 400 ? "اطلاعات ثبت‌نام معتبر نیست." : "ثبت درخواست انجام نشد.");
+  if (response.status === 400) {
+    const error = await response.json().catch(() => null);
+    if (error?.code === "mobile_verification_required") throw new Error("برای تأیید دوبارهٔ شماره موبایل، به مرحلهٔ اول برگردید.");
+    throw new Error("اطلاعات ثبت‌نام معتبر نیست.");
+  }
+  if (!response.ok) throw new Error("ثبت درخواست انجام نشد.");
   return response.json() as Promise<{ trackingCode: string }>;
 }
 

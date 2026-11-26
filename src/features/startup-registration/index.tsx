@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { registrationDraft, registrationFiles } from "./draft";
 import React from "react";
+import MobileVerification from "./MobileVerification";
 import "./index.css";
 
 export default function Main() {
+  const [mobile, setMobile] = useState(registrationDraft.mobile ?? "");
   const [logo, setLogo] = useState(registrationFiles.logo);
   const [logoUrl, setLogoUrl] = useState("");
   useEffect(() => {
@@ -359,12 +361,8 @@ export default function Main() {
                 </span>
               </div>
               <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[160]">
-                <div className="flex w-[99px] pt-[6px] pr-[12px] pb-[6px] pl-[12px] items-start shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[161]">
-                  <span className="h-[19px] shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-semibold leading-[18.75px] text-[#2094e3] relative text-left whitespace-nowrap z-[162]">
-                    دریافت کد تأیید
-                  </span>
-                </div>
-                <input type="tel" required maxLength={16} aria-label="شماره موبایل" data-registration-field="mobile" defaultValue={registrationDraft.mobile ?? ""} onChange={event => { registrationDraft.mobile = event.target.value; }} className="min-w-0 grow bg-transparent text-right text-sm text-[#1a202c] outline-none" />
+                <MobileVerification mobile={mobile} />
+                <input type="tel" required maxLength={16} aria-label="شماره موبایل" data-registration-field="mobile" value={mobile} onChange={event => { registrationDraft.mobile = event.target.value; setMobile(event.target.value); }} className="min-w-0 grow bg-transparent text-right text-sm text-[#1a202c] outline-none" />
               </div>
             </div>
             <div className="flex flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[164]">

@@ -1,4 +1,4 @@
-import { registrationDraft, registrationFiles, registrationDetails } from "../../draft";
+import { registrationDraft, registrationFiles, registrationDetails, registrationMobileVerification } from "../../draft";
 import { submitStartupApplication } from "../../api";
 import { normalizeIranMobile } from "../../../../auth/oidc";
 
@@ -105,6 +105,12 @@ async function continueRegistration(label: string, path: string) {
       showRegistrationError("شماره موبایل را درست وارد کنید.");
       return;
     }
+    if (path === STEP2_PATH && registrationMobileVerification.required
+      && (!registrationMobileVerification.token
+        || registrationMobileVerification.mobile !== normalizeIranMobile(registrationDraft.mobile ?? ""))) {
+      showRegistrationError("شماره موبایل را با کد پیامکی تأیید کنید.");
+      return;
+    }
     if (path === STEP4_PATH && !registrationFiles.pitchDeck) {
       showRegistrationError("فایل معرفی استارتاپ را انتخاب کنید.");
       return;
@@ -135,6 +141,7 @@ async function continueRegistration(label: string, path: string) {
     }
     form.set("description", description);
     form.set("mobile", normalizeIranMobile(registrationDraft.mobile ?? ""));
+    form.set("mobileVerification", registrationMobileVerification.token);
     form.set("contactName", [registrationDraft.firstName, registrationDraft.lastName].join(" ").trim());
     form.set("nationalId", (registrationDraft.nationalId ?? "").replace(/[۰-۹٠-٩]/g, digit =>
       String(digit.charCodeAt(0) - (digit >= "۰" ? 1776 : 1632))));
@@ -145,6 +152,8 @@ async function continueRegistration(label: string, path: string) {
     try {
       const result = await submitStartupApplication(form);
       sessionStorage.setItem("moon-startup-tracking-code", result.trackingCode);
+      registrationMobileVerification.mobile = "";
+      registrationMobileVerification.token = "";
       for (const key of Object.keys(registrationDraft)) delete registrationDraft[key];
       for (const key of ["pitchDeck", "logo", "legalDocument", "identityDocument"] as const) delete registrationFiles[key];
       for (const key of Object.keys(registrationDetails)) delete registrationDetails[key];

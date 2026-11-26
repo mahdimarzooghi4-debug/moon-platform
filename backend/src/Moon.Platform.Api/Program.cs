@@ -213,7 +213,12 @@ builder.Services.AddAuthorization(options =>
     });
 });
 
-builder.Services.AddScoped<ISmsProvider, DisabledSmsProvider>();
+builder.Services.AddHttpClient<SmsIrProvider>(client => client.Timeout = TimeSpan.FromSeconds(10));
+builder.Services.AddScoped<ISmsProvider>(services =>
+    string.Equals(builder.Configuration["ExternalServices:Sms:Provider"], "SmsIr", StringComparison.OrdinalIgnoreCase)
+        ? services.GetRequiredService<SmsIrProvider>()
+        : new DisabledSmsProvider());
+builder.Services.AddSingleton<StartupMobileVerification>();
 builder.Services.AddHttpClient<KeycloakAccountClient>(client => client.Timeout = TimeSpan.FromSeconds(15));
 builder.Services.AddScoped<IPaymentGateway, DisabledPaymentGateway>();
 

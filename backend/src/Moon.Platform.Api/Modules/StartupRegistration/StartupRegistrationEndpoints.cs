@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Moon.Platform.Api.Infrastructure.Persistence;
+using Moon.Platform.Api.Integrations.Sms;
 using Moon.Platform.Api.Modules.Identity;
 
 namespace Moon.Platform.Api.Modules.StartupRegistration;
@@ -31,14 +32,33 @@ public sealed class StartupApplication
 
 public sealed record ApproveStartupApplicationRequest(string? TemporaryPassword);
 
+internal sealed record StartupMobileRequest(string? Mobile, string? Code);
+
 public static class StartupRegistrationEndpoints
 {
     public static void MapStartupRegistrationEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var registration = endpoints.MapGroup("/api/v1/public/startup-applications").AllowAnonymous();
 
+        registration.MapGet("/mobile-verification", (StartupMobileVerification verification) =>
+            Results.Ok(new { required = verification.Enabled }));
+        registration.MapPost("/mobile-verification/send", async Task<IResult> (
+            StartupMobileRequest request, StartupMobileVerification verification, ISmsProvider sms, CancellationToken ct) =>
+            StartupMobileVerification.IsMobile(request.Mobile)
+                ? await verification.SendAsync(request.Mobile!, sms, ct)
+                : Results.BadRequest());
+        registration.MapPost("/mobile-verification/confirm", IResult (
+            StartupMobileRequest request, StartupMobileVerification verification) =>
+        {
+            if (!verification.Enabled || !StartupMobileVerification.IsMobile(request.Mobile)
+                || request.Code is not { Length: 6 } || !request.Code.All(char.IsAsciiDigit))
+                return Results.BadRequest();
+            var token = verification.Verify(request.Mobile!, request.Code);
+            return token is null ? Results.BadRequest() : Results.Ok(new { token });
+        });
+
         registration.MapPost("/", async Task<IResult> (
-            HttpRequest request, MoonDbContext db, CancellationToken ct) =>
+            HttpRequest request, MoonDbContext db, StartupMobileVerification verification, CancellationToken ct) =>
         {
             const int maxDocumentSize = 15 * 1024 * 1024;
             if (!request.HasFormContentType || request.ContentLength > 28 * 1024 * 1024 + 64 * 1024)
@@ -60,7 +80,7 @@ public static class StartupRegistrationEndpoints
             var identity = form.Files.GetFile("identityDocument");
             if (name is not { Length: > 0 and <= 160 }
                 || contact is not { Length: > 0 and <= 120 }
-                || !System.Text.RegularExpressions.Regex.IsMatch(mobile, @"\A09[0-9]{9}\z")
+                || !StartupMobileVerification.IsMobile(mobile)
                 || email is not { Length: > 0 and <= 254 }
                 || !System.Net.Mail.MailAddress.TryCreate(email, out var address)
                 || address.Address != email
@@ -104,8 +124,19 @@ public static class StartupRegistrationEndpoints
                 IdentityDocument = identityContent,
                 TrackingCode = Convert.ToHexString(RandomNumberGenerator.GetBytes(24))
             };
-            db.StartupApplications.Add(application);
-            await db.SaveChangesAsync(ct);
+            var submitted = false;
+            if (verification.Enabled && !verification.TryReserve(mobile, form["mobileVerification"].ToString()))
+                return Results.BadRequest(new { code = "mobile_verification_required" });
+            try
+            {
+                db.StartupApplications.Add(application);
+                await db.SaveChangesAsync(ct);
+                submitted = true;
+            }
+            finally
+            {
+                if (verification.Enabled) verification.Complete(mobile, submitted);
+            }
             return Results.Created(
                 $"/api/v1/public/startup-applications/{application.TrackingCode}",
                 new { application.TrackingCode, application.Status });

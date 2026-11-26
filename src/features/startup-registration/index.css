@@ -49,10 +49,6 @@ body {
   background-image: url("/assets/codia/PHNkOFHS4y.png") !important;
 }
 
-.main-container div[class*="z-[161]"] {
-  display: none !important;
-}
-
 .main-container [data-mah-register-action],
 .main-container button,
 .main-container a {
