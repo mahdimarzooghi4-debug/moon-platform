@@ -32,11 +32,12 @@
     p { margin:0; line-height:1.9; }
     .moon-muted { font-size:14px; color:#526275; }
     .moon-form { display:grid; gap:20px; margin-top:24px; }
-    .moon-field { display:grid; gap:8px; text-align:right; }
+    .moon-field { display:grid; gap:8px; direction:rtl; text-align:right; }
+    .moon-field > label { display:block; width:100%; direction:rtl; text-align:right; }
     label { font-size:14px; font-weight:600; color:#2d3748; }
     input { width:100%; min-width:0; min-height:50px; padding:12px 16px; border:1px solid #cbd5e1; border-radius:12px; background:white; color:#1a202c; }
-    #moon-mobile { text-align:right; font-variant-numeric:tabular-nums; }
-    #moon-code { height:64px; text-align:right; font-family:Vazirmatn,Tahoma,Arial,sans-serif; font-size:clamp(22px,5vw,28px); font-weight:700; letter-spacing:.48em; font-variant-numeric:tabular-nums; }
+    #moon-mobile { text-align:left; font-variant-numeric:tabular-nums; }
+    #moon-code { height:64px; text-align:center; font-family:Vazirmatn,Tahoma,Arial,sans-serif; font-size:clamp(22px,5vw,28px); font-weight:700; letter-spacing:.48em; padding-inline-start:calc(12px + .48em); font-variant-numeric:tabular-nums; }
     input::placeholder { color:#748397; opacity:1; }
     button { cursor:pointer; }
     button:focus-visible,input:focus-visible,a:focus-visible { outline:3px solid #1476b9; outline-offset:3px; }
