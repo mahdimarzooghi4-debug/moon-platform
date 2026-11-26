@@ -51,11 +51,36 @@ def begin(browser, mobile, headers=None):
                   code_challenge=b64(hashlib.sha256(verifier.encode()).digest()),
                   code_challenge_method="S256", login_hint=mobile)
     page.goto(AUTH + "/auth?" + urllib.parse.urlencode(params))
+    if not headers and mobile == realm["users"][0]["username"]:
+        check_branded_login(page, False)
     page.locator("#moon-mobile").fill(mobile)
     page.locator("button[value=send]").click()
     page.locator("#moon-code").wait_for()
+    if not headers and mobile == realm["users"][0]["username"]:
+        check_branded_login(page, True)
     assert not page.url.startswith(CALLBACK)
     return ctx, page, verifier, state, nonce
+
+def check_branded_login(page, otp_step):
+    assert page.locator("html").get_attribute("lang") == "fa"
+    assert page.locator("html").get_attribute("dir") == "rtl"
+    assert page.locator(".moon-card").is_visible()
+    assert page.locator(".moon-logo").evaluate("(img) => img.complete && img.naturalWidth > 0")
+    assert page.locator(".moon-card").evaluate("(el) => getComputedStyle(el).borderRadius") == "20px"
+    assert page.locator(".moon-primary").evaluate("(el) => getComputedStyle(el).backgroundImage").startswith("linear-gradient")
+    field = page.locator("#moon-code" if otp_step else "#moon-mobile")
+    assert field.is_visible()
+    assert field.get_attribute("maxlength") == ("6" if otp_step else "11")
+    if otp_step:
+        assert field.get_attribute("autocomplete") == "one-time-code"
+        assert page.locator("button[value=resend]").is_visible()
+        assert page.locator("button[value=edit]").is_visible()
+    for width, height in ((320, 700), (390, 844), (1280, 800)):
+        page.set_viewport_size({"width": width, "height": height})
+        assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
+        box = field.bounding_box()
+        assert box and box["x"] >= 0 and box["x"] + box["width"] <= width + 1
+    page.set_viewport_size({"width": 1280, "height": 800})
 
 def await_condition(predicate, label):
     deadline = time.monotonic() + 20
