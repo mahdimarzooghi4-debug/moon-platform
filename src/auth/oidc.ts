@@ -88,6 +88,8 @@ export async function beginLogin(options: {
   mobile: string;
   returnTo?: string;
 }) {
+  const mobile = normalizeIranMobile(options.mobile);
+  if (!isValidIranMobile(mobile)) throw new Error("invalid_mobile");
   const verifier = randomValue(64);
   const challenge = await sha256(verifier);
   const state = randomValue();
@@ -98,7 +100,7 @@ export async function beginLogin(options: {
     state,
     nonce,
     verifier,
-    returnTo: options.returnTo,
+    returnTo: safePanelReturnTo(options.returnTo),
     accountType: options.accountType,
   };
   sessionStorage.setItem(PENDING_KEY, JSON.stringify(pending));
@@ -112,7 +114,8 @@ export async function beginLogin(options: {
     code_challenge_method: "S256",
     state,
     nonce,
-    login_hint: normalizeIranMobile(options.mobile),
+    login_hint: mobile,
+    prompt: "login",
     ui_locales: "fa",
   });
 
@@ -282,7 +285,21 @@ const PANEL_RULES: Array<{ prefix: string; roles: string[] }> = [
 
 export function canAccessPanelPath(roles: string[], pathname: string) {
   const rule = PANEL_RULES.find((item) => pathname === item.prefix || pathname.startsWith(`${item.prefix}/`));
-  return !rule || rule.roles.some((role) => roles.includes(role));
+  return Boolean(rule?.roles.some((role) => roles.includes(role)));
+}
+
+// A navigation preference is never an authorization decision.
+export function safePanelReturnTo(value?: string): string | undefined {
+  if (!value || !value.startsWith("/panel/") || /[\\\u0000-\u0020\u007f]/.test(value)) return undefined;
+  try {
+    const parsed = new URL(value, "https://moon.invalid");
+    if (parsed.origin !== "https://moon.invalid" || parsed.hash ||
+        /%2f|%5c|%2e/i.test(parsed.pathname)) return undefined;
+    if (!PANEL_RULES.some(rule => parsed.pathname === rule.prefix || parsed.pathname.startsWith(rule.prefix + "/"))) return undefined;
+    return parsed.pathname + parsed.search;
+  } catch {
+    return undefined;
+  }
 }
 
 export function defaultPanelForRoles(roles: string[]) {

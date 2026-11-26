@@ -1,11 +1,11 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
+  beginLogin,
   isValidIranMobile,
   normalizeIranMobile,
   type AccountType,
 } from "../auth/oidc";
-import OtpStep from "./OtpStep";
 import "./index.css";
 
 const IMG = {
@@ -68,46 +68,36 @@ function selectedCardClass(accountType: AccountType) {
 }
 
 export default function Main() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const returnTo = searchParams.get("returnTo");
   const error = searchParams.get("error");
   const queryAccountType = accountTypeFromParam(searchParams.get("accountType"));
-  const queryMobile = searchParams.get("mobile") ?? "";
   const suggestedType = useMemo(() => accountTypeForReturnTo(returnTo), [returnTo]);
   const [selected, setSelected] = useState<AccountType>(suggestedType ?? queryAccountType ?? "company");
-  const [phone, setPhone] = useState(queryMobile);
+  const [phone, setPhone] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [loginError, setLoginError] = useState("");
+  const submitting = useRef(false);
 
   const normalizedPhone = normalizeIranMobile(phone);
   const canSubmit = isValidIranMobile(normalizedPhone);
   const hasSelection = selected !== null;
-  const isOtpStep = searchParams.get("step") === "otp";
-
-  if (
-    isOtpStep &&
-    queryAccountType &&
-    isValidIranMobile(normalizeIranMobile(queryMobile))
-  ) {
-    return (
-      <OtpStep
-        accountType={queryAccountType}
-        mobile={normalizeIranMobile(queryMobile)}
-        returnTo={returnTo ?? undefined}
-      />
-    );
-  }
-
-  function handleLogin() {
-    if (!isValidIranMobile(normalizedPhone)) return;
-    const params = new URLSearchParams({
-      step: "otp",
-      accountType: selected,
-      mobile: normalizedPhone,
-    });
-    if (returnTo) params.set("returnTo", returnTo);
-    setSearchParams(params);
+  async function handleLogin() {
+    if (submitting.current || !isValidIranMobile(normalizedPhone)) return;
+    submitting.current = true;
+    setBusy(true);
+    setLoginError("");
+    try {
+      await beginLogin({ accountType: selected, mobile: normalizedPhone, returnTo: returnTo ?? undefined });
+    } catch {
+      submitting.current = false;
+      setBusy(false);
+      setLoginError("شروع ورود انجام نشد. دوباره تلاش کنید.");
+    }
   }
 
   function renderAccountHint() {
+    if (loginError) return <p role="alert" className="m-0 text-center text-[13px] text-[#c53030]">{loginError}</p>;
     if (error) {
       return (
         <p className="m-0 text-center text-[13px] text-[#c53030]">
@@ -274,7 +264,7 @@ export default function Main() {
                 value={phone}
                 onChange={(event) => setPhone(event.target.value)}
                 onKeyDown={(event) => {
-                  if (event.key === "Enter") handleLogin();
+                  if (event.key === "Enter") void handleLogin();
                 }}
                 placeholder="مثال: ۰۹۱۲۱۲۳۴۵۶۷"
                 className="min-w-0 grow border-none bg-transparent text-right text-[14px] font-normal text-[#1a202c] outline-none placeholder:text-[#a0aec0]"
@@ -282,22 +272,22 @@ export default function Main() {
               <img src={IMG.phoneIcon} alt="" className="h-[18px] w-[18px] shrink-0 object-contain" />
             </div>
             <span className="w-full text-right text-[12px] font-normal text-[#718096]">
-              کد تأیید به این شماره ارسال می‌شود.
+              در مرحله بعد، ارسال کد به این شماره را در صفحه امن ورود تأیید کنید.
             </span>
           </div>
 
           <button
             type="button"
-            disabled={!canSubmit}
-            onClick={handleLogin}
+            disabled={!canSubmit || busy}
+            onClick={() => void handleLogin()}
             className={[
               "flex h-[50px] w-full items-center justify-center rounded-[12px] border-none text-[16px] font-semibold transition-opacity",
-              canSubmit
+              canSubmit && !busy
                 ? "cursor-pointer bg-gradient-to-r from-[#2094e3] to-[#159455] text-white hover:opacity-90"
                 : "cursor-not-allowed bg-[#e2e8f0] text-[#a0aec0]",
             ].join(" ")}
           >
-            ادامه و دریافت کد تأیید
+            {busy ? "در حال انتقال به ورود امن..." : "ادامه و دریافت کد تأیید"}
           </button>
 
           <div className="flex w-full items-center justify-center">

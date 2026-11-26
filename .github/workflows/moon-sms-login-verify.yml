@@ -101,3 +101,14 @@ jobs:
           jar="$PWD/backend/keycloak/sms-login/target/moon-sms-login-1.0.0.jar"
           chmod a+r "$jar"
           docker run --rm -v "$jar:/opt/keycloak/providers/moon-sms-login.jar:ro" quay.io/keycloak/keycloak:26.7.3 build --db=postgres
+
+  frontend-oidc-entry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: node tests/moon-oidc-entry.test.mjs
