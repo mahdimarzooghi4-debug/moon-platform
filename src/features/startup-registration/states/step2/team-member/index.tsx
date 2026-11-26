@@ -1,11 +1,10 @@
 import { FormEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { navigateRegistration } from "../../../navigation";
 import { registrationDraft } from "../../../draft";
 
 const STEP2_PATH = "/register/startup/states/step2";
 
 export default function StartupTeamMemberAddPage() {
-  const navigate = useNavigate();
   const [error, setError] = useState("");
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
@@ -15,7 +14,7 @@ export default function StartupTeamMemberAddPage() {
   const [linkedin, setLinkedin] = useState("");
 
   function goBack() {
-    navigate(STEP2_PATH);
+    navigateRegistration(STEP2_PATH);
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -37,7 +36,7 @@ export default function StartupTeamMemberAddPage() {
     }
 
     registrationDraft.team = team;
-    navigate(STEP2_PATH);
+    navigateRegistration(STEP2_PATH);
   }
 
   return (
