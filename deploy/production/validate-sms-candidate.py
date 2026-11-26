@@ -39,11 +39,12 @@ try:
 except (ValueError, binascii.Error):
     raise SystemExit("SMS candidate contract failed: invalid HMAC encoding") from None
 require(len(decoded) >= 32 and len(set(decoded)) > 1, "HMAC key length and nontriviality")
-require(key != env["MOON_SMS_IR_API_KEY"] and key != password, "separate HMAC secret")
+require(key != env["MOON_SMS_IR_API_KEY"] and key != password and key != owner_password, "separate HMAC secret")
+require(owner_password != env["MOON_SMS_IR_API_KEY"], "owner and SMS credentials must differ")
 require(bool(env["MOON_SMS_IR_API_KEY"]) and not env["MOON_SMS_IR_API_KEY"].startswith("REPLACE_"), "SMS credential configured")
 require(re.fullmatch(r"[1-9][0-9]*", env["MOON_SMS_IR_STARTUP_TEMPLATE_ID"]), "template ID")
 require(bool(env["MOON_SMS_IR_STARTUP_CODE_PARAMETER"].strip()), "code parameter")
 require(kc["depends_on"]["moon-login-otp-db"]["condition"] == "service_healthy", "OTP DB dependency")
-require(any(v.get("target") == "/docker-entrypoint-initdb.d/10-moon-login-otp.sql" and v.get("read_only")
+require(any(v.get("target") == "/docker-entrypoint-initdb.d/20-moon-login-otp.sql" and v.get("read_only")
             for v in otp["volumes"]), "private schema initialization")
 print("SMS candidate Compose contract verified; no live infrastructure or SMS delivery verified.")

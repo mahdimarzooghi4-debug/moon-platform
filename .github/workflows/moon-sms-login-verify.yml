@@ -33,7 +33,7 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U otp_test -d otp_test"
+          --health-cmd "pg_isready -U otp_owner -d otp_test"
           --health-interval 10s --health-timeout 5s --health-retries 10
     env:
       OTP_TEST_JDBC: jdbc:postgresql://localhost:5432/otp_test
@@ -203,13 +203,12 @@ jobs:
           flags=$("${compose[@]}" exec -T moon-login-otp-db psql -U moon_login_otp_owner -d moon_login_otp -Atc \
             "SELECT rolsuper || '|' || rolcreatedb || '|' || rolcreaterole || '|' || rolbypassrls FROM pg_roles WHERE rolname='moon_login_otp'")
           test "$flags" = "f|f|f|f"
-          if "${compose[@]}" exec -T moon-login-otp-db psql -U moon_login_otp_owner -d moon_login_otp -v ON_ERROR_STOP=1 \
+          if "${compose[@]}" exec -T -e PGPASSWORD="$MOON_LOGIN_OTP_DB_PASSWORD" moon-login-otp-db \
+            psql -h 127.0.0.1 -U moon_login_otp -d moon_login_otp -v ON_ERROR_STOP=1 \
             -c 'CREATE TABLE moon_login_otp_must_not_ddl(id integer)' >/dev/null 2>&1; then
             echo "OTP runtime role unexpectedly created a table"
             exit 1
           fi
-          "${compose[@]}" exec -T moon-login-otp-db psql -U moon_login_otp_owner -d moon_login_otp -v ON_ERROR_STOP=1 \
-            -c "GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE moon_login_otp_challenge, moon_login_otp_send TO moon_login_otp"
           "${compose[@]}" exec -T -e PGPASSWORD="$MOON_LOGIN_OTP_DB_PASSWORD" moon-login-otp-db \
             psql -h 127.0.0.1 -U moon_login_otp -d moon_login_otp -v ON_ERROR_STOP=1 \
             -c 'SELECT count(*) FROM moon_login_otp_challenge' >/dev/null
