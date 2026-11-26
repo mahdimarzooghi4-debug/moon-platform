@@ -8,6 +8,13 @@ const js = ts.transpileModule(source.replace("import.meta.env", "({})"), {
   compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022 },
 }).outputText;
 const auth = await import("data:text/javascript;base64," + Buffer.from(js).toString("base64"));
+assert.equal(auth.toPersianLoginDigits("0123456789"),"۰۱۲۳۴۵۶۷۸۹");
+assert.equal(auth.toPersianLoginDigits("٠١٢٣٤٥٦٧٨٩"),"۰۱۲۳۴۵۶۷۸۹");
+assert.equal(auth.toPersianLoginDigits("۰۹1٢- x"),"۰۹۱۲- x");
+assert.equal(auth.toPersianLoginDigits("۰۹۱۲"),"۰۹۱۲");
+assert.equal(auth.normalizeIranMobile(auth.toPersianLoginDigits("09120000000")),"09120000000");
+assert.equal(auth.isValidIranMobile(auth.toPersianLoginDigits("09120000000")),true);
+assert.equal(auth.isValidIranMobile(auth.toPersianLoginDigits("0912000000x")),false);
 const storage = new Map();
 globalThis.sessionStorage = { setItem: (k,v) => storage.set(k,v), getItem: k => storage.get(k) ?? null, removeItem: k => storage.delete(k) };
 let destination;

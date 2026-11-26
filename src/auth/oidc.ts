@@ -63,6 +63,15 @@ function rolesFromPayload(payload: JwtPayload) {
   return [...new Set(values)];
 }
 
+export function toPersianLoginDigits(value: string) {
+  const persian = "۰۱۲۳۴۵۶۷۸۹";
+  const arabic = "٠١٢٣٤٥٦٧٨٩";
+  return value.replace(/[0-9٠-٩]/g, (digit) => {
+    const index = arabic.indexOf(digit);
+    return persian[index >= 0 ? index : Number(digit)];
+  });
+}
+
 export function normalizeIranMobile(value: string) {
   const persian = "۰۱۲۳۴۵۶۷۸۹";
   const arabic = "٠١٢٣٤٥٦٧٨٩";

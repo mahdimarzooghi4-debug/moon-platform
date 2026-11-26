@@ -4,6 +4,7 @@ import {
   beginLogin,
   isValidIranMobile,
   normalizeIranMobile,
+  toPersianLoginDigits,
   type AccountType,
 } from "../auth/oidc";
 import "./index.css";
@@ -262,7 +263,20 @@ export default function Main() {
                 autoComplete="tel"
                 dir="rtl"
                 value={phone}
-                onChange={(event) => setPhone(event.target.value)}
+                onChange={(event) => {
+                  const input = event.currentTarget;
+                  const start = input.selectionStart;
+                  const end = input.selectionEnd;
+                  const direction = input.selectionDirection;
+                  const display = toPersianLoginDigits(input.value);
+                  if (input.value !== display) {
+                    input.value = display;
+                    if (start !== null && end !== null) {
+                      input.setSelectionRange(start, end, direction ?? "none");
+                    }
+                  }
+                  setPhone(display);
+                }}
                 onKeyDown={(event) => {
                   if (event.key === "Enter") void handleLogin();
                 }}
