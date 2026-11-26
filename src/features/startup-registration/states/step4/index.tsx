@@ -5,7 +5,7 @@ import "./index.css";
 
 export default function Main() {
   return (
-    <div className="main-container flex w-[1440px] h-[1800px] flex-col justify-between items-center flex-nowrap bg-[#f7fafc] relative mx-auto my-0">
+    <div dir="rtl" className="main-container flex w-[1440px] h-[1800px] flex-col justify-between items-center flex-nowrap bg-[#f7fafc] relative mx-auto my-0">
       <div className="flex h-[80px] pt-0 pr-[120px] pb-0 pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] border-solid border-t border-t-[#e4ebf1] relative">
         <div className="flex w-[237px] gap-[20px] items-center shrink-0 flex-nowrap relative z-[1]">
           <span className="flex w-[87px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[21.875px] text-[#718096] relative text-right whitespace-nowrap z-[2]">
@@ -115,7 +115,7 @@ export default function Main() {
                     </span>
 
                     <span className="flex w-[146px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#4a5568] relative text-right whitespace-nowrap z-[51]">
-                      شماره تماس: {registrationDraft.mobile}
+                      شماره تماس: <bdi dir="ltr">{registrationDraft.mobile}</bdi>
                     </span>
                   </div>
                 </div>
@@ -183,7 +183,7 @@ export default function Main() {
                   </div>
                   <div className="flex flex-col gap-[6px] items-end self-stretch shrink-0 flex-nowrap relative z-[80]">
                     <span className="flex w-[199px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#4a5568] relative text-right whitespace-nowrap z-[81]">
-                      {Object.values(registrationFiles).filter(Boolean).map(file => file?.name).join("، ")}
+                      <bdi>{Object.values(registrationFiles).filter(Boolean).map(file => file?.name).join("، ")}</bdi>
                     </span>
 
                   </div>
@@ -207,13 +207,13 @@ export default function Main() {
               </div>
             </div>
             <div className="flex flex-col gap-[12px] items-end self-stretch shrink-0 flex-nowrap relative z-[90]">
-              {registrationDraft.email && <p>ایمیل <bdi>{registrationDraft.email}</bdi></p>}
+              {registrationDraft.email && <p>ایمیل <bdi dir="ltr">{registrationDraft.email}</bdi></p>}
               {registrationDraft.description && <p className="whitespace-pre-wrap break-words">راهکار {registrationDraft.description}</p>}
-              {registrationDraft.nationalId && <p>کد ملی نماینده: <bdi>{registrationDraft.nationalId}</bdi></p>}
+              {registrationDraft.nationalId && <p>کد ملی نماینده: <bdi dir="ltr">{registrationDraft.nationalId}</bdi></p>}
               {Object.entries(registrationDetails).some(([, value]) => value) && (
-                <dl className="w-full space-y-2 text-right text-sm">
+                <dl dir="rtl" className="w-full space-y-2 text-right text-sm">
                   {Object.entries(registrationDetails).filter(([, value]) => value).map(([label, value]) => (
-                    <div key={label}><dt className="font-bold">{label}</dt><dd className="whitespace-pre-wrap break-words">{value}</dd></div>
+                    <div key={label}><dt className="font-bold">{label}</dt><dd className="whitespace-pre-wrap break-words"><bdi>{value}</bdi></dd></div>
                   ))}
                 </dl>
               )}

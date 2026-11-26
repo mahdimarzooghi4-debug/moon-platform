@@ -1,3 +1,4 @@
+import { navigateRegistration } from "../../navigation";
 import { registrationDraft, registrationFiles, registrationDetails, registrationMobileVerification } from "../../draft";
 import { submitStartupApplication } from "../../api";
 import { normalizeIranMobile } from "../../../../auth/oidc";
@@ -82,17 +83,6 @@ function findAction(target: HTMLElement, routes: Record<string, string>) {
   return null;
 }
 
-function navigate(path: string) {
-  if (window.location.pathname === path) return;
-  if (path.startsWith(STARTUP_REGISTER_ROOT)) {
-    window.history.pushState(null, "", path);
-    window.dispatchEvent(new PopStateEvent("popstate"));
-    window.scrollTo(0, 0);
-    return;
-  }
-  window.location.assign(path);
-}
-
 async function continueRegistration(label: string, path: string) {
   if (label === "ذخیره و ادامه") {
     document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>("[data-registration-detail]").forEach(field => {
@@ -164,7 +154,7 @@ async function continueRegistration(label: string, path: string) {
       sending = false;
     }
   }
-  navigate(path);
+  navigateRegistration(path);
 }
 
 function handleClick(event: MouseEvent) {

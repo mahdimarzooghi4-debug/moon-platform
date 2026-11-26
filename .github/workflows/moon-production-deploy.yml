@@ -103,7 +103,7 @@ jobs:
           {
             if [ -n "$MOON_SMS_DEPLOY_KEY" ]; then
               printf 'export MOON_SMS_PROVIDER=SmsIr MOON_SMS_IR_API_KEY=%q MOON_SMS_IR_STARTUP_TEMPLATE_ID=%q MOON_SMS_IR_STARTUP_CODE_PARAMETER=%q\n' \
-                "$MOON_SMS_DEPLOY_KEY" "$MOON_SMS_DEPLOY_TEMPLATE" "${MOON_SMS_DEPLOY_PARAMETER:-Code}"
+                "$MOON_SMS_DEPLOY_KEY" "$MOON_SMS_DEPLOY_TEMPLATE" "${MOON_SMS_DEPLOY_PARAMETER:-CODE}"
             fi
             cat <<'REMOTE'
           set -euo pipefail
