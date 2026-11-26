@@ -44,6 +44,12 @@ public final class LoginOtpService {
         return new SendResult(SendState.ACCEPTED, id);
     }
 
+    /** Reserve the same budgets for an unresolved account without contacting SMS.ir. */
+    public void discardUnresolved(LoginOtpChallenge.Binding binding, String trustedSource) throws SQLException {
+        var issued = store.issue(binding, trustedSource);
+        if (issued.isPresent()) store.deliveryFailed(binding, issued.orElseThrow().challenge().id());
+    }
+
     public boolean verify(LoginOtpChallenge.Binding binding, UUID challengeId, String code) throws SQLException {
         return store.verify(binding, challengeId, code);
     }

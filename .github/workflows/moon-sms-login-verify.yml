@@ -77,3 +77,27 @@ jobs:
           cp=$(cat "$out/classpath")
           javac -Xlint:all -Werror -cp "$cp" -d "$out" $(find "$root/src/main" "$root/transport/src" -name '*.java')
           java -cp "$out:$cp" ir.mah.identity.SmsIrLoginSenderTest
+
+  keycloak-provider-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Compile provider against Keycloak 26.7.3
+        run: |
+          set -euo pipefail
+          root=backend/keycloak/sms-login
+          mvn -B -q -f "$root/pom.xml" -Dmaven.test.skip=true package
+          jar="$root/target/moon-sms-login-1.0.0.jar"
+          jar tf "$jar" | grep -Fx 'META-INF/services/org.keycloak.authentication.AuthenticatorFactory'
+          jar tf "$jar" | grep -Fx 'theme-resources/templates/moon-sms-login.ftl'
+          jar tf "$jar" | grep -Fx 'ir/mah/identity/MoonSmsAuthenticator.class'
+      - name: Verify provider installation on disposable exact-version Keycloak
+        run: |
+          set -euo pipefail
+          jar="$PWD/backend/keycloak/sms-login/target/moon-sms-login-1.0.0.jar"
+          chmod a+r "$jar"
+          docker run --rm -v "$jar:/opt/keycloak/providers/moon-sms-login.jar:ro" quay.io/keycloak/keycloak:26.7.3 build --db=postgres
