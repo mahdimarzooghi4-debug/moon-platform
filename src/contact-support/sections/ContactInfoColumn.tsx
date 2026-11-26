@@ -1,6 +1,6 @@
 export function ContactInfoColumn() {
   return (
-    <div className="flex w-[384px] flex-col gap-[24px] items-end shrink-0 flex-nowrap relative z-[80]">
+    <div className="mah-contact-info flex w-[384px] flex-col gap-[24px] items-end shrink-0 flex-nowrap relative z-[80]">
       <div className="flex p-[24px] flex-col gap-[20px] items-end self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[20px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[81]">
         <span className="h-[28px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[18px] font-bold leading-[28px] text-[#17324d] relative text-right whitespace-nowrap z-[82]">
           راه‌های ارتباط با ماه

@@ -150,18 +150,25 @@ button {
   align-items: flex-end !important;
 }
 
-/* Contact columns retain the Figma placement: info left, request form right. */
-.mah-contact-page .mah-contact-details { direction: ltr !important; justify-content: space-between !important; }
-.mah-contact-page .mah-contact-details > :first-child { direction: rtl !important; text-align: right !important; }
-.mah-contact-page .mah-contact-details > :last-child { direction: rtl !important; text-align: right !important; min-width: 0; }
-.mah-contact-page .mah-contact-details > :last-child .flex-col.items-start { align-items: flex-end !important; }
-.mah-contact-page .mah-contact-details > :last-child .flex-col.items-start > span,
-.mah-contact-page .mah-contact-details > :last-child .flex-col.items-start > div { text-align: right !important; }
-.mah-contact-page .mah-contact-details > :last-child .flex-col.items-start > div:not(.self-stretch) { align-self: stretch; }
-.mah-contact-page .mah-contact-details :where(input,textarea,select,[contenteditable]) { direction: rtl !important; text-align: right !important; }
-.mah-contact-page .mah-contact-details .mah-contact-ltr { direction: ltr !important; }
-.mah-contact-page .mah-contact-details > :first-child > div:last-child > div:first-child { justify-content: flex-end !important; }
-.mah-contact-page .mah-contact-details > :last-child > div:nth-child(2) > div:nth-last-child(3) { direction: rtl !important; }
+.mah-contact-page .mah-contact-details {
+  display: grid !important;
+  direction: rtl !important;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 384px);
+  padding-inline: clamp(16px, 8.33vw, 120px);
+}
+.mah-contact-page .mah-contact-details > :is(.mah-contact-info, .mah-contact-support-form) {
+  width: 100% !important;
+  min-width: 0;
+  direction: rtl !important;
+  text-align: right !important;
+}
+.mah-contact-page .mah-contact-support-form .flex-col.items-start { align-items: flex-start !important; }
+.mah-contact-page .mah-contact-support-form .flex-col.items-start > div { align-self: stretch; }
+.mah-contact-page .mah-contact-support-form :where(input,textarea,select,[contenteditable]) {
+  direction: rtl !important;
+  text-align: right !important;
+}
+.mah-contact-page .mah-contact-support-form .mah-contact-ltr { direction: ltr !important; }
 
 /* Keep each contact icon immediately to the right of its text. */
 .mah-contact-page .mah-contact-info-row {
@@ -245,7 +252,8 @@ button {
 }
 
 .mah-contact-page .mah-contact-hero > :first-child > span {
-  justify-content: flex-start;
+  display: block;
+  width: 100%;
   height: auto;
   white-space: normal;
   text-align: right !important;
@@ -257,12 +265,9 @@ button {
 }
 
 .mah-contact-page .mah-contact-search-suggestions {
+  direction: rtl;
   justify-content: flex-start;
   max-width: 100%;
-}
-
-.mah-contact-page .mah-contact-search-suggestions > :last-child {
-  order: -1;
 }
 
 .mah-contact-page .mah-contact-quick-links {
@@ -276,6 +281,38 @@ button {
   flex-wrap: wrap;
 }
 
-.mah-contact-page .mah-contact-quick-links > :last-child {
+
+.mah-contact-page .mah-contact-header {
+  direction: rtl !important;
+  gap: 16px;
+  padding-inline: clamp(16px, 8.33vw, 120px);
+}
+
+.mah-contact-page .mah-contact-header-brand {
   order: -1;
+  width: auto !important;
+  direction: rtl !important;
+  gap: 24px;
+}
+
+.mah-contact-page .mah-contact-header-logo { order: -1; }
+
+.mah-contact-page .mah-contact-header-links {
+  width: auto !important;
+  flex-direction: row-reverse !important;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+@media (max-width: 1100px) {
+  .mah-contact-page .mah-contact-header { flex-wrap: wrap; }
+  .mah-contact-page .mah-contact-header :is(.mah-contact-header-brand, .mah-contact-header-actions) {
+    flex-wrap: wrap;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 760px) {
+  .mah-contact-page .mah-contact-details { grid-template-columns: minmax(0, 1fr); }
+  .mah-contact-page .mah-contact-header-brand { gap: 12px; }
 }
