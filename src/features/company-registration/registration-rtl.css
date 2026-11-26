@@ -1,0 +1,24 @@
+/* Company registration uses an exported physical LTR grid with Persian content.
+   Scope alignment to the six registration routes; preserve DOM and form handlers. */
+.main-container.mah-company-rtl { direction: ltr !important; text-align: right; height: auto; }
+.mah-company-rtl .mah-company-rtl-card,
+.mah-company-rtl .mah-company-registration-head,
+.mah-company-rtl .mah-company-rtl-heading { direction: ltr !important; text-align: right; }
+.mah-company-rtl .mah-company-rtl-card:not(.mah-company-rtl-success),
+.mah-company-rtl .mah-company-rtl-card .flex-col.items-end,
+.mah-company-rtl .mah-company-registration-head,
+.mah-company-rtl .mah-company-rtl-heading { direction: ltr !important; align-items: flex-end !important; }
+.mah-company-rtl .mah-company-rtl-card .flex.justify-end:not(.justify-center) { direction: ltr !important; justify-content: flex-end !important; }
+.mah-company-rtl .mah-company-rtl-card :where(span,p,label,h1,h2,h3,button,a),
+.mah-company-rtl .mah-company-rtl-heading :where(span,p,h1,h2,h3) { direction: rtl; text-align: right; }
+.mah-company-rtl .mah-company-rtl-card span.flex.text-right,
+.mah-company-rtl .mah-company-rtl-heading span.flex.text-right { direction: rtl !important; justify-content: flex-start !important; text-align: right !important; }
+.mah-company-rtl .mah-company-rtl-card .text-center,
+.mah-company-rtl .mah-company-rtl-card .justify-center > span { text-align: center !important; }
+.mah-company-rtl .mah-company-rtl-card :where(input,textarea,select):not([type="email"]):not([type="url"]):not([type="tel"]):not([dir="ltr"]) { direction: rtl !important; text-align: right !important; }
+.mah-company-rtl .mah-company-rtl-card :where([dir="ltr"],input[type="email"],input[type="url"],input[type="tel"]) { direction: ltr !important; unicode-bidi: isolate; }
+.mah-company-rtl .mah-company-rtl-card :where(p,span,label,bdi) { overflow-wrap: anywhere; }
+.mah-company-rtl .mah-company-rtl-card :where(p,span,label)[class~="text-right"]:not([class~="text-center"]) { max-width: 100%; }
+.mah-company-rtl .mah-company-rtl-status .flex-col.items-end > span { max-width: 100%; }
+.mah-company-rtl .mah-company-rtl-success { align-items: center !important; }
+.mah-company-rtl .mah-company-rtl-success .text-center { text-align: center !important; }

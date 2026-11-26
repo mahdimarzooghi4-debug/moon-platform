@@ -1,9 +1,10 @@
 import React from "react";
 import "./index.css";
+import "../../registration-rtl.css";
 
 export default function Main() {
   return (
-    <div className="main-container flex w-[1440px] flex-col items-center flex-nowrap bg-[#f7fafc] relative mx-auto my-0">
+    <div className="main-container mah-company-rtl flex w-[1440px] flex-col items-center flex-nowrap bg-[#f7fafc] relative mx-auto my-0">
       <div className="flex h-[80px] pt-0 pr-[120px] pb-0 pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] border-solid border-t border-t-[#e4ebf1] relative">
         <div className="flex w-[237px] gap-[20px] items-center shrink-0 flex-nowrap relative z-[1]">
           <span className="flex w-[87px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[21.875px] text-[#718096] relative text-right whitespace-nowrap z-[2]">
@@ -18,7 +19,7 @@ export default function Main() {
         </div>
       </div>
       <div className="flex pt-[80px] pr-0 pb-[80px] pl-0 flex-col gap-[32px] items-center self-stretch shrink-0 flex-nowrap relative z-[6]">
-        <div className="flex w-[580px] pt-[48px] pr-[48px] pb-[48px] pl-[48px] flex-col gap-[32px] items-center shrink-0 flex-nowrap bg-[#fff] rounded-[24px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_24px_0_rgba(0,0,0,0.03)] z-[7]">
+        <div className="mah-company-rtl-card mah-company-rtl-success flex w-[580px] pt-[48px] pr-[48px] pb-[48px] pl-[48px] flex-col gap-[32px] items-center shrink-0 flex-nowrap bg-[#fff] rounded-[24px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_24px_0_rgba(0,0,0,0.03)] z-[7]">
           <div className="flex w-[72px] h-[72px] justify-center items-center shrink-0 flex-nowrap bg-[#eaf8f0] rounded-[36px] relative z-[8]">
             <div className="w-[32px] h-[32px] shrink-0 bg-[url(https://static.codia.ai/image/2026-08-24/Qu2RrbczeQ.png)] bg-cover bg-no-repeat relative overflow-hidden z-[9]" />
           </div>

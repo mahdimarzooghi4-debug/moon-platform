@@ -1,9 +1,10 @@
 import React from "react";
 import "./index.css";
+import "../registration-rtl.css";
 
 export default function Main() {
   return (
-    <div className="main-container flex w-[1440px] flex-col items-center flex-nowrap bg-[#f7fafc] relative mx-auto my-0">
+    <div className="main-container mah-company-rtl flex w-[1440px] flex-col items-center flex-nowrap bg-[#f7fafc] relative mx-auto my-0">
       <div className="flex h-[80px] pt-0 pr-[120px] pb-0 pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] border-solid border-t border-t-[#e2e8f0] relative">
         <div className="flex w-[284px] gap-[24px] items-center shrink-0 flex-nowrap relative z-[1]">
           <div className="flex w-[81px] gap-[8px] items-center shrink-0 flex-nowrap relative z-[2]">
@@ -28,7 +29,7 @@ export default function Main() {
         </div>
       </div>
       <div className="flex pt-[64px] pr-0 pb-[64px] pl-0 flex-col gap-[32px] items-center self-stretch shrink-0 flex-nowrap relative z-[12]">
-        <div className="flex w-[880px] pt-[36px] pr-[36px] pb-[36px] pl-[36px] flex-col gap-[28px] items-start shrink-0 flex-nowrap bg-[#fff] rounded-[24px] border-solid border border-[#e2e8f0] relative shadow-[0_4px_20px_0_rgba(0,0,0,0.02)] z-[13]">
+        <div className="mah-company-rtl-card mah-company-rtl-status flex w-[880px] pt-[36px] pr-[36px] pb-[36px] pl-[36px] flex-col gap-[28px] items-start shrink-0 flex-nowrap bg-[#fff] rounded-[24px] border-solid border border-[#e2e8f0] relative shadow-[0_4px_20px_0_rgba(0,0,0,0.02)] z-[13]">
           <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[14]">
             <div className="flex w-[164px] pt-[6px] pr-[12px] pb-[6px] pl-[12px] justify-center items-center shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[100px] relative z-[15]">
               <span className="flex w-[140px] h-[19px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-semibold leading-[18.75px] text-[#2094e3] relative text-center whitespace-nowrap z-[16]">
