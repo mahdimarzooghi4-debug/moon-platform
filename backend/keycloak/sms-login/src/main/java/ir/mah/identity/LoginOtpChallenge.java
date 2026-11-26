@@ -72,6 +72,19 @@ public final class LoginOtpChallenge {
             State.PENDING_DELIVERY), code);
     }
 
+    // Only for restoration by the transactional store after matching the persisted binding.
+    static LoginOtpChallenge restore(UUID id, Binding binding, Instant expiresAt,
+                                     String digest, int attempts, State state) {
+        if (id == null || binding == null || expiresAt == null || state == null ||
+            digest == null || !digest.matches("[0-9a-f]{64}") ||
+            attempts < 0 || attempts > MAX_ATTEMPTS ||
+            (state == State.READY && attempts >= MAX_ATTEMPTS))
+            throw new IllegalArgumentException("Invalid persisted OTP challenge");
+        return new LoginOtpChallenge(id, binding, expiresAt, digest, attempts, state);
+    }
+
+    String digestForStorage() { return digest; }
+
     public UUID id() { return id; }
     public Instant expiresAt() { return expiresAt; }
     public State state() { return state; }

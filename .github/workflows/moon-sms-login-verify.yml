@@ -1,13 +1,10 @@
 name: Moon SMS Login Verify
-
 on:
   pull_request:
     branches: [main]
   workflow_dispatch:
-
 permissions:
   contents: read
-
 jobs:
   otp-policy:
     runs-on: ubuntu-latest
@@ -22,5 +19,42 @@ jobs:
           set -euo pipefail
           out=$(mktemp -d)
           trap 'rm -rf "$out"' EXIT
-          javac -Xlint:all -Werror -d "$out" $(find backend/keycloak/sms-login/src -name '*.java')
+          javac -Xlint:all -Werror -d "$out" $(find backend/keycloak/sms-login/src/main -name '*.java') backend/keycloak/sms-login/src/test/java/ir/mah/identity/LoginOtpChallengeTest.java
           java -cp "$out" ir.mah.identity.LoginOtpChallengeTest
+  postgres-otp:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_DB: otp_test
+          POSTGRES_USER: otp_test
+          POSTGRES_PASSWORD: ci-only-otp
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U otp_test -d otp_test"
+          --health-interval 10s --health-timeout 5s --health-retries 10
+    env:
+      OTP_TEST_JDBC: jdbc:postgresql://localhost:5432/otp_test
+      OTP_TEST_USER: otp_test
+      OTP_TEST_PASSWORD: ci-only-otp
+      PGPASSWORD: ci-only-otp
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Install test-only PostgreSQL JDBC and CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpostgresql-jdbc-java postgresql-client
+      - name: Test real PostgreSQL atomic transitions and shared limits
+        run: |
+          set -euo pipefail
+          psql -h localhost -U otp_test -d otp_test -v ON_ERROR_STOP=1 -f backend/keycloak/sms-login/schema.sql
+          out=$(mktemp -d)
+          trap 'rm -rf "$out"' EXIT
+          javac -Xlint:all -Werror -cp /usr/share/java/postgresql.jar -d "$out" $(find backend/keycloak/sms-login/src -name '*.java')
+          java -cp "$out:/usr/share/java/postgresql.jar" ir.mah.identity.PostgresLoginOtpStoreTest

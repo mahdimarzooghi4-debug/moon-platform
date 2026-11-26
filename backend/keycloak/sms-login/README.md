@@ -1,6 +1,6 @@
 # Central SMS login — foundation
 
-This module is an isolated Java 21 transition policy for the future Keycloak 26.7.3 browser authenticator. It is not installed, bound to a realm, or exposed to users.
+This module contains a Java 21 transition policy and a private PostgreSQL store for the future Keycloak 26.7.3 browser authenticator. It is not installed, bound to a realm, or exposed to users.
 
 ## Approved behavior and boundaries
 
@@ -12,7 +12,7 @@ This module is an isolated Java 21 transition policy for the future Keycloak 26.
 
 ## Required before activation
 
-The policy alone is not an authenticator or a persistent store. The caller must atomically apply each transition (including consume-before-authentication-success), invalidate prior challenges on resend, and handle concurrent requests, delivery failure or ambiguity, restart and multi-replica behavior. A previous immutable snapshot must never be accepted again. Use a dedicated server-side HMAC secret, never the SMS.ir key. No credential or OTP may be logged or passed to URLs.
+The policy alone is not an authenticator. The PostgreSQL store implements atomic state transitions, one active challenge per realm/mobile, shared limits, and consume-before-success. All replicas must use the same dedicated stable HMAC secret and database. No raw mobile, subject, IP or code is stored. Challenge cleanup across inactive scopes, operational database provisioning, trusted-proxy source extraction, and coordinated key rotation remain required before activation. The caller must atomically apply each transition (including consume-before-authentication-success), invalidate prior challenges on resend, and handle concurrent requests, delivery failure or ambiguity, restart and multi-replica behavior. A previous immutable snapshot must never be accepted again. Use a dedicated server-side HMAC secret, never the SMS.ir key. No credential or OTP may be logged or passed to URLs.
 
 Implement and test a Keycloak Authentication SPI on the deployed version, wire SMS.ir using server-only configuration, resolve an enabled account through authoritative username/subject mapping, preserve required actions and account controls, and use generic user-facing failures. Existing accounts without a valid assigned mobile require operator reconciliation; never assign a mobile or role from a login request. Maintain an independent administrative recovery path outside the public Moon browser flow.
 
@@ -24,7 +24,9 @@ From repository root:
 
 ```sh
 out=$(mktemp -d)
-javac -Xlint:all -Werror -d "$out" $(find backend/keycloak/sms-login/src -name '*.java')
+javac -Xlint:all -Werror -d "$out" $(find backend/keycloak/sms-login/src/main -name '*.java') backend/keycloak/sms-login/src/test/java/ir/mah/identity/LoginOtpChallengeTest.java
 java -cp "$out" ir.mah.identity.LoginOtpChallengeTest
 rm -rf "$out"
 ```
+
+The CI PostgreSQL job applies schema.sql to a disposable database and verifies concurrent consumption and shared rate limits. No schema is applied to production.
