@@ -76,6 +76,14 @@ public final class PostgresLoginOtpStore {
         });
     }
 
+    public boolean isPending(LoginOtpChallenge.Binding binding, UUID id) throws SQLException {
+        return transaction(hash("realm", binding.realmId()), (c, now) -> {
+            var current = load(c, binding, id);
+            return current != null && current.state() == LoginOtpChallenge.State.PENDING_DELIVERY
+                && now.isBefore(current.expiresAt());
+        });
+    }
+
     public boolean deliveryAccepted(LoginOtpChallenge.Binding binding, UUID id) throws SQLException {
         return transaction(hash("realm", binding.realmId()), (c, now) -> {
             var current = load(c, binding, id);

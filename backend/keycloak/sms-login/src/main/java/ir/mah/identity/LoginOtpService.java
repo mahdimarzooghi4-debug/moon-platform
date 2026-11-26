@@ -2,59 +2,76 @@ package ir.mah.identity;
 
 import java.sql.SQLException;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
-/** Orchestrates issuance, provider acceptance and atomic verification. No token issuance. */
-public final class LoginOtpService {
-    public enum SendState { ACCEPTED, NOT_AVAILABLE }
-    public record SendResult(SendState state, UUID challengeId) {}
+/** Browser requests never wait on SMS transport. Only committed acknowledgement permits verification.
+ * Bounded volatile work queue: no persistent plaintext, automatic retries, or synthetic acknowledgement. */
+public final class LoginOtpService implements AutoCloseable {
     private final PostgresLoginOtpStore store;
     private final LoginSmsSender sender;
+    private final ThreadPoolExecutor delivery;
 
     public LoginOtpService(PostgresLoginOtpStore store, LoginSmsSender sender) {
         this.store = Objects.requireNonNull(store);
         this.sender = Objects.requireNonNull(sender);
+        // Local engineering resource bound, not a new account or rate policy.
+        delivery = new ThreadPoolExecutor(4, 4, 0L, TimeUnit.MILLISECONDS,
+            new ArrayBlockingQueue<>(50), Thread.ofPlatform().daemon().name("moon-otp-delivery-",0).factory(),
+            new ThreadPoolExecutor.AbortPolicy());
     }
 
-    public SendResult send(LoginOtpChallenge.Binding binding, String trustedSource)
-        throws SQLException, InterruptedException {
+    /** Same issuance path for resolved and unresolved accounts; issuance is not delivery. */
+    public Optional<UUID> requestDelivery(LoginOtpChallenge.Binding binding, String trustedSource,
+                                           boolean resolved) throws SQLException {
         var pending = store.issue(binding, trustedSource);
-        if (pending.isEmpty()) return unavailable();
+        if (pending.isEmpty()) return Optional.empty();
         var issued = pending.orElseThrow();
         UUID id = issued.challenge().id();
-        // Do not retry automatically: a network failure can mean the provider accepted
-        // the SMS but the response was lost. Pending/invalidated codes cannot authenticate.
-        LoginSmsSender.Result result;
         try {
-            result = sender.send(binding.mobile(), issued.code());
-        } catch (InterruptedException e) {
-            try { store.deliveryFailed(binding, id); }
-            catch (SQLException failure) { e.addSuppressed(failure); }
-            throw e;
-        } catch (RuntimeException e) {
-            // Deliberately discard transport exception details; they may contain secrets.
-            store.deliveryFailed(binding, id);
-            return unavailable();
+            delivery.execute(() -> deliver(binding, issued, resolved));
+        } catch (RejectedExecutionException e) {
+            // Never run transport on the caller. Pending remains unusable and expires.
+            // The original rate budget is retained even on overload or shutdown.
         }
-        if (result != LoginSmsSender.Result.ACCEPTED) {
-            store.deliveryFailed(binding, id);
-            return unavailable();
-        }
-        if (!store.deliveryAccepted(binding, id)) return unavailable();
-        return new SendResult(SendState.ACCEPTED, id);
+        return Optional.of(id);
     }
 
-    /** Reserve the same budgets for an unresolved account without contacting SMS.ir. */
-    public void discardUnresolved(LoginOtpChallenge.Binding binding, String trustedSource) throws SQLException {
-        var issued = store.issue(binding, trustedSource);
-        if (issued.isPresent()) store.deliveryFailed(binding, issued.orElseThrow().challenge().id());
+    private void deliver(LoginOtpChallenge.Binding binding, LoginOtpChallenge.Issued issued,
+                         boolean resolved) {
+        UUID id = issued.challenge().id();
+        try {
+            if (!store.isPending(binding, id)) return;
+            if (!resolved) {
+                store.deliveryFailed(binding, id);
+                return;
+            }
+            if (sender.send(binding.mobile(), issued.code()) == LoginSmsSender.Result.ACCEPTED)
+                store.deliveryAccepted(binding, id);
+            else
+                store.deliveryFailed(binding, id);
+        } catch (InterruptedException e) {
+            invalidatePending(binding, id);
+            Thread.currentThread().interrupt();
+        } catch (SQLException | RuntimeException e) {
+            invalidatePending(binding, id);
+        }
+    }
+
+    private void invalidatePending(LoginOtpChallenge.Binding binding, UUID id) {
+        try { store.deliveryFailed(binding, id); }
+        catch (SQLException | RuntimeException ignored) {
+            // No details logged; pending remains unusable. Never retry ambiguous delivery.
+        }
     }
 
     public boolean verify(LoginOtpChallenge.Binding binding, UUID challengeId, String code) throws SQLException {
         return store.verify(binding, challengeId, code);
     }
 
-    private static SendResult unavailable() {
-        return new SendResult(SendState.NOT_AVAILABLE, null);
-    }
+    @Override public void close() { delivery.shutdownNow(); }
 }

@@ -57,16 +57,13 @@ public final class MoonSmsAuthenticator implements Authenticator {
                 return;
             }
             form(context, validMobile(mobile) ? mobile : "", validMobile(mobile), "درخواست معتبر نیست.");
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            fail(context);
         } catch (SQLException | RuntimeException e) {
             // No request payload, exception text, phone, OTP or secret is logged.
             fail(context);
         }
     }
 
-    private void send(AuthenticationFlowContext context, String mobile) throws SQLException, InterruptedException {
+    private void send(AuthenticationFlowContext context, String mobile) throws SQLException {
         var auth = context.getAuthenticationSession();
         String previous = auth.getAuthNote(CHALLENGE);
         UserModel user = eligible(context, mobile);
@@ -75,16 +72,11 @@ public final class MoonSmsAuthenticator implements Authenticator {
         String source = context.getConnection().getRemoteAddr();
         if (source == null || source.isBlank()) throw new IllegalStateException("Missing connection source");
         var binding = binding(context, mobile, user == null ? "moon-unresolved-subject" : user.getId());
-        if (user == null) {
-            service.get().discardUnresolved(binding, source);
+        var issued = service.get().requestDelivery(binding, source, user != null);
+        if (issued.isPresent())
+            auth.setAuthNote(CHALLENGE, issued.orElseThrow().toString());
+        else if (previous == null || !mobile.equals(auth.getAuthNote(MOBILE)))
             auth.removeAuthNote(CHALLENGE);
-        } else {
-            var sent = service.get().send(binding, source);
-            if (sent.state() == LoginOtpService.SendState.ACCEPTED)
-                auth.setAuthNote(CHALLENGE, sent.challengeId().toString());
-            else if (previous == null || !mobile.equals(auth.getAuthNote(MOBILE)))
-                auth.removeAuthNote(CHALLENGE);
-        }
         auth.setAuthNote(MOBILE, mobile);
         form(context, mobile, true, null);
     }
@@ -92,8 +84,10 @@ public final class MoonSmsAuthenticator implements Authenticator {
     private void verify(AuthenticationFlowContext context, String mobile, String code) throws SQLException {
         String challenge = context.getAuthenticationSession().getAuthNote(CHALLENGE);
         UserModel user = eligible(context, mobile);
-        if (challenge != null && user != null &&
-            service.get().verify(binding(context, mobile, user.getId()), UUID.fromString(challenge), code)) {
+        var binding = binding(context, mobile, user == null ? "moon-unresolved-subject" : user.getId());
+        boolean verified = challenge != null &&
+            service.get().verify(binding, UUID.fromString(challenge), code);
+        if (verified && user != null) {
             // Re-resolve account after consumption. Never promote a stale subject or a
             // user whose canonical mobile or enabled/lockout state changed.
             UserModel current = eligible(context, mobile);

@@ -66,5 +66,5 @@ public final class MoonSmsAuthenticatorFactory implements AuthenticatorFactory {
     }
     @Override public void init(Config.Scope config) { }
     @Override public void postInit(KeycloakSessionFactory factory) { }
-    @Override public void close() { }
+    @Override public void close() { var current = service; if (current != null) current.close(); }
 }

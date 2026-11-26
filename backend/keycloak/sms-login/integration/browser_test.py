@@ -7,6 +7,7 @@ import secrets
 import ssl
 import subprocess
 import sys
+import time
 import urllib.parse
 import urllib.request
 from playwright.sync_api import sync_playwright
@@ -56,7 +57,27 @@ def begin(browser, mobile, headers=None):
     assert not page.url.startswith(CALLBACK)
     return ctx, page, verifier, state, nonce
 
-def otp():
+def await_condition(predicate, label):
+    deadline = time.monotonic() + 20
+    while time.monotonic() < deadline:
+        if predicate():
+            return
+        time.sleep(0.05)
+    raise AssertionError(label)
+
+def states():
+    return subprocess.check_output(["docker","exec","moon-ci-pg","psql","-U","moonci",
+        "-d","otp","-Atc","SELECT state FROM moon_login_otp_challenge ORDER BY challenge_id"]).decode().splitlines()
+
+def await_delivery(count):
+    await_condition(lambda: len(messages()) == count and "PENDING_DELIVERY" not in states(),
+                    "delivery did not settle")
+
+def otp(settled=True):
+    if settled:
+        await_delivery(1)
+    else:
+        await_condition(lambda: len(messages()) == 1, "transport not entered")
     rows = messages()
     assert len(rows) == 1, "expected one accepted transport request"
     code = rows[0]["parameters"][0]["value"]
@@ -132,9 +153,22 @@ with sync_playwright() as p:
     for invalid in ("09120000999","09120000997"):
         reset()
         ctx,page,*_ = begin(browser,invalid)
+        await_condition(lambda: states() == ["INVALIDATED"], "unresolved challenge did not settle")
         assert messages() == [], "disabled or unknown account dispatched an SMS"
         reject(page,"123456")
         ctx.close()
+    reset("hold")
+    ctx,page,verifier,state,nonce = begin(browser,mobile)
+    # Reaching the OTP form before the provider is released proves the
+    # browser request does not wait for the SMS transport response.
+    code = otp(settled=False)
+    assert states() == ["PENDING_DELIVERY"]
+    reject(page,code)
+    assert states() == ["PENDING_DELIVERY"]
+    req(MOCK + "/__test/release", b"{}", tls)
+    await_delivery(1)
+    accept(page,verifier,state,nonce,code,realm["users"][0])
+    ctx.close()
     reset("reject")
     ctx,page,*_ = begin(browser,mobile)
     reject(page,otp())
@@ -161,6 +195,7 @@ with sync_playwright() as p:
         headers = {"X-Forwarded-For": f"192.0.2.{i+1}", "X-Real-IP": f"198.51.100.{i+1}"}
         ctx,page,*_ = begin(browser,user["username"],headers)
         ctx.close()
+        await_delivery(min(i+1,5))
         assert len(messages()) == min(i+1,5), "forged source bypassed shared limit"
     sources = subprocess.check_output(["docker","exec","moon-ci-pg","psql","-U","moonci",
         "-d","otp","-Atc","SELECT count(*) || ':' || count(DISTINCT source_key) FROM moon_login_otp_send"]).decode().strip()

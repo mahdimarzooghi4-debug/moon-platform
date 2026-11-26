@@ -2,9 +2,10 @@
 import json
 import ssl
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from threading import Lock
+from threading import Event, Lock
 
 lock = Lock()
+release = Event()
 messages = []
 mode = "ok"
 
@@ -36,15 +37,22 @@ class Handler(BaseHTTPRequestHandler):
             if self.path == "/__test/reset":
                 messages.clear()
                 mode = data.get("mode", "ok")
+                release.clear()
+                return self.reply(200, {})
+            if self.path == "/__test/release":
+                release.set()
                 return self.reply(200, {})
             if self.path != "/v1/send/verify" or self.headers.get("X-API-KEY") != "ci-only-not-a-real-sms-key":
                 return self.reply(403, {"status": 0})
             if data.get("templateId") != 123456 or len(data.get("parameters", [])) != 1 or data["parameters"][0].get("name") != "LOGIN_CODE":
                 return self.reply(400, {"status": 0})
             messages.append(data)
-            if mode == "reject":
-                return self.reply(503, {"status": 0})
-            return self.reply(200, {"status": 1})
+            scenario = mode
+        if scenario == "hold" and not release.wait(12):
+            return self.reply(503, {"status": 0})
+        if scenario == "reject":
+            return self.reply(503, {"status": 0})
+        return self.reply(200, {"status": 1})
 
 server = ThreadingHTTPServer(("0.0.0.0", 443), Handler)
 context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)

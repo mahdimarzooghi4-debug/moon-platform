@@ -67,22 +67,46 @@ public final class PostgresLoginOtpStoreTest {
         check(b.issue(binding("session15","subject15","09120000015"),"shared-source").isEmpty(),"source limit across accounts");
         var serviceBinding=binding("service-session","service-subject","09120000020");
         var captured=new java.util.concurrent.atomic.AtomicReference<String>();
-        var service=new LoginOtpService(a,(mobile,code)->{
+        var entered=new CountDownLatch(1);
+        var release=new CountDownLatch(1);
+        try(var service=new LoginOtpService(a,(mobile,code)->{
             captured.set(code);
             check(mobile.equals(serviceBinding.mobile()),"correct service destination");
+            entered.countDown();
+            if (!release.await(20,java.util.concurrent.TimeUnit.SECONDS))
+                throw new IllegalStateException("test gate timeout");
             return LoginSmsSender.Result.ACCEPTED;
-        });
-        var send=service.send(serviceBinding,"service-source");
-        check(send.state()==LoginOtpService.SendState.ACCEPTED && send.challengeId()!=null,"service acknowledgement");
-        check(service.verify(serviceBinding,send.challengeId(),captured.get()),"service verification");
-        check(!service.verify(serviceBinding,send.challengeId(),captured.get()),"service replay");
+        })) {
+            var send=service.requestDelivery(serviceBinding,"service-source",true).orElseThrow();
+            check(entered.await(10,java.util.concurrent.TimeUnit.SECONDS),"worker entered transport");
+            check(!service.verify(serviceBinding,send,captured.get()),"pending transport cannot authenticate");
+            var dummy=binding("dummy-session","moon-unresolved-subject","09120000023");
+            var dummyId=service.requestDelivery(dummy,"service-source",false).orElseThrow();
+            awaitState(ds,dummyId,"INVALIDATED");
+            check(!service.verify(dummy,dummyId,"123456"),"unresolved denied");
+            release.countDown();
+            awaitState(ds,send,"READY");
+            check(service.verify(serviceBinding,send,captured.get()),"service verification");
+            check(!service.verify(serviceBinding,send,captured.get()),"service replay");
+        } finally { release.countDown(); }
         var denied=binding("failed-session","failed-subject","09120000021");
-        var failureService=new LoginOtpService(a,(mobile,code)->LoginSmsSender.Result.NOT_ACCEPTED);
-        var failure=failureService.send(denied,"service-source");
-        check(failure.state()==LoginOtpService.SendState.NOT_AVAILABLE && failure.challengeId()==null,"service failure");
+        try(var failureService=new LoginOtpService(a,(mobile,code)->LoginSmsSender.Result.NOT_ACCEPTED)) {
+            var failure=failureService.requestDelivery(denied,"service-source",true).orElseThrow();
+            awaitState(ds,failure,"INVALIDATED");
+            check(!failureService.verify(denied,failure,"123456"),"service failure");
+        }
         var exceptional=binding("exception-session","exception-subject","09120000022");
-        var exceptionalService=new LoginOtpService(a,(mobile,code)->{throw new IllegalStateException("synthetic failure");});
-        check(exceptionalService.send(exceptional,"service-source").state()==LoginOtpService.SendState.NOT_AVAILABLE,"transport exception");
+        try(var exceptionalService=new LoginOtpService(a,(mobile,code)->{throw new IllegalStateException("synthetic failure");})) {
+            var failure=exceptionalService.requestDelivery(exceptional,"service-source",true).orElseThrow();
+            awaitState(ds,failure,"INVALIDATED");
+        }
+        var stopped=binding("stopped-session","stopped-subject","09120000024");
+        var stoppedService=new LoginOtpService(a,(mobile,code)->{throw new AssertionError("closed executor dispatched");});
+        stoppedService.close();
+        var stoppedId=stoppedService.requestDelivery(stopped,"stopped-source",true).orElseThrow();
+        awaitState(ds,stoppedId,"PENDING_DELIVERY");
+        check(!stoppedService.verify(stopped,stoppedId,"123456"),"rejected task cannot authenticate");
+        check(stoppedService.requestDelivery(stopped,"stopped-source",true).isEmpty(),"rejected task preserves cooldown");
         var expiredPending = binding("cleanup-pending","cleanup-subject-p","09120000030");
         var expiredReady = binding("cleanup-ready","cleanup-subject-r","09120000031");
         var retainedReady = binding("cleanup-live","cleanup-subject-l","09120000032");
@@ -111,6 +135,18 @@ public final class PostgresLoginOtpStoreTest {
         }
         check(b.verify(retainedReady,live.challenge().id(),live.code()),"unexpired challenge retained");
         System.out.println("PostgreSQL OTP integration tests passed");
+    }
+    private static void awaitState(PGSimpleDataSource ds, java.util.UUID id, String expected) throws Exception {
+        long deadline=System.nanoTime()+java.util.concurrent.TimeUnit.SECONDS.toNanos(15);
+        do {
+            try(var c=ds.getConnection();
+                var s=c.prepareStatement("SELECT state FROM moon_login_otp_challenge WHERE challenge_id=?")) {
+                s.setObject(1,id);
+                try(var r=s.executeQuery()) { if(r.next() && expected.equals(r.getString(1))) return; }
+            }
+            Thread.sleep(25);
+        } while(System.nanoTime()<deadline);
+        throw new AssertionError("delivery did not reach "+expected);
     }
     private static LoginOtpChallenge.Binding binding(String session,String subject,String mobile) {
         return new LoginOtpChallenge.Binding("moon","moon-web",session,subject,mobile);
