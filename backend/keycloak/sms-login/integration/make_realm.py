@@ -7,15 +7,7 @@ import uuid
 source, destination = map(pathlib.Path, sys.argv[1:])
 realm = json.loads(source.read_text())
 realm.update(sslRequired="none", resetPasswordAllowed=False, rememberMe=False,
-             browserFlow="moon-sms-ci", bruteForceProtected=True)
-realm["authenticationFlows"] = [{
-    "alias": "moon-sms-ci", "description": "CI-only isolated OTP browser flow",
-    "providerId": "basic-flow", "topLevel": True, "builtIn": False,
-    "authenticationExecutions": [{
-        "authenticator": "moon-sms-login", "authenticatorFlow": False,
-        "requirement": "REQUIRED", "priority": 10, "userSetupAllowed": False
-    }]
-}]
+             bruteForceProtected=True)
 web = next(c for c in realm["clients"] if c["clientId"] == "moon-web")
 web.update(redirectUris=["http://127.0.0.1:18081/callback"],
            webOrigins=["http://127.0.0.1:18081"],

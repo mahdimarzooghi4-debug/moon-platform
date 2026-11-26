@@ -28,3 +28,7 @@ Never print or save the rendered environment. The image tag is the reviewed rele
 ## Status
 
 Candidate packaging only. No production SSH, secret read, database migration, image transfer, runtime restart, client change or live SMS is performed by this preparation. The exact operational release command and rollback mechanism remain a separate gate.
+
+## Client binding rehearsal
+
+The private operator command sms-client-flow.py prepares an unbound exact one-execution REQUIRED flow, captures a mode-600 immutable-by-convention snapshot, and verifies client-only activation or rollback against the running Keycloak API. It accepts only an explicit private loopback tunnel and a mode-600 token file, never a command-line token. Every write requires an explicit matching release SHA argument, and activation/rollback require the snapshot digest. It requires enforced PKCE S256, checks default realm flow and other client binding drift, and refuses unexpected states. This is not cryptographic release authorization or a concurrency lock: use an exclusive operator maintenance window with independent owner approval. The running production realm has not been inspected. The disposable browser suite first rehearses activation, idempotent replay and rollback, then tests all seven roles using the client override rather than a global realm binding. A coordinated web/image switch and operational recovery gate are still required; the automatic deploy guard remains in place.

@@ -39,6 +39,7 @@ docker run -d --name moon-ci-keycloak --network moon-ci-otp -p 127.0.0.1:18081:8
   -e KC_DB=postgres -e KC_DB_URL=jdbc:postgresql://moon-ci-pg:5432/keycloak \
   -e KC_DB_USERNAME=moonci -e KC_DB_PASSWORD=ci-only-db \
   -e KC_HOSTNAME=http://127.0.0.1:18081 \
+  -e KC_BOOTSTRAP_ADMIN_USERNAME=ci-admin -e KC_BOOTSTRAP_ADMIN_PASSWORD=ci-only-admin-password \
   -e MOON_LOGIN_OTP_JDBC_URL=jdbc:postgresql://moon-ci-pg:5432/otp \
   -e MOON_LOGIN_OTP_DB_USER=moonci -e MOON_LOGIN_OTP_DB_PASSWORD=ci-only-db \
   -e MOON_LOGIN_OTP_HMAC_KEY="$hmac" \
@@ -55,4 +56,5 @@ for i in $(seq 1 180); do
   sleep 2
 done
 if [ "$ready" != 1 ]; then docker logs --tail 100 moon-ci-keycloak; exit 1; fi
+python "$root/integration/flow_rehearsal.py" "$fixture" "$root/../../../deploy/production/sms-client-flow.py"
 python "$root/integration/browser_test.py" "$fixture"
