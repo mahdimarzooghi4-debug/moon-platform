@@ -168,3 +168,10 @@ jobs:
             echo "Invalid HMAC key unexpectedly accepted"
             exit 1
           fi
+
+  release-bundle-contract:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify bundle manifest and reject mismatched and unsafe artifacts
+        run: python3 deploy/production/test-sms-release-bundle.py

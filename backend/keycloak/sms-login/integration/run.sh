@@ -22,6 +22,7 @@ chmod 644 "$fixture/moon-realm.json"
 mvn -B -q -f "$root/pom.xml" -Dmaven.test.skip=true package
 jar="$root/target/moon-sms-login-1.0.0.jar"
 chmod a+r "$jar"
+docker build -t moon-platform/keycloak:ci-browser "$root"
 docker network create moon-ci-otp >/dev/null
 docker run -d --name moon-ci-pg --network moon-ci-otp -e POSTGRES_USER=moonci \
   -e POSTGRES_PASSWORD=ci-only-db -e POSTGRES_DB=keycloak postgres:18 >/dev/null
@@ -38,7 +39,7 @@ hmac="$(openssl rand -base64 32)"
 docker run -d --name moon-ci-keycloak --network moon-ci-otp -p 127.0.0.1:18081:8080 \
   -e KC_DB=postgres -e KC_DB_URL=jdbc:postgresql://moon-ci-pg:5432/keycloak \
   -e KC_DB_USERNAME=moonci -e KC_DB_PASSWORD=ci-only-db \
-  -e KC_HOSTNAME=http://127.0.0.1:18081 \
+  -e KC_HOSTNAME=http://127.0.0.1:18081 -e KC_HTTP_ENABLED=true \
   -e KC_BOOTSTRAP_ADMIN_USERNAME=ci-admin -e KC_BOOTSTRAP_ADMIN_PASSWORD=ci-only-admin-password \
   -e MOON_LOGIN_OTP_JDBC_URL=jdbc:postgresql://moon-ci-pg:5432/otp \
   -e MOON_LOGIN_OTP_DB_USER=moonci -e MOON_LOGIN_OTP_DB_PASSWORD=ci-only-db \
@@ -48,8 +49,7 @@ docker run -d --name moon-ci-keycloak --network moon-ci-otp -p 127.0.0.1:18081:8
   -e 'JAVA_OPTS_APPEND=-Djavax.net.ssl.trustStore=/fixture/trust.p12 -Djavax.net.ssl.trustStorePassword=ci-only-trust -Djavax.net.ssl.trustStoreType=PKCS12' \
   -v "$fixture/trust.p12:/fixture/trust.p12:ro" \
   -v "$fixture/moon-realm.json:/opt/keycloak/data/import/moon-realm.json:ro" \
-  -v "$jar:/opt/keycloak/providers/moon-sms-login.jar:ro" \
-  quay.io/keycloak/keycloak:26.7.3 start-dev --import-realm >/dev/null
+  moon-platform/keycloak:ci-browser start --optimized --import-realm >/dev/null
 ready=0
 for i in $(seq 1 180); do
   if curl -fsS http://127.0.0.1:18081/realms/moon/.well-known/openid-configuration >/dev/null 2>&1; then ready=1; break; fi
