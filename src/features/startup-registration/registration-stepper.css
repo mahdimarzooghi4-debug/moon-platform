@@ -1,0 +1,26 @@
+
+.main-container .mah-startup-progress {
+  direction: rtl !important; display: flex; align-items: center; justify-content: center;
+  width: 100%; padding: 16px 0; gap: 12px; align-self: stretch;
+}
+.mah-startup-progress .mah-progress-step {
+  display: flex; align-items: center; direction: rtl; gap: 8px; flex: 0 0 auto;
+  color: #718096; font-size: 14px; font-weight: 500;
+}
+.mah-startup-progress .mah-progress-step[data-state="complete"] { color: #159455; }
+.mah-startup-progress .mah-progress-step[data-state="active"] { color: #1476b9; font-weight: 700; }
+.mah-startup-progress .mah-progress-number {
+  display: grid; place-items: center; width: 28px; height: 28px; flex: 0 0 28px;
+  border-radius: 50%; border: 1px solid #e2e8f0; background: #e2e8f0;
+  text-align: center !important; font-weight: 700;
+}
+.mah-startup-progress [data-state="complete"] .mah-progress-number { border-color: #159455; background: #eaf8f0; }
+.mah-startup-progress [data-state="active"] .mah-progress-number { border-color: #2094e3; background: #eaf5fd; }
+.mah-startup-progress .mah-progress-line { flex: 1 1 40px; min-width: 10px; max-width: 40px; height: 1px; background: #cbd5e1; }
+.mah-startup-progress .mah-progress-line[data-complete="true"] { background: #159455; }
+@media (max-width: 700px) {
+  .main-container .mah-startup-progress { gap: 5px; }
+  .mah-startup-progress .mah-progress-step { flex: 1 1 0; flex-direction: column; gap: 4px; min-width: 0; font-size: 11px; }
+  .mah-startup-progress .mah-progress-label { text-align: center !important; }
+  .mah-startup-progress .mah-progress-line { align-self: flex-start; margin-top: 14px; min-width: 4px; max-width: 20px; }
+}

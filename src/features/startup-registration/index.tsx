@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { registrationDraft, registrationFiles } from "./draft";
 import React from "react";
 import MobileVerification from "./MobileVerification";
+import RegistrationStepper from "./RegistrationStepper";
 import "./index.css";
 
 export default function Main() {
@@ -56,51 +57,7 @@ export default function Main() {
               خلاق بررسی شود.
             </span>
           </div>
-          <div className="mah-registration-stepper flex pt-[16px] pr-0 pb-[16px] pl-0 gap-[16px] justify-center items-center self-stretch shrink-0 flex-nowrap relative z-[18]">
-            <div className="flex w-[117px] h-[36px] gap-[8px] items-center shrink-0 flex-nowrap relative z-[19]">
-              <span className="flex w-[81px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[21.875px] text-[#718096] relative text-right whitespace-nowrap z-20">
-                بازبینی و ارسال
-              </span>
-              <div className="flex w-[28px] h-[28px] justify-center items-center shrink-0 flex-nowrap bg-[#e2e8f0] rounded-[14px] relative z-[21]">
-                <span className="flex w-[8px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-bold leading-[18.75px] text-[#718096] relative text-right whitespace-nowrap z-[22]">
-                  ۴
-                </span>
-              </div>
-            </div>
-            <div className="flex w-[196px] h-[36px] gap-[8px] items-center shrink-0 flex-nowrap relative z-[23]">
-              <span className="flex w-[112px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[21.875px] text-[#718096] relative text-right whitespace-nowrap z-[24]">
-                اثر اجتماعی و مدارک
-              </span>
-              <div className="flex w-[28px] h-[28px] justify-center items-center shrink-0 flex-nowrap bg-[#e2e8f0] rounded-[14px] relative z-[25]">
-                <span className="flex w-[9px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-bold leading-[18.75px] text-[#718096] relative text-right whitespace-nowrap z-[26]">
-                  ۳
-                </span>
-              </div>
-              <div className="w-[40px] h-px shrink-0 bg-[url(https://static.codia.ai/image/2026-08-24/tT91VW2437.png)] bg-cover bg-no-repeat relative z-[27]" />
-            </div>
-            <div className="flex w-[161px] h-[36px] gap-[8px] items-center shrink-0 flex-nowrap relative z-[28]">
-              <span className="h-[22px] shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[21.875px] text-[#718096] relative text-left whitespace-nowrap z-[29]">
-                محصول و تیم
-              </span>
-              <div className="flex w-[28px] h-[28px] justify-center items-center shrink-0 flex-nowrap bg-[#e2e8f0] rounded-[14px] relative z-30">
-                <span className="flex w-[7px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-bold leading-[18.75px] text-[#718096] relative text-right whitespace-nowrap z-[31]">
-                  ۲
-                </span>
-              </div>
-              <div className="w-[40px] h-px shrink-0 bg-[url(https://static.codia.ai/image/2026-08-24/CAFO6ERcY4.png)] bg-cover bg-no-repeat relative z-[32]" />
-            </div>
-            <div className="flex w-[154px] h-[36px] gap-[8px] items-center shrink-0 flex-nowrap relative z-[33]">
-              <span className="h-[22px] shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#2094e3] relative text-left whitespace-nowrap z-[34]">
-                اطلاعات پایه
-              </span>
-              <div className="flex w-[28px] h-[28px] justify-center items-center shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[14px] border-solid border-[1.5px] border-[#2094e3] relative z-[35]">
-                <span className="flex w-[4px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-bold leading-[18.75px] text-[#2094e3] relative text-right whitespace-nowrap z-[36]">
-                  ۱
-                </span>
-              </div>
-              <div className="w-[40px] h-px shrink-0 bg-[url(https://static.codia.ai/image/2026-08-24/ZLvOAytJLp.png)] bg-cover bg-no-repeat relative z-[37]" />
-            </div>
-          </div>
+          <RegistrationStepper current={1} />
           <div className="flex pt-[36px] pr-[36px] pb-[36px] pl-[36px] flex-col gap-[28px] items-end self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[20px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_24px_0_rgba(0,0,0,0.03)] z-[38]">
             <div className="flex flex-col gap-[6px] items-end self-stretch shrink-0 flex-nowrap relative z-[39]">
               <span className="flex w-[115px] h-[28px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[18px] font-bold leading-[28px] text-[#1a202c] relative text-right whitespace-nowrap z-40">

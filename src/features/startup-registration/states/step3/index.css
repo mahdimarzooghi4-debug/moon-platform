@@ -68,3 +68,16 @@ button {
   direction: ltr;
   text-align: right;
 }
+
+/* Preserve the physical order of paired fields; align their Persian content. */
+.mah-startup-step3 .mah-startup-step3-card { direction: ltr !important; text-align: right; }
+.mah-startup-step3 .mah-startup-step3-card .flex-col.items-end { direction: ltr !important; align-items: flex-end !important; }
+.mah-startup-step3 .mah-startup-step3-card .flex.justify-end:not(.justify-center) { direction: ltr !important; justify-content: flex-end !important; }
+.mah-startup-step3 .mah-startup-step3-card span.flex.text-right { direction: rtl !important; justify-content: flex-start !important; text-align: right !important; }
+.mah-startup-step3 .mah-startup-step3-card textarea,
+.mah-startup-step3 .mah-startup-step3-card input:not([type="file"]),
+.mah-startup-step3 .mah-startup-step3-card select { direction: rtl !important; text-align: right !important; width: 100%; }
+.mah-startup-step3 .mah-pitch-upload { display: flex; flex-direction: column; align-items: center; gap: 5px; max-width: 100%; }
+.mah-startup-step3 .mah-pitch-label { display: block; cursor: pointer; padding: 8px 16px; border-radius: 8px; background: #eaf5fd; color: #1476b9; font-size: 14px; font-weight: 600; }
+.mah-startup-step3 .mah-pitch-label:focus-within { outline: 2px solid #2094e3; }
+.mah-startup-step3 .mah-pitch-name { max-width: 100%; overflow-wrap: anywhere; font-size: 12px; }
