@@ -1,4 +1,4 @@
-import { registrationDraft, registrationFiles } from "../../draft";
+import { registrationDraft, registrationFiles, registrationDetails } from "../../draft";
 import { submitStartupApplication } from "../../api";
 import { normalizeIranMobile } from "../../../../auth/oidc";
 
@@ -95,6 +95,9 @@ function navigate(path: string) {
 
 async function continueRegistration(label: string, path: string) {
   if (label === "ذخیره و ادامه") {
+    document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("[data-registration-detail]").forEach(field => {
+      if (field.dataset.registrationDetail) registrationDetails[field.dataset.registrationDetail] = field.value.trim();
+    });
     for (const field of document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("[data-registration-field]")) {
       if (!field.reportValidity()) return;
     }
@@ -118,6 +121,15 @@ async function continueRegistration(label: string, path: string) {
     for (const key of ["name", "email", "product", "description", "team", "audience"]) {
       form.set(key, registrationDraft[key] ?? "");
     }
+    const details = Object.entries(registrationDetails)
+      .filter(([, value]) => value)
+      .map(([label, value]) => `${label}: ${value}`);
+    const description = [registrationDraft.description?.trim() ?? "", ...details].join("\n");
+    if (description.length > 4000) {
+      showRegistrationError("مجموع راهکار و توضیحات تکمیلی باید حداکثر ۴۰۰۰ کاراکتر باشد.");
+      return;
+    }
+    form.set("description", description);
     form.set("mobile", normalizeIranMobile(registrationDraft.mobile ?? ""));
     form.set("contactName", [registrationDraft.firstName, registrationDraft.lastName].join(" ").trim());
     form.set("pitchDeck", pitchDeck);
@@ -127,6 +139,7 @@ async function continueRegistration(label: string, path: string) {
       sessionStorage.setItem("moon-startup-tracking-code", result.trackingCode);
       for (const key of Object.keys(registrationDraft)) delete registrationDraft[key];
       delete registrationFiles.pitchDeck;
+      for (const key of Object.keys(registrationDetails)) delete registrationDetails[key];
     } catch (error) {
       showRegistrationError(error instanceof Error ? error.message : "ارسال انجام نشد.");
       return;

@@ -130,9 +130,7 @@ export default function Main() {
                   </span>
                 </div>
                 <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[56]">
-                  <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#a0aec0] relative text-right whitespace-nowrap z-[57]">
-                    Startup name
-                  </span>
+                  <input aria-label="نام انگلیسی" maxLength={160} data-registration-detail="نام انگلیسی" data-registration-key="englishName" defaultValue={registrationDraft.englishName ?? ""} onChange={event => { registrationDraft.englishName = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
                 </div>
               </div>
               <div className="flex w-[450px] flex-col gap-[8px] items-end shrink-0 flex-nowrap relative z-[58]">
@@ -156,9 +154,7 @@ export default function Main() {
                 </span>
               </div>
               <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[67]">
-                <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[68]">
-                  سامانه هوشمند مدیریت و شتابدهی طرح‌های فناورانه خلاق
-                </span>
+                <input aria-label="شعار کوتاه" maxLength={160} data-registration-detail="شعار کوتاه" data-registration-key="tagline" defaultValue={registrationDraft.tagline ?? ""} onChange={event => { registrationDraft.tagline = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
               </div>
             </div>
             <div className="mah-registration-field-row flex gap-[16px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[69]">
@@ -169,9 +165,7 @@ export default function Main() {
                   </span>
                 </div>
                 <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[73]">
-                  <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[74]">
-                    ۱۴۰۰
-                  </span>
+                  <input aria-label="سال شروع فعالیت" maxLength={160} data-registration-detail="سال شروع فعالیت" data-registration-key="startYear" defaultValue={registrationDraft.startYear ?? ""} onChange={event => { registrationDraft.startYear = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
                 </div>
               </div>
               <div className="flex w-[450px] flex-col gap-[8px] items-end shrink-0 flex-nowrap relative z-[75]">
@@ -216,9 +210,7 @@ export default function Main() {
                   </span>
                 </div>
                 <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[94]">
-                  <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[95]">
-                    تهران
-                  </span>
+                  <input aria-label="شهر" maxLength={160} data-registration-detail="شهر" data-registration-key="city" defaultValue={registrationDraft.city ?? ""} onChange={event => { registrationDraft.city = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
                 </div>
               </div>
               <div className="flex w-[450px] flex-col gap-[8px] items-end shrink-0 flex-nowrap relative z-[96]">
@@ -231,9 +223,7 @@ export default function Main() {
                   </span>
                 </div>
                 <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[100]">
-                  <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[101]">
-                    تهران
-                  </span>
+                  <input aria-label="استان" maxLength={160} data-registration-detail="استان" data-registration-key="province" defaultValue={registrationDraft.province ?? ""} onChange={event => { registrationDraft.province = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
                 </div>
               </div>
             </div>
@@ -248,9 +238,7 @@ export default function Main() {
                   </span>
                 </div>
                 <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] justify-end items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[107]">
-                  <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[108]">
-                    MVP (نمونه محصول اولیه فعال)
-                  </span>
+                  <input aria-label="مرحله رشد" maxLength={160} data-registration-detail="مرحله رشد" data-registration-key="stage" defaultValue={registrationDraft.stage ?? ""} onChange={event => { registrationDraft.stage = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
                 </div>
               </div>
               <div className="flex w-[450px] flex-col gap-[8px] items-end shrink-0 flex-nowrap relative z-[109]">
@@ -263,9 +251,7 @@ export default function Main() {
                   </span>
                 </div>
                 <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] justify-end items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[113]">
-                  <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[114]">
-                    خدمات دیجیتال، صنایع خلاق، فناوری مالی
-                  </span>
+                  <input aria-label="حوزه فعالیت" maxLength={160} data-registration-detail="حوزه فعالیت" data-registration-key="industry" defaultValue={registrationDraft.industry ?? ""} onChange={event => { registrationDraft.industry = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
                 </div>
               </div>
             </div>
@@ -277,9 +263,7 @@ export default function Main() {
                   </span>
                 </div>
                 <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[119]">
-                  <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#a0aec0] relative text-right whitespace-nowrap z-[120]">
-                    linkedin.com/company/startup
-                  </span>
+                  <input aria-label="شبکه اجتماعی" maxLength={160} data-registration-detail="شبکه اجتماعی" data-registration-key="social" defaultValue={registrationDraft.social ?? ""} onChange={event => { registrationDraft.social = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
                 </div>
               </div>
               <div className="flex w-[450px] flex-col gap-[8px] items-end shrink-0 flex-nowrap relative z-[121]">
@@ -289,9 +273,7 @@ export default function Main() {
                   </span>
                 </div>
                 <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[124]">
-                  <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[125]">
-                    https://mahsystem.ir
-                  </span>
+                  <input aria-label="وب‌سایت" maxLength={160} data-registration-detail="وب‌سایت" data-registration-key="website" defaultValue={registrationDraft.website ?? ""} onChange={event => { registrationDraft.website = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
                 </div>
               </div>
             </div>
@@ -343,9 +325,7 @@ export default function Main() {
                   </span>
                 </div>
                 <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[148]">
-                  <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[149]">
-                    مدیر عامل و هم‌بنیان‌گذار
-                  </span>
+                  <input aria-label="سمت نماینده" maxLength={160} data-registration-detail="سمت نماینده" data-registration-key="position" defaultValue={registrationDraft.position ?? ""} onChange={event => { registrationDraft.position = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
                 </div>
               </div>
               <div className="flex w-[450px] flex-col gap-[8px] items-end shrink-0 flex-nowrap relative z-[150]">

@@ -122,12 +122,7 @@ export default function Main() {
                 </span>
               </div>
               <div className="flex h-[96px] pt-[12px] pr-[12px] pb-[12px] pl-[12px] flex-col items-end self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[52]">
-                <span className="flex w-[904px] h-[72px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right z-[53]">
-                  فرآیندهای ارزیابی و نظارت بر پیشرفت تیم‌های استارتاپی در
-                  شتابدهنده‌ها و خانه‌های خلاق به‌شدت دستی، نامنظم و پراکنده است
-                  که موجب اتلاف زمان، عدم ارزیابی کیفی منصفانه و عدم شفافیت برای
-                  سرمایه‌گذار می‌شود.
-                </span>
+                <textarea aria-label="مسئله اصلی" maxLength={160} data-registration-detail="مسئله اصلی" data-registration-key="problem" defaultValue={registrationDraft.problem ?? ""} onChange={event => { registrationDraft.problem = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]"></textarea>
               </div>
             </div>
             <div className="flex h-[126px] flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[54]">
@@ -153,11 +148,7 @@ export default function Main() {
                 </span>
               </div>
               <div className="flex h-[96px] pt-[12px] pr-[12px] pb-[12px] pl-[12px] flex-col items-end self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[64]">
-                <span className="flex w-[904px] h-[72px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right z-[65]">
-                  شتابدهنده‌های عمومی و سازمانی، خانه‌های خلاق و نوآوری،
-                  پارک‌های علم و فناوری، سرمایه‌گذاران خطرپذیر (VC) و صندوق‌های
-                  پژوهش و فناوری.
-                </span>
+                <textarea aria-label="مشتریان هدف" maxLength={160} data-registration-detail="مشتریان هدف" data-registration-key="customers" defaultValue={registrationDraft.customers ?? ""} onChange={event => { registrationDraft.customers = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]"></textarea>
               </div>
             </div>
             <div className="flex gap-[16px] items-start self-stretch shrink-0 flex-nowrap relative z-[66]">
@@ -207,9 +198,7 @@ export default function Main() {
                   </span>
                 </div>
                 <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[88]">
-                  <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[89]">
-                    فروش اشتراک (SaaS) / کارمزد از سرمایه‌گذاری
-                  </span>
+                  <input aria-label="مدل درآمدی" maxLength={160} data-registration-detail="مدل درآمدی" data-registration-key="revenue" defaultValue={registrationDraft.revenue ?? ""} onChange={event => { registrationDraft.revenue = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
                 </div>
               </div>
             </div>
@@ -227,9 +216,7 @@ export default function Main() {
                     </span>
                   </div>
                   <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[97]">
-                    <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[98]">
-                      ۱۲ مرکز نوآوری
-                    </span>
+                    <input aria-label="تعداد مشتریان پرداخت‌کننده" maxLength={160} data-registration-detail="تعداد مشتریان پرداخت‌کننده" data-registration-key="paidCustomers" defaultValue={registrationDraft.paidCustomers ?? ""} onChange={event => { registrationDraft.paidCustomers = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
                   </div>
                 </div>
                 <div className="flex w-[450px] flex-col gap-[8px] items-end shrink-0 flex-nowrap relative z-[99]">
@@ -239,9 +226,7 @@ export default function Main() {
                     </span>
                   </div>
                   <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[102]">
-                    <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[103]">
-                      ۱۵۰ مدیر و مربی
-                    </span>
+                    <input aria-label="تعداد کاربران فعال" maxLength={160} data-registration-detail="تعداد کاربران فعال" data-registration-key="activeUsers" defaultValue={registrationDraft.activeUsers ?? ""} onChange={event => { registrationDraft.activeUsers = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
                   </div>
                 </div>
               </div>
@@ -253,9 +238,7 @@ export default function Main() {
                     </span>
                   </div>
                   <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[108]">
-                    <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[109]">
-                      ۲۵٪
-                    </span>
+                    <input aria-label="نرخ رشد" maxLength={160} data-registration-detail="نرخ رشد" data-registration-key="growth" defaultValue={registrationDraft.growth ?? ""} onChange={event => { registrationDraft.growth = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
                   </div>
                 </div>
                 <div className="flex w-[450px] flex-col gap-[8px] items-end shrink-0 flex-nowrap relative z-[110]">
@@ -265,9 +248,7 @@ export default function Main() {
                     </span>
                   </div>
                   <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[113]">
-                    <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[114]">
-                      ۸۰,۰۰۰,۰۰۰ تومان
-                    </span>
+                    <input aria-label="درآمد ماهانه" maxLength={160} data-registration-detail="درآمد ماهانه" data-registration-key="monthlyRevenue" defaultValue={registrationDraft.monthlyRevenue ?? ""} onChange={event => { registrationDraft.monthlyRevenue = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
                   </div>
                 </div>
               </div>

@@ -1,4 +1,4 @@
-import { registrationDraft, registrationFiles } from "../../draft";
+import { registrationDraft, registrationFiles, registrationDetails } from "../../draft";
 import React from "react";
 import "./index.css";
 
@@ -206,6 +206,13 @@ export default function Main() {
               </div>
             </div>
             <div className="flex flex-col gap-[12px] items-end self-stretch shrink-0 flex-nowrap relative z-[90]">
+              {Object.entries(registrationDetails).some(([, value]) => value) && (
+                <dl className="w-full space-y-2 text-right text-sm">
+                  {Object.entries(registrationDetails).filter(([, value]) => value).map(([label, value]) => (
+                    <div key={label}><dt className="font-bold">{label}</dt><dd className="whitespace-pre-wrap break-words">{value}</dd></div>
+                  ))}
+                </dl>
+              )}
               <span className="flex w-[102px] h-[23px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[15px] font-bold leading-[23px] text-[#2d3748] relative text-right whitespace-nowrap z-[91]">
                 تأییدیه و تعهدات
               </span>
