@@ -24,10 +24,15 @@ require(set(otp["networks"]) == {"private"} and cfg["networks"]["private"]["inte
 require(env["KC_PROXY_HEADERS"] == "xforwarded" and env["KC_PROXY_TRUSTED_ADDRESSES"] == "172.30.88.10", "trusted proxy")
 require(services["gateway"]["networks"]["frontend"]["ipv4_address"] == "172.30.88.10", "gateway address")
 require(env["MOON_LOGIN_OTP_JDBC_URL"] == "jdbc:postgresql://moon-login-otp-db:5432/moon_login_otp", "dedicated DB")
-require(env["MOON_LOGIN_OTP_DB_USER"] == db["POSTGRES_USER"] == "moon_login_otp", "dedicated DB user")
+require(env["MOON_LOGIN_OTP_DB_USER"] == "moon_login_otp", "restricted application DB user")
+require(db["POSTGRES_USER"] == "moon_login_otp_owner", "separate database owner")
 password = env["MOON_LOGIN_OTP_DB_PASSWORD"]
-require(password == db["POSTGRES_PASSWORD"] and password and not password.startswith("REPLACE_"), "OTP DB credentials")
-require(password not in (env["KC_DB_PASSWORD"], services["moon-db"]["environment"]["POSTGRES_PASSWORD"]), "separate DB credentials")
+owner_password = db["POSTGRES_PASSWORD"]
+require(password and not password.startswith("REPLACE_"), "OTP application credentials")
+require(owner_password and not owner_password.startswith("REPLACE_"), "OTP owner credentials")
+require(password != owner_password, "application and owner credentials must differ")
+require(password not in (env["KC_DB_PASSWORD"], services["moon-db"]["environment"]["POSTGRES_PASSWORD"]), "separate application credentials")
+require(owner_password not in (env["KC_DB_PASSWORD"], services["moon-db"]["environment"]["POSTGRES_PASSWORD"]), "separate owner credentials")
 key = env["MOON_LOGIN_OTP_HMAC_KEY"]
 try:
     decoded = base64.b64decode(key, validate=True)

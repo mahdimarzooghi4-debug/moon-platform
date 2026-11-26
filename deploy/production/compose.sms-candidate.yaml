@@ -21,11 +21,14 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_DB: moon_login_otp
-      POSTGRES_USER: moon_login_otp
-      POSTGRES_PASSWORD: ${MOON_LOGIN_OTP_DB_PASSWORD:?set unique OTP DB password}
+      POSTGRES_USER: moon_login_otp_owner
+      POSTGRES_PASSWORD: ${MOON_LOGIN_OTP_OWNER_PASSWORD:?set separate OTP database owner password}
+      MOON_LOGIN_OTP_DB_PASSWORD: ${MOON_LOGIN_OTP_DB_PASSWORD:?set restricted OTP application password}
     volumes:
       - moon-login-otp-postgres:/var/lib/postgresql
-      - ../../backend/keycloak/sms-login/schema.sql:/docker-entrypoint-initdb.d/10-moon-login-otp.sql:ro
+      - ./otp-db-init/10-create-app-role.sh:/docker-entrypoint-initdb.d/10-create-app-role.sh:ro
+      - ../../backend/keycloak/sms-login/schema.sql:/docker-entrypoint-initdb.d/20-moon-login-otp.sql:ro
+      - ./otp-db-init/30-grant-app-role.sql:/docker-entrypoint-initdb.d/30-grant-app-role.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U moon_login_otp -d moon_login_otp"]
       interval: 10s

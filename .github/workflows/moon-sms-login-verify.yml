@@ -28,8 +28,8 @@ jobs:
         image: postgres:18
         env:
           POSTGRES_DB: otp_test
-          POSTGRES_USER: otp_test
-          POSTGRES_PASSWORD: ci-only-otp
+          POSTGRES_USER: otp_owner
+          POSTGRES_PASSWORD: ci-only-owner
         ports:
           - 5432:5432
         options: >-
@@ -37,9 +37,10 @@ jobs:
           --health-interval 10s --health-timeout 5s --health-retries 10
     env:
       OTP_TEST_JDBC: jdbc:postgresql://localhost:5432/otp_test
-      OTP_TEST_USER: otp_test
-      OTP_TEST_PASSWORD: ci-only-otp
-      PGPASSWORD: ci-only-otp
+      OTP_TEST_USER: otp_app
+      OTP_TEST_PASSWORD: ci-only-app
+      OTP_TEST_OWNER: otp_owner
+      OTP_TEST_OWNER_PASSWORD: ci-only-owner
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -53,7 +54,27 @@ jobs:
       - name: Test real PostgreSQL atomic transitions and shared limits
         run: |
           set -euo pipefail
-          psql -h localhost -U otp_test -d otp_test -v ON_ERROR_STOP=1 -f backend/keycloak/sms-login/schema.sql
+          PGPASSWORD="$OTP_TEST_OWNER_PASSWORD" psql -h localhost -U "$OTP_TEST_OWNER" -d otp_test -v ON_ERROR_STOP=1 \
+            --set=app_password="$OTP_TEST_PASSWORD" <<'SQL'
+          CREATE ROLE otp_app LOGIN PASSWORD :'app_password'
+            NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOREPLICATION NOBYPASSRLS;
+          REVOKE CREATE ON SCHEMA public FROM PUBLIC;
+          GRANT CONNECT ON DATABASE otp_test TO otp_app;
+          GRANT USAGE ON SCHEMA public TO otp_app;
+          SQL
+          PGPASSWORD="$OTP_TEST_OWNER_PASSWORD" psql -h localhost -U "$OTP_TEST_OWNER" -d otp_test -v ON_ERROR_STOP=1 -f backend/keycloak/sms-login/schema.sql
+          PGPASSWORD="$OTP_TEST_OWNER_PASSWORD" psql -h localhost -U "$OTP_TEST_OWNER" -d otp_test -v ON_ERROR_STOP=1 \
+            -c 'GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE moon_login_otp_challenge, moon_login_otp_send TO otp_app;'
+          role_flags="$(PGPASSWORD="$OTP_TEST_OWNER_PASSWORD" psql -h localhost -U "$OTP_TEST_OWNER" -d otp_test -Atc \
+            "SELECT rolsuper || '|' || rolcreatedb || '|' || rolcreaterole || '|' || rolbypassrls FROM pg_roles WHERE rolname='otp_app'")"
+          test "$role_flags" = "f|f|f|f"
+          if PGPASSWORD="$OTP_TEST_PASSWORD" psql -h localhost -U "$OTP_TEST_USER" -d otp_test -v ON_ERROR_STOP=1 \
+            -c 'CREATE TABLE otp_app_must_not_ddl(id integer)'; then
+            echo "Restricted OTP application role unexpectedly created a table"
+            exit 1
+          fi
+          PGPASSWORD="$OTP_TEST_PASSWORD" psql -h localhost -U "$OTP_TEST_USER" -d otp_test -v ON_ERROR_STOP=1 \
+            -c 'SELECT count(*) FROM moon_login_otp_challenge' >/dev/null
           out=$(mktemp -d)
           trap 'rm -rf "$out"' EXIT
           javac -Xlint:all -Werror -cp /usr/share/java/postgresql.jar -d "$out" $(find backend/keycloak/sms-login/src -name '*.java')
@@ -151,7 +172,8 @@ jobs:
           docker run --rm "moon-platform/keycloak:$GITHUB_SHA" start --optimized --help >/dev/null
       - name: Validate candidate Compose using disposable credentials
         env:
-          MOON_LOGIN_OTP_DB_PASSWORD: ci-only-separate-otp-db
+          MOON_LOGIN_OTP_DB_PASSWORD: ci-only-separate-otp-app
+          MOON_LOGIN_OTP_OWNER_PASSWORD: ci-only-separate-otp-owner
           MOON_SMS_IR_API_KEY: ci-only-not-a-real-key
           MOON_SMS_IR_STARTUP_TEMPLATE_ID: '743974'
           MOON_SMS_IR_STARTUP_CODE_PARAMETER: CODE
@@ -168,6 +190,29 @@ jobs:
             echo "Invalid HMAC key unexpectedly accepted"
             exit 1
           fi
+          compose=(docker compose --env-file deploy/production/env.example -f deploy/production/compose.yaml -f deploy/production/compose.sms-candidate.yaml)
+          cleanup() { "${compose[@]}" down --volumes --remove-orphans >/dev/null 2>&1 || true; }
+          trap cleanup EXIT
+          "${compose[@]}" up -d moon-login-otp-db
+          ready=0
+          for _ in $(seq 1 60); do
+            if "${compose[@]}" exec -T moon-login-otp-db pg_isready -U moon_login_otp_owner -d moon_login_otp >/dev/null 2>&1; then ready=1; break; fi
+            sleep 1
+          done
+          test "$ready" = 1
+          flags=$("${compose[@]}" exec -T moon-login-otp-db psql -U moon_login_otp_owner -d moon_login_otp -Atc \
+            "SELECT rolsuper || '|' || rolcreatedb || '|' || rolcreaterole || '|' || rolbypassrls FROM pg_roles WHERE rolname='moon_login_otp'")
+          test "$flags" = "f|f|f|f"
+          if "${compose[@]}" exec -T moon-login-otp-db psql -U moon_login_otp_owner -d moon_login_otp -v ON_ERROR_STOP=1 \
+            -c 'CREATE TABLE moon_login_otp_must_not_ddl(id integer)' >/dev/null 2>&1; then
+            echo "OTP runtime role unexpectedly created a table"
+            exit 1
+          fi
+          "${compose[@]}" exec -T moon-login-otp-db psql -U moon_login_otp_owner -d moon_login_otp -v ON_ERROR_STOP=1 \
+            -c "GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE moon_login_otp_challenge, moon_login_otp_send TO moon_login_otp"
+          "${compose[@]}" exec -T -e PGPASSWORD="$MOON_LOGIN_OTP_DB_PASSWORD" moon-login-otp-db \
+            psql -h 127.0.0.1 -U moon_login_otp -d moon_login_otp -v ON_ERROR_STOP=1 \
+            -c 'SELECT count(*) FROM moon_login_otp_challenge' >/dev/null
 
   release-bundle-contract:
     runs-on: ubuntu-24.04

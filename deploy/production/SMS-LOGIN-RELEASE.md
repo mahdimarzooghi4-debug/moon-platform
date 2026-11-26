@@ -4,7 +4,7 @@ This is a preparation package, not authorization to install or activate the prov
 
 ## Candidate artifact and configuration
 
-CI packages an optimized Keycloak 26.7.3 image with the unchanged tested provider. The base production compose is not changed. The separate compose.sms-candidate.yaml overlay is opt-in only. It adds a dedicated private PostgreSQL volume, the existing OTP schema on first initialization, explicit secrets and the trusted Caddy proxy address. The overlay does not bind a flow, run a realm import, or change the running realm. The existing API and Keycloak databases are not reused for OTP. PostgreSQL initialization scripts run only for a new volume; independently verify schema and privileges on existing volumes. No real secrets are committed.
+CI packages an optimized Keycloak 26.7.3 image with the unchanged tested provider. The base production compose is not changed. The separate compose.sms-candidate.yaml overlay is opt-in only. It adds a dedicated private PostgreSQL volume, a separate database-owner role and restricted runtime role, the existing OTP schema on first initialization, explicit secrets and the trusted Caddy proxy address. Keycloak connects only as `moon_login_otp` (NOSUPERUSER, NOCREATEDB, NOCREATEROLE, NOINHERIT, NOBYPASSRLS); the distinct `moon_login_otp_owner` role is used only by PostgreSQL initialization. Runtime receives only SELECT/INSERT/UPDATE/DELETE on the two OTP tables and USAGE on public; it cannot create tables, roles, databases, or extensions. The overlay does not bind a flow, run a realm import, or change the running realm. The existing API and Keycloak databases are not reused for OTP. PostgreSQL initialization scripts run only for a new volume; independently verify schema and privileges on existing volumes. No real secrets are committed.
 
 On an approved server with a protected mode-600 environment file, the following is a read-only syntax/contract check (not approval or activation):
 ```sh
@@ -12,7 +12,7 @@ docker compose --env-file deploy/production/.env.production \
   -f deploy/production/compose.yaml -f deploy/production/compose.sms-candidate.yaml \
   config --format json | python3 deploy/production/validate-sms-candidate.py
 ```
-Never print or save the rendered environment. The image tag is the reviewed release SHA, not a mutable tag. Generate unique OTP database credentials and an independent stable random HMAC key on the protected server. Use the existing authorized SMS.ir API credential only after confirming the template and parameter. Do not substitute test credentials.
+Never print or save the rendered environment. The image tag is the reviewed release SHA, not a mutable tag. Generate two different unique OTP database credentials (owner and application) and an independent stable random HMAC key on the protected server. Do not give the owner credential to Keycloak. Use the existing authorized SMS.ir API credential only after confirming the template and parameter. Do not substitute test credentials.
 
 ## Release prerequisites (not yet evidenced)
 
