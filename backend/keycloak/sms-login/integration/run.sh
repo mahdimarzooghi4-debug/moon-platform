@@ -51,6 +51,18 @@ docker run -d --name moon-ci-keycloak --network moon-ci-otp --network-alias keyc
   -v "$fixture/trust.p12:/fixture/trust.p12:ro" \
   -v "$fixture/moon-realm.json:/opt/keycloak/data/import/moon-realm.json:ro" \
   moon-platform/keycloak:ci-browser start --optimized --import-realm >/dev/null
+# Fail on Keycloak startup errors before trying to resolve it through Caddy.
+ready=0
+for i in $(seq 1 90); do
+  if [ "$(docker inspect -f '{{.State.Running}}' moon-ci-keycloak)" != true ]; then
+    docker inspect -f 'exit={{.State.ExitCode}} oom={{.State.OOMKilled}}' moon-ci-keycloak
+    docker logs --tail 100 moon-ci-keycloak
+    exit 1
+  fi
+  if curl -fsS http://127.0.0.1:18083/identity/realms/moon/.well-known/openid-configuration >/dev/null 2>&1; then ready=1; break; fi
+  sleep 2
+done
+if [ "$ready" != 1 ]; then docker logs --tail 100 moon-ci-keycloak; exit 1; fi
 # Use the actual production Caddyfile with a disposable HTTP-only site address.
 # The private admin port is loopback-only in CI; no public admin route.
 docker run -d --name moon-ci-gateway --network moon-ci-otp --ip 172.30.88.10 \
