@@ -30,6 +30,10 @@ namespace Moon.Platform.Api.Infrastructure.Persistence.Migrations
                     b.Property<string>("Team").HasMaxLength(4000).HasColumnType("character varying(4000)");
                     b.Property<string>("Product").HasMaxLength(4000).HasColumnType("character varying(4000)");
                     b.Property<string>("Audience").HasMaxLength(200).HasColumnType("character varying(200)");
+                    b.Property<string>("NationalId").HasMaxLength(10).HasColumnType("character varying(10)");
+                    b.Property<byte[]>("Logo").HasColumnType("bytea");
+                    b.Property<byte[]>("LegalDocument").HasColumnType("bytea");
+                    b.Property<byte[]>("IdentityDocument").HasColumnType("bytea");
                     b.Property<byte[]>("PitchDeck").HasColumnType("bytea");
                     b.Property<string>("ActivationSubject").HasMaxLength(36).HasColumnType("character varying(36)");
                     b.Property<string>("TrackingCode").IsRequired().HasMaxLength(48).HasColumnType("character varying(48)");

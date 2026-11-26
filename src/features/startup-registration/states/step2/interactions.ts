@@ -95,11 +95,15 @@ function navigate(path: string) {
 
 async function continueRegistration(label: string, path: string) {
   if (label === "ذخیره و ادامه") {
-    document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("[data-registration-detail]").forEach(field => {
+    document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>("[data-registration-detail]").forEach(field => {
       if (field.dataset.registrationDetail) registrationDetails[field.dataset.registrationDetail] = field.value.trim();
     });
-    for (const field of document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("[data-registration-field]")) {
+    for (const field of document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>("[data-registration-field]")) {
       if (!field.reportValidity()) return;
+    }
+    if (path === STEP2_PATH && !/^09[0-9]{9}$/.test(normalizeIranMobile(registrationDraft.mobile ?? ""))) {
+      showRegistrationError("شماره موبایل را درست وارد کنید.");
+      return;
     }
     if (path === STEP4_PATH && !registrationFiles.pitchDeck) {
       showRegistrationError("فایل معرفی استارتاپ را انتخاب کنید.");
@@ -132,13 +136,17 @@ async function continueRegistration(label: string, path: string) {
     form.set("description", description);
     form.set("mobile", normalizeIranMobile(registrationDraft.mobile ?? ""));
     form.set("contactName", [registrationDraft.firstName, registrationDraft.lastName].join(" ").trim());
-    form.set("pitchDeck", pitchDeck);
+    form.set("nationalId", (registrationDraft.nationalId ?? "").replace(/[۰-۹٠-٩]/g, digit =>
+      String(digit.charCodeAt(0) - (digit >= "۰" ? 1776 : 1632))));
+    for (const [key, file] of Object.entries(registrationFiles)) {
+      if (file) form.set(key, file);
+    }
     sending = true;
     try {
       const result = await submitStartupApplication(form);
       sessionStorage.setItem("moon-startup-tracking-code", result.trackingCode);
       for (const key of Object.keys(registrationDraft)) delete registrationDraft[key];
-      delete registrationFiles.pitchDeck;
+      for (const key of ["pitchDeck", "logo", "legalDocument", "identityDocument"] as const) delete registrationFiles[key];
       for (const key of Object.keys(registrationDetails)) delete registrationDetails[key];
     } catch (error) {
       showRegistrationError(error instanceof Error ? error.message : "ارسال انجام نشد.");

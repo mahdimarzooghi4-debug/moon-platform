@@ -20,6 +20,10 @@ public sealed class StartupApplication
     [MaxLength(4000)] public string? Product { get; init; }
     [MaxLength(200)] public string? Audience { get; init; }
     public byte[]? PitchDeck { get; init; }
+    [MaxLength(10)] public string? NationalId { get; init; }
+    public byte[]? Logo { get; init; }
+    public byte[]? LegalDocument { get; init; }
+    public byte[]? IdentityDocument { get; init; }
     [MaxLength(32)] public string Status { get; set; } = "pending_review";
     [MaxLength(36)] public string? ActivationSubject { get; set; }
     public DateTimeOffset SubmittedAtUtc { get; init; } = DateTimeOffset.UtcNow;
@@ -37,7 +41,7 @@ public static class StartupRegistrationEndpoints
             HttpRequest request, MoonDbContext db, CancellationToken ct) =>
         {
             const int maxDocumentSize = 15 * 1024 * 1024;
-            if (!request.HasFormContentType || request.ContentLength > maxDocumentSize + 64 * 1024)
+            if (!request.HasFormContentType || request.ContentLength > 28 * 1024 * 1024 + 64 * 1024)
                 return Results.BadRequest(new { code = "invalid_startup_application" });
 
             var form = await request.ReadFormAsync(ct);
@@ -50,6 +54,10 @@ public static class StartupRegistrationEndpoints
             var product = form["product"].ToString().Trim();
             var audience = form["audience"].ToString().Trim();
             var pitchDeck = form.Files.GetFile("pitchDeck");
+            var nationalId = form["nationalId"].ToString().Trim();
+            var logo = form.Files.GetFile("logo");
+            var legal = form.Files.GetFile("legalDocument");
+            var identity = form.Files.GetFile("identityDocument");
             if (name is not { Length: > 0 and <= 160 }
                 || contact is not { Length: > 0 and <= 120 }
                 || !System.Text.RegularExpressions.Regex.IsMatch(mobile, @"\A09[0-9]{9}\z")
@@ -61,15 +69,23 @@ public static class StartupRegistrationEndpoints
                 || product is not { Length: > 0 and <= 4000 }
                 || audience is not { Length: > 0 and <= 200 }
                 || pitchDeck is null || pitchDeck.Length is < 5 or > maxDocumentSize
-                || form.Files.Count != 1)
+                || (nationalId.Length != 0 && !System.Text.RegularExpressions.Regex.IsMatch(nationalId, @"\A[0-9]{10}\z"))
+                || logo is { Length: < 1 or > 5 * 1024 * 1024 }
+                || legal is { Length: < 1 or > 4 * 1024 * 1024 }
+                || identity is { Length: < 1 or > 4 * 1024 * 1024 }
+                || form.Files.Count != 1 + (logo is null ? 0 : 1) + (legal is null ? 0 : 1) + (identity is null ? 0 : 1))
                 return Results.BadRequest(new { code = "invalid_startup_application" });
 
-            using var upload = pitchDeck.OpenReadStream();
-            using var buffer = new MemoryStream((int)pitchDeck.Length);
-            await upload.CopyToAsync(buffer, ct);
-            var document = buffer.ToArray();
-            if (!document.AsSpan().StartsWith("%PDF-"u8))
+            var document = await ReadFileAsync(pitchDeck, ct);
+            if (document is null || !document.AsSpan().StartsWith("%PDF-"u8))
                 return Results.BadRequest(new { code = "invalid_pitch_deck" });
+
+            var logoContent = await ReadFileAsync(logo, ct);
+            var legalContent = await ReadFileAsync(legal, ct);
+            var identityContent = await ReadFileAsync(identity, ct);
+            if ((logoContent is not null && !IsImage(logoContent) && !IsSvg(logoContent))
+                || !IsSupportingDocument(legalContent) || !IsSupportingDocument(identityContent))
+                return Results.BadRequest(new { code = "invalid_startup_attachment" });
 
             var application = new StartupApplication
             {
@@ -82,6 +98,10 @@ public static class StartupRegistrationEndpoints
                 Product = product,
                 Audience = audience,
                 PitchDeck = document,
+                NationalId = nationalId.Length == 0 ? null : nationalId,
+                Logo = logoContent,
+                LegalDocument = legalContent,
+                IdentityDocument = identityContent,
                 TrackingCode = Convert.ToHexString(RandomNumberGenerator.GetBytes(24))
             };
             db.StartupApplications.Add(application);
@@ -135,6 +155,10 @@ public static class StartupRegistrationEndpoints
                     application.Product,
                     application.Audience,
                     HasPitchDeck = application.PitchDeck != null,
+                    application.NationalId,
+                    HasLogo = application.Logo != null,
+                    HasLegalDocument = application.LegalDocument != null,
+                    HasIdentityDocument = application.IdentityDocument != null,
                     application.Status,
                     application.SubmittedAtUtc
                 })
@@ -156,6 +180,33 @@ public static class StartupRegistrationEndpoints
                 .Select(application => application.PitchDeck)
                 .SingleOrDefaultAsync(ct);
             return content is null ? Results.NotFound() : Results.File(content, "application/pdf", "pitch-deck.pdf");
+        }).RequireAuthorization();
+
+        endpoints.MapGet("/api/v1/creative-house/startup-applications/{id:guid}/attachments/{kind}", async Task<IResult> (
+            Guid id, string kind, ClaimsPrincipal principal, IIdentitySyncService identity, MoonDbContext db, CancellationToken ct) =>
+        {
+            var current = await identity.GetCurrentAsync(principal, ct);
+            if (current is not { IsActive: true }
+                || !current.Memberships.Any(membership =>
+                    membership.OrganizationType == "creative_house"
+                    && membership.RoleCode is SystemRoles.ProductOwner or SystemRoles.Evaluator))
+                return Results.Forbid();
+
+            var application = db.StartupApplications.AsNoTracking().Where(item => item.Id == id);
+            var query = kind switch
+            {
+                "logo" => application.Select(item => item.Logo),
+                "legalDocument" => application.Select(item => item.LegalDocument),
+                "identityDocument" => application.Select(item => item.IdentityDocument),
+                _ => null
+            };
+            var content = query is null ? null : await query.SingleOrDefaultAsync(ct);
+            if (content is null) return Results.NotFound();
+
+            var extension = content.AsSpan().StartsWith("%PDF-"u8) ? "pdf"
+                : content.AsSpan().StartsWith(new byte[] { 0x89, 0x50, 0x4e, 0x47 }) ? "png"
+                : IsImage(content) ? "jpg" : "svg";
+            return Results.File(content, "application/octet-stream", $"{kind}.{extension}");
         }).RequireAuthorization();
 
         endpoints.MapPost("/api/v1/creative-house/startup-applications/{id:guid}/approve", async Task<IResult> (
@@ -215,4 +266,38 @@ public static class StartupRegistrationEndpoints
             return Results.NoContent();
         }).RequireAuthorization();
     }
+    private static async Task<byte[]?> ReadFileAsync(IFormFile? file, CancellationToken ct)
+    {
+        if (file is null) return null;
+        using var buffer = new MemoryStream((int)file.Length);
+        await file.CopyToAsync(buffer, ct);
+        return buffer.ToArray();
+    }
+
+    private static bool IsImage(byte[] file) =>
+        file.AsSpan().StartsWith(new byte[] { 0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a })
+        || file.AsSpan().StartsWith(new byte[] { 0xff, 0xd8, 0xff });
+
+    private static bool IsSvg(byte[] file)
+    {
+        try
+        {
+            using var stream = new MemoryStream(file);
+            using var reader = System.Xml.XmlReader.Create(stream, new System.Xml.XmlReaderSettings
+            {
+                DtdProcessing = System.Xml.DtdProcessing.Prohibit,
+                XmlResolver = null
+            });
+            return reader.MoveToContent() == System.Xml.XmlNodeType.Element
+                && reader.LocalName == "svg" && reader.NamespaceURI == "http://www.w3.org/2000/svg";
+        }
+        catch (System.Xml.XmlException)
+        {
+            return false;
+        }
+    }
+
+    private static bool IsSupportingDocument(byte[]? file) =>
+        file is null || IsImage(file) || file.AsSpan().StartsWith("%PDF-"u8);
+
 }

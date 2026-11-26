@@ -13,6 +13,10 @@ export type StartupApplicationInput = {
   product?: string;
   audience?: string;
   hasPitchDeck?: boolean;
+  nationalId?: string;
+  hasLogo?: boolean;
+  hasLegalDocument?: boolean;
+  hasIdentityDocument?: boolean;
 };
 
 export type StartupApplicationStatus = {
@@ -66,17 +70,21 @@ export function startupApplicationStatus(status: string) {
   return "در صف بررسی خانهٔ خلاق";
 }
 
-export async function downloadStartupPitchDeck(id: string) {
+export type StartupAttachment = "logo" | "legalDocument" | "identityDocument";
+
+export async function downloadStartupAttachment(id: string, kind: StartupAttachment | "pitchDeck") {
   const session = await getValidSession();
   if (!session) throw new Error("نشست شما پایان یافته است.");
-  const response = await fetch(baseUrl + "/api/v1/creative-house/startup-applications/" + encodeURIComponent(id) + "/pitch-deck", {
+  const path = kind === "pitchDeck" ? "/pitch-deck" : "/attachments/" + kind;
+  const response = await fetch(baseUrl + "/api/v1/creative-house/startup-applications/" + encodeURIComponent(id) + path, {
     headers: { Authorization: `Bearer ${session.accessToken}` },
   });
   if (!response.ok) throw new Error("دریافت فایل معرفی انجام نشد.");
   const url = URL.createObjectURL(await response.blob());
   const link = document.createElement("a");
   link.href = url;
-  link.download = "pitch-deck.pdf";
+  const disposition = response.headers.get("Content-Disposition") ?? "";
+  link.download = disposition.match(/filename="?([a-zA-Z0-9.-]+)/)?.[1] ?? (kind === "pitchDeck" ? "pitch-deck.pdf" : kind);
   link.click();
   window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 }

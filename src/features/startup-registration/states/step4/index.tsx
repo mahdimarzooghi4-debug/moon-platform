@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { registrationDraft, registrationFiles, registrationDetails } from "../../draft";
 import React from "react";
 import "./index.css";
@@ -101,9 +102,9 @@ export default function Main() {
               <div className="flex gap-[16px] items-start self-stretch shrink-0 flex-nowrap relative z-[43]">
                 <div className="flex w-[450px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col gap-[12px] items-end shrink-0 flex-nowrap bg-[#f8fafc] rounded-[12px] border-solid border border-[#e2e8f0] relative z-[44]">
                   <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[45]">
-                    <span className="flex w-[84px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-semibold leading-[20px] text-[#2094e3] relative text-right whitespace-nowrap z-[46]">
+                    <Link to="/register/startup" className="flex w-[84px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-semibold leading-[20px] text-[#2094e3] relative text-right whitespace-nowrap z-[46]">
                       ویرایش اطلاعات
-                    </span>
+                    </Link>
                     <span className="flex w-[130px] h-[23px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[15px] font-bold leading-[23px] text-[#1a202c] relative text-right whitespace-nowrap z-[47]">
                       اطلاعات نماینده اصلی
                     </span>
@@ -120,9 +121,9 @@ export default function Main() {
                 </div>
                 <div className="flex w-[450px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col gap-[12px] items-end shrink-0 flex-nowrap bg-[#f8fafc] rounded-[12px] border-solid border border-[#e2e8f0] relative z-[52]">
                   <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[53]">
-                    <span className="flex w-[84px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-semibold leading-[20px] text-[#2094e3] relative text-right whitespace-nowrap z-[54]">
+                    <Link to="/register/startup" className="flex w-[84px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-semibold leading-[20px] text-[#2094e3] relative text-right whitespace-nowrap z-[54]">
                       ویرایش اطلاعات
-                    </span>
+                    </Link>
                     <span className="flex w-[131px] h-[23px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[15px] font-bold leading-[23px] text-[#1a202c] relative text-right whitespace-nowrap z-[55]">
                       اطلاعات پایه استارتاپ
                     </span>
@@ -139,9 +140,9 @@ export default function Main() {
               <div className="flex gap-[16px] items-start self-stretch shrink-0 flex-nowrap relative z-[60]">
                 <div className="flex w-[450px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col gap-[12px] items-end shrink-0 flex-nowrap bg-[#f8fafc] rounded-[12px] border-solid border border-[#e2e8f0] relative z-[61]">
                   <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[62]">
-                    <span className="flex w-[84px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-semibold leading-[20px] text-[#2094e3] relative text-right whitespace-nowrap z-[63]">
+                    <Link to="/register/startup/states/step2" className="flex w-[84px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-semibold leading-[20px] text-[#2094e3] relative text-right whitespace-nowrap z-[63]">
                       ویرایش اطلاعات
-                    </span>
+                    </Link>
                     <span className="flex w-[64px] h-[23px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[15px] font-bold leading-[23px] text-[#1a202c] relative text-right whitespace-nowrap z-[64]">
                       اعضای تیم
                     </span>
@@ -155,9 +156,9 @@ export default function Main() {
                 </div>
                 <div className="flex w-[450px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col gap-[12px] items-end shrink-0 flex-nowrap bg-[#f8fafc] rounded-[12px] border-solid border border-[#e2e8f0] relative z-[68]">
                   <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[69]">
-                    <span className="flex w-[84px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-semibold leading-[20px] text-[#2094e3] relative text-right whitespace-nowrap z-[70]">
+                    <Link to="/register/startup/states/step2" className="flex w-[84px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-semibold leading-[20px] text-[#2094e3] relative text-right whitespace-nowrap z-[70]">
                       ویرایش اطلاعات
-                    </span>
+                    </Link>
                     <span className="flex w-[85px] h-[23px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[15px] font-bold leading-[23px] text-[#1a202c] relative text-right whitespace-nowrap z-[71]">
                       محصول و بازار
                     </span>
@@ -173,25 +174,25 @@ export default function Main() {
               <div className="flex gap-[16px] items-start self-stretch shrink-0 flex-nowrap relative z-[75]">
                 <div className="flex w-[450px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col gap-[12px] items-end shrink-0 flex-nowrap bg-[#f8fafc] rounded-[12px] border-solid border border-[#e2e8f0] relative z-[76]">
                   <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[77]">
-                    <span className="flex w-[84px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-semibold leading-[20px] text-[#2094e3] relative text-right whitespace-nowrap z-[78]">
+                    <Link to="/register/startup/states/step3" className="flex w-[84px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-semibold leading-[20px] text-[#2094e3] relative text-right whitespace-nowrap z-[78]">
                       ویرایش اطلاعات
-                    </span>
+                    </Link>
                     <span className="flex w-[117px] h-[23px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[15px] font-bold leading-[23px] text-[#1a202c] relative text-right whitespace-nowrap z-[79]">
                       مدارک بارگذاری‌شده
                     </span>
                   </div>
                   <div className="flex flex-col gap-[6px] items-end self-stretch shrink-0 flex-nowrap relative z-[80]">
                     <span className="flex w-[199px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#4a5568] relative text-right whitespace-nowrap z-[81]">
-                      {registrationFiles.pitchDeck?.name}
+                      {Object.values(registrationFiles).filter(Boolean).map(file => file?.name).join("، ")}
                     </span>
 
                   </div>
                 </div>
                 <div className="flex w-[450px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col gap-[12px] items-end shrink-0 flex-nowrap bg-[#f8fafc] rounded-[12px] border-solid border border-[#e2e8f0] relative z-[83]">
                   <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[84]">
-                    <span className="flex w-[84px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-semibold leading-[20px] text-[#2094e3] relative text-right whitespace-nowrap z-[85]">
+                    <Link to="/register/startup/states/step3" className="flex w-[84px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-semibold leading-[20px] text-[#2094e3] relative text-right whitespace-nowrap z-[85]">
                       ویرایش اطلاعات
-                    </span>
+                    </Link>
                     <span className="flex w-[101px] h-[23px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[15px] font-bold leading-[23px] text-[#1a202c] relative text-right whitespace-nowrap z-[86]">
                       حوزه اثر اجتماعی
                     </span>
@@ -206,6 +207,9 @@ export default function Main() {
               </div>
             </div>
             <div className="flex flex-col gap-[12px] items-end self-stretch shrink-0 flex-nowrap relative z-[90]">
+              {registrationDraft.email && <p>ایمیل <bdi>{registrationDraft.email}</bdi></p>}
+              {registrationDraft.description && <p className="whitespace-pre-wrap break-words">راهکار {registrationDraft.description}</p>}
+              {registrationDraft.nationalId && <p>کد ملی نماینده: <bdi>{registrationDraft.nationalId}</bdi></p>}
               {Object.entries(registrationDetails).some(([, value]) => value) && (
                 <dl className="w-full space-y-2 text-right text-sm">
                   {Object.entries(registrationDetails).filter(([, value]) => value).map(([label, value]) => (
