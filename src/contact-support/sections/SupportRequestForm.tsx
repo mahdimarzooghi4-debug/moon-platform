@@ -1,6 +1,6 @@
 export function SupportRequestForm() {
   return (
-    <div className="flex flex-col gap-[28px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[133]">
+    <div className="mah-contact-support-form flex flex-col gap-[28px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[133]">
       <div className="flex flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[134]">
         <span className="flex w-[229px] h-[38px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[24px] font-extrabold leading-[37.5px] text-[#17324d] relative text-right whitespace-nowrap z-[135]">
           ثبت درخواست پشتیبانی
