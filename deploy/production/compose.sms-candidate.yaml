@@ -11,8 +11,8 @@ services:
       MOON_LOGIN_OTP_DB_PASSWORD: ${MOON_LOGIN_OTP_DB_PASSWORD:?set unique OTP DB password}
       MOON_LOGIN_OTP_HMAC_KEY: ${MOON_LOGIN_OTP_HMAC_KEY:?set independent stable base64 HMAC key}
       MOON_SMS_IR_API_KEY: ${MOON_SMS_IR_API_KEY:?set authorized SMS.ir secret}
-      MOON_SMS_IR_STARTUP_TEMPLATE_ID: ${MOON_SMS_IR_STARTUP_TEMPLATE_ID:?set verified SMS template}
-      MOON_SMS_IR_STARTUP_CODE_PARAMETER: ${MOON_SMS_IR_STARTUP_CODE_PARAMETER:?set verified code parameter}
+      MOON_SMS_IR_LOGIN_TEMPLATE_ID: ${MOON_SMS_IR_LOGIN_TEMPLATE_ID:?set verified SMS template}
+      MOON_SMS_IR_LOGIN_CODE_PARAMETER: ${MOON_SMS_IR_LOGIN_CODE_PARAMETER:?set verified code parameter}
     depends_on:
       moon-login-otp-db:
         condition: service_healthy

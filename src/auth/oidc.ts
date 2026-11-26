@@ -148,6 +148,7 @@ export async function completeLogin(search: string) {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body,
+    signal: AbortSignal.timeout(15_000),
   });
 
   if (!response.ok) throw new Error("token_exchange_failed");
@@ -158,11 +159,14 @@ export async function completeLogin(search: string) {
     expires_in?: number;
   };
 
+  if (typeof tokens.access_token !== "string" || typeof tokens.id_token !== "string")
+    throw new Error("missing_token");
   const accessPayload = decodeJwt(tokens.access_token);
-  if (tokens.id_token) {
-    const idPayload = decodeJwt(tokens.id_token);
-    if (idPayload.nonce && idPayload.nonce !== pending.nonce) throw new Error("invalid_nonce");
-  }
+  const idPayload = decodeJwt(tokens.id_token);
+  if (typeof pending.nonce !== "string" || !pending.nonce || idPayload.nonce !== pending.nonce)
+    throw new Error("invalid_nonce");
+  if (typeof accessPayload.sub !== "string" || !accessPayload.sub || idPayload.sub !== accessPayload.sub)
+    throw new Error("invalid_subject");
 
   const expiresAt = accessPayload.exp
     ? accessPayload.exp * 1000

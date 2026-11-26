@@ -175,8 +175,8 @@ jobs:
           MOON_LOGIN_OTP_DB_PASSWORD: ci-only-separate-otp-app
           MOON_LOGIN_OTP_OWNER_PASSWORD: ci-only-separate-otp-owner
           MOON_SMS_IR_API_KEY: ci-only-not-a-real-key
-          MOON_SMS_IR_STARTUP_TEMPLATE_ID: '743974'
-          MOON_SMS_IR_STARTUP_CODE_PARAMETER: CODE
+          MOON_SMS_IR_LOGIN_TEMPLATE_ID: '123456'
+          MOON_SMS_IR_LOGIN_CODE_PARAMETER: LOGIN_CODE
         run: |
           set -euo pipefail
           export MOON_SMS_KEYCLOAK_IMAGE_TAG="$GITHUB_SHA"
@@ -188,6 +188,12 @@ jobs:
             -f deploy/production/compose.yaml -f deploy/production/compose.sms-candidate.yaml \
             config --format json | python3 deploy/production/validate-sms-candidate.py; then
             echo "Invalid HMAC key unexpectedly accepted"
+            exit 1
+          fi
+          if MOON_SMS_IR_LOGIN_TEMPLATE_ID= MOON_SMS_IR_STARTUP_TEMPLATE_ID=743974 docker compose --env-file deploy/production/env.example \
+            -f deploy/production/compose.yaml -f deploy/production/compose.sms-candidate.yaml \
+            config --format json >/dev/null 2>&1; then
+            echo "Missing login template unexpectedly accepted"
             exit 1
           fi
           compose=(docker compose --env-file deploy/production/env.example -f deploy/production/compose.yaml -f deploy/production/compose.sms-candidate.yaml)

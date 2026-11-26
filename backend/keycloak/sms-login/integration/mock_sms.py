@@ -39,7 +39,7 @@ class Handler(BaseHTTPRequestHandler):
                 return self.reply(200, {})
             if self.path != "/v1/send/verify" or self.headers.get("X-API-KEY") != "ci-only-not-a-real-sms-key":
                 return self.reply(403, {"status": 0})
-            if data.get("templateId") != 743974 or len(data.get("parameters", [])) != 1 or data["parameters"][0].get("name") != "CODE":
+            if data.get("templateId") != 123456 or len(data.get("parameters", [])) != 1 or data["parameters"][0].get("name") != "LOGIN_CODE":
                 return self.reply(400, {"status": 0})
             messages.append(data)
             if mode == "reject":

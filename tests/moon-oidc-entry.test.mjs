@@ -43,3 +43,31 @@ for(const [role,panel] of Object.entries({company:"company",startup:"startup",sy
   assert.equal(auth.canAccessPanelPath([role],"/panel/"+panel),true);
 }
 console.log("Moon OIDC entry and existing role routing tests passed");
+
+ // These fixture tokens test callback claim guards only, not cryptographic validation.
+const token = (payload) => "fixture." + Buffer.from(JSON.stringify(payload)).toString("base64url") + ".fixture";
+async function callbackScenario(change, expectedError) {
+  auth.clearSession();
+  await auth.beginLogin({accountType:"internal",mobile:"09120000000"});
+  const pending = JSON.parse(storage.get("moon.auth.pending"));
+  const claims = {sub:"fixture-subject",nonce:pending.nonce};
+  const response = {access_token:token({sub:"fixture-subject",exp:Math.floor(Date.now()/1000)+300}),id_token:token(claims)};
+  change(response, claims);
+  globalThis.fetch = async () => new Response(JSON.stringify(response), {status:200});
+  const callback = "?code=fixture-code&state=" + pending.state;
+  if (expectedError) {
+    await assert.rejects(auth.completeLogin(callback), expectedError);
+    assert.equal(storage.has("moon.auth.session"),false);
+  } else {
+    const result = await auth.completeLogin(callback);
+    assert.equal(result.session.subject,"fixture-subject");
+    assert.equal(storage.has("moon.auth.pending"),false);
+  }
+}
+await callbackScenario(() => {},null);
+await callbackScenario(r => delete r.id_token,/missing_token/);
+await callbackScenario((r,c) => { delete c.nonce; r.id_token=token(c); },/invalid_nonce/);
+await callbackScenario((r,c) => { c.nonce="wrong"; r.id_token=token(c); },/invalid_nonce/);
+await callbackScenario((r,c) => { c.sub="different"; r.id_token=token(c); },/invalid_subject/);
+await callbackScenario(r => { r.access_token=token({}); },/invalid_subject/);
+console.log("Moon callback rejects absent/mismatched nonce and subject");

@@ -45,7 +45,7 @@ docker run -d --name moon-ci-keycloak --network moon-ci-otp -p 127.0.0.1:18081:8
   -e MOON_LOGIN_OTP_DB_USER=moonci -e MOON_LOGIN_OTP_DB_PASSWORD=ci-only-db \
   -e MOON_LOGIN_OTP_HMAC_KEY="$hmac" \
   -e MOON_SMS_IR_API_KEY=ci-only-not-a-real-sms-key \
-  -e MOON_SMS_IR_STARTUP_TEMPLATE_ID=743974 -e MOON_SMS_IR_STARTUP_CODE_PARAMETER=CODE \
+  -e MOON_SMS_IR_LOGIN_TEMPLATE_ID=123456 -e MOON_SMS_IR_LOGIN_CODE_PARAMETER=LOGIN_CODE \
   -e 'JAVA_OPTS_APPEND=-Djavax.net.ssl.trustStore=/fixture/trust.p12 -Djavax.net.ssl.trustStorePassword=ci-only-trust -Djavax.net.ssl.trustStoreType=PKCS12' \
   -v "$fixture/trust.p12:/fixture/trust.p12:ro" \
   -v "$fixture/moon-realm.json:/opt/keycloak/data/import/moon-realm.json:ro" \

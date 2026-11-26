@@ -33,7 +33,7 @@ The CI PostgreSQL job applies schema.sql to a disposable database and verifies c
 
 ## SMS transport
 
-The isolated Java transport uses the exact Keycloak 26.7.3 JSON dependency set and the existing Moon SMS.ir verify contract. Production endpoint is fixed; configuration is server-only. Current deployment template is 743974 and parameter CODE; the operator must wire those approved settings and the existing secret into Keycloak at deployment. No live SMS is sent by CI.
+The isolated Java transport uses the exact Keycloak 26.7.3 JSON dependency set and the existing Moon SMS.ir verify contract. Production endpoint is fixed; configuration is server-only. Login has independent required template ID and code parameter settings. No production login template ID or parameter is assumed. The operator must verify the actual SMS.ir login template and parameter; 123456 and LOGIN_CODE are disposable test fixtures only. No live SMS is sent by CI.
 
 LoginOtpService issues a pending challenge, sends once, records provider acceptance before allowing verification, invalidates failed/ambiguous sends, and never returns a code to the caller. Provider acceptance is not proof of handset delivery. The transport and service remain unregistered with Keycloak; the browser authenticator, server secret provisioning, database wiring and runtime tests are still required.
 
@@ -43,7 +43,7 @@ The provider ID is moon-sms-login. The Maven package contains the Authentication
 
 Unresolved accounts use the same form and shared issuance limits, but no SMS is sent. This is not a guarantee of timing indistinguishability; enumeration resistance must be tested and hardened before activation. The connection address must be derived from the trusted reverse proxy configuration; do not activate on an unverified proxy topology. Existing mobile username ownership must be reconciled before OTP-only login, especially privileged users. Required actions and alternate clients must be reviewed; never silently remove a required action or alter admin recovery.
 
-Server-only required environment: MOON_LOGIN_OTP_JDBC_URL, MOON_LOGIN_OTP_DB_USER, MOON_LOGIN_OTP_DB_PASSWORD, MOON_LOGIN_OTP_HMAC_KEY (base64, at least 32 random bytes), MOON_SMS_IR_API_KEY, MOON_SMS_IR_STARTUP_TEMPLATE_ID, MOON_SMS_IR_STARTUP_CODE_PARAMETER. The existing SMS settings are reused only after explicit operator wiring. The private OTP schema is not installed automatically. No provider JAR, environment, existing realm, frontend or production compose is changed by this commit. CI checks compilation and disposable Keycloak installation; full browser/role/recovery integration remains required.
+Server-only required environment: MOON_LOGIN_OTP_JDBC_URL, MOON_LOGIN_OTP_DB_USER, MOON_LOGIN_OTP_DB_PASSWORD, MOON_LOGIN_OTP_HMAC_KEY (base64, at least 32 random bytes), MOON_SMS_IR_API_KEY, MOON_SMS_IR_LOGIN_TEMPLATE_ID, MOON_SMS_IR_LOGIN_CODE_PARAMETER. The existing SMS settings are reused only after explicit operator wiring. The private OTP schema is not installed automatically. No provider JAR, environment, existing realm, frontend or production compose is changed by this commit. CI checks compilation and disposable Keycloak installation; full browser/role/recovery integration remains required.
 
 ## Web entry (not deployed)
 

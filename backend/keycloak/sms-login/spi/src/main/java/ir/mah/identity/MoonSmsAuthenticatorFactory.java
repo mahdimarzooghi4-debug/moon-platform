@@ -38,8 +38,8 @@ public final class MoonSmsAuthenticatorFactory implements AuthenticatorFactory {
             try {
                 var store = new PostgresLoginOtpStore(ds, key);
                 var sender = new SmsIrLoginSender(required("MOON_SMS_IR_API_KEY"),
-                    Integer.parseInt(required("MOON_SMS_IR_STARTUP_TEMPLATE_ID")),
-                    required("MOON_SMS_IR_STARTUP_CODE_PARAMETER"));
+                    Integer.parseInt(required("MOON_SMS_IR_LOGIN_TEMPLATE_ID")),
+                    required("MOON_SMS_IR_LOGIN_CODE_PARAMETER"));
                 service = new LoginOtpService(store, sender);
                 return service;
             } finally {

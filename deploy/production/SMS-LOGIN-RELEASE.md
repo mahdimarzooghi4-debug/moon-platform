@@ -12,7 +12,7 @@ docker compose --env-file deploy/production/.env.production \
   -f deploy/production/compose.yaml -f deploy/production/compose.sms-candidate.yaml \
   config --format json | python3 deploy/production/validate-sms-candidate.py
 ```
-Never print or save the rendered environment. The image tag is the reviewed release SHA, not a mutable tag. Generate two different unique OTP database credentials (owner and application) and an independent stable random HMAC key on the protected server. Do not give the owner credential to Keycloak. Use the existing authorized SMS.ir API credential only after confirming the template and parameter. Do not substitute test credentials.
+Never print or save the rendered environment. The image tag is the reviewed release SHA, not a mutable tag. Generate two different unique OTP database credentials (owner and application) and an independent stable random HMAC key on the protected server. Do not give the owner credential to Keycloak. Use the existing authorized SMS.ir API credential only after confirming the login-specific template and parameter. Keycloak requires MOON_SMS_IR_LOGIN_TEMPLATE_ID and MOON_SMS_IR_LOGIN_CODE_PARAMETER, with no fallback to startup registration configuration. The registration API and its configuration are unchanged. Do not substitute test credentials.
 
 ## Release prerequisites (not yet evidenced)
 
