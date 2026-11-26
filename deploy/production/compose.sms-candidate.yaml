@@ -30,7 +30,7 @@ services:
       - ../../backend/keycloak/sms-login/schema.sql:/docker-entrypoint-initdb.d/20-moon-login-otp.sql:ro
       - ./otp-db-init/30-grant-app-role.sql:/docker-entrypoint-initdb.d/30-grant-app-role.sql:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U moon_login_otp -d moon_login_otp"]
+      test: ["CMD-SHELL", "psql -U moon_login_otp -d moon_login_otp -v ON_ERROR_STOP=1 -c 'SELECT 1' >/dev/null"]
       interval: 10s
       timeout: 5s
       retries: 10

@@ -66,8 +66,8 @@ jobs:
           PGPASSWORD="$OTP_TEST_OWNER_PASSWORD" psql -h localhost -U "$OTP_TEST_OWNER" -d otp_test -v ON_ERROR_STOP=1 \
             -c 'GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE moon_login_otp_challenge, moon_login_otp_send TO otp_app;'
           role_flags="$(PGPASSWORD="$OTP_TEST_OWNER_PASSWORD" psql -h localhost -U "$OTP_TEST_OWNER" -d otp_test -Atc \
-            "SELECT rolsuper || '|' || rolcreatedb || '|' || rolcreaterole || '|' || rolbypassrls FROM pg_roles WHERE rolname='otp_app'")"
-          test "$role_flags" = "f|f|f|f"
+            "SELECT (NOT rolsuper AND NOT rolcreatedb AND NOT rolcreaterole AND NOT rolbypassrls) FROM pg_roles WHERE rolname='otp_app'")"
+          test "$role_flags" = "t"
           if PGPASSWORD="$OTP_TEST_PASSWORD" psql -h localhost -U "$OTP_TEST_USER" -d otp_test -v ON_ERROR_STOP=1 \
             -c 'CREATE TABLE otp_app_must_not_ddl(id integer)'; then
             echo "Restricted OTP application role unexpectedly created a table"
@@ -196,13 +196,13 @@ jobs:
           "${compose[@]}" up -d moon-login-otp-db
           ready=0
           for _ in $(seq 1 60); do
-            if "${compose[@]}" exec -T moon-login-otp-db pg_isready -U moon_login_otp_owner -d moon_login_otp >/dev/null 2>&1; then ready=1; break; fi
+            if "${compose[@]}" exec -T moon-login-otp-db psql -U moon_login_otp_owner -d moon_login_otp -Atc 'SELECT 1' >/dev/null 2>&1; then ready=1; break; fi
             sleep 1
           done
           test "$ready" = 1
           flags=$("${compose[@]}" exec -T moon-login-otp-db psql -U moon_login_otp_owner -d moon_login_otp -Atc \
-            "SELECT rolsuper || '|' || rolcreatedb || '|' || rolcreaterole || '|' || rolbypassrls FROM pg_roles WHERE rolname='moon_login_otp'")
-          test "$flags" = "f|f|f|f"
+            "SELECT (NOT rolsuper AND NOT rolcreatedb AND NOT rolcreaterole AND NOT rolbypassrls) FROM pg_roles WHERE rolname='moon_login_otp'")
+          test "$flags" = "t"
           if "${compose[@]}" exec -T -e PGPASSWORD="$MOON_LOGIN_OTP_DB_PASSWORD" moon-login-otp-db \
             psql -h 127.0.0.1 -U moon_login_otp -d moon_login_otp -v ON_ERROR_STOP=1 \
             -c 'CREATE TABLE moon_login_otp_must_not_ddl(id integer)' >/dev/null 2>&1; then
