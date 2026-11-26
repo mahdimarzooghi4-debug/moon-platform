@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -10,8 +11,9 @@ internal sealed class StartupMobileVerification(IConfiguration configuration)
 {
     private readonly object gate = new();
     private readonly Dictionary<string, Challenge> challenges = new();
-    private readonly Queue<DateTimeOffset> requests = new();
+    private readonly Queue<(DateTimeOffset Time, IPAddress Address)> requests = new();
     private readonly byte[] secret = RandomNumberGenerator.GetBytes(32);
+    private readonly IPAddress? trustedProxy = IPAddress.TryParse(configuration["ReverseProxy:TrustedProxyIp"], out var proxy) ? proxy : null;
     private readonly string template = configuration["ExternalServices:Sms:StartupTemplateId"] ?? "";
     private readonly string parameter = configuration["ExternalServices:Sms:StartupCodeParameter"] ?? "Code";
 
@@ -20,11 +22,12 @@ internal sealed class StartupMobileVerification(IConfiguration configuration)
 
     public static bool IsMobile(string? mobile) => mobile is not null && Regex.IsMatch(mobile, @"\A09[0-9]{9}\z");
 
-    public async Task<IResult> SendAsync(string mobile, ISmsProvider provider, CancellationToken ct)
+    public async Task<IResult> SendAsync(string mobile, HttpContext context, ISmsProvider provider, CancellationToken ct)
     {
         if (!Enabled || !int.TryParse(template, out var templateId) || templateId <= 0)
             return Results.StatusCode(503);
 
+        var address = GetClientAddress(context);
         var now = DateTimeOffset.UtcNow;
         var code = RandomNumberGenerator.GetInt32(0, 1_000_000).ToString("D6", CultureInfo.InvariantCulture);
         Challenge challenge;
@@ -33,11 +36,12 @@ internal sealed class StartupMobileVerification(IConfiguration configuration)
             foreach (var key in challenges.Where(item => item.Value.WindowEnds <= now && item.Value.TokenExpires <= now && !item.Value.Reserved)
                          .Select(item => item.Key).ToArray())
                 challenges.Remove(key);
-            while (requests.TryPeek(out var requestTime) && requestTime <= now.AddMinutes(-10))
+            while (requests.TryPeek(out var requestTime) && requestTime.Time <= now.AddMinutes(-10))
                 requests.Dequeue();
             challenges.TryGetValue(mobile, out var previous);
             var recent = previous is not null && previous.WindowEnds > now ? previous : null;
-            if (requests.Count >= 50 || previous is { Reserved: true }
+            if (requests.Count >= 50 || requests.Count(request => request.Address.Equals(address)) >= 5
+                || previous is { Reserved: true }
                 || previous?.NextSend > now || recent?.SendCount >= 5)
                 return Results.StatusCode(429);
 
@@ -45,7 +49,7 @@ internal sealed class StartupMobileVerification(IConfiguration configuration)
                 Digest(mobile, code), now.AddMinutes(5), now.AddMinutes(1),
                 recent?.WindowEnds ?? now.AddHours(1), (recent?.SendCount ?? 0) + 1);
             challenges[mobile] = challenge;
-            requests.Enqueue(now);
+            requests.Enqueue((now, address));
         }
 
         var result = await provider.SendOtpAsync(mobile, template, new Dictionary<string, string> { [parameter] = code }, ct);
@@ -99,6 +103,16 @@ internal sealed class StartupMobileVerification(IConfiguration configuration)
             challenge.Reserved = false;
             if (submitted) challenge.Token = null;
         }
+    }
+
+    private IPAddress GetClientAddress(HttpContext context)
+    {
+        var remote = context.Connection.RemoteIpAddress ?? IPAddress.None;
+        if (remote.IsIPv4MappedToIPv6) remote = remote.MapToIPv4();
+        if (!remote.Equals(trustedProxy)) return remote;
+
+        var forwarded = context.Request.Headers["X-Forwarded-For"].ToString().Split(',').Last().Trim();
+        return IPAddress.TryParse(forwarded, out var address) ? address : remote;
     }
 
     private byte[] Digest(string mobile, string secretValue) =>

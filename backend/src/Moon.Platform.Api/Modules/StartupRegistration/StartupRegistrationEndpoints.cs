@@ -43,9 +43,9 @@ public static class StartupRegistrationEndpoints
         registration.MapGet("/mobile-verification", (StartupMobileVerification verification) =>
             Results.Ok(new { required = verification.Enabled }));
         registration.MapPost("/mobile-verification/send", async Task<IResult> (
-            StartupMobileRequest request, StartupMobileVerification verification, ISmsProvider sms, CancellationToken ct) =>
+            StartupMobileRequest request, HttpContext context, StartupMobileVerification verification, ISmsProvider sms, CancellationToken ct) =>
             StartupMobileVerification.IsMobile(request.Mobile)
-                ? await verification.SendAsync(request.Mobile!, sms, ct)
+                ? await verification.SendAsync(request.Mobile!, context, sms, ct)
                 : Results.BadRequest());
         registration.MapPost("/mobile-verification/confirm", IResult (
             StartupMobileRequest request, StartupMobileVerification verification) =>
