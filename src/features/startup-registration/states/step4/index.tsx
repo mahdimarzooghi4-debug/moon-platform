@@ -148,7 +148,7 @@ export default function Main() {
                     </span>
                   </div>
                   <div className="flex flex-col gap-[6px] items-end self-stretch shrink-0 flex-nowrap relative z-[65]">
-                    <span className="flex w-[221px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#4a5568] relative text-right whitespace-nowrap z-[66]">
+                    <span className="flex max-w-full justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#4a5568] relative text-right whitespace-pre-wrap break-words z-[66]">
                       {registrationDraft.team}
                     </span>
 
