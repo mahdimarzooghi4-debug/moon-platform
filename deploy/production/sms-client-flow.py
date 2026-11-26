@@ -159,9 +159,19 @@ def main():
     raw = read_private(args.snapshot)
     require(hashlib.sha256(raw).hexdigest() == args.snapshot_digest, "Snapshot digest mismatch")
     snapshot = json.loads(raw)
-    flow = admin.flow()
+    # Recovery must not depend on the broken candidate execution being healthy.
+    # The pinned flow ID and current client binding still constrain rollback.
+    flow = snapshot["candidateFlowId"] if args.command == "rollback" else admin.flow()
+    require(isinstance(flow, str) and bool(flow), "Invalid candidate flow ID")
     observed = check_snapshot(snapshot, realm, client, flow, args.release_sha, args.base)
     prior = snapshot["browserOverride"]
+    if args.command == "rollback":
+        flows = admin.call("/authentication/flows")
+        require(any(row.get("alias") == snapshot["defaultBrowserFlow"] and row.get("topLevel") is True
+                    for row in flows), "Previous realm browser flow missing")
+        if prior is not None:
+            require(any(row.get("id") == prior and row.get("topLevel") is True
+                        for row in flows), "Previous client browser flow missing")
     require(prior != flow and observed in (prior, flow), "Unexpected browser binding; refuse overwrite")
     if args.command == "verify":
         print("Candidate binding: " + ("ACTIVE" if observed == flow else "PREVIOUS"))
@@ -173,7 +183,8 @@ def main():
         admin.call("/clients/" + quote(client["id"]), "PUT",
                    {"clientId": CLIENT, "authenticationFlowBindingOverrides": {"browser": target or ""}})
     realm, client = admin.current()
-    require(check_snapshot(snapshot, realm, client, admin.flow(), args.release_sha, args.base) == target,
+    observed_flow = flow if args.command == "rollback" else admin.flow()
+    require(check_snapshot(snapshot, realm, client, observed_flow, args.release_sha, args.base) == target,
             "Binding read-back failed; inspect before further mutations")
     print("Verified client-only binding: " + ("ACTIVE" if target == flow else "PREVIOUS"))
 

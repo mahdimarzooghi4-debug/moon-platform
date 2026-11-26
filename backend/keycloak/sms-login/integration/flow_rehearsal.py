@@ -47,7 +47,31 @@ try:
     assert "PREVIOUS" in invoke("rollback", approved)
     assert "PREVIOUS" in invoke("rollback", approved)
     assert "PREVIOUS" in invoke("verify", evidence)
-    # Restore candidate binding for the subsequent seven-role browser suite.
+    # Deliberately break the candidate while it is bound. Activation/verify must
+    # reject the damaged flow, but recovery must restore the pinned previous binding.
+    assert "ACTIVE" in invoke("activate", approved)
+    admin = base + "/admin/realms/moon"
+    def call(path, method="GET", data=None):
+        request = urllib.request.Request(admin + path, method=method,
+            headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"},
+            data=None if data is None else json.dumps(data).encode())
+        with urllib.request.urlopen(request, timeout=20) as response:
+            raw = response.read()
+            return json.loads(raw) if raw else None
+    execution_path = "/authentication/flows/moon-sms-login-v1/executions"
+    executions = call(execution_path)
+    assert len(executions) == 1
+    call("/authentication/executions/" + urllib.parse.quote(executions[0]["id"], safe=""), "DELETE")
+    invoke("verify", evidence, False)
+    invoke("activate", approved, False)
+    assert "PREVIOUS" in invoke("rollback", approved)
+    assert "PREVIOUS" in invoke("rollback", approved)
+    client = call("/clients/" + urllib.parse.quote(saved["clientId"], safe=""))
+    assert not (client.get("authenticationFlowBindingOverrides") or {}).get("browser")
+    assert call("")["browserFlow"] == saved["defaultBrowserFlow"]
+    # Repair the same unbound candidate flow for the subsequent browser suite.
+    call(execution_path + "/execution", "POST", {"provider": "moon-sms-login", "priority": 10})
+    assert "PREVIOUS" in invoke("verify", evidence)
     assert "ACTIVE" in invoke("activate", approved)
     assert "ACTIVE" in invoke("verify", evidence)
     print("Real Keycloak client-only activation and rollback rehearsal passed.")

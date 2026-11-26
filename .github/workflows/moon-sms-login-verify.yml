@@ -236,3 +236,5 @@ jobs:
       - uses: actions/checkout@v4
       - name: Verify bundle manifest and reject mismatched and unsafe artifacts
         run: python3 deploy/production/test-sms-release-bundle.py
+      - name: Verify private immutable runtime baseline and drift rejection
+        run: python3 deploy/production/test-sms-runtime-baseline.py
