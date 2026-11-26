@@ -161,56 +161,36 @@ export default function Main() {
                 <span className="flex w-[169px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-bold leading-[20px] text-[#718096] relative text-right whitespace-nowrap z-[85]">
                   مدارک حقوقی و هویتی (اختیاری)
                 </span>
-                <div className="flex pt-[12px] pr-[12px] pb-[12px] pl-[12px] justify-between items-center self-stretch shrink-0 flex-nowrap rounded-[8px] border-solid border border-[#e2e8f0] relative z-[86]">
-                  <div className="flex w-[102px] gap-[12px] items-center shrink-0 flex-nowrap relative z-[87]">
-                    {files.legalDocument && <>
-                      <button type="button" className="text-xs text-[#e53e3e]" onClick={() => updateFile("legalDocument")}>حذف</button>
-                      <button type="button" className="text-xs text-[#2094e3]" onClick={() => {
-                        const file = files.legalDocument;
-                        if (!file) return;
-                        const url = URL.createObjectURL(file);
-                        window.open(url, "_blank", "noopener,noreferrer");
-                        window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
-                      }}>مشاهده فایل</button>
-                    </>}
+                {([["legalDocument", "مدرک حقوقی"], ["identityDocument", "مدرک هویتی"]] as const).map(([key, title]) => (
+                  <div className="mah-document-row" key={key} dir="rtl">
+                    <div className="mah-document-info">
+                      <strong>{title}</strong>
+                      <small>PDF، JPG، PNG — حداکثر ۴ مگابایت</small>
+                      {files[key] ? <bdi dir="auto">{files[key]?.name}</bdi> : <small>فایلی انتخاب نشده است</small>}
+                    </div>
+                    <div className="mah-document-actions">
+                      <label className="mah-document-select">
+                        {files[key] ? "تغییر فایل" : "انتخاب فایل"}
+                        <input type="file" aria-label={title} className="sr-only" accept=".pdf,.png,.jpg,.jpeg"
+                          onChange={event => {
+                            const file = event.currentTarget.files?.[0];
+                            event.currentTarget.value = "";
+                            if (file) updateFile(key, file);
+                          }} />
+                      </label>
+                      {files[key] && <>
+                        <button type="button" onClick={() => {
+                          const file = files[key];
+                          if (!file) return;
+                          const url = URL.createObjectURL(file);
+                          window.open(url, "_blank", "noopener,noreferrer");
+                          window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
+                        }}>مشاهده</button>
+                        <button type="button" className="mah-document-remove" onClick={() => updateFile(key)}>حذف</button>
+                      </>}
+                    </div>
                   </div>
-                  <div className="flex w-[232px] gap-[8px] items-center shrink-0 flex-nowrap relative z-[90]">
-                    <label className="min-w-0 cursor-pointer truncate text-sm text-[#2094e3] focus-within:ring-2">
-                      {files.legalDocument?.name ?? "مدرک حقوقی"}
-                      <input type="file" aria-label="مدرک حقوقی" className="sr-only" accept=".pdf,.png,.jpg,.jpeg"
-                        onChange={event => {
-                          const file = event.currentTarget.files?.[0];
-                          event.currentTarget.value = "";
-                          if (file) updateFile("legalDocument", file);
-                        }} />
-                    </label>
-                  </div>
-                </div>
-                <div className="flex pt-[12px] pr-[12px] pb-[12px] pl-[12px] justify-between items-center self-stretch shrink-0 flex-nowrap rounded-[8px] border-solid border border-[#e2e8f0] relative z-[92]">
-                  <div className="flex w-[102px] gap-[12px] items-center shrink-0 flex-nowrap relative z-[93]">
-                    {files.identityDocument && <>
-                      <button type="button" className="text-xs text-[#e53e3e]" onClick={() => updateFile("identityDocument")}>حذف</button>
-                      <button type="button" className="text-xs text-[#2094e3]" onClick={() => {
-                        const file = files.identityDocument;
-                        if (!file) return;
-                        const url = URL.createObjectURL(file);
-                        window.open(url, "_blank", "noopener,noreferrer");
-                        window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
-                      }}>مشاهده فایل</button>
-                    </>}
-                  </div>
-                  <div className="flex w-[219px] gap-[8px] items-center shrink-0 flex-nowrap relative z-[96]">
-                    <label className="min-w-0 cursor-pointer truncate text-sm text-[#2094e3] focus-within:ring-2">
-                      {files.identityDocument?.name ?? "مدرک هویتی"}
-                      <input type="file" aria-label="مدرک هویتی" className="sr-only" accept=".pdf,.png,.jpg,.jpeg"
-                        onChange={event => {
-                          const file = event.currentTarget.files?.[0];
-                          event.currentTarget.value = "";
-                          if (file) updateFile("identityDocument", file);
-                        }} />
-                    </label>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
             <div className="flex flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[98]">

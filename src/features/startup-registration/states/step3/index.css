@@ -81,3 +81,15 @@ button {
 .mah-startup-step3 .mah-pitch-label { display: block; cursor: pointer; padding: 8px 16px; border-radius: 8px; background: #eaf5fd; color: #1476b9; font-size: 14px; font-weight: 600; }
 .mah-startup-step3 .mah-pitch-label:focus-within { outline: 2px solid #2094e3; }
 .mah-startup-step3 .mah-pitch-name { max-width: 100%; overflow-wrap: anywhere; font-size: 12px; }
+
+.mah-startup-step3 .mah-document-row { direction: rtl !important; display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 16px; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; }
+.mah-startup-step3 .mah-document-info { min-width: 0; display: grid; gap: 5px; text-align: right; }
+.mah-startup-step3 .mah-document-info strong { font-size: 14px; color: #2d3748; }
+.mah-startup-step3 .mah-document-info small { color: #718096; font-size: 12px; }
+.mah-startup-step3 .mah-document-info bdi { overflow-wrap: anywhere; font-size: 13px; color: #17324d; }
+.mah-startup-step3 .mah-document-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; flex-shrink: 0; }
+.mah-startup-step3 .mah-document-actions button,.mah-startup-step3 .mah-document-select { display: inline-block; cursor: pointer; padding: 8px 12px; border: 1px solid #bee3f8; border-radius: 8px; color: #1476b9; font-size: 13px; }
+.mah-startup-step3 .mah-document-select { background: #eaf5fd; font-weight: 600; }
+.mah-startup-step3 .mah-document-select:focus-within,.mah-startup-step3 .mah-document-actions button:focus-visible { outline: 2px solid #2094e3; outline-offset: 2px; }
+.mah-startup-step3 .mah-document-actions .mah-document-remove { color: #c53030; border-color: #fed7d7; }
+@media (max-width: 700px) { .mah-startup-step3 .mah-document-row { align-items: flex-start; flex-direction: column; } }

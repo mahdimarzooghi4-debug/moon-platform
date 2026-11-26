@@ -122,7 +122,7 @@ public static class StartupRegistrationEndpoints
                 Logo = logoContent,
                 LegalDocument = legalContent,
                 IdentityDocument = identityContent,
-                TrackingCode = Convert.ToHexString(RandomNumberGenerator.GetBytes(24))
+                TrackingCode = StartupTrackingCode.Create()
             };
             var submitted = false;
             if (verification.Enabled && !verification.TryReserve(mobile, form["mobileVerification"].ToString()))
@@ -145,10 +145,8 @@ public static class StartupRegistrationEndpoints
         registration.MapGet("/{trackingCode}", async Task<IResult> (
             string trackingCode, MoonDbContext db, CancellationToken ct) =>
         {
-            if (trackingCode.Length != 48 || !trackingCode.All(Uri.IsHexDigit))
-                return Results.NotFound();
-
-            var code = trackingCode.ToUpperInvariant();
+            var code = StartupTrackingCode.Normalize(trackingCode);
+            if (code is null) return Results.NotFound();
             var result = await db.StartupApplications.AsNoTracking()
                 .Where(application => application.TrackingCode == code)
                 .Select(application => new { application.Status, application.SubmittedAtUtc })
