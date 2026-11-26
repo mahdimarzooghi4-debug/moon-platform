@@ -65,6 +65,14 @@ def check_branded_login(page, otp_step):
     assert page.locator("html").get_attribute("lang") == "fa"
     assert page.locator("html").get_attribute("dir") == "rtl"
     assert page.locator(".moon-card").is_visible()
+    # A computed font-family alone would pass even when all font files failed.
+    assert page.evaluate("""async () => {
+      const faces = await document.fonts.load('400 16px Vazirmatn', 'سامانه ماه');
+      const bold = await document.fonts.load('700 24px Vazirmatn', 'کد تأیید');
+      return faces.length > 0 && bold.length > 0 &&
+        [...faces, ...bold].every(face => face.status === 'loaded');
+    }"""), "local Persian font did not load"
+
     assert page.locator(".moon-logo").evaluate("(img) => img.complete && img.naturalWidth > 0")
     assert page.locator(".moon-card").evaluate("(el) => getComputedStyle(el).borderRadius") == "20px"
     assert page.locator(".moon-primary").evaluate("(el) => getComputedStyle(el).backgroundImage").startswith("linear-gradient")

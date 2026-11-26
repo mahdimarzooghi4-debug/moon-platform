@@ -7,6 +7,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ورود امن | سامانه ماه</title>
+  <link rel="stylesheet" href="${url.resourcesPath}/moon-fonts/fonts.css">
   <style>
     :root { color-scheme:light; font-family:Vazirmatn,Tahoma,Arial,sans-serif; color:#1a202c; background:#f7fafc; }
     * { box-sizing:border-box; }
