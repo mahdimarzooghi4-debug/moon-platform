@@ -1,3 +1,4 @@
+import { registrationDraft, registrationFiles } from "../../draft";
 import React from "react";
 import "./index.css";
 
@@ -29,7 +30,7 @@ export default function Main() {
             <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-10">
               <div className="flex w-[144px] gap-[12px] items-center shrink-0 flex-nowrap relative z-[11]">
                 <span className="h-[22px] shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#159455] relative text-left whitespace-nowrap z-[12]">
-                  ✓ ذخیره خودکار انجام شد
+
                 </span>
               </div>
               <div className="flex w-[402px] gap-[16px] items-center shrink-0 flex-nowrap relative z-[13]">
@@ -166,9 +167,7 @@ export default function Main() {
                   </span>
                 </div>
                 <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[69]">
-                  <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[70]">
-                    جوانان و نوجوانان، فارغ‌التحصیلان دانشگاهی
-                  </span>
+                  <input type="text" required maxLength={200} aria-label="جامعه هدف طرح" data-registration-field="audience" defaultValue={registrationDraft.audience ?? ""} onChange={event => { registrationDraft.audience = event.target.value; }} className="min-w-0 grow bg-transparent text-right text-sm text-[#1a202c] outline-none" />
                 </div>
               </div>
               <div className="flex w-[450px] flex-col gap-[8px] items-end shrink-0 flex-nowrap relative z-[71]">
@@ -199,9 +198,7 @@ export default function Main() {
                   فایل PDF، حداکثر حجم ۱۵ مگابایت
                 </span>
                 <div className="flex w-[148px] pt-[6px] pr-[16px] pb-[6px] pl-[16px] items-start shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[82]">
-                  <span className="flex w-[116px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-semibold leading-[20px] text-[#2094e3] relative text-right whitespace-nowrap z-[83]">
-                    انتخاب فایل از سیستم
-                  </span>
+                  <input aria-label="فایل معرفی استارتاپ" type="file" accept=".pdf,application/pdf" onChange={event => { registrationFiles.pitchDeck = event.target.files?.[0]; }} className="max-w-full text-sm" />
                 </div>
               </div>
               <div className="flex flex-col gap-[10px] items-end self-stretch shrink-0 flex-nowrap relative z-[84]">

@@ -1,3 +1,4 @@
+import { registrationDraft } from "../../draft";
 import React from "react";
 import "./index.css";
 
@@ -25,7 +26,7 @@ export default function Main() {
             <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-10">
               <div className="flex w-[144px] gap-[12px] items-center shrink-0 flex-nowrap relative z-[11]">
                 <span className="h-[22px] shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#159455] relative text-left whitespace-nowrap z-[12]">
-                  ✓ ذخیره خودکار انجام شد
+
                 </span>
               </div>
               <div className="flex w-[402px] gap-[16px] items-center shrink-0 flex-nowrap relative z-[13]">
@@ -108,11 +109,7 @@ export default function Main() {
                 </span>
               </div>
               <div className="flex h-[96px] pt-[12px] pr-[12px] pb-[12px] pl-[12px] flex-col items-end self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[46]">
-                <span className="flex w-[904px] h-[72px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right z-[47]">
-                  سامانه ماه، اولین پلتفرم یکپارچه مدیریت شتابدهی است که چرخه
-                  حیات استارتاپ‌ها، فرآیند ارزیابی مربیان و مدیریت سرمایه‌گذاران
-                  را برای مراکز نوآوری و خانه‌های خلاق تسهیل و هوشمند می‌کند.
-                </span>
+                <textarea required maxLength={4000} aria-label="معرفی کوتاه استارتاپ" data-registration-field="product" defaultValue={registrationDraft.product ?? ""} onChange={event => { registrationDraft.product = event.target.value; }} className="min-w-0 grow bg-transparent text-right text-sm text-[#1a202c] outline-none"></textarea>
               </div>
             </div>
             <div className="flex h-[126px] flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[48]">
@@ -143,12 +140,7 @@ export default function Main() {
                 </span>
               </div>
               <div className="flex h-[96px] pt-[12px] pr-[12px] pb-[12px] pl-[12px] flex-col items-end self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[58]">
-                <span className="flex w-[904px] h-[72px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right z-[59]">
-                  ماه با ارائه داشبوردهای شاخص‌های کلیدی عملکرد (KPI)، ارزیابی
-                  چندبعدی مربیان، رصد زمان واقعی پروژه‌ها و پنل اختصاصی
-                  سرمایه‌گذاران، چرخه شتابدهی را کاملاً شفاف، خودکار و داده‌محور
-                  می‌سازد.
-                </span>
+                <textarea required maxLength={4000} aria-label="راهکار" data-registration-field="description" defaultValue={registrationDraft.description ?? ""} onChange={event => { registrationDraft.description = event.target.value; }} className="min-w-0 grow bg-transparent text-right text-sm text-[#1a202c] outline-none"></textarea>
               </div>
             </div>
             <div className="flex h-[126px] flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[60]">
@@ -291,48 +283,7 @@ export default function Main() {
                   اعضای اصلی تیم استارتاپ
                 </span>
               </div>
-              <div className="flex gap-[16px] items-start self-stretch shrink-0 flex-nowrap relative z-[120]">
-                <div className="flex w-[450px] pt-[16px] pr-[16px] pb-[16px] pl-[16px] gap-[12px] justify-end items-center shrink-0 flex-nowrap rounded-[12px] border-solid border border-[#e2e8f0] relative z-[121]">
-                  <div className="flex flex-col gap-[4px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[122]">
-                    <span className="flex w-[53px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[123]">
-                      علی علوی
-                    </span>
-                    <span className="flex w-[146px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#718096] relative text-right whitespace-nowrap z-[124]">
-                      هم‌بنیان‌گذار و مدیر فنی (CTO)
-                    </span>
-                    <div className="flex w-[56px] pt-[2px] pr-[8px] pb-[2px] pl-[8px] items-start shrink-0 flex-nowrap bg-[#eaf8f0] rounded-[4px] relative z-[125]">
-                      <span className="flex w-[40px] h-[17px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[11px] font-semibold leading-[17px] text-[#159455] relative text-right whitespace-nowrap z-[126]">
-                        تمام‌وقت
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex w-[48px] h-[48px] justify-center items-center shrink-0 flex-nowrap bg-[#e2e8f0] rounded-[24px] relative z-[127]">
-                    <span className="flex w-[15px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#4a5568] relative text-right whitespace-nowrap z-[128]">
-                      ع‌ع
-                    </span>
-                  </div>
-                </div>
-                <div className="flex w-[450px] pt-[16px] pr-[16px] pb-[16px] pl-[16px] gap-[12px] justify-end items-center shrink-0 flex-nowrap rounded-[12px] border-solid border border-[#e2e8f0] relative z-[129]">
-                  <div className="flex flex-col gap-[4px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[130]">
-                    <span className="flex w-[67px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[131]">
-                      سارا حسینی
-                    </span>
-                    <span className="flex w-[159px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#718096] relative text-right whitespace-nowrap z-[132]">
-                      مدیر محصول و طراح تجربه کاربری
-                    </span>
-                    <div className="flex w-[52px] pt-[2px] pr-[8px] pb-[2px] pl-[8px] items-start shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[4px] relative z-[133]">
-                      <span className="flex w-[36px] h-[17px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[11px] font-semibold leading-[17px] text-[#2094e3] relative text-right whitespace-nowrap z-[134]">
-                        پاره‌وقت
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex w-[48px] h-[48px] justify-center items-center shrink-0 flex-nowrap bg-[#e2e8f0] rounded-[24px] relative z-[135]">
-                    <span className="flex w-[23px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#4a5568] relative text-right whitespace-nowrap z-[136]">
-                      س‌ح
-                    </span>
-                  </div>
-                </div>
-              </div>
+              <textarea required maxLength={4000} data-registration-field="team" aria-label="اعضای اصلی تیم و مسئولیت‌ها" defaultValue={registrationDraft.team ?? ""} onChange={event => { registrationDraft.team = event.target.value; }} className="min-h-24 w-full rounded-lg border border-slate-300 p-3 text-right" />
             </div>
             <div className="flex pt-[24px] pr-0 pb-0 pl-0 justify-between items-center self-stretch shrink-0 flex-nowrap border-solid border-b border-b-[#e4ebf1] relative z-[137]">
               <div className="flex w-[230px] gap-[16px] items-center shrink-0 flex-nowrap relative z-[138]">

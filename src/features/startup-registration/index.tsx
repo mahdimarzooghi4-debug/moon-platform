@@ -1,3 +1,4 @@
+import { registrationDraft } from "./draft";
 import React from "react";
 import "./index.css";
 
@@ -25,7 +26,7 @@ export default function Main() {
             <div className="mah-registration-title-row flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-10">
               <div className="flex w-[144px] gap-[12px] items-center shrink-0 flex-nowrap relative z-[11]">
                 <span className="h-[22px] shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#159455] relative text-left whitespace-nowrap z-[12]">
-                  ✓ ذخیره خودکار انجام شد
+
                 </span>
               </div>
               <div className="flex w-[402px] gap-[16px] items-center shrink-0 flex-nowrap relative z-[13]">
@@ -144,9 +145,7 @@ export default function Main() {
                   </span>
                 </div>
                 <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[62]">
-                  <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[63]">
-                    سامانه ماه
-                  </span>
+                  <input type="text" required maxLength={160} aria-label="نام فارسی استارتاپ" data-registration-field="name" defaultValue={registrationDraft.name ?? ""} onChange={event => { registrationDraft.name = event.target.value; }} className="min-w-0 grow bg-transparent text-right text-sm text-[#1a202c] outline-none" />
                 </div>
               </div>
             </div>
@@ -316,9 +315,7 @@ export default function Main() {
                   </span>
                 </div>
                 <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[135]">
-                  <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[136]">
-                    علوی
-                  </span>
+                  <input type="text" required maxLength={59} aria-label="نام خانوادگی نماینده" data-registration-field="lastName" defaultValue={registrationDraft.lastName ?? ""} onChange={event => { registrationDraft.lastName = event.target.value; }} className="min-w-0 grow bg-transparent text-right text-sm text-[#1a202c] outline-none" />
                 </div>
               </div>
               <div className="flex w-[450px] flex-col gap-[8px] items-end shrink-0 flex-nowrap relative z-[137]">
@@ -331,9 +328,7 @@ export default function Main() {
                   </span>
                 </div>
                 <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[141]">
-                  <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[142]">
-                    علی
-                  </span>
+                  <input type="text" required maxLength={60} aria-label="نام نماینده" data-registration-field="firstName" defaultValue={registrationDraft.firstName ?? ""} onChange={event => { registrationDraft.firstName = event.target.value; }} className="min-w-0 grow bg-transparent text-right text-sm text-[#1a202c] outline-none" />
                 </div>
               </div>
             </div>
@@ -384,9 +379,7 @@ export default function Main() {
                     دریافت کد تأیید
                   </span>
                 </div>
-                <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[163]">
-                  ۰۹۱۲۳۴۵۶۷۸۹
-                </span>
+                <input type="tel" required maxLength={16} aria-label="شماره موبایل" data-registration-field="mobile" defaultValue={registrationDraft.mobile ?? ""} onChange={event => { registrationDraft.mobile = event.target.value; }} className="min-w-0 grow bg-transparent text-right text-sm text-[#1a202c] outline-none" />
               </div>
             </div>
             <div className="flex flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[164]">
@@ -399,9 +392,7 @@ export default function Main() {
                 </span>
               </div>
               <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[168]">
-                <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[169]">
-                  info@mahsystem.ir
-                </span>
+                <input type="email" required maxLength={254} aria-label="ایمیل مکاتبات رسمی" data-registration-field="email" defaultValue={registrationDraft.email ?? ""} onChange={event => { registrationDraft.email = event.target.value; }} className="min-w-0 grow bg-transparent text-right text-sm text-[#1a202c] outline-none" />
               </div>
             </div>
             <div className="flex pt-[24px] pr-0 pb-0 pl-0 justify-between items-center self-stretch shrink-0 flex-nowrap border-solid border-b border-b-[#e4ebf1] relative z-[170]">

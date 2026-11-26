@@ -1,3 +1,4 @@
+import { registrationDraft, registrationFiles } from "../../draft";
 import React from "react";
 import "./index.css";
 
@@ -64,9 +65,7 @@ export default function Main() {
                 اثر اجتماعی و مدارک
               </span>
               <div className="flex w-[28px] h-[28px] justify-center items-center shrink-0 flex-nowrap bg-[#eaf8f0] rounded-[14px] border-solid border-[1.5px] border-[#159455] relative z-[25]">
-                <span className="h-[19px] shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-bold leading-[18.75px] text-[#159455] relative text-left whitespace-nowrap z-[26]">
-                  ✓
-                </span>
+                <input type="checkbox" required data-registration-consent aria-label="تأیید تعهد ثبت‌نام" />
               </div>
               <div className="w-[40px] h-px shrink-0 bg-[url(/assets/codia/N0AXHZh5z7.svg)] bg-cover bg-no-repeat relative z-[27]" />
             </div>
@@ -75,9 +74,7 @@ export default function Main() {
                 محصول و تیم
               </span>
               <div className="flex w-[28px] h-[28px] justify-center items-center shrink-0 flex-nowrap bg-[#eaf8f0] rounded-[14px] border-solid border-[1.5px] border-[#159455] relative z-30">
-                <span className="h-[19px] shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-bold leading-[18.75px] text-[#159455] relative text-left whitespace-nowrap z-[31]">
-                  ✓
-                </span>
+                <input type="checkbox" required data-registration-consent aria-label="تأیید تعهد ثبت‌نام" />
               </div>
               <div className="w-[40px] h-px shrink-0 bg-[url(/assets/codia/3K3RQgftDN.svg)] bg-cover bg-no-repeat relative z-[32]" />
             </div>
@@ -86,9 +83,7 @@ export default function Main() {
                 اطلاعات پایه
               </span>
               <div className="flex w-[28px] h-[28px] justify-center items-center shrink-0 flex-nowrap bg-[#eaf8f0] rounded-[14px] border-solid border-[1.5px] border-[#159455] relative z-[35]">
-                <span className="h-[19px] shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-bold leading-[18.75px] text-[#159455] relative text-left whitespace-nowrap z-[36]">
-                  ✓
-                </span>
+                <input type="checkbox" required data-registration-consent aria-label="تأیید تعهد ثبت‌نام" />
               </div>
             </div>
           </div>
@@ -115,13 +110,11 @@ export default function Main() {
                   </div>
                   <div className="flex flex-col gap-[6px] items-end self-stretch shrink-0 flex-nowrap relative z-[48]">
                     <span className="flex w-[147px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#4a5568] relative text-right whitespace-nowrap z-[49]">
-                      نام و نام خانوادگی: علی علوی
+                      نام و نام خانوادگی: {registrationDraft.firstName} {registrationDraft.lastName}
                     </span>
-                    <span className="flex w-[165px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#4a5568] relative text-right whitespace-nowrap z-50">
-                      سمت: مدیر عامل و هم‌بنیان‌گذار
-                    </span>
+
                     <span className="flex w-[146px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#4a5568] relative text-right whitespace-nowrap z-[51]">
-                      شماره تماس: ۰۹۱۲۳۴۵۶۷۸۹
+                      شماره تماس: {registrationDraft.mobile}
                     </span>
                   </div>
                 </div>
@@ -136,14 +129,10 @@ export default function Main() {
                   </div>
                   <div className="flex flex-col gap-[6px] items-end self-stretch shrink-0 flex-nowrap relative z-[56]">
                     <span className="flex w-[159px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#4a5568] relative text-right whitespace-nowrap z-[57]">
-                      نام فارسی استارتاپ: سامانه ماه
+                      نام فارسی استارتاپ: {registrationDraft.name}
                     </span>
-                    <span className="flex w-[167px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#4a5568] relative text-right whitespace-nowrap z-[58]">
-                      وضعیت حقوقی: شرکت ثبت‌شده
-                    </span>
-                    <span className="flex w-[202px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#4a5568] relative text-right whitespace-nowrap z-[59]">
-                      مرحله رشد: نمونه محصول اولیه (MVP)
-                    </span>
+
+
                   </div>
                 </div>
               </div>
@@ -159,11 +148,9 @@ export default function Main() {
                   </div>
                   <div className="flex flex-col gap-[6px] items-end self-stretch shrink-0 flex-nowrap relative z-[65]">
                     <span className="flex w-[221px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#4a5568] relative text-right whitespace-nowrap z-[66]">
-                      علی علوی - هم‌بنیان‌گذار و CTO (تمام‌وقت)
+                      {registrationDraft.team}
                     </span>
-                    <span className="flex w-[226px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#4a5568] relative text-right whitespace-nowrap z-[67]">
-                      سارا حسینی - طراح محصول و UX (پاره‌وقت)
-                    </span>
+
                   </div>
                 </div>
                 <div className="flex w-[450px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col gap-[12px] items-end shrink-0 flex-nowrap bg-[#f8fafc] rounded-[12px] border-solid border border-[#e2e8f0] relative z-[68]">
@@ -177,11 +164,9 @@ export default function Main() {
                   </div>
                   <div className="flex flex-col gap-[6px] items-end self-stretch shrink-0 flex-nowrap relative z-[72]">
                     <span className="flex w-[182px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#4a5568] relative text-right whitespace-nowrap z-[73]">
-                      مدل درآمدی: اشتراک سازمانی SaaS
+                      {registrationDraft.product}
                     </span>
-                    <span className="flex w-[236px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#4a5568] relative text-right whitespace-nowrap z-[74]">
-                      مشتریان هدف: شتابدهنده‌ها و خانه‌های خلاق
-                    </span>
+
                   </div>
                 </div>
               </div>
@@ -197,11 +182,9 @@ export default function Main() {
                   </div>
                   <div className="flex flex-col gap-[6px] items-end self-stretch shrink-0 flex-nowrap relative z-[80]">
                     <span className="flex w-[199px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#4a5568] relative text-right whitespace-nowrap z-[81]">
-                      مدرک ۱: آگهی_تاسیس_سامانه_ماه.pdf
+                      {registrationFiles.pitchDeck?.name}
                     </span>
-                    <span className="flex w-[194px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#4a5568] relative text-right whitespace-nowrap z-[82]">
-                      مدرک ۲: کارت_ملی_نماینده_رسمی.jpg
-                    </span>
+
                   </div>
                 </div>
                 <div className="flex w-[450px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col gap-[12px] items-end shrink-0 flex-nowrap bg-[#f8fafc] rounded-[12px] border-solid border border-[#e2e8f0] relative z-[83]">
@@ -214,11 +197,9 @@ export default function Main() {
                     </span>
                   </div>
                   <div className="flex flex-col gap-[6px] items-end self-stretch shrink-0 flex-nowrap relative z-[87]">
-                    <span className="flex w-[230px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#4a5568] relative text-right whitespace-nowrap z-[88]">
-                      حوزه اثر: آموزش، توانمندسازی و اشتغال پایدار
-                    </span>
+
                     <span className="flex w-[250px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#4a5568] relative text-right whitespace-nowrap z-[89]">
-                      جامعه هدف: جوانان، نوجوانان و جویندگان مهارت
+                      جامعه هدف: {registrationDraft.audience}
                     </span>
                   </div>
                 </div>
@@ -233,9 +214,7 @@ export default function Main() {
                   صحت اطلاعات و مدارک واردشده را کاملاً تأیید می‌کنم.
                 </span>
                 <div className="flex w-[18px] h-[18px] justify-center items-center shrink-0 flex-nowrap bg-[#2094e3] rounded-[4px] relative z-[94]">
-                  <span className="h-[17px] shrink-0 basis-auto font-['Vazirmatn'] text-[11px] font-black leading-[17px] text-[#fff] relative text-left whitespace-nowrap z-[95]">
-                    ✓
-                  </span>
+                  <input type="checkbox" required data-registration-consent aria-label="تأیید تعهد ثبت‌نام" />
                 </div>
               </div>
               <div className="flex w-[434px] gap-[8px] items-center shrink-0 flex-nowrap relative z-[96]">
@@ -244,9 +223,7 @@ export default function Main() {
                   می‌دهم.
                 </span>
                 <div className="flex w-[18px] h-[18px] justify-center items-center shrink-0 flex-nowrap bg-[#2094e3] rounded-[4px] relative z-[98]">
-                  <span className="h-[17px] shrink-0 basis-auto font-['Vazirmatn'] text-[11px] font-black leading-[17px] text-[#fff] relative text-left whitespace-nowrap z-[99]">
-                    ✓
-                  </span>
+                  <input type="checkbox" required data-registration-consent aria-label="تأیید تعهد ثبت‌نام" />
                 </div>
               </div>
               <div className="flex w-[425px] gap-[8px] items-center shrink-0 flex-nowrap relative z-[100]">
@@ -255,9 +232,7 @@ export default function Main() {
                   می‌پذیرم.
                 </span>
                 <div className="flex w-[18px] h-[18px] justify-center items-center shrink-0 flex-nowrap bg-[#2094e3] rounded-[4px] relative z-[102]">
-                  <span className="h-[17px] shrink-0 basis-auto font-['Vazirmatn'] text-[11px] font-black leading-[17px] text-[#fff] relative text-left whitespace-nowrap z-[103]">
-                    ✓
-                  </span>
+                  <input type="checkbox" required data-registration-consent aria-label="تأیید تعهد ثبت‌نام" />
                 </div>
               </div>
             </div>
