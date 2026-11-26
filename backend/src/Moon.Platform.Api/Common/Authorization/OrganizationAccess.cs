@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Moon.Platform.Api.Infrastructure.Persistence;
+using Moon.Platform.Api.Modules.Identity;
 
 namespace Moon.Platform.Api.Common.Authorization;
 
@@ -28,6 +29,8 @@ public sealed class OrganizationAccessService(MoonDbContext dbContext) : IOrgani
                   && user.IsActive
                   && membership.OrganizationId == organizationId
                   && membership.IsActive
+                  && membership.RoleId != SystemRoles.AuditorId
+                  && !dbContext.Roles.Any(role => role.Id == membership.RoleId && role.Code == SystemRoles.Auditor)
             select membership.Id)
             .AnyAsync(cancellationToken);
     }

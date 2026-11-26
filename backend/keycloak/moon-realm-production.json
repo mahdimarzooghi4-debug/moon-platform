@@ -27,9 +27,6 @@
         "name": "supervisor"
       },
       {
-        "name": "auditor"
-      },
-      {
         "name": "system_admin"
       }
     ]

@@ -66,14 +66,13 @@ const GLOBAL_PANEL_ROLES = new Set([
   "evaluator",
   "finance",
   "supervisor",
-  "auditor",
 ]);
 
 export function panelRolesFromIdentity(identity: CurrentIdentity) {
   const roles = new Set<string>();
 
   for (const membership of identity.memberships) {
-    roles.add(membership.roleCode);
+    if (membership.roleCode.toLowerCase() !== "auditor") roles.add(membership.roleCode);
   }
 
   for (const role of identity.identityRoles) {

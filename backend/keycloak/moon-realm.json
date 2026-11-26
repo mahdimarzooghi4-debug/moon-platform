@@ -14,7 +14,6 @@
       { "name": "startup" },
       { "name": "finance" },
       { "name": "supervisor" },
-      { "name": "auditor" },
       { "name": "system_admin" }
     ]
   },
