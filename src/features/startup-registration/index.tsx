@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { registrationDraft, registrationFiles } from "./draft";
 import React from "react";
 import MobileVerification from "./MobileVerification";
+import { localizePersianNumericInput, toPersianLoginDigits } from "../../auth/oidc";
 import RegistrationStepper from "./RegistrationStepper";
 import "./index.css";
 
 export default function Main() {
-  const [mobile, setMobile] = useState(registrationDraft.mobile ?? "");
+  const [mobile, setMobile] = useState(toPersianLoginDigits(registrationDraft.mobile ?? ""));
   const [logo, setLogo] = useState(registrationFiles.logo);
   const [logoUrl, setLogoUrl] = useState("");
   useEffect(() => {
@@ -302,8 +303,8 @@ export default function Main() {
                 <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[154]">
                   <input dir="ltr" aria-label="کد ملی نماینده" inputMode="numeric" required maxLength={10}
                     pattern="[0-9۰-۹٠-٩]{10}" data-registration-field="nationalId"
-                    defaultValue={registrationDraft.nationalId ?? ""}
-                    onChange={event => { registrationDraft.nationalId = event.target.value; }}
+                    defaultValue={toPersianLoginDigits(registrationDraft.nationalId ?? "")}
+                    onChange={event => { registrationDraft.nationalId = localizePersianNumericInput(event.currentTarget); }}
                     className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
                 </div>
               </div>
@@ -319,7 +320,7 @@ export default function Main() {
               </div>
               <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[160]">
                 <MobileVerification mobile={mobile} />
-                <input dir="ltr" type="tel" required maxLength={16} aria-label="شماره موبایل" data-registration-field="mobile" value={mobile} onChange={event => { registrationDraft.mobile = event.target.value; setMobile(event.target.value); }} className="min-w-0 grow bg-transparent text-right text-sm text-[#1a202c] outline-none" />
+                <input dir="ltr" type="tel" required maxLength={16} aria-label="شماره موبایل" data-registration-field="mobile" value={mobile} onChange={event => { const display = localizePersianNumericInput(event.currentTarget); registrationDraft.mobile = display; setMobile(display); }} className="min-w-0 grow bg-transparent text-right text-sm text-[#1a202c] outline-none" />
               </div>
             </div>
             <div className="flex flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[164]">

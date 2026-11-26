@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { toPersianLoginDigits } from "../../../../auth/oidc";
 import { registrationDraft, registrationFiles, registrationDetails } from "../../draft";
 import React from "react";
 import RegistrationStepper from "../../RegistrationStepper";
@@ -65,9 +66,9 @@ export default function Main() {
               <article className="mah-review-box">
                 <header><h3>اطلاعات نماینده اصلی</h3><Link to="/register/startup">ویرایش اطلاعات</Link></header>
                 <p>نام و نام خانوادگی: {registrationDraft.firstName} {registrationDraft.lastName}</p>
-                <p>شماره تماس: <bdi dir="ltr">{registrationDraft.mobile}</bdi></p>
+                <p>شماره تماس: <bdi dir="ltr">{toPersianLoginDigits(registrationDraft.mobile ?? "")}</bdi></p>
                 {registrationDraft.email && <p>ایمیل: <bdi dir="ltr">{registrationDraft.email}</bdi></p>}
-                {registrationDraft.nationalId && <p>کد ملی نماینده: <bdi dir="ltr">{registrationDraft.nationalId}</bdi></p>}
+                {registrationDraft.nationalId && <p>کد ملی نماینده: <bdi dir="ltr">{toPersianLoginDigits(registrationDraft.nationalId ?? "")}</bdi></p>}
               </article>
               <article className="mah-review-box">
                 <header><h3>محصول و بازار</h3><Link to="/register/startup/states/step2">ویرایش اطلاعات</Link></header>

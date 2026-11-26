@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { normalizeIranMobile } from "../../auth/oidc";
+import { normalizeIranMobile, localizePersianNumericInput } from "../../auth/oidc";
 import { confirmStartupMobile, getStartupMobileVerification, sendStartupMobileCode } from "./api";
 import { registrationMobileVerification } from "./draft";
 
@@ -72,7 +72,7 @@ export default function MobileVerification({ mobile: inputMobile }: { mobile: st
           <form onSubmit={verify} className="flex flex-col gap-3">
             <label>کد پیامک‌شده
               <input dir="ltr" name="code" required inputMode="numeric" autoComplete="one-time-code" maxLength={6}
-                pattern="[0-9۰-۹٠-٩]{6}" className="block rounded border border-slate-300 p-2" />
+                pattern="[0-9۰-۹٠-٩]{6}" onChange={event => { localizePersianNumericInput(event.currentTarget); }} className="block rounded border border-slate-300 p-2" />
             </label>
             {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
             <button disabled={busy} className="rounded-lg bg-[#2094e3] p-2 text-white">تأیید شماره</button>

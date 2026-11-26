@@ -72,6 +72,21 @@ export function toPersianLoginDigits(value: string) {
   });
 }
 
+// Preserve selection while replacing digits in text and tel inputs.
+export function localizePersianNumericInput(input: HTMLInputElement): string {
+  const start = input.selectionStart;
+  const end = input.selectionEnd;
+  const direction = input.selectionDirection;
+  const display = toPersianLoginDigits(input.value);
+  if (input.value !== display) {
+    input.value = display;
+    if (start !== null && end !== null) {
+      input.setSelectionRange(start, end, direction ?? "none");
+    }
+  }
+  return display;
+}
+
 export function normalizeIranMobile(value: string) {
   const persian = "۰۱۲۳۴۵۶۷۸۹";
   const arabic = "٠١٢٣٤٥٦٧٨٩";

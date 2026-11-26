@@ -78,3 +78,13 @@ await callbackScenario((r,c) => { c.nonce="wrong"; r.id_token=token(c); },/inval
 await callbackScenario((r,c) => { c.sub="different"; r.id_token=token(c); },/invalid_subject/);
 await callbackScenario(r => { r.access_token=token({}); },/invalid_subject/);
 console.log("Moon callback rejects absent/mismatched nonce and subject");
+
+// Display conversion must preserve leading zero, separators, and cursor selection.
+{
+  let selection;
+  const input = { value: "012٣۴5", selectionStart: 2, selectionEnd: 4, selectionDirection: "backward", setSelectionRange(...args) { selection = args; } };
+  assert.equal(auth.localizePersianNumericInput(input), "۰۱۲۳۴۵");
+  assert.equal(input.value, "۰۱۲۳۴۵");
+  assert.deepEqual(selection, [2, 4, "backward"]);
+  assert.equal(auth.normalizeIranMobile("۰۹۱۲۳۴۵۶۷۸۹"), "09123456789");
+}
