@@ -11,7 +11,7 @@ namespace Moon.Platform.Api.Modules.StartupRegistration;
 public sealed class StartupApplication
 {
     public Guid Id { get; init; } = Guid.NewGuid();
-    [MaxLength(48)] public required string TrackingCode { get; init; }
+    [MaxLength(48)] public required string TrackingCode { get; set; }
     [MaxLength(160)] public required string Name { get; init; }
     [MaxLength(120)] public required string ContactName { get; init; }
     [MaxLength(11)] public required string Mobile { get; init; }
@@ -33,6 +33,7 @@ public sealed class StartupApplication
 public sealed record ApproveStartupApplicationRequest(string? TemporaryPassword);
 
 internal sealed record StartupMobileRequest(string? Mobile, string? Code);
+internal sealed record TrackStartupApplicationRequest(string? TrackingCode, string? Mobile, string? MobileVerification);
 
 public static class StartupRegistrationEndpoints
 {
@@ -130,7 +131,28 @@ public static class StartupRegistrationEndpoints
             try
             {
                 db.StartupApplications.Add(application);
-                await db.SaveChangesAsync(ct);
+                // The database unique index is the authoritative concurrency guard.
+                // Retry only a collision on that exact index, never other failures.
+                var indexName = db.Model.FindEntityType(typeof(StartupApplication))!
+                    .GetIndexes().Single(index => index.Properties.Count == 1
+                        && index.Properties[0].Name == nameof(StartupApplication.TrackingCode))
+                    .GetDatabaseName();
+                for (var attempt = 0; ; attempt++)
+                {
+                    try
+                    {
+                        await db.SaveChangesAsync(ct);
+                        break;
+                    }
+                    catch (DbUpdateException error) when (error.InnerException is Npgsql.PostgresException pg
+                        && pg.SqlState == Npgsql.PostgresErrorCodes.UniqueViolation
+                        && indexName is not null && pg.ConstraintName == indexName)
+                    {
+                        if (attempt >= 4)
+                            return Results.StatusCode(StatusCodes.Status503ServiceUnavailable);
+                        application.TrackingCode = StartupTrackingCode.Create();
+                    }
+                }
                 submitted = true;
             }
             finally
@@ -146,12 +168,40 @@ public static class StartupRegistrationEndpoints
             string trackingCode, MoonDbContext db, CancellationToken ct) =>
         {
             var code = StartupTrackingCode.Normalize(trackingCode);
-            if (code is null) return Results.NotFound();
+            if (!StartupTrackingCode.IsLegacyBearerCode(code)) return Results.NotFound();
             var result = await db.StartupApplications.AsNoTracking()
                 .Where(application => application.TrackingCode == code)
                 .Select(application => new { application.Status, application.SubmittedAtUtc })
                 .SingleOrDefaultAsync(ct);
             return result is null ? Results.NotFound() : Results.Ok(result);
+        });
+
+        // A ten-digit reference alone is never an authorization credential.
+        // The existing SMS challenge must be verified for the submitted mobile.
+        // Consume the proof even on a miss so it cannot enumerate references.
+        registration.MapPost("/track", async Task<IResult> (
+            TrackStartupApplicationRequest request, MoonDbContext db,
+            StartupMobileVerification verification, CancellationToken ct) =>
+        {
+            var code = StartupTrackingCode.Normalize(request.TrackingCode);
+            if (code is null || !StartupMobileVerification.IsMobile(request.Mobile))
+                return Results.NotFound();
+            if (!verification.Enabled) return Results.StatusCode(StatusCodes.Status503ServiceUnavailable);
+            var mobile = request.Mobile!;
+            if (!verification.TryReserve(mobile, request.MobileVerification ?? ""))
+                return Results.BadRequest(new { code = "mobile_verification_required" });
+            try
+            {
+                var result = await db.StartupApplications.AsNoTracking()
+                    .Where(application => application.TrackingCode == code && application.Mobile == mobile)
+                    .Select(application => new { application.Status, application.SubmittedAtUtc })
+                    .SingleOrDefaultAsync(ct);
+                return result is null ? Results.NotFound() : Results.Ok(result);
+            }
+            finally
+            {
+                verification.Complete(mobile, submitted: true);
+            }
         });
 
         endpoints.MapGet("/api/v1/creative-house/startup-applications", async Task<IResult> (

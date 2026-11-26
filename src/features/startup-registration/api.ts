@@ -71,6 +71,16 @@ export async function trackStartupApplication(code: string) {
   return response.json() as Promise<StartupApplicationStatus>;
 }
 
+export async function trackStartupApplicationWithMobile(code: string, mobile: string, mobileVerification: string) {
+  const response = await fetch(baseUrl + publicPath + "/track", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ trackingCode: code, mobile, mobileVerification }),
+  });
+  if (response.status === 404) return null;
+  if (!response.ok) throw new Error("پیگیری انجام نشد. دوباره شماره موبایل را تأیید کنید.");
+  return response.json() as Promise<StartupApplicationStatus>;
+}
+
 export async function listStartupApplications(page: number, signal: AbortSignal) {
   const session = await getValidSession();
   if (!session) throw new Error("نشست شما پایان یافته است. دوباره وارد شوید.");

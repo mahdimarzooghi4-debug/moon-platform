@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { startupApplicationStatus, trackStartupApplication } from "../../api";
+import { toPersianLoginDigits } from "../../../../auth/oidc";
 import React from "react";
 import "./index.css";
 
@@ -8,10 +9,10 @@ export default function Main() {
   const [status, setStatus] = useState("");
   const code = sessionStorage.getItem("moon-startup-tracking-code");
   const [copyStatus, setCopyStatus] = useState("");
-  const displayCode = code?.length === 16 ? code.match(/.{4}/g)?.join("-") ?? code : code;
+  const displayCode = code?.length === 10 ? toPersianLoginDigits(code) : code?.length === 16 ? code.match(/.{4}/g)?.join("-") ?? code : code;
   async function copyCode() {
     if (!code) return;
-    try { await navigator.clipboard.writeText(code); setCopyStatus("کد کپی شد."); }
+    try { await navigator.clipboard.writeText(displayCode ?? code); setCopyStatus("کد کپی شد."); }
     catch { setCopyStatus("کد را انتخاب و کپی کنید."); }
   }
   return (
@@ -62,7 +63,7 @@ export default function Main() {
           <div className="flex flex-col gap-[12px] items-start self-stretch shrink-0 flex-nowrap relative z-[24]">
             <div className="flex flex-col gap-[12px] items-start self-stretch shrink-0 flex-nowrap relative z-[25]">
               <div className="flex pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#2094e3] rounded-[12px] relative z-[26]">
-                <button type="button" className="flex w-[96px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#fff] relative text-center whitespace-nowrap z-[27]" disabled={!code} onClick={async () => { if (!code) return; try { const result = await trackStartupApplication(code); setStatus(result ? startupApplicationStatus(result.status) : "پرونده پیدا نشد."); } catch { setStatus("دریافت وضعیت انجام نشد."); } }}>پیگیری درخواست</button><output className="text-sm text-[#17324d]" role="status">{status}</output>
+                <button type="button" className="flex w-[96px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#fff] relative text-center whitespace-nowrap z-[27]" disabled={!code} onClick={async () => { if (!code) return; if (code.length === 10) { window.location.assign("/registration/track"); return; } try { const result = await trackStartupApplication(code); setStatus(result ? startupApplicationStatus(result.status) : "پرونده پیدا نشد."); } catch { setStatus("دریافت وضعیت انجام نشد."); } }}>پیگیری درخواست</button><output className="text-sm text-[#17324d]" role="status">{status}</output>
               </div>
               <div className="flex pt-[12px] pr-0 pb-[12px] pl-0 justify-center items-center self-stretch shrink-0 flex-nowrap relative z-[28]">
                 <Link to="/" className="text-sm font-semibold text-[#2094e3]">بازگشت به صفحه اصلی</Link>
