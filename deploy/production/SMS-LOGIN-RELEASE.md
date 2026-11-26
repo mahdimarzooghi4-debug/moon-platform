@@ -1,0 +1,30 @@
+# Moon SMS login: candidate deployment boundary
+
+This is a preparation package, not authorization to install or activate the provider. The production automatic main-branch deploy is deliberately blocked for this release until an approved coordinated activation and rollback mechanism exists. Never remove the guard merely to make CI green.
+
+## Candidate artifact and configuration
+
+CI packages an optimized Keycloak 26.7.3 image with the unchanged tested provider. The base production compose is not changed. The separate compose.sms-candidate.yaml overlay is opt-in only. It adds a dedicated private PostgreSQL volume, the existing OTP schema on first initialization, explicit secrets and the trusted Caddy proxy address. The overlay does not bind a flow, run a realm import, or change the running realm. The existing API and Keycloak databases are not reused for OTP. PostgreSQL initialization scripts run only for a new volume; independently verify schema and privileges on existing volumes. No real secrets are committed.
+
+On an approved server with a protected mode-600 environment file, the following is a read-only syntax/contract check (not approval or activation):
+```sh
+docker compose --env-file deploy/production/.env.production \
+  -f deploy/production/compose.yaml -f deploy/production/compose.sms-candidate.yaml \
+  config --format json | python3 deploy/production/validate-sms-candidate.py
+```
+Never print or save the rendered environment. The image tag is the reviewed release SHA, not a mutable tag. Generate unique OTP database credentials and an independent stable random HMAC key on the protected server. Use the existing authorized SMS.ir API credential only after confirming the template and parameter. Do not substitute test credentials.
+
+## Release prerequisites (not yet evidenced)
+
+- Complete technical code review and exact-SHA CI, including image build, real browser integration, and proxy spoofing resistance on the actual topology.
+- Verify server capacity, private DB schema, least privilege, backup/restore and HMAC rotation/expired data cleanup procedures; no invented retention period.
+- Privately inventory real Keycloak users, canonical verified mobile ownership, active roles and required actions. Reconcile any non-mobile or unverified privileged accounts before switching. Preserve required actions, audit trails and independently tested admin recovery. Do not assign roles or change mobile ownership automatically.
+- Check for active legacy auditor memberships and realm assignments; resolve through audited authorized actions, not history deletion.
+- Validate SMS.ir connectivity, real authorized key, active template, balance and an owner-approved test number. Provider acknowledgement is not proof of handset delivery.
+- Create a dedicated REQUIRED browser flow and bind it only to moon-web, preserving the realm default flow and admin recovery; verify the current client override, PKCE and rollback targets. Existing realm import does not update live realm. Never use a global browser-flow override.
+- Capture current immutable image tags, existing client flow binding, protected configuration and verified database backups; rehearse rollback in an isolated environment. Restore the previous client override and compatible web/Keycloak images together if activation fails; do not automatically reverse data migrations or restore a database over new business data.
+- Explicit owner release approval is required before any production mutation. A successful CI is insufficient. After coordinated activation, verify one real delivered code and correct panel permissions for every actual role. Stop and roll back on failure.
+
+## Status
+
+Candidate packaging only. No production SSH, secret read, database migration, image transfer, runtime restart, client change or live SMS is performed by this preparation. The exact operational release command and rollback mechanism remain a separate gate.

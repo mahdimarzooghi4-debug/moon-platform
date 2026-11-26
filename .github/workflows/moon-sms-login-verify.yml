@@ -132,3 +132,39 @@ jobs:
           python -m playwright install --with-deps chromium
       - name: Run real Keycloak browser and PostgreSQL integration with isolated SMS HTTPS
         run: bash backend/keycloak/sms-login/integration/run.sh
+
+  sms-deployment-candidate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Build optimized provider image (no production transfer)
+        run: |
+          set -euo pipefail
+          root=backend/keycloak/sms-login
+          mvn -B -q -f "$root/pom.xml" -Dmaven.test.skip=true package
+          docker build -t "moon-platform/keycloak:$GITHUB_SHA" "$root"
+          docker run --rm "moon-platform/keycloak:$GITHUB_SHA" start --optimized --help >/dev/null
+      - name: Validate candidate Compose using disposable credentials
+        env:
+          MOON_LOGIN_OTP_DB_PASSWORD: ci-only-separate-otp-db
+          MOON_SMS_IR_API_KEY: ci-only-not-a-real-key
+          MOON_SMS_IR_STARTUP_TEMPLATE_ID: '743974'
+          MOON_SMS_IR_STARTUP_CODE_PARAMETER: CODE
+        run: |
+          set -euo pipefail
+          export MOON_SMS_KEYCLOAK_IMAGE_TAG="$GITHUB_SHA"
+          export MOON_LOGIN_OTP_HMAC_KEY="$(openssl rand -base64 32)"
+          docker compose --env-file deploy/production/env.example \
+            -f deploy/production/compose.yaml -f deploy/production/compose.sms-candidate.yaml \
+            config --format json | python3 deploy/production/validate-sms-candidate.py
+          if MOON_LOGIN_OTP_HMAC_KEY=invalid docker compose --env-file deploy/production/env.example \
+            -f deploy/production/compose.yaml -f deploy/production/compose.sms-candidate.yaml \
+            config --format json | python3 deploy/production/validate-sms-candidate.py; then
+            echo "Invalid HMAC key unexpectedly accepted"
+            exit 1
+          fi

@@ -52,3 +52,7 @@ The public Moon login page starts the existing OIDC authorization-code + PKCE fl
 ## Disposable browser integration
 
 CI builds the unchanged provider JAR and runs Keycloak 26.7.3, PostgreSQL 18, and Chromium. The SMS.ir hostname resolves to a disposable HTTPS fixture on a Docker network, with an ephemeral certificate and fake API key. No live SMS, production realm, or production database is accessed. The fixture derives the seven current domain roles from the repository production realm; verifies OIDC state, PKCE, nonce, subject, audience and role isolation; checks wrong code, cooldown, expiry, attempt exhaustion, disabled/unknown users, rejected transport, session isolation and required action preservation. Database state is reset only between isolated test scenarios. These tests do not validate real SMS delivery, real account ownership, existing realm migration, proxy configuration, or operational recovery. The provider remains unactivated in production.
+
+## Production candidate packaging
+
+See deploy/production/SMS-LOGIN-RELEASE.md. The optimized image and opt-in Compose overlay are prepared without activating the provider or modifying a running realm. Automatic deployment remains deliberately blocked until coordinated activation and rollback are implemented and approved.
