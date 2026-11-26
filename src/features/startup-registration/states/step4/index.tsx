@@ -1,4 +1,4 @@
-import { registrationDraft, registrationFiles } from "../../draft";
+import { registrationDraft, registrationFiles, registrationDetails } from "../../draft";
 import React from "react";
 import "./index.css";
 
@@ -65,7 +65,7 @@ export default function Main() {
                 اثر اجتماعی و مدارک
               </span>
               <div className="flex w-[28px] h-[28px] justify-center items-center shrink-0 flex-nowrap bg-[#eaf8f0] rounded-[14px] border-solid border-[1.5px] border-[#159455] relative z-[25]">
-                <input type="checkbox" required data-registration-consent aria-label="تأیید تعهد ثبت‌نام" />
+                <span aria-hidden="true">✓</span>
               </div>
               <div className="w-[40px] h-px shrink-0 bg-[url(/assets/codia/N0AXHZh5z7.svg)] bg-cover bg-no-repeat relative z-[27]" />
             </div>
@@ -74,7 +74,7 @@ export default function Main() {
                 محصول و تیم
               </span>
               <div className="flex w-[28px] h-[28px] justify-center items-center shrink-0 flex-nowrap bg-[#eaf8f0] rounded-[14px] border-solid border-[1.5px] border-[#159455] relative z-30">
-                <input type="checkbox" required data-registration-consent aria-label="تأیید تعهد ثبت‌نام" />
+                <span aria-hidden="true">✓</span>
               </div>
               <div className="w-[40px] h-px shrink-0 bg-[url(/assets/codia/3K3RQgftDN.svg)] bg-cover bg-no-repeat relative z-[32]" />
             </div>
@@ -83,7 +83,7 @@ export default function Main() {
                 اطلاعات پایه
               </span>
               <div className="flex w-[28px] h-[28px] justify-center items-center shrink-0 flex-nowrap bg-[#eaf8f0] rounded-[14px] border-solid border-[1.5px] border-[#159455] relative z-[35]">
-                <input type="checkbox" required data-registration-consent aria-label="تأیید تعهد ثبت‌نام" />
+                <span aria-hidden="true">✓</span>
               </div>
             </div>
           </div>
@@ -206,6 +206,13 @@ export default function Main() {
               </div>
             </div>
             <div className="flex flex-col gap-[12px] items-end self-stretch shrink-0 flex-nowrap relative z-[90]">
+              {Object.entries(registrationDetails).some(([, value]) => value) && (
+                <dl className="w-full space-y-2 text-right text-sm">
+                  {Object.entries(registrationDetails).filter(([, value]) => value).map(([label, value]) => (
+                    <div key={label}><dt className="font-bold">{label}</dt><dd className="whitespace-pre-wrap break-words">{value}</dd></div>
+                  ))}
+                </dl>
+              )}
               <span className="flex w-[102px] h-[23px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[15px] font-bold leading-[23px] text-[#2d3748] relative text-right whitespace-nowrap z-[91]">
                 تأییدیه و تعهدات
               </span>

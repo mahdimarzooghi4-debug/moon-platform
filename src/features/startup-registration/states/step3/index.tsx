@@ -125,20 +125,11 @@ export default function Main() {
                     تجربه قبلی طرح‌های اثرگذار
                   </span>
                 </div>
-                <div className="flex w-[122px] h-[48px] gap-[16px] items-center shrink-0 flex-nowrap relative z-[51]">
-                  <div className="flex w-[55px] gap-[6px] items-center shrink-0 flex-nowrap relative z-[52]">
-                    <span className="flex w-[33px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#4a5568] relative text-right whitespace-nowrap z-[53]">
-                      نداریم
-                    </span>
-                    <div className="w-[16px] h-[16px] shrink-0 bg-[url(/assets/codia/yKSsOMwNWd.svg)] bg-cover bg-no-repeat rounded-[50%] relative z-[54]" />
-                  </div>
-                  <div className="flex w-[51px] gap-[6px] items-center shrink-0 flex-nowrap relative z-[55]">
-                    <span className="flex w-[29px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[56]">
-                      داریم
-                    </span>
-                    <div className="w-[16px] h-[16px] shrink-0 bg-[url(/assets/codia/Gw5JMREobZ.svg)] bg-cover bg-no-repeat rounded-[50%] relative z-[57]" />
-                  </div>
-                </div>
+                <select aria-label="تجربه قبلی طرح‌های اثرگذار" data-registration-field="impactExperience" data-registration-detail="تجربه قبلی طرح‌های اثرگذار" defaultValue={registrationDraft.impactExperience ?? ""} onChange={event => { registrationDraft.impactExperience = event.target.value; }} className="h-12 w-full rounded-lg border border-slate-300 bg-white px-3 text-right text-sm">
+                  <option value="">انتخاب کنید</option>
+                  <option>نداریم</option>
+                  <option>داریم</option>
+                </select>
               </div>
               <div className="flex w-[450px] flex-col gap-[8px] items-end shrink-0 flex-nowrap relative z-[58]">
                 <div className="flex gap-[4px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[59]">
@@ -150,9 +141,7 @@ export default function Main() {
                   </span>
                 </div>
                 <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[62]">
-                  <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[63]">
-                    چنداستانی (تهران، البرز و اصفهان)
-                  </span>
+                  <input aria-label="محدوده جغرافیایی" maxLength={160} data-registration-detail="محدوده جغرافیایی" data-registration-key="coverage" defaultValue={registrationDraft.coverage ?? ""} onChange={event => { registrationDraft.coverage = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
                 </div>
               </div>
             </div>
@@ -180,9 +169,7 @@ export default function Main() {
                   </span>
                 </div>
                 <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[75]">
-                  <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[76]">
-                    آموزش و مهارت‌افزایی، اشتغال پایدار
-                  </span>
+                  <input aria-label="حوزه اثر اجتماعی" maxLength={160} data-registration-detail="حوزه اثر اجتماعی" data-registration-key="impact" defaultValue={registrationDraft.impact ?? ""} onChange={event => { registrationDraft.impact = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
                 </div>
               </div>
             </div>
@@ -244,9 +231,7 @@ export default function Main() {
                 </span>
               </div>
               <div className="flex h-[96px] pt-[12px] pr-[12px] pb-[12px] pl-[12px] flex-col items-end self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[101]">
-                <span className="h-[22px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#a0aec0] relative text-right overflow-hidden whitespace-nowrap z-[102]">
-                  اگر نکته یا توضیح بیشتری لازم است در این بخش بنویسید...
-                </span>
+                <textarea aria-label="توضیحات تکمیلی" maxLength={160} data-registration-detail="توضیحات تکمیلی" data-registration-key="notes" defaultValue={registrationDraft.notes ?? ""} onChange={event => { registrationDraft.notes = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]"></textarea>
               </div>
             </div>
             <div className="flex pt-[24px] pr-0 pb-0 pl-0 justify-between items-center self-stretch shrink-0 flex-nowrap border-solid border-b border-b-[#e4ebf1] relative z-[103]">
