@@ -1,8 +1,17 @@
-import { registrationDraft } from "./draft";
+import { useEffect, useState } from "react";
+import { registrationDraft, registrationFiles } from "./draft";
 import React from "react";
 import "./index.css";
 
 export default function Main() {
+  const [logo, setLogo] = useState(registrationFiles.logo);
+  const [logoUrl, setLogoUrl] = useState("");
+  useEffect(() => {
+    if (!logo) return;
+    const url = URL.createObjectURL(logo);
+    setLogoUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [logo]);
   return (
     <div dir="rtl" className="main-container flex w-[1440px] h-[1984px] flex-col justify-between items-center flex-nowrap bg-[#f7fafc] relative mx-auto my-0">
       <div className="mah-registration-header flex h-[80px] pt-0 pr-[120px] pb-0 pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] border-solid border-t border-t-[#e4ebf1] relative">
@@ -106,19 +115,27 @@ export default function Main() {
               </span>
               <div className="flex w-[306px] gap-[16px] items-center shrink-0 flex-nowrap relative z-[45]">
                 <div className="flex w-[226px] flex-col gap-[4px] items-end shrink-0 flex-nowrap relative z-[46]">
-                  <div className="flex w-[85px] pt-[6px] pr-[12px] pb-[6px] pl-[12px] items-start shrink-0 flex-nowrap bg-[#eaf5fd] rounded-[8px] relative z-[47]">
-                    <span className="flex w-[61px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-semibold leading-[18.75px] text-[#2094e3] relative text-right whitespace-nowrap z-[48]">
-                      بارگذاری لوگو
-                    </span>
-                  </div>
+                  <label className="cursor-pointer rounded-[8px] bg-[#eaf5fd] px-3 py-1.5 text-xs font-semibold text-[#2094e3] focus-within:ring-2">
+                    بارگذاری لوگو
+                    <input type="file" className="sr-only" accept=".png,.jpg,.jpeg,.svg" onChange={event => {
+                      const file = event.currentTarget.files?.[0];
+                      event.currentTarget.value = "";
+                      if (!file) return;
+                      if (file.size > 5 * 1024 * 1024) {
+                        window.alert("حداکثر حجم لوگو ۵ مگابایت است.");
+                        return;
+                      }
+                      registrationFiles.logo = file;
+                      setLogo(file);
+                    }} />
+                  </label>
                   <span className="flex w-[226px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#a0aec0] relative text-right whitespace-nowrap z-[49]">
                     حداکثر حجم فایل ۵ مگابایت (PNG, JPG, SVG)
                   </span>
                 </div>
                 <div className="flex w-[64px] h-[64px] justify-center items-center shrink-0 flex-nowrap bg-[#edf2f7] rounded-[32px] border-solid border border-[#e2e8f0] relative z-50">
-                  <span className="flex w-[20px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#718096] relative text-right whitespace-nowrap z-[51]">
-                    لوگو
-                  </span>
+                  {logoUrl ? <img src={logoUrl} alt="لوگو" className="h-full w-full rounded-full object-cover" />
+                    : <span className="text-xs text-[#718096]">لوگو</span>}
                 </div>
               </div>
             </div>
@@ -324,9 +341,11 @@ export default function Main() {
                   </span>
                 </div>
                 <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[154]">
-                  <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#1a202c] relative text-right whitespace-nowrap z-[155]">
-                    ۰۰۲۴۵۶۷۸۹۱
-                  </span>
+                  <input aria-label="کد ملی نماینده" inputMode="numeric" required maxLength={10}
+                    pattern="[0-9۰-۹٠-٩]{10}" data-registration-field="nationalId"
+                    defaultValue={registrationDraft.nationalId ?? ""}
+                    onChange={event => { registrationDraft.nationalId = event.target.value; }}
+                    className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
                 </div>
               </div>
             </div>

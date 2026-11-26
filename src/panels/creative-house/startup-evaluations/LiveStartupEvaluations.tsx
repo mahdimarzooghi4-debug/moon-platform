@@ -2,11 +2,19 @@ import { useEffect, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import {
   approveStartupApplication,
-  downloadStartupPitchDeck,
+  downloadStartupAttachment,
   listStartupApplications,
   startupApplicationStatus,
   type StartupApplication,
+  type StartupAttachment,
 } from "../../../features/startup-registration/api";
+
+const attachments = [
+  ["hasPitchDeck", "pitchDeck", "فایل معرفی"],
+  ["hasLogo", "logo", "لوگو"],
+  ["hasLegalDocument", "legalDocument", "مدرک حقوقی"],
+  ["hasIdentityDocument", "identityDocument", "مدرک هویتی"],
+] as const satisfies readonly (readonly [keyof StartupApplication, StartupAttachment | "pitchDeck", string])[];
 
 export default function LiveStartupEvaluations() {
   const [page, setPage] = useState(1);
@@ -60,12 +68,13 @@ export default function LiveStartupEvaluations() {
           {item.product && <p className="whitespace-pre-wrap break-words">محصول: {item.product}</p>}
           {item.team && <p className="whitespace-pre-wrap break-words">تیم: {item.team}</p>}
           {item.audience && <p className="break-words">جامعهٔ هدف: {item.audience}</p>}
-          {item.hasPitchDeck && (
-            <button type="button" className="text-[#167dca]" onClick={() => {
+          {item.nationalId && <p>کد ملی نماینده <bdi>{item.nationalId}</bdi></p>}
+          {attachments.map(([flag, kind, label]) => item[flag] && (
+            <button key={kind} type="button" className="me-3 text-[#167dca]" onClick={() => {
               setApprovalError("");
-              void downloadStartupPitchDeck(item.id).catch((cause: Error) => setApprovalError(cause.message));
-            }}>دریافت فایل معرفی</button>
-          )}
+              void downloadStartupAttachment(item.id, kind).catch((cause: Error) => setApprovalError(cause.message));
+            }}>دریافت {label}</button>
+          ))}
           {item.status !== "approved" && (
             <form onSubmit={(event) => approve(event, item)} className="flex flex-wrap items-end gap-3">
               {item.status === "pending_review" && <label>رمز موقت حساب<input name="temporaryPassword" type="password" autoComplete="new-password" dir="ltr" minLength={12} maxLength={128} required className="block rounded-lg border border-slate-300 p-2" /></label>}
