@@ -19,19 +19,24 @@
     # Management endpoints must not be exposed directly to the internet.
     # Operators administer Keycloak using an audited private connection.
     @admin path /identity/admin /identity/admin/*
-    respond @admin 403
-
     @api path /api/* /health/*
-    handle @api {
-        reverse_proxy api:8080
-    }
-
     @identity path /identity/*
-    handle @identity {
-        reverse_proxy keycloak:8080
-    }
 
-    handle {
-        reverse_proxy web:8080
+    # Explicit ordering: a top-level respond may be sorted after handle.
+    # Deny management routes before the broader identity proxy.
+    route {
+        respond @admin 403
+
+        handle @api {
+            reverse_proxy api:8080
+        }
+
+        handle @identity {
+            reverse_proxy keycloak:8080
+        }
+
+        handle {
+            reverse_proxy web:8080
+        }
     }
 }

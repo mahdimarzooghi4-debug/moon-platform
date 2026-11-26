@@ -76,6 +76,13 @@ for i in $(seq 1 180); do
   sleep 2
 done
 if [ "$ready" != 1 ]; then docker logs --tail 100 moon-ci-keycloak; docker logs --tail 100 moon-ci-gateway; exit 1; fi
-test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:18081/identity/admin/realms/moon)" = 403
+for path in /identity/admin /identity/admin/ /identity/admin/realms/moon; do
+  status="$(curl -sS -o /dev/null -w '%{http_code}' "http://127.0.0.1:18081$path")"
+  if [ "$status" != 403 ]; then
+    echo "Public admin deny failed: $path returned $status (expected 403)" >&2
+    exit 1
+  fi
+done
+echo "Public Keycloak admin routes denied; continuing private activation rehearsal."
 python "$root/integration/flow_rehearsal.py" "$fixture" "$root/../../../deploy/production/sms-client-flow.py"
 python "$root/integration/browser_test.py" "$fixture"
