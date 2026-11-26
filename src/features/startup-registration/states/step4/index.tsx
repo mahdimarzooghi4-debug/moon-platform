@@ -65,7 +65,7 @@ export default function Main() {
                 اثر اجتماعی و مدارک
               </span>
               <div className="flex w-[28px] h-[28px] justify-center items-center shrink-0 flex-nowrap bg-[#eaf8f0] rounded-[14px] border-solid border-[1.5px] border-[#159455] relative z-[25]">
-                <input type="checkbox" required data-registration-consent aria-label="تأیید تعهد ثبت‌نام" />
+                <span aria-hidden="true">✓</span>
               </div>
               <div className="w-[40px] h-px shrink-0 bg-[url(/assets/codia/N0AXHZh5z7.svg)] bg-cover bg-no-repeat relative z-[27]" />
             </div>
@@ -74,7 +74,7 @@ export default function Main() {
                 محصول و تیم
               </span>
               <div className="flex w-[28px] h-[28px] justify-center items-center shrink-0 flex-nowrap bg-[#eaf8f0] rounded-[14px] border-solid border-[1.5px] border-[#159455] relative z-30">
-                <input type="checkbox" required data-registration-consent aria-label="تأیید تعهد ثبت‌نام" />
+                <span aria-hidden="true">✓</span>
               </div>
               <div className="w-[40px] h-px shrink-0 bg-[url(/assets/codia/3K3RQgftDN.svg)] bg-cover bg-no-repeat relative z-[32]" />
             </div>
@@ -83,7 +83,7 @@ export default function Main() {
                 اطلاعات پایه
               </span>
               <div className="flex w-[28px] h-[28px] justify-center items-center shrink-0 flex-nowrap bg-[#eaf8f0] rounded-[14px] border-solid border-[1.5px] border-[#159455] relative z-[35]">
-                <input type="checkbox" required data-registration-consent aria-label="تأیید تعهد ثبت‌نام" />
+                <span aria-hidden="true">✓</span>
               </div>
             </div>
           </div>
