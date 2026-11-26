@@ -60,3 +60,40 @@ textarea {
   direction: ltr;
   text-align: right;
 }
+
+
+/* Keep the physical order of the exported header, stepper and paired fields.
+   Only this step's form card overrides the shared registration alignment. */
+.mah-startup-step2 .mah-startup-step2-card {
+  direction: ltr !important;
+  text-align: right;
+}
+
+.mah-startup-step2 .mah-startup-step2-card .flex-col.items-end {
+  direction: ltr !important;
+  align-items: flex-end !important;
+}
+
+.mah-startup-step2 .mah-startup-step2-card .flex.justify-end:not(.justify-center) {
+  direction: ltr !important;
+  justify-content: flex-end !important;
+}
+
+/* Text spans have RTL direction, so their flex-start is physically right. */
+.mah-startup-step2 .mah-startup-step2-card span.flex.text-right {
+  direction: rtl !important;
+  justify-content: flex-start !important;
+  text-align: right !important;
+}
+
+.mah-startup-step2 .mah-startup-step2-card textarea,
+.mah-startup-step2 .mah-startup-step2-card input,
+.mah-startup-step2 .mah-startup-step2-card select {
+  direction: rtl !important;
+  text-align: right !important;
+  unicode-bidi: plaintext;
+}
+
+.mah-startup-step2 .mah-startup-step2-card textarea {
+  width: 100%;
+}

@@ -4,7 +4,7 @@ import "./index.css";
 
 export default function Main() {
   return (
-    <div dir="rtl" className="main-container flex w-[1440px] flex-col items-center flex-nowrap bg-[#f7fafc] relative mx-auto my-0">
+    <div dir="rtl" className="main-container mah-startup-step2 flex w-[1440px] flex-col items-center flex-nowrap bg-[#f7fafc] relative mx-auto my-0">
       <div className="flex h-[80px] pt-0 pr-[120px] pb-0 pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] border-solid border-t border-t-[#e4ebf1] relative">
         <div className="flex w-[237px] gap-[20px] items-center shrink-0 flex-nowrap relative z-[1]">
           <span className="flex w-[87px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[21.875px] text-[#718096] relative text-right whitespace-nowrap z-[2]">
@@ -89,7 +89,7 @@ export default function Main() {
               </div>
             </div>
           </div>
-          <div className="flex pt-[36px] pr-[36px] pb-[36px] pl-[36px] flex-col gap-[28px] items-end self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[20px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_24px_0_rgba(0,0,0,0.03)] z-[37]">
+          <div className="mah-startup-step2-card flex pt-[36px] pr-[36px] pb-[36px] pl-[36px] flex-col gap-[28px] items-end self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[20px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_24px_0_rgba(0,0,0,0.03)] z-[37]">
             <div className="flex flex-col gap-[6px] items-end self-stretch shrink-0 flex-nowrap relative z-[38]">
               <span className="flex w-[167px] h-[28px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[18px] font-bold leading-[28px] text-[#1a202c] relative text-right whitespace-nowrap z-[39]">
                 محصول و تیم استارتاپ
@@ -109,7 +109,7 @@ export default function Main() {
                 </span>
               </div>
               <div className="flex h-[96px] pt-[12px] pr-[12px] pb-[12px] pl-[12px] flex-col items-end self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[46]">
-                <textarea required maxLength={4000} aria-label="معرفی کوتاه استارتاپ" data-registration-field="product" defaultValue={registrationDraft.product ?? ""} onChange={event => { registrationDraft.product = event.target.value; }} className="min-w-0 grow bg-transparent text-right text-sm text-[#1a202c] outline-none"></textarea>
+                <textarea required maxLength={4000} aria-label="معرفی کوتاه استارتاپ" data-registration-field="product" defaultValue={registrationDraft.product ?? ""} onChange={event => { registrationDraft.product = event.target.value; }} className="min-w-0 w-full grow bg-transparent text-right text-sm text-[#1a202c] outline-none"></textarea>
               </div>
             </div>
             <div className="flex h-[126px] flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[48]">
@@ -135,7 +135,7 @@ export default function Main() {
                 </span>
               </div>
               <div className="flex h-[96px] pt-[12px] pr-[12px] pb-[12px] pl-[12px] flex-col items-end self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[58]">
-                <textarea required maxLength={4000} aria-label="راهکار" data-registration-field="description" defaultValue={registrationDraft.description ?? ""} onChange={event => { registrationDraft.description = event.target.value; }} className="min-w-0 grow bg-transparent text-right text-sm text-[#1a202c] outline-none"></textarea>
+                <textarea required maxLength={4000} aria-label="راهکار" data-registration-field="description" defaultValue={registrationDraft.description ?? ""} onChange={event => { registrationDraft.description = event.target.value; }} className="min-w-0 w-full grow bg-transparent text-right text-sm text-[#1a202c] outline-none"></textarea>
               </div>
             </div>
             <div className="flex h-[126px] flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[60]">
