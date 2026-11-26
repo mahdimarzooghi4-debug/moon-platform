@@ -1,6 +1,14 @@
 <#-- Moon's existing OTP visual design, rendered inside the real Keycloak session.
      Keep all form actions, field names and server-side validation unchanged. -->
 <#assign otp = moonOtp?? && moonOtp>
+<#function persianDigits value>
+  <#local result = value>
+  <#list 0..9 as i>
+    <#local result = result?replace("0123456789"?substring(i,i+1), "۰۱۲۳۴۵۶۷۸۹"?substring(i,i+1))>
+    <#local result = result?replace("٠١٢٣٤٥٦٧٨٩"?substring(i,i+1), "۰۱۲۳۴۵۶۷۸۹"?substring(i,i+1))>
+  </#list>
+  <#return result>
+</#function>
 <!doctype html>
 <html lang="fa" dir="rtl">
 <head>
@@ -8,6 +16,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ورود امن | سامانه ماه</title>
   <link rel="stylesheet" href="${url.resourcesPath}/moon-fonts/fonts.css">
+  <script defer src="${url.resourcesPath}/moon-digits.js"></script>
   <style>
     :root { color-scheme:light; font-family:Vazirmatn,Tahoma,Arial,sans-serif; color:#1a202c; background:#f7fafc; }
     * { box-sizing:border-box; }
@@ -27,7 +36,7 @@
     label { font-size:14px; font-weight:600; color:#2d3748; }
     input { width:100%; min-width:0; min-height:50px; padding:12px 16px; border:1px solid #cbd5e1; border-radius:12px; background:white; color:#1a202c; }
     #moon-mobile { text-align:left; font-variant-numeric:tabular-nums; }
-    #moon-code { height:64px; text-align:center; font-family:monospace; font-size:clamp(22px,5vw,28px); font-weight:700; letter-spacing:.48em; padding-inline-start:calc(12px + .48em); font-variant-numeric:tabular-nums; }
+    #moon-code { height:64px; text-align:center; font-family:Vazirmatn,Tahoma,Arial,sans-serif; font-size:clamp(22px,5vw,28px); font-weight:700; letter-spacing:.48em; padding-inline-start:calc(12px + .48em); font-variant-numeric:tabular-nums; }
     input::placeholder { color:#748397; opacity:1; }
     button { cursor:pointer; }
     button:focus-visible,input:focus-visible,a:focus-visible { outline:3px solid #1476b9; outline-offset:3px; }
@@ -60,7 +69,7 @@
         <h1 id="moon-title">کد تأیید را وارد کنید</h1>
         <p class="moon-muted">اگر شماره واردشده واجد شرایط باشد، کد تأیید ارسال می‌شود. اعتبار کد ۱۲۰ ثانیه است.</p>
         <#if moonMobile?? && moonMobile?length == 11>
-          <p class="moon-muted" dir="ltr"><bdi>${moonMobile?substring(0,4)}•••${moonMobile?substring(7,11)}</bdi></p>
+          <p class="moon-muted" dir="ltr"><bdi>${persianDigits(moonMobile?substring(0,4))}•••${persianDigits(moonMobile?substring(7,11))}</bdi></p>
         </#if>
       <#else>
         <h1 id="moon-title">ورود پیامکی سامانه ماه</h1>
@@ -81,7 +90,7 @@
         <#else>
           <div class="moon-field">
             <label for="moon-mobile">شماره موبایل</label>
-            <input id="moon-mobile" name="mobile" dir="ltr" type="tel" inputmode="tel" autocomplete="tel" maxlength="11" value="${moonMobile!''}" placeholder="09xxxxxxxxx" required>
+            <input id="moon-mobile" name="mobile" dir="ltr" type="tel" inputmode="tel" autocomplete="tel" maxlength="11" value="${persianDigits(moonMobile!'')}" placeholder="۰۹۱۲۳۴۵۶۷۸۹" required>
           </div>
           <button class="moon-primary" type="submit" name="moonAction" value="send">دریافت کد تأیید</button>
         </#if>

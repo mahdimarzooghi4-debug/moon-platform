@@ -39,6 +39,10 @@ def reset(mode="ok"):
 def b64(data):
     return base64.urlsafe_b64encode(data).rstrip(b"=").decode()
 
+def persian_digits(value):
+    return value.translate(str.maketrans("0123456789٠١٢٣٤٥٦٧٨٩", "۰۱۲۳۴۵۶۷۸۹۰۱۲۳۴۵۶۷۸۹"))
+
+
 def begin(browser, mobile, headers=None):
     ctx = browser.new_context(extra_http_headers=headers or {})
     page = ctx.new_page()
@@ -53,11 +57,15 @@ def begin(browser, mobile, headers=None):
     page.goto(AUTH + "/auth?" + urllib.parse.urlencode(params))
     if not headers and mobile == realm["users"][0]["username"]:
         check_branded_login(page, False)
-    page.locator("#moon-mobile").fill(mobile)
+    field = page.locator("#moon-mobile")
+    assert field.input_value() == persian_digits(mobile)
+    field.fill(mobile)
+    assert field.input_value() == persian_digits(mobile)
     page.locator("button[value=send]").click()
     page.locator("#moon-code").wait_for()
     if not headers and mobile == realm["users"][0]["username"]:
         check_branded_login(page, True)
+        assert page.locator(".moon-muted bdi").inner_text() == persian_digits(mobile[:4] + "•••" + mobile[7:])
     assert not page.url.startswith(CALLBACK)
     return ctx, page, verifier, state, nonce
 
@@ -118,7 +126,9 @@ def otp(settled=True):
     return code
 
 def submit(page, code):
-    page.locator("#moon-code").fill(code)
+    field = page.locator("#moon-code")
+    field.fill(code)
+    assert field.input_value() == persian_digits(code)
     page.locator("button[value=verify]").click()
 
 def reject(page, code):
@@ -169,6 +179,14 @@ with sync_playwright() as p:
         assert result == "CONSUMED"
         ctx.close()
     mobile = realm["users"][0]["username"]
+    reset()
+    ctx,page,verifier,state,nonce = begin(browser,mobile)
+    code = otp()
+    # Arabic-Indic keyboard and Persian clipboard are both localized and
+    # the real server must still issue the correct OIDC subject.
+    arabic_code = code.translate(str.maketrans("0123456789", "٠١٢٣٤٥٦٧٨٩"))
+    accept(page,verifier,state,nonce,arabic_code,realm["users"][0])
+    ctx.close()
     reset()
     ctx,page,*_ = begin(browser,mobile)
     code = otp()
