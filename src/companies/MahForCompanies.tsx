@@ -66,11 +66,11 @@ export default function MahForCompanies() {
           <div className="w-[137px] h-[46px] shrink-0 bg-[url(/assets/codia/SbaYix9bCr.png)] bg-cover bg-no-repeat relative z-[16]" />
         </div>
       </div>
-      <div className="mah-request-breadcrumb flex pt-[24px] pr-[120px] pb-0 pl-[120px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[17]">
-        <span className="flex w-[155px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[18]">
-          صفحه اصلی / برای شرکت‌ها
+      <nav aria-label="مسیر صفحه" dir="rtl" className="self-stretch shrink-0 px-[clamp(16px,8.33vw,120px)] pt-6" style={{direction:"rtl",textAlign:"right",width:"100%"}}>
+        <span className="font-['Vazirmatn'] text-[14px] leading-[22px] text-[#60758a]">
+          <a href="/" className="hover:underline">صفحه اصلی</a><span aria-hidden="true"> / </span><span aria-current="page">برای شرکت‌ها</span>
         </span>
-      </div>
+      </nav>
       <div className="flex pt-[48px] pr-[120px] pb-[48px] pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[19]">
         <div className="mah-company-hero-image flex w-[480px] h-[400px] items-start shrink-0 flex-nowrap bg-[url(/assets/mah-hero/companies.svg)] bg-cover bg-no-repeat rounded-[24px] relative overflow-hidden z-20">
           <div className="flex h-[91px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] justify-between items-start shrink-0 flex-nowrap bg-[url(/assets/codia/9hnNVXY0hN.png)] bg-cover bg-no-repeat absolute bottom-0 left-[-380px] right-[480px] z-[21]" />
