@@ -236,3 +236,27 @@ button {
   justify-content: center !important;
   text-align: center !important;
 }
+
+/* About-only overrides for global RTL and physical Figma layout rules. */
+body.mah-public-rtl #app .main-container.mah-about-page > .mah-about-breadcrumb {
+  direction:rtl!important;justify-content:flex-start!important;
+}
+body.mah-public-rtl #app .main-container.mah-about-page > .mah-about-breadcrumb > span {
+  display:flex;gap:5px;width:auto!important;direction:rtl!important;justify-content:flex-start!important;
+}
+body.mah-public-rtl #app .main-container.mah-about-page .mah-about-hero > div:last-child > .mah-request-about-cta {
+  direction:rtl!important;justify-content:flex-start!important;align-self:stretch!important;width:100%!important;margin:0!important;
+}
+.mah-about-project-link {display:inline-flex;justify-content:center;align-items:center;min-height:44px;padding:11px 20px;text-decoration:none;}
+.mah-about-project-link:focus-visible,.mah-about-breadcrumb a:focus-visible {outline:2px solid #1476b9;outline-offset:3px;}
+.mah-about-live-stats {align-self:stretch;box-sizing:border-box;background:#fff;padding:64px 120px;display:flex;flex-direction:column;gap:24px;direction:rtl;text-align:center;}
+.mah-about-live-stats h2 {font-size:32px;font-weight:800;line-height:1.6;color:#17324d;}
+body.mah-public-rtl #app .main-container.mah-about-page .mah-about-live-stats > h2 {text-align:center!important;}
+.mah-about-live-stats p {color:#60758a;}
+.mah-about-live-stats-grid {display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:24px;}
+.mah-about-live-stat {display:flex;min-width:0;min-height:128px;flex-direction:column;align-items:flex-start;gap:8px;padding:20px;border:1px solid #e4ebf1;border-radius:16px;color:#60758a;font-size:14px;text-align:right;}
+.mah-about-stat-marker {width:32px;height:4px;border-radius:2px;}
+.mah-about-stat-value {display:flex;align-items:baseline;flex-wrap:wrap;gap:4px;width:100%;overflow-wrap:anywhere;}
+.mah-about-stat-value strong {font-size:28px;font-weight:700;color:#17324d;max-width:100%;overflow-wrap:anywhere;}
+.mah-about-stat-value small {font-size:14px;}
+@media(max-width:1000px){.mah-about-live-stats{padding:40px 24px}.mah-about-live-stats-grid{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}}

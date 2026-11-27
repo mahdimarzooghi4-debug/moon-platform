@@ -161,6 +161,7 @@ function swapStakeholderCards(root: HTMLElement) {
 
 function markAboutLinks(root: HTMLElement) {
   root.querySelectorAll<HTMLElement>("span, a, button, div").forEach((element) => {
+    if (element.closest("a[href], button") || element.closest(".mah-about-breadcrumb")) return;
     const label = normalize(element.textContent);
     const href = aboutRoutes[label];
     if (!href) return;
