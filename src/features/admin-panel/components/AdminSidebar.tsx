@@ -13,6 +13,7 @@ type AdminSidebarProps = {
     | "individual-participations"
     | "revenues"
     | "reports"
+    | "support"
     | "content"
     | "settings";
 };
@@ -26,6 +27,7 @@ const sidebarItems = [
   { key: "individual-participations", label: "مشارکت افراد حقیقی", to: "/panel/admin/reports/individual-participations", icon: "nav-participations.svg" },
   { key: "revenues", label: "درآمدها", to: "/panel/admin/revenues", icon: "nav-revenues.svg" },
   { key: "reports", label: "گزارش‌ها", to: "/panel/admin/reports", icon: "nav-reports.svg" },
+  { key: "support", label: "درخواست‌های پشتیبانی", to: "/panel/admin/support-requests", icon: null },
   { key: "content", label: "مدیریت محتوا", to: "/panel/admin/content", icon: null },
   { key: "settings", label: "تنظیمات", to: "/panel/admin/settings", icon: "nav-settings.svg" },
 ] as const;

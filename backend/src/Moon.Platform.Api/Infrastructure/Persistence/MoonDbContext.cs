@@ -1,3 +1,4 @@
+using Moon.Platform.Api.Modules.Support;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Moon.Platform.Api.Common.Auditing;
@@ -66,6 +67,13 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("moon");
+        modelBuilder.Entity<SupportTicket>(entity =>
+        {
+            entity.ToTable("support_tickets");
+            entity.Property(x => x.Revision).IsConcurrencyToken();
+            entity.HasIndex(x => x.TrackingCode).IsUnique();
+            entity.HasIndex(x => x.SubmittedAtUtc);
+        });
         modelBuilder.Entity<CompanyApplication>(entity =>
         {
             entity.ToTable("company_applications");

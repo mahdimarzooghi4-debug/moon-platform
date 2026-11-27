@@ -123,6 +123,7 @@ const AdminRevenuesPage = lazy(() => import("../features/admin-panel/revenues"))
 const AdminRevenueDetailPage = lazy(() => import("../features/admin-panel/revenue-detail"));
 const AdminReportsPage = lazy(() => import("../features/admin-panel/reports"));
 const AdminReportDetailPage = lazy(() => import("../features/admin-panel/report-detail"));
+const AdminSupportPage = lazy(() => import("../features/admin-panel/support-requests"));
 const AdminContentManagementPage = lazy(() => import("../features/admin-panel/content"));
 const AdminSettingsPage = lazy(() => import("../features/admin-panel/settings"));
 const AdminAccessPolicyPage = lazy(() => import("../features/admin-panel/access-policy"));
@@ -315,6 +316,7 @@ export function AppRouter() {
         <Route path="/panel/admin/revenues" element={lazyElement(AdminRevenuesPage)} />
         <Route path="/panel/admin/reports/:reportId" element={lazyElement(AdminReportDetailPage)} />
         <Route path="/panel/admin/reports" element={lazyElement(AdminReportsPage)} />
+        <Route path="/panel/admin/support-requests" element={lazyElement(AdminSupportPage)} />
         <Route path="/panel/admin/content" element={lazyElement(AdminContentManagementPage)} />
         <Route path="/panel/admin/settings/access-policy" element={lazyElement(AdminAccessPolicyPage)} />
         <Route path="/panel/admin/settings" element={lazyElement(AdminSettingsPage)} />

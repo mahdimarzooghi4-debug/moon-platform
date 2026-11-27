@@ -1,3 +1,4 @@
+using Moon.Platform.Api.Modules.Support;
 using System.Security.Claims;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -303,6 +304,7 @@ app.MapGet("/api/v1/organizations/{organizationId:guid}/access", (Guid organizat
 app.MapStartupRegistrationEndpoints();
 app.MapCompanyRegistrationEndpoints();
 app.MapCompanyApplicationReviewEndpoints();
+app.MapSupportEndpoints();
 app.MapAdminAccessEndpoints();
 app.MapAdminManagementEndpoints();
 app.MapAdminNewsImageEndpoints();

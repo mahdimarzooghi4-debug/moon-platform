@@ -23,6 +23,29 @@ namespace Moon.Platform.Api.Infrastructure.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Moon.Platform.Api.Modules.Support.SupportTicket", b =>
+                {
+                    b.Property<Guid>("Id").ValueGeneratedOnAdd().HasColumnType("uuid");
+                    b.Property<string>("TrackingCode").IsRequired().HasMaxLength(36).HasColumnType("character varying(36)");
+                    b.Property<string>("Name").IsRequired().HasMaxLength(200).HasColumnType("character varying(200)");
+                    b.Property<string>("Mobile").IsRequired().HasMaxLength(11).HasColumnType("character varying(11)");
+                    b.Property<string>("Email").HasMaxLength(254).HasColumnType("character varying(254)");
+                    b.Property<string>("Audience").IsRequired().HasMaxLength(32).HasColumnType("character varying(32)");
+                    b.Property<string>("Topic").IsRequired().HasMaxLength(32).HasColumnType("character varying(32)");
+                    b.Property<string>("Title").IsRequired().HasMaxLength(200).HasColumnType("character varying(200)");
+                    b.Property<string>("Description").IsRequired().HasMaxLength(4000).HasColumnType("character varying(4000)");
+                    b.Property<string>("Status").IsRequired().HasMaxLength(32).HasColumnType("character varying(32)");
+                    b.Property<string>("ResponseNote").HasMaxLength(4000).HasColumnType("character varying(4000)");
+                    b.Property<string>("AssignedToSubject").HasMaxLength(200).HasColumnType("character varying(200)");
+                    b.Property<int>("Revision").IsConcurrencyToken().HasColumnType("integer");
+                    b.Property<DateTimeOffset>("SubmittedAtUtc").HasColumnType("timestamp with time zone");
+                    b.Property<DateTimeOffset>("UpdatedAtUtc").HasColumnType("timestamp with time zone");
+                    b.HasKey("Id");
+                    b.HasIndex("TrackingCode").IsUnique();
+                    b.HasIndex("SubmittedAtUtc");
+                    b.ToTable("support_tickets", "moon");
+                });
+
             modelBuilder.Entity("Moon.Platform.Api.Modules.CompanyRegistration.CompanyApplication", b =>
                 {
                     b.Property<Guid>("Id").ValueGeneratedOnAdd().HasColumnType("uuid");

@@ -1,3 +1,4 @@
+import {SupportRequestForm} from "../contact-support/sections/SupportRequestForm";
 import React from "react";
 import TrustedCompanyCarousel from "../shared/TrustedCompanyCarousel";
 import CompanyRecommendations from "./CompanyRecommendations";
@@ -1063,76 +1064,7 @@ export default function MahForCompanies() {
             شما ارتباط بگیرد.
           </span>
         </div>
-        <div className="flex w-[720px] pt-[40px] pr-[40px] pb-[40px] pl-[40px] flex-col gap-[24px] items-start shrink-0 flex-nowrap bg-[#fcfbf8] rounded-[24px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[479]">
-          <div className="flex flex-col gap-[16px] items-end self-stretch shrink-0 flex-nowrap relative z-[480]">
-            <div className="flex flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[481]">
-              <span className="h-[22px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[482]">
-                نام و نام خانوادگی نماینده
-              </span>
-              <div className="flex pt-[12px] pr-[12px] pb-[12px] pl-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[10px] border-solid border border-[#e4ebf1] relative z-[483]">
-                <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[484]">
-                  مثال: علی احمدی
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[485]">
-              <span className="h-[22px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[486]">
-                نام شرکت یا سازمان
-              </span>
-              <div className="flex pt-[12px] pr-[12px] pb-[12px] pl-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[10px] border-solid border border-[#e4ebf1] relative z-[487]">
-                <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[488]">
-                  مثال: شرکت پیشرو داده
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[489]">
-              <span className="h-[22px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[490]">
-                شماره موبایل سازمانی
-              </span>
-              <div className="flex pt-[12px] pr-[12px] pb-[12px] pl-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[10px] border-solid border border-[#e4ebf1] relative z-[491]">
-                <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[492]">
-                  ۰۹۱۲۳۴۵۶۷۸۹
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[493]">
-              <span className="h-[22px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[494]">
-                ایمیل کاری
-              </span>
-              <div className="flex pt-[12px] pr-[12px] pb-[12px] pl-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[10px] border-solid border border-[#e4ebf1] relative z-[495]">
-                <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[496]">
-                  info@company.com
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[497]">
-              <span className="h-[22px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[498]">
-                موضوع درخواست
-              </span>
-              <div className="flex pt-[12px] pr-[12px] pb-[12px] pl-[12px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[10px] border-solid border border-[#e4ebf1] relative z-[499]">
-                <div className="w-[14px] h-[14px] shrink-0 bg-[url(/assets/codia/c0AQpx1XRe.png)] bg-cover bg-no-repeat relative overflow-hidden z-[500]" />
-                <span className="flex w-[162px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[501]">
-                  انتخاب پروژه دارای اثر اجتماعی مناسب
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[502]">
-              <span className="h-[22px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[503]">
-                توضیحات و نیازمندی‌ها
-              </span>
-              <div className="flex h-[100px] pt-[12px] pr-[12px] pb-[12px] pl-[12px] items-start self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[10px] border-solid border border-[#e4ebf1] relative z-[504]">
-                <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[505]">
-                  جزییات بیشتری از اهداف و حوزه‌های ترجیحی سازمان خود بنویسید...
-                </span>
-              </div>
-            </div>
-          </div>
-          <div className="flex pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#2094e3] rounded-[12px] relative z-[509]">
-            <span className="flex w-[117px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#fff] relative text-center whitespace-nowrap z-[510]">
-              ثبت درخواست تماس
-            </span>
-          </div>
-        </div>
+        <div className="w-full max-w-[720px]"><SupportRequestForm company /></div>
       </div>
       <div className="flex pt-[80px] pr-[120px] pb-[80px] pl-[120px] flex-col gap-[24px] items-center self-stretch shrink-0 flex-nowrap bg-[#f7fafc] relative z-[511]">
         <span className="h-[50px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[32px] font-extrabold leading-[50px] text-[#17324d] relative text-center whitespace-nowrap z-[512]">
