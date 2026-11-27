@@ -115,6 +115,7 @@ const AdminAddUserPage = lazy(() => import("../features/admin-panel/users-new"))
 const AdminRoleManagementPage = lazy(() => import("../features/admin-panel/roles"));
 const AdminUserDetailPage = lazy(() => import("../features/admin-panel/user-detail"));
 const AdminOrganizationsPage = lazy(() => import("../features/admin-panel/organizations"));
+const CompanyApplicationsPage = lazy(() => import("../features/admin-panel/company-applications"));
 const AdminOrganizationDetailPage = lazy(() => import("../features/admin-panel/organization-detail"));
 const AdminProjectsPage = lazy(() => import("../features/admin-panel/projects"));
 const AdminProjectDetailPage = lazy(() => import("../features/admin-panel/project-detail"));
@@ -310,6 +311,7 @@ export function AppRouter() {
         <Route path="/panel/admin/users" element={lazyElement(AdminUsersRolesPage)} />
         <Route path="/panel/admin/organizations/:organizationId" element={lazyElement(AdminOrganizationDetailPage)} />
         <Route path="/panel/admin/organizations" element={lazyElement(AdminOrganizationsPage)} />
+        <Route path="/panel/admin/company-applications" element={lazyElement(CompanyApplicationsPage)} />
         <Route path="/panel/admin/projects/:projectId" element={lazyElement(AdminProjectDetailPage)} />
         <Route path="/panel/admin/projects" element={lazyElement(AdminProjectsPage)} />
         <Route path="/panel/admin/funding/:fundingId" element={lazyElement(AdminFundingDetailPage)} />

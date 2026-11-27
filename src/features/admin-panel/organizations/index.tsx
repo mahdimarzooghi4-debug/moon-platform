@@ -201,6 +201,7 @@ export default function AdminOrganizations() {
         <aside className="admin-info-note">شرکت‌ها فقط برای مشاهده مدیریتی هستند. استارتاپ‌ها علاوه بر وضعیت و دسترسی، پروفایل مدیریتی قابل ویرایش دارند و اطلاعات ذخیره‌شده Backend در همین فهرست نمایش داده می‌شود.</aside>
       </main>
       <AdminSidebar active="organizations" />
+      <Link to="/panel/admin/company-applications" className="fixed bottom-6 left-6 z-50 rounded-xl bg-[#1476b9] px-5 py-3 text-sm font-semibold text-white shadow">درخواست‌های ثبت‌نام شرکت‌ها</Link>
     </div>
   );
 }

@@ -302,6 +302,7 @@ app.MapGet("/api/v1/organizations/{organizationId:guid}/access", (Guid organizat
 
 app.MapStartupRegistrationEndpoints();
 app.MapCompanyRegistrationEndpoints();
+app.MapCompanyApplicationReviewEndpoints();
 app.MapAdminAccessEndpoints();
 app.MapAdminManagementEndpoints();
 app.MapAdminNewsImageEndpoints();
