@@ -2,7 +2,6 @@ const ABOUT_PATH = "/about";
 
 const aboutRoutes: Record<string, string> = {
   "ورود کاربران": "/auth",
-  "پیگیری مشارکت": "/participation/track",
   "شروع مشارکت": "/projects",
   "درباره ما": "/about",
   "تماس با ما": "/contact",

@@ -2,7 +2,6 @@ const COMPANY_PATHS = new Set(["/companies", "/for-companies"]);
 
 const companyRoutes: Record<string, string> = {
   "ورود کاربران": "/auth",
-  "پیگیری مشارکت": "/participation/track",
   "شروع مشارکت": "/projects",
   "درباره ما": "/about",
   "تماس با ما": "/contact",

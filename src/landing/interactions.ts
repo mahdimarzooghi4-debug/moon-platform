@@ -8,7 +8,6 @@ const landingRootSelector = '.main-container:has([class*="4T7A4AiY30.png"])';
 
 const actions: LandingAction[] = [
   { selector: '[class~="z-[2]"]', href: '/auth', label: 'ورود کاربران' },
-  { selector: '[class~="z-[4]"]', href: '/participation/track', label: 'پیگیری مشارکت' },
   { selector: '[class~="z-[6]"]', href: '/projects', label: 'شروع مشارکت' },
   { selector: '[class~="z-10"]', href: '/about', label: 'درباره ما' },
   { selector: '[class~="z-[11]"]', href: '/contact', label: 'تماس با ما' },
@@ -42,7 +41,6 @@ const actions: LandingAction[] = [
   { selector: '[class~="z-[329]"]', href: '/privacy-policy', label: 'حریم خصوصی' },
   { selector: '[class~="z-[332]"]', href: '/contact', label: 'تماس با ما' },
   { selector: '[class~="z-[333]"]', href: '/faq', label: 'سؤالات متداول' },
-  { selector: '[class~="z-[334]"]', href: '/participation/track', label: 'پیگیری مشارکت' },
   { selector: '[class~="z-[337]"]', href: '/projects', label: 'پروژه‌ها' },
   { selector: '[class~="z-[338]"]', href: '/companies', label: 'برای شرکت‌ها' },
   { selector: '[class~="z-[339]"]', href: '/how-it-works', label: 'نحوه مشارکت' },

@@ -2,7 +2,6 @@ const STARTUP_PATHS = new Set(["/startups", "/for-startups"]);
 
 const ACTION_ROUTES: Record<string, string> = {
   "ورود کاربران": "/auth",
-  "پیگیری مشارکت": "/participation/track",
   "شروع مشارکت": "/projects",
   "درباره ما": "/about",
   "تماس با ما": "/contact",

@@ -8,7 +8,6 @@ type Action =
 const COMMON_ROUTES: Record<string, string> = {
   "ورود کاربران": "/auth",
   "ورود/ثبت نام": "/auth",
-  "پیگیری مشارکت": "/participation/track",
   "شروع مشارکت": "/projects",
   "صفحه اصلی": "/",
   "پروژه‌ها": "/projects",

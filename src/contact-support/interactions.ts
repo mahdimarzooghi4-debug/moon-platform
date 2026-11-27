@@ -1,6 +1,6 @@
 // Legacy visual sections keep navigation only. Support submission is a real React form.
 const paths=new Set(["/contact","/contact-support"]);
-const routes:Record<string,string>={"پیگیری مشارکت فردی":"/participation/track","پیگیری ثبت‌نام شرکت یا استارتاپ":"/registration/track","مشاهده پروژه‌ها":"/projects","گزارش‌های اثر":"/impact-reports","سؤالات متداول":"/faq"};
+const routes:Record<string,string>={"پیگیری ثبت‌نام شرکت یا استارتاپ":"/registration/track","مشاهده پروژه‌ها":"/projects","گزارش‌های اثر":"/impact-reports","سؤالات متداول":"/faq"};
 const scroll=new Set(["پشتیبانی مشارکت","پشتیبانی شرکت‌ها","پشتیبانی استارتاپ‌ها","ثبت درخواست عمومی"]);
 function apply(){if(!paths.has(location.pathname))return;const root=document.querySelector(".mah-contact-page");root?.querySelectorAll<HTMLElement>("span").forEach(node=>{if(node.closest("a,button,form,.mah-live-support"))return;const label=node.textContent?.replace(/\s+/g," ").trim()??"";if(!routes[label]&&!scroll.has(label))return;node.dataset.mahSupportNav=routes[label]??"#mah-support-form";node.tabIndex=0;node.setAttribute("role",routes[label]?"link":"button");node.style.cursor="pointer"})}
 function activate(e:Event){if(!paths.has(location.pathname))return;const t=e.target;if(!(t instanceof Element))return;const n=t.closest<HTMLElement>("[data-mah-support-nav]");if(!n)return;e.preventDefault();if(n.dataset.mahSupportNav==="#mah-support-form")document.getElementById("mah-support-form")?.scrollIntoView({behavior:"smooth"});else if(n.dataset.mahSupportNav)location.assign(n.dataset.mahSupportNav)}
