@@ -39,7 +39,7 @@ jobs:
               assert "public.ecr.aws/docker/library/" + name in compose
           assert "image: postgres:" not in compose and "image: caddy:" not in compose
           assert "FROM public.ecr.aws/docker/library/node:22-alpine AS build" in dockerfile
-          assert "FROM public.ecr.aws/nginx/nginx-unprivileged:stable-alpine AS runtime" in dockerfile
+          assert "FROM ghcr.io/nginx/nginx-unprivileged:stable-alpine AS runtime" in dockerfile
 
           PY
   frontend:
