@@ -260,3 +260,15 @@ body.mah-public-rtl #app .main-container.mah-about-page .mah-about-live-stats > 
 .mah-about-stat-value strong {font-size:28px;font-weight:700;color:#17324d;max-width:100%;overflow-wrap:anywhere;}
 .mah-about-stat-value small {font-size:14px;}
 @media(max-width:1000px){.mah-about-live-stats{padding:40px 24px}.mah-about-live-stats-grid{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}}
+
+/* Equal-height role cards and native navigation on About. */
+.mah-about-page .mah-about-role-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;align-items:stretch;align-self:stretch;direction:ltr;}
+.mah-about-page .mah-about-role-card {display:flex;flex-direction:column;gap:20px;min-width:0;padding:32px;border:1px solid #e4ebf1;border-radius:16px;background:#fff;box-shadow:0 4px 16px rgba(22,45,71,.08);text-align:right;}
+.mah-about-role-card h3 {font-size:20px;font-weight:800;line-height:31px;color:#17324d;}
+.mah-about-role-card p {font-size:14px;line-height:22px;color:#60758a;white-space:normal;overflow-wrap:anywhere;}
+.mah-about-page .mah-about-role-action {display:flex;align-items:center;justify-content:center;min-height:44px;padding:11px 20px;border-radius:12px;border:1px solid #e4ebf1;background:#fff;color:#1476b9;text-decoration:none;text-align:center;font-size:14px;font-weight:500;line-height:22px;cursor:pointer;}
+.mah-about-page .mah-about-role-card .mah-about-role-action {margin-top:auto;align-self:stretch;}
+.mah-about-page .mah-about-role-action.is-primary {background:#2094e3;border-color:#2094e3;color:#fff;}
+.mah-about-page .mah-about-role-action:focus-visible {outline:2px solid #1476b9;outline-offset:3px;}
+.mah-about-page .mah-about-final-actions {display:flex;direction:ltr;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;}
+@media(max-width:760px){.mah-about-page .mah-about-role-grid{grid-template-columns:1fr;}.mah-about-page .mah-about-role-card{padding:24px;}}
