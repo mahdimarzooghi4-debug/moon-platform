@@ -1,3 +1,4 @@
+import {getPublicLandingKpis,type PublicLandingKpis} from "../../impact/api";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./index.css";
@@ -154,10 +155,13 @@ function Header() {
 }
 
 function InternalHero() {
+  const [kpis,setKpis]=useState<PublicLandingKpis|null>(null);
+  React.useEffect(()=>{let active=true;getPublicLandingKpis().then(x=>{if(active)setKpis(x)}).catch(()=>undefined);return()=>{active=false}},[]);
+  const fmt=(n:number|undefined)=>n===undefined?"—":new Intl.NumberFormat("fa-IR").format(n);
   const stats = [
-    ["۲۴", "پروژه فعال"],
-    ["۱۲٬۸۴۰", "فرد بهره‌مند"],
-    ["۳۴۶", "فرصت شغلی"],
+    [fmt(kpis?.activeProjectCount), "پروژه فعال"],
+    [fmt(kpis?.beneficiaryCount), "فرد بهره‌مند"],
+    [fmt(kpis?.jobsCreated), "فرصت شغلی"],
   ];
   return (
     <section className="flex w-full flex-col items-end gap-[20px] border-b border-[#e4ebf1] bg-[#fcfbf8] px-[120px] py-[48px]">
@@ -165,7 +169,7 @@ function InternalHero() {
       <div className="flex w-full items-center justify-between" dir="ltr">
         <div className="flex items-center gap-[24px]">
           {stats.map(([value, label], index) => (
-            <React.Fragment key={value}>
+            <React.Fragment key={label}>
               <div className="flex flex-col items-center gap-[4px] whitespace-nowrap" dir="rtl">
                 <p className="text-[20px] font-bold text-[#17324d]">{value}</p>
                 <p className="text-[12px] font-normal text-[#60758a]">{label}</p>

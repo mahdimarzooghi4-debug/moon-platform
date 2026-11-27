@@ -120,15 +120,8 @@ public sealed class AdminManagementService(MoonDbContext dbContext, IAuditWriter
 
     public async Task<IReadOnlyList<AdminNewsArticleView>> ListNewsAsync(bool publishedOnly, CancellationToken cancellationToken = default)
     {
-        var sampleArticles = await NewsArticles
-            .Where(x => SampleNewsIds.Contains(x.Id))
-            .ToListAsync(cancellationToken);
-        if (sampleArticles.Count > 0)
-        {
-            NewsArticles.RemoveRange(sampleArticles);
-            await dbContext.SaveChangesAsync(cancellationToken);
-        }
-        var query = NewsArticles.AsNoTracking().AsQueryable();
+        // A public read must never delete persisted records.
+        var query = NewsArticles.AsNoTracking().Where(x => !SampleNewsIds.Contains(x.Id));
         if (publishedOnly) query = query.Where(x => x.Status == "published");
         return await query.OrderByDescending(x => x.UpdatedAtUtc).Select(x => ToView(x)).ToListAsync(cancellationToken);
     }

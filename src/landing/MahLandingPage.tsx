@@ -20,7 +20,8 @@ type LandingKpiView = {
 export default function Main() {
   const [introOpen, setIntroOpen] = React.useState(false);
   const [landingKpis, setLandingKpis] = React.useState<LandingKpiView | null>(null);
-  const [news, setNews] = React.useState<Awaited<ReturnType<typeof listPublicNews>>>([]);
+  const [news, setNews] = React.useState<Awaited<ReturnType<typeof listPublicNews>> | null>(null);
+  const [newsFailed,setNewsFailed] = React.useState(false);
 
   React.useEffect(() => {
     let cancelled = false;
@@ -54,7 +55,7 @@ export default function Main() {
     let cancelled = false;
     listPublicNews()
       .then((items) => { if (!cancelled) setNews(items); })
-      .catch(() => { if (!cancelled) setNews([]); });
+      .catch(() => { if (!cancelled) setNewsFailed(true); });
     return () => { cancelled = true; };
   }, []);
   return (
@@ -645,7 +646,7 @@ export default function Main() {
           </div>
         </div>
         <div className="mah-home-news-grid" aria-live="polite">
-          {news.slice(0, 3).map((item) => (
+          {(news ?? []).slice(0, 3).map((item) => (
             <article className="mah-home-news-card" key={item.id}>
               <div className="mah-home-news-image">
                 <img src={publicNewsImageUrl(item.id)} alt="" onError={(event) => { event.currentTarget.style.display = "none"; }} />
@@ -657,11 +658,11 @@ export default function Main() {
                 </div>
                 <h3>{item.title}</h3>
                 <p>{item.summary}</p>
-                <a href="/news" aria-label={"مطالعه خبر: " + item.title}>مطالعه خبر</a>
+                <a href={"/news/"+encodeURIComponent(item.id)} aria-label={"مطالعه خبر: " + item.title}>مطالعه خبر</a>
               </div>
             </article>
           ))}
-          {news.length === 0 ? <p className="mah-home-news-empty">هنوز خبری برای انتشار ثبت نشده است.</p> : null}
+          {!news?.length ? <p className="mah-home-news-empty" role="status">{newsFailed?"دریافت اخبار امکان‌پذیر نیست.":news?"هنوز خبری برای انتشار ثبت نشده است.":"در حال دریافت اخبار…"}</p> : null}
         </div>
         <div className="flex w-[155px] gap-[8px] items-center shrink-0 flex-nowrap relative z-[306]">
           <div className="w-[16px] h-[16px] shrink-0 bg-[url(/assets/codia/6mrr4HWzfu.png)] bg-cover bg-no-repeat relative overflow-hidden z-[307]" />

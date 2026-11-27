@@ -8,8 +8,6 @@ import PublicPageInteractions from "./shared/PublicPageInteractions";
 import StartupTeamMemberAddPage from "./features/startup-registration/states/step2/team-member";
 import ProjectImpactDocumentsPage from "./project-impact-report/documents";
 import HowItWorksInteractions from "./how-it-works/HowItWorksInteractions";
-import NewsListInteractions from "./news-list/NewsListInteractions";
-import NewsDetailsInteractions from "./news-details/NewsDetailsInteractions";
 import FaqInteractions from "./faq/FaqInteractions";
 import ProjectDetailsInteractions from "./features/project-details/ProjectDetailsInteractions";
 import EmdadCertificateIssuerSettings from "./features/emdad-certificate-issuer-settings";
@@ -73,8 +71,6 @@ export default function App() {
         <ManagedPublicContent />
         <PublicPageInteractions />
         <HowItWorksInteractions />
-        <NewsListInteractions />
-        <NewsDetailsInteractions />
         <FaqInteractions />
         <ProjectDetailsInteractions />
         <EmdadCertificateIssuerSettings />
