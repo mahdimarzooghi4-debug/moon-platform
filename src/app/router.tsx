@@ -30,14 +30,6 @@ const ParticipationCheckoutRedirectingPage = lazy(() => import("../participation
 const ParticipationCheckoutPaymentErrorPage = lazy(() => import("../participation-checkout/payment-error"));
 const ParticipationCheckoutUnavailablePage = lazy(() => import("../participation-checkout/unavailable"));
 const ParticipationModalPage = lazy(() => import("../participation-modal"));
-const ParticipationTrackFormPage = lazy(() => import("../participation-track/form"));
-const ParticipationTrackOtpPage = lazy(() => import("../participation-track/otp"));
-const ParticipationTrackListPage = lazy(() => import("../participation-track/list"));
-const ParticipationTrackDetailsPage = lazy(() => import("../participation-track/details"));
-const ParticipationTrackPendingPage = lazy(() => import("../participation-track/pending"));
-const ParticipationTrackCompletedPage = lazy(() => import("../participation-track/completed"));
-const ParticipationTrackFailedPage = lazy(() => import("../participation-track/failed"));
-const ParticipationTrackEmptyPage = lazy(() => import("../participation-track/empty"));
 const PaymentResultSuccessPage = lazy(() => import("../payment-result/success"));
 const PaymentResultFailedPage = lazy(() => import("../payment-result/failed"));
 const PaymentResultPendingPage = lazy(() => import("../payment-result/pending"));
@@ -214,17 +206,8 @@ export function AppRouter() {
         <Route path="/projects/:projectId/participate/payment-error" element={lazyElement(ParticipationCheckoutPaymentErrorPage)} />
         <Route path="/participation/checkout/unavailable" element={lazyElement(ParticipationCheckoutUnavailablePage)} />
         <Route path="/projects/:projectId/participate/unavailable" element={lazyElement(ParticipationCheckoutUnavailablePage)} />
+        <Route path="/participation/track/*" element={<Navigate to="/contact" replace />} />
         <Route path="/participation/modal" element={lazyElement(ParticipationModalPage)} />
-        <Route path="/participation/track" element={lazyElement(ParticipationTrackFormPage)} />
-        <Route path="/participation/track/form" element={lazyElement(ParticipationTrackFormPage)} />
-        <Route path="/participation/track/otp" element={lazyElement(ParticipationTrackOtpPage)} />
-        <Route path="/participation/track/list" element={lazyElement(ParticipationTrackListPage)} />
-        <Route path="/participation/track/details" element={lazyElement(ParticipationTrackDetailsPage)} />
-        <Route path="/participation/track/pending" element={lazyElement(ParticipationTrackPendingPage)} />
-        <Route path="/participation/track/completed" element={lazyElement(ParticipationTrackCompletedPage)} />
-        <Route path="/participation/track/failed" element={lazyElement(ParticipationTrackFailedPage)} />
-        <Route path="/participation/track/empty" element={lazyElement(ParticipationTrackEmptyPage)} />
-        <Route path="/participation/track/:participationId" element={lazyElement(ParticipationTrackDetailsPage)} />
         <Route path="/payment/result/success" element={lazyElement(PaymentResultSuccessPage)} />
         <Route path="/payment/result/failed" element={lazyElement(PaymentResultFailedPage)} />
         <Route path="/payment/result/pending" element={lazyElement(PaymentResultPendingPage)} />
