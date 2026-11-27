@@ -6,7 +6,7 @@ Status: owner-approved functional boundary; technical implementation and externa
 
 Moon generates the letter from its existing certificate template using authoritative data. The authorized Emdad official reviews and officially issues the certificate. Moon records and displays the final certificate to the relevant company and notifies its representative after confirmed issuance. Company-registration approval belongs to system_admin and is not certificate approval. Startup approval remains with the creative-house product owner.
 
-The SMS parameter CODE is the exact official Emdad letter number, never Moon's tracking code or a locally invented official number. No truncation or synthetic number. If the number is incompatible with the approved SMS template, hold the notice for reconciliation. Template ID for this third message is not supplied yet. No real notification without it.
+The SMS parameter CODE is the exact official Emdad letter number, never Moon's tracking code or a locally invented official number. No truncation or synthetic number. If the number is incompatible with the approved SMS template, hold the notice for reconciliation. Owner-supplied third SMS.ir template ID: 100098. Configuration must still be explicitly enabled and actual template acceptance verified; no notification before committed official issuance.
 
 ## Existing implementation references
 
@@ -27,4 +27,7 @@ These screens currently contain static example certificate data and browser-loca
 5. Company-scoped access to final record and print/download; audit reads and issuance. No cross-company access. Retain historic template and issuer evidence with issued records; later settings changes do not alter them.
 6. Durable deduplicated notice from committed issuance, using exact official letter number and an approved SMS.ir template. Provider acceptance is not handset delivery. Uncertain sending requires reconciliation, not automatic duplicates.
 
-No payment, tax eligibility criteria, external API, credential, signature technology, certificate number, issuer identity, template ID or production release is assumed. This document authorizes the functional flow, not a production release. Next technical increment must establish the missing authoritative contracts before enabling issuance.
+No payment, tax eligibility criteria, external API, credential, signature technology, certificate number, issuer identity or production release is assumed. This document authorizes the functional flow, not a production release. Next technical increment must establish the missing authoritative contracts before enabling issuance.
+
+## Draft template safety increment
+The existing official-looking sample screens remain in source as design references, not live certificate or approval routes. Operational company and Emdad certificate routes display an honest unavailable state until the authoritative issuance API exists. The reusable draft letter component uses the existing logo and layout, accepts only supplied data, visibly marks the content as unofficial and unissued on screen and in print, and does not consume localStorage signer settings, a decorative stamp, or a fabricated letter number. It makes no legal eligibility assertion. This is presentation foundation only; there is no new public draft-generation or issuance endpoint.

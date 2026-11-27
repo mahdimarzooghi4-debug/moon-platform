@@ -51,6 +51,8 @@ const NewsDetailsPage = lazy(() => import("../news-details"));
 const PrivacyPolicyPage = lazy(() => import("../privacy-policy"));
 const TermsPage = lazy(() => import("../terms"));
 const Article172GuidePage = lazy(() => import("../article-172-guide"));
+const CompanyCertificateUnavailablePage = lazy(() => import("../features/article-172/Unavailable").then(module => ({ default: module.CompanyCertificateUnavailable })));
+const EmdadCertificateUnavailablePage = lazy(() => import("../features/article-172/Unavailable").then(module => ({ default: module.EmdadCertificateUnavailable })));
 const SearchResultsPage = lazy(() => import("../search-results"));
 const SearchResultsInitialPage = lazy(() => import("../search-results/states/initial"));
 const SearchResultsLoadingPage = lazy(() => import("../search-results/states/loading"));
@@ -101,9 +103,6 @@ const CompanyParticipationsPage = lazy(() => import("../features/company-panel/p
 const CompanyParticipationDetailPage = lazy(() => import("../features/company-panel/participation-detail"));
 const CompanyReportsPage = lazy(() => import("../features/company-panel/reports"));
 const CompanyReportDetailPage = lazy(() => import("../features/company-panel/report-detail"));
-const CompanyArticle172CertificatesPage = lazy(() => import("../features/company-panel/certificates"));
-const CompanyArticle172CertificateDetailPage = lazy(() => import("../features/company-panel/certificate-detail"));
-const CompanyArticle172CertificateIssuedPage = lazy(() => import("../features/company-panel/certificate-issued"));
 const CompanyOrganizationAccountPage = lazy(() => import("../features/company-panel/account"));
 const CompanyEditOrganizationInfoPage = lazy(() => import("../features/company-panel/account-edit-organization"));
 const CompanyEditOrganizationRepresentativePage = lazy(() => import("../features/company-panel/account-edit-representative"));
@@ -157,9 +156,6 @@ const EmdadDashboardPage = lazy(() => import("../panels/emdad"));
 const EmdadReleaseRequestsPage = lazy(() => import("../panels/emdad/release-requests"));
 const EmdadReleaseRequestDetailPage = lazy(() => import("../panels/emdad/release-requests/detail"));
 const EmdadReleaseSuccessPage = lazy(() => import("../panels/emdad/release-requests/success"));
-const EmdadArticle172ApprovalsPage = lazy(() => import("../panels/emdad/article172-approvals"));
-const EmdadArticle172RequestDetailPage = lazy(() => import("../panels/emdad/article172-approvals/detail"));
-const EmdadArticle172SuccessPage = lazy(() => import("../panels/emdad/article172-approvals/success"));
 const EmdadPaymentHistoryPage = lazy(() => import("../panels/emdad/payment-history"));
 const EmdadPaymentDetailPage = lazy(() => import("../panels/emdad/payment-history/detail"));
 const EmdadFinancialReportsPage = lazy(() => import("../panels/emdad/financial-reports"));
@@ -296,9 +292,9 @@ export function AppRouter() {
         <Route path="/panel/company/participations/:participationId" element={lazyElement(CompanyParticipationDetailPage)} />
         <Route path="/panel/company/reports" element={lazyElement(CompanyReportsPage)} />
         <Route path="/panel/company/reports/:reportId" element={lazyElement(CompanyReportDetailPage)} />
-        <Route path="/panel/company/certificates" element={lazyElement(CompanyArticle172CertificatesPage)} />
-        <Route path="/panel/company/certificates/:certificateId/issued" element={lazyElement(CompanyArticle172CertificateIssuedPage)} />
-        <Route path="/panel/company/certificates/:certificateId" element={lazyElement(CompanyArticle172CertificateDetailPage)} />
+        <Route path="/panel/company/certificates" element={lazyElement(CompanyCertificateUnavailablePage)} />
+        <Route path="/panel/company/certificates/:certificateId/issued" element={lazyElement(CompanyCertificateUnavailablePage)} />
+        <Route path="/panel/company/certificates/:certificateId" element={lazyElement(CompanyCertificateUnavailablePage)} />
         <Route path="/panel/company/account" element={lazyElement(CompanyOrganizationAccountPage)} />
         <Route path="/panel/company/account/edit/organization" element={lazyElement(CompanyEditOrganizationInfoPage)} />
         <Route path="/panel/company/account/edit/representative" element={lazyElement(CompanyEditOrganizationRepresentativePage)} />
@@ -353,9 +349,9 @@ export function AppRouter() {
         <Route path="/panel/emdad/release-requests" element={lazyElement(EmdadReleaseRequestsPage)} />
         <Route path="/panel/emdad/release-requests/detail" element={lazyElement(EmdadReleaseRequestDetailPage)} />
         <Route path="/panel/emdad/release-requests/success" element={lazyElement(EmdadReleaseSuccessPage)} />
-        <Route path="/panel/emdad/article172-approvals" element={lazyElement(EmdadArticle172ApprovalsPage)} />
-        <Route path="/panel/emdad/article172-approvals/detail" element={lazyElement(EmdadArticle172RequestDetailPage)} />
-        <Route path="/panel/emdad/article172-approvals/success" element={lazyElement(EmdadArticle172SuccessPage)} />
+        <Route path="/panel/emdad/article172-approvals" element={lazyElement(EmdadCertificateUnavailablePage)} />
+        <Route path="/panel/emdad/article172-approvals/detail" element={lazyElement(EmdadCertificateUnavailablePage)} />
+        <Route path="/panel/emdad/article172-approvals/success" element={lazyElement(EmdadCertificateUnavailablePage)} />
         <Route path="/panel/emdad/payment-history" element={lazyElement(EmdadPaymentHistoryPage)} />
         <Route path="/panel/emdad/payment-history/detail" element={lazyElement(EmdadPaymentDetailPage)} />
         <Route path="/panel/emdad/financial-reports" element={lazyElement(EmdadFinancialReportsPage)} />
