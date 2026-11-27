@@ -58,9 +58,40 @@ public static class CompanyApplicationReviewEndpoints
             return Results.Ok(item);
         });
 
-        group.MapPost("/{id:guid}/approve", async Task<IResult> (Guid id, CompanyApprovalRequest request,
+        group.MapPost("/{id:guid}/approve", ApproveAsync);
+
+        group.MapGet("/{id:guid}/documents/{kind}", async Task<IResult> (Guid id, string kind,
+            ClaimsPrincipal principal, HttpContext context, IIdentitySyncService identity,
+            IConfiguration config, MoonDbContext db, IAuditWriter audit, CancellationToken ct) =>
+        {
+            var actor = await identity.GetCurrentAsync(principal, ct);
+            if (!MayRead(actor, config)) return Results.Forbid();
+            var query = db.CompanyApplications.AsNoTracking().Where(x => x.Id == id);
+            IQueryable<byte[]>? document = kind switch
+            {
+                "representativeLetter" => query.Select(x => x.RepresentativeLetter),
+                "establishmentNotice" => query.Select(x => x.EstablishmentNotice),
+                "articlesOfAssociation" => query.Select(x => x.ArticlesOfAssociation),
+                "latestChangesNotice" => query.Select(x => x.LatestChangesNotice),
+                _ => null
+            };
+            if (document is null) return Results.NotFound();
+            var bytes = await document.SingleOrDefaultAsync(ct);
+            if (bytes is null || !CompanyRegistrationValidation.IsSupportedDocument(bytes)) return Results.NotFound();
+            var extension = bytes.AsSpan().StartsWith("%PDF-"u8) ? "pdf"
+                : bytes.AsSpan().StartsWith(new byte[] { 0xff, 0xd8, 0xff }) ? "jpg" : "png";
+            await audit.AppendAsync(new AuditWriteRequest(actor!.ExternalSubject, "company_application.document_read",
+                "company_application", id.ToString("D"), context.TraceIdentifier,
+                AfterJson: System.Text.Json.JsonSerializer.Serialize(new { document = kind })), ct);
+            context.Response.Headers.CacheControl = "no-store";
+            context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+            return Results.File(bytes, "application/octet-stream", fileDownloadName: $"{kind}.{extension}");
+        });
+    }
+
+    public static async Task<IResult> ApproveAsync(Guid id, CompanyApprovalRequest request,
             ClaimsPrincipal principal, HttpContext context, IIdentitySyncService identity, IConfiguration config,
-            MoonDbContext db, IAuditWriter audit, KeycloakAccountClient keycloak, CancellationToken ct) =>
+            MoonDbContext db, IAuditWriter audit, KeycloakAccountClient keycloak, CancellationToken ct)
         {
             var actor = await identity.GetCurrentAsync(principal, ct);
             if (!MayRead(actor, config) || !config.GetValue<bool>("CompanyRegistration:ApprovalEnabled"))
@@ -88,18 +119,20 @@ public static class CompanyApplicationReviewEndpoints
             {
                 if (application.ActivationSubject is not null || application.ActivatedOrganizationId is not null)
                     return Results.Conflict(new { code = "activation_lineage_conflict" });
+                if ($"{application.RepresentativeFirstName} {application.RepresentativeLastName}".Length > 200)
+                    return Results.Conflict(new { code = "representative_name_too_long" });
                 var role = await db.Roles.SingleAsync(x => x.Code == SystemRoles.Company, ct);
                 var subject = await keycloak.CreateSmsOnlyDisabledAsync(application.Mobile,
                     application.RepresentativeFirstName, application.RepresentativeLastName, application.Email, ct);
                 if (subject is null)
                     return Results.Conflict(new { code = "account_exists_or_pending" });
 
-                var organization = new Organization { Name = application.Name, Type = "company" };
-                var user = new AppUser { ExternalSubject = subject,
+                var organization = new Organization { Name = application.Name, Type = "company", Status = "pending_activation" };
+                var user = new AppUser { ExternalSubject = subject, IsActive = false,
                     DisplayName = $"{application.RepresentativeFirstName} {application.RepresentativeLastName}" };
                 db.Organizations.Add(organization);
                 db.Users.Add(user);
-                db.Memberships.Add(new Membership { UserId = user.Id, OrganizationId = organization.Id, RoleId = role.Id });
+                db.Memberships.Add(new Membership { UserId = user.Id, OrganizationId = organization.Id, RoleId = role.Id, IsActive = false });
                 application.ActivationSubject = subject;
                 application.ActivatedOrganizationId = organization.Id;
                 application.Status = "pending_activation";
@@ -131,18 +164,27 @@ public static class CompanyApplicationReviewEndpoints
                 || current.ActivatedOrganizationId != organizationId) return Results.Conflict();
             if (current.Status == "approved") return Results.NoContent();
             if (current.Status != "pending_activation") return Results.Conflict();
-            var authorized = await (
-                from u in db.Users
-                join m in db.Memberships on u.Id equals m.UserId
-                join o in db.Organizations on m.OrganizationId equals o.Id
-                join r in db.Roles on m.RoleId equals r.Id
-                where u.ExternalSubject == activationSubject && u.IsActive && m.IsActive
-                    && o.Id == organizationId && o.Type == "company" && o.Status == "active"
-                    && r.Code == SystemRoles.Company
-                select m.Id).AnyAsync(ct);
-            if (!authorized) return Results.Conflict(new { code = "activation_lineage_conflict" });
+            // Keep Moon access disabled until the same transaction records approval.
+            // Keycloak enable can succeed even when the acknowledgement or DB commit fails.
+            var user = (await db.Users.FromSqlInterpolated(
+                $"SELECT * FROM moon.users WHERE \"ExternalSubject\" = {activationSubject} FOR UPDATE")
+                .ToListAsync(ct)).SingleOrDefault();
+            var organization = (await db.Organizations.FromSqlInterpolated(
+                $"SELECT * FROM moon.organizations WHERE \"Id\" = {organizationId} FOR UPDATE")
+                .ToListAsync(ct)).SingleOrDefault();
+            if (user is null || user.IsActive || organization is null || organization.Type != "company"
+                || organization.Status != "pending_activation")
+                return Results.Conflict(new { code = "activation_lineage_conflict" });
+            var membership = (await db.Memberships.FromSqlInterpolated(
+                $"SELECT * FROM moon.memberships WHERE \"UserId\" = {user.Id} AND \"OrganizationId\" = {organizationId} AND \"RoleId\" = {SystemRoles.CompanyId} FOR UPDATE")
+                .ToListAsync(ct)).SingleOrDefault();
+            if (membership is null || membership.IsActive)
+                return Results.Conflict(new { code = "activation_lineage_conflict" });
 
             await keycloak.EnableAsync(activationSubject, ct);
+            user.IsActive = true;
+            organization.Status = "active";
+            membership.IsActive = true;
             current.Status = "approved";
             db.OutboxMessages.Add(RegistrationSmsNotice.Create(id, RegistrationSmsNotice.Approved, "company_application"));
             await audit.AppendAsync(new AuditWriteRequest(actor!.ExternalSubject, "company_application.account_activated",
@@ -150,35 +192,6 @@ public static class CompanyApplicationReviewEndpoints
                 OrganizationId: organizationId.ToString("D")), ct);
             await finish.CommitAsync(ct);
             return Results.NoContent();
-        });
-
-        group.MapGet("/{id:guid}/documents/{kind}", async Task<IResult> (Guid id, string kind,
-            ClaimsPrincipal principal, HttpContext context, IIdentitySyncService identity,
-            IConfiguration config, MoonDbContext db, IAuditWriter audit, CancellationToken ct) =>
-        {
-            var actor = await identity.GetCurrentAsync(principal, ct);
-            if (!MayRead(actor, config)) return Results.Forbid();
-            var query = db.CompanyApplications.AsNoTracking().Where(x => x.Id == id);
-            IQueryable<byte[]>? document = kind switch
-            {
-                "representativeLetter" => query.Select(x => x.RepresentativeLetter),
-                "establishmentNotice" => query.Select(x => x.EstablishmentNotice),
-                "articlesOfAssociation" => query.Select(x => x.ArticlesOfAssociation),
-                "latestChangesNotice" => query.Select(x => x.LatestChangesNotice),
-                _ => null
-            };
-            if (document is null) return Results.NotFound();
-            var bytes = await document.SingleOrDefaultAsync(ct);
-            if (bytes is null || !CompanyRegistrationValidation.IsSupportedDocument(bytes)) return Results.NotFound();
-            var extension = bytes.AsSpan().StartsWith("%PDF-"u8) ? "pdf"
-                : bytes.AsSpan().StartsWith(new byte[] { 0xff, 0xd8, 0xff }) ? "jpg" : "png";
-            await audit.AppendAsync(new AuditWriteRequest(actor!.ExternalSubject, "company_application.document_read",
-                "company_application", id.ToString("D"), context.TraceIdentifier,
-                AfterJson: System.Text.Json.JsonSerializer.Serialize(new { document = kind })), ct);
-            context.Response.Headers.CacheControl = "no-store";
-            context.Response.Headers["X-Content-Type-Options"] = "nosniff";
-            return Results.File(bytes, "application/octet-stream", fileDownloadName: $"{kind}.{extension}");
-        });
     }
 }
 

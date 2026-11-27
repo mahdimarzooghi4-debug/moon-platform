@@ -92,6 +92,7 @@ public sealed class RegistrationSmsDispatcher(
                 if (company is not null
                     && (message.EventType == RegistrationSmsNotice.Submitted || company.Status == "approved")
                     && StartupMobileVerification.IsMobile(company.Mobile)
+                    && company.TrackingCode.Length == 10
                     && StartupTrackingCode.Normalize(company.TrackingCode) == company.TrackingCode)
                 {
                     mobile = company.Mobile;

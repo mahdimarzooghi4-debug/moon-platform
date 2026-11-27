@@ -50,6 +50,7 @@ public static class CompanyRegistrationEndpoints
                 (Value("notes"), 4000, false),
             };
             if (fields.Any(x => x.Value.Length > x.Max || (x.Required && x.Value.Length == 0))
+                || (Value("representativeFirstName").Length + 1 + Value("representativeLastName").Length > 200)
                 || !CompanyRegistrationValidation.IsDigits(Value("nationalIdentifier"), 11)
                 || !CompanyRegistrationValidation.IsDigits(Value("representativeNationalId"), 10)
                 || !CompanyRegistrationValidation.IsDigits(Value("postalCode"), 10)

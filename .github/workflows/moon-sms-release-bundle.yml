@@ -2,7 +2,7 @@ name: Moon SMS Release Bundle
 on:
   workflow_dispatch:
   pull_request:
-    branches: [main]
+    branches: [main, feat/keycloak-central-sms-login]
 permissions:
   contents: read
 jobs:
