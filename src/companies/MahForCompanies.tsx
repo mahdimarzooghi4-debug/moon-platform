@@ -1,67 +1,9 @@
-import React, { useEffect, useState } from "react";
-import {
-  listPublicTrustedCompanies,
-  publicTrustedCompanyLogoUrl,
-  type PublicTrustedCompany,
-} from "../features/admin-panel/management-api";
+import React from "react";
+import TrustedCompanyCarousel from "../shared/TrustedCompanyCarousel";
 import CompanyRecommendations from "./CompanyRecommendations";
 import "./index.css";
 
-function OrganizationalPartners() {
-  const [companies, setCompanies] = useState<PublicTrustedCompany[] | null>(null);
-  const [loadFailed, setLoadFailed] = useState(false);
-
-  useEffect(() => {
-    let active = true;
-    listPublicTrustedCompanies()
-      .then((items) => {
-        if (active) setCompanies(items);
-      })
-      .catch(() => {
-        if (active) setLoadFailed(true);
-      });
-
-    return () => { active = false; };
-  }, []);
-
-  return (
-    <section
-      aria-labelledby="mah-organizational-partners"
-      dir="rtl"
-      className="relative z-[340] flex flex-col items-center gap-8 self-stretch bg-[#f0f4f8] px-[clamp(16px,8.33vw,120px)] py-16 text-center"
-    >
-      <div className="flex flex-col gap-3">
-        <h2 id="mah-organizational-partners" className="text-[32px] font-extrabold leading-tight text-[#17324d]">
-          همراهان سازمانی ماه
-        </h2>
-        <p className="text-[16px] leading-[25px] text-[#60758a]">
-          شرکت‌هایی که در پروژه‌های دارای اثر اجتماعی تأییدشده مشارکت کرده‌اند.
-        </p>
-      </div>
-      {companies?.length ? (
-        <ul className="flex w-full flex-wrap items-center justify-center gap-x-10 gap-y-5">
-          {companies.map((company) => (
-            <li key={company.id} className="flex min-w-0 max-w-full items-center gap-2 text-lg font-bold text-[#17324d]">
-              {company.hasLogo && (
-                <img src={publicTrustedCompanyLogoUrl(company.id)} alt="" loading="lazy" className="h-10 w-10 shrink-0 rounded-md bg-white object-contain" />
-              )}
-              <span className="min-w-0 break-words text-right">{company.name}</span>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p role="status" className="text-sm text-[#60758a]">
-          {loadFailed ? "فهرست همراهان سازمانی در دسترس نیست." : companies ? "هنوز شرکتی برای نمایش منتشر نشده است." : "در حال دریافت فهرست همراهان سازمانی…"}
-        </p>
-      )}
-      {companies?.some((company) => company.hasLogo) && (
-        <p className="text-[11px] leading-[17px] text-[#60758a]">
-          نمایش لوگوی همکاران به معنای تأیید همه‌جانبه فعالیت‌های تجاری شرکت توسط سامانه ماه نیست.
-        </p>
-      )}
-    </section>
-  );
-}
+function OrganizationalPartners(){return <section dir="rtl" className="flex flex-col items-center gap-8 self-stretch bg-[#f0f4f8] px-[clamp(16px,8.33vw,120px)] py-16 text-center"><h2 className="text-[32px] font-extrabold text-[#17324d]">همراهان سازمانی ماه</h2><p className="text-[#60758a]">شرکت‌هایی که در پروژه‌های دارای اثر اجتماعی تأییدشده مشارکت کرده‌اند.</p><TrustedCompanyCarousel/><p className="text-xs text-[#60758a]">نمایش لوگوی همکاران به معنای تأیید همه‌جانبه فعالیت‌های تجاری شرکت توسط سامانه ماه نیست.</p></section>;}
 
 export default function MahForCompanies() {
   return (
@@ -110,7 +52,7 @@ export default function MahForCompanies() {
           <div className="w-[137px] h-[46px] shrink-0 bg-[url(/assets/codia/SbaYix9bCr.png)] bg-cover bg-no-repeat relative z-[16]" />
         </div>
       </div>
-      <div className="flex pt-[24px] pr-[120px] pb-0 pl-[120px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[17]">
+      <div className="mah-request-breadcrumb flex pt-[24px] pr-[120px] pb-0 pl-[120px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[17]">
         <span className="flex w-[155px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[18]">
           صفحه اصلی / برای شرکت‌ها
         </span>
@@ -128,7 +70,7 @@ export default function MahForCompanies() {
             واریز کنید و پیشرفت اجرایی، تحقق KPI و نتایج اثر اجتماعی را در پنل
             سازمانی خود دنبال کنید.
           </span>
-          <div className="mah-companies-hero-actions flex w-[305px] gap-[16px] justify-end items-center shrink-0 flex-nowrap relative z-[25]">
+          <div className="mah-companies-hero-actions mah-request-primary-right flex w-[305px] gap-[16px] justify-end items-center shrink-0 flex-nowrap relative z-[25]">
             <div className="flex w-[132px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[26]">
               <span className="flex w-[92px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#2094e3] relative text-center whitespace-nowrap z-[27]">
                 مشاهده پروژه‌ها
@@ -141,9 +83,7 @@ export default function MahForCompanies() {
             </div>
           </div>
           <div className="mah-companies-hero-secondary flex flex-col gap-[6px] items-end self-stretch shrink-0 flex-nowrap relative z-30">
-            <span className="flex w-[185px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#2094e3] relative text-right underline whitespace-nowrap z-[31]">
-              قبلاً ثبت‌نام کرده‌اید؟ ورود سازمانی
-            </span>
+            
             <span className="flex w-[373px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-right whitespace-nowrap z-[32]">
               * ثبت‌نام اولیه رایگان است و به معنای تعهد مالی یا تضمین صدور
               گواهی نیست.
@@ -1113,7 +1053,7 @@ export default function MahForCompanies() {
           </div>
         </div>
       </div>
-      <div className="flex pt-[80px] pr-[120px] pb-[80px] pl-[120px] flex-col gap-[40px] items-start self-stretch shrink-0 flex-nowrap bg-[#fff] relative z-[475]">
+      <div className="mah-request-company-contact flex pt-[80px] pr-[120px] pb-[80px] pl-[120px] flex-col gap-[40px] items-start self-stretch shrink-0 flex-nowrap bg-[#fff] relative z-[475]">
         <div className="flex flex-col gap-[12px] items-end self-stretch shrink-0 flex-nowrap relative z-[476]">
           <span className="flex w-[619px] h-[50px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[32px] font-extrabold leading-[50px] text-[#17324d] relative text-right whitespace-nowrap z-[477]">
             برای انتخاب مسیر مناسب همراهی گفت‌وگو کنیم

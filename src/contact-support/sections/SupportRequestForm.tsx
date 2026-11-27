@@ -1,15 +1,7 @@
 export function SupportRequestForm() {
   return (
-    <div className="mah-contact-support-form flex flex-col gap-[28px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[133]">
-      <div className="flex flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[134]">
-        <span className="flex w-[229px] h-[38px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[24px] font-extrabold leading-[37.5px] text-[#17324d] relative text-right whitespace-nowrap z-[135]">
-          ثبت درخواست پشتیبانی
-        </span>
-        <span className="flex w-[498px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[136]">
-          موضوع را انتخاب کنید و اطلاعات لازم را وارد کنید تا درخواست شما به
-          تیم مرتبط ارسال شود.
-        </span>
-      </div>
+    <div id="mah-support-form" className="mah-contact-support-form flex flex-col gap-[28px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[133]">
+      
       <div className="flex pt-[32px] pr-[32px] pb-[32px] pl-[32px] flex-col gap-[20px] items-end self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[20px] border-solid border border-[#e4ebf1] relative z-[137]">
         <div className="flex gap-[20px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[138]">
           <div className="flex flex-col gap-[8px] items-start grow shrink-0 basis-0 flex-nowrap relative z-[139]">

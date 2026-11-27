@@ -5,8 +5,6 @@ import { SupportHeroSection } from "./sections/SupportHeroSection";
 import { SupportTopicsSection } from "./sections/SupportTopicsSection";
 import { QuickLinksSection } from "./sections/QuickLinksSection";
 import { ContactAndRequestSection } from "./sections/ContactAndRequestSection";
-import { FaqSection } from "./sections/FaqSection";
-import { TrackingActionsSection } from "./sections/TrackingActionsSection";
 import SupportSuccessPage from "./SupportSuccessPage";
 
 export default function Main() {
@@ -24,8 +22,6 @@ export default function Main() {
       <SupportTopicsSection />
       <QuickLinksSection />
       <ContactAndRequestSection />
-      <FaqSection />
-      <TrackingActionsSection />
     </div>
   );
 }

@@ -1,8 +1,9 @@
+import TrustedCompanyCarousel from "../shared/TrustedCompanyCarousel";
 import React from "react";
 import "./index.css";
 import MoonIntroDialog from "./MoonIntroDialog";
 import { getPublicLandingKpis } from "../impact/api";
-import { listPublicNews, listPublicTrustedCompanies, publicNewsImageUrl, publicTrustedCompanyLogoUrl, type PublicTrustedCompany } from "../features/admin-panel/management-api";
+import { listPublicNews, publicNewsImageUrl } from "../features/admin-panel/management-api";
 
 const integerFormatter = new Intl.NumberFormat("fa-IR", { maximumFractionDigits: 0 });
 const decimalFormatter = new Intl.NumberFormat("fa-IR", { maximumFractionDigits: 1 });
@@ -19,7 +20,6 @@ type LandingKpiView = {
 export default function Main() {
   const [introOpen, setIntroOpen] = React.useState(false);
   const [landingKpis, setLandingKpis] = React.useState<LandingKpiView | null>(null);
-  const [trustedCompanies, setTrustedCompanies] = React.useState<PublicTrustedCompany[]>([]);
   const [news, setNews] = React.useState<Awaited<ReturnType<typeof listPublicNews>>>([]);
 
   React.useEffect(() => {
@@ -49,13 +49,6 @@ export default function Main() {
     };
   }, []);
 
-  React.useEffect(() => {
-    let cancelled = false;
-    listPublicTrustedCompanies()
-      .then((items) => { if (!cancelled) setTrustedCompanies(items); })
-      .catch(() => { if (!cancelled) setTrustedCompanies([]); });
-    return () => { cancelled = true; };
-  }, []);
 
   React.useEffect(() => {
     let cancelled = false;
@@ -638,16 +631,7 @@ export default function Main() {
             همراهان سازمانی در مسیر سرمایه‌گذاری اجتماعی شفاف و اثرگذار
           </span>
         </div>
-        <div className="flex pt-0 pr-[24px] pb-0 pl-[24px] justify-between items-center self-stretch shrink-0 flex-wrap gap-y-5 relative z-[239]">
-          {trustedCompanies.map((company) => (
-            <div className="flex min-w-[120px] h-[38px] gap-[10px] justify-center items-center shrink-0 flex-nowrap opacity-70" key={company.id}>
-              <span className="h-[34px] font-['Vazirmatn'] text-[22px] font-bold leading-[34px] text-[#606d7c] text-center whitespace-nowrap">{company.name}</span>
-              <div className="flex w-[36px] h-[36px] flex-col justify-center items-center shrink-0 overflow-hidden bg-[#2094e3] rounded-[12px]">
-                {company.hasLogo ? <img className="h-full w-full object-contain bg-white" src={publicTrustedCompanyLogoUrl(company.id)} alt={`لوگوی ${company.name}`} /> : <span className="text-white text-sm font-bold" aria-hidden="true">{company.name.slice(0, 1)}</span>}
-              </div>
-            </div>
-          ))}
-        </div>
+        <TrustedCompanyCarousel />
       </div>
       <div className="flex pt-[96px] pr-[120px] pb-[96px] pl-[120px] flex-col gap-[40px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] relative z-[264]">
         <div className="flex justify-center items-center self-stretch shrink-0 flex-nowrap relative z-[265]">

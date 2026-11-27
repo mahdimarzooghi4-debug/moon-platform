@@ -1,0 +1,22 @@
+.main-container .mah-request-breadcrumb {direction:ltr!important;justify-content:flex-end!important;text-align:right!important;}
+.main-container .mah-request-breadcrumb > span {direction:rtl!important;justify-content:flex-start!important;text-align:right!important;}
+.mah-companies-page .mah-request-primary-right,.mah-startups-page .mah-request-primary-right {direction:ltr!important;flex-direction:row!important;justify-content:flex-end!important;}
+.mah-companies-page .mah-request-primary-right > :first-child,.mah-startups-page .mah-request-primary-right > :first-child {order:0!important;}
+.mah-companies-page .mah-request-primary-right > :last-child,.mah-startups-page .mah-request-primary-right > :last-child {order:1!important;}
+.mah-companies-page .mah-request-company-contact {direction:ltr!important;align-items:flex-end!important;}
+.mah-companies-page .mah-request-company-contact > div {max-width:100%;direction:rtl!important;}
+.mah-about-page .mah-about-hero .mah-request-about-cta {direction:rtl!important;justify-content:flex-start!important;width:100%!important;}
+.main-container .mah-legal-intro {text-align:right!important;direction:rtl!important;}
+.main-container .mah-legal-intro > p {margin-right:0!important;margin-left:auto!important;text-align:right!important;}
+.main-container .mah-legal-intro > div {direction:rtl!important;justify-content:flex-start!important;}
+.main-container .mah-trusted-carousel {display:grid!important;grid-template-columns:36px minmax(0,1fr) 36px;gap:12px;width:100%;align-items:center;direction:ltr!important;}
+.main-container .mah-trusted-carousel-track {display:flex!important;direction:rtl!important;flex-flow:row nowrap!important;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:thin;padding:12px 4px;min-width:0;}
+.main-container .mah-trusted-carousel-tile {flex:0 0 170px;min-height:96px;display:flex!important;align-items:center;justify-content:center;gap:8px;flex-direction:column;border:1px solid #e4ebf1;background:#fff;border-radius:16px;padding:12px;color:#17324d;box-shadow:0 3px 10px #17324d0d;scroll-snap-align:start;text-align:center;direction:rtl!important;}
+.main-container .mah-trusted-carousel-tile img {width:100%;height:54px;object-fit:contain;background:#fff;}
+.mah-trusted-carousel-arrow {height:36px;width:36px;border:1px solid #e4ebf1;border-radius:50%;background:#fff;color:#1476b9;font-size:24px;cursor:pointer;}
+.mah-public-header {display:flex;direction:rtl!important;align-items:center;justify-content:space-between;gap:20px;width:100%;box-sizing:border-box;background:#fff;border-bottom:1px solid #e4ebf1;padding:16px clamp(16px,8.33vw,120px);flex-wrap:wrap;font-family:Vazirmatn,sans-serif;}
+.mah-public-header nav,.mah-public-header-actions {display:flex;gap:16px;align-items:center;flex-wrap:wrap;direction:rtl!important;}
+.mah-public-header a {text-decoration:none;font-size:14px;color:#17324d;white-space:nowrap;}
+.mah-public-header a[aria-current=page] {color:#2094e3;}
+.mah-public-header-actions a {border:1px solid #2094e3;border-radius:12px;padding:10px 18px;color:#2094e3;}
+.mah-public-header-actions a:first-child {background:#2094e3;color:white;}

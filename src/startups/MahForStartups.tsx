@@ -1,3 +1,4 @@
+import "../shared/public-corrections.css";
 import React from "react";
 import "./index.css";
 
@@ -49,7 +50,7 @@ export default function MahForStartups() {
         </div>
       </div>
       <div className="flex pt-[48px] pr-[120px] pb-[80px] pl-[120px] flex-col gap-[32px] items-end self-stretch shrink-0 flex-nowrap bg-[#fcfbf8] relative z-[17]">
-        <div className="flex justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[18]">
+        <div className="mah-request-breadcrumb flex justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[18]">
           <span className="flex w-[156px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#60758a] relative text-right whitespace-nowrap z-[19]">
             صفحه اصلی / برای استارتاپ‌ها
           </span>
@@ -66,7 +67,7 @@ export default function MahForStartups() {
               برمی‌دارند. با ثبت فرآیندها، پروژه‌های کارآفرینی شما پس از
               صحه‌گذاری به منبع پایدار مسئولیت اجتماعی متصل می‌گردند.
             </span>
-            <div className="mah-startups-hero-actions flex w-[316px] gap-[16px] justify-end items-center shrink-0 flex-nowrap relative z-[25]">
+            <div className="mah-startups-hero-actions mah-request-primary-right flex w-[316px] gap-[16px] justify-end items-center shrink-0 flex-nowrap relative z-[25]">
               <div className="flex w-[169px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[26]">
                 <span className="flex w-[129px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#2094e3] relative text-center whitespace-nowrap z-[27]">
                   پیگیری وضعیت ثبت‌نام
