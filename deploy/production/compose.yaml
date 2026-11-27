@@ -53,6 +53,9 @@ services:
       ExternalServices__Sms__ApiKey: ${MOON_SMS_IR_API_KEY:-}
       ExternalServices__Sms__StartupTemplateId: ${MOON_SMS_IR_STARTUP_TEMPLATE_ID:-}
       ExternalServices__Sms__StartupCodeParameter: ${MOON_SMS_IR_STARTUP_CODE_PARAMETER:-Code}
+      ExternalServices__Sms__RegistrationNotificationsEnabled: ${MOON_SMS_REGISTRATION_NOTIFICATIONS_ENABLED:-false}
+      ExternalServices__Sms__RegistrationSubmittedTemplateId: ${MOON_SMS_REGISTRATION_SUBMITTED_TEMPLATE_ID:-411055}
+      ExternalServices__Sms__RegistrationApprovedTemplateId: ${MOON_SMS_REGISTRATION_APPROVED_TEMPLATE_ID:-833279}
       ExternalServices__Payment__Provider: Disabled
       MehradSso__Enabled: "false"
     expose:

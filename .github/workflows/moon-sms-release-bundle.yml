@@ -1,0 +1,31 @@
+name: Moon SMS Release Bundle
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  candidate-bundle:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Build and verify one exact-SHA candidate bundle
+        env:
+          RELEASE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: bash deploy/production/build-sms-release-bundle.sh "$RELEASE_SHA" "$RUNNER_TEMP/moon-sms-bundle"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: moon-sms-candidate-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ runner.temp }}/moon-sms-bundle/
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 7

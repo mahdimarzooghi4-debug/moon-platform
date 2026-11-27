@@ -13,6 +13,7 @@ import {
   defaultPanelForRoles,
   getValidSession,
   setSessionPanelRoles,
+  safePanelReturnTo,
 } from "./oidc";
 
 const DEV_PANEL_PREVIEW_KEY = "moon.auth.dev-panel-preview";
@@ -73,15 +74,20 @@ function CallbackScreen() {
         const identity = await syncIdentity(session);
         if (!active) return;
 
+        if (!identity.isActive) {
+          clearSession();
+          window.location.replace("/auth?error=forbidden");
+          return;
+        }
         const panelRoles = panelRolesFromIdentity(identity);
         setSessionPanelRoles(panelRoles);
 
         const accountRoles = rolesForAccountType(panelRoles, pending.accountType);
-        const requested = pending.returnTo;
+        const requested = safePanelReturnTo(pending.returnTo);
         const destination =
-          requested && canAccessPanelPath(accountRoles, requested)
+          requested && canAccessPanelPath(panelRoles, new URL(requested, window.location.origin).pathname)
             ? requested
-            : defaultPanelForRoles(accountRoles);
+            : defaultPanelForRoles(accountRoles) ?? defaultPanelForRoles(panelRoles);
 
         if (!destination) {
           clearSession();
@@ -127,7 +133,7 @@ function ProtectedPanelGate({ children, pathname }: { children: ReactNode; pathn
         const panelRoles = panelRolesFromIdentity(identity);
         setSessionPanelRoles(panelRoles);
 
-        if (!canAccessPanelPath(panelRoles, pathname)) {
+        if (!identity.isActive || !canAccessPanelPath(panelRoles, pathname)) {
           window.location.replace("/auth?error=forbidden");
           return;
         }

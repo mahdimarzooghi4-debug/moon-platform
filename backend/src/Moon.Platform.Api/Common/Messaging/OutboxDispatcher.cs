@@ -57,7 +57,8 @@ public sealed class OutboxDispatcher(
             claimed = await db.Set<OutboxMessage>()
                 .FromSqlInterpolated($"""
                     SELECT * FROM moon.outbox_messages
-                    WHERE "PublishedAtUtc" IS NULL
+                    WHERE "EventType" NOT IN ('StartupRegistrationSmsSubmitted', 'StartupRegistrationSmsApproved')
+                      AND "PublishedAtUtc" IS NULL
                       AND "DeadLetteredAtUtc" IS NULL
                       AND "NextAttemptAtUtc" <= {now}
                       AND ("LockedUntilUtc" IS NULL OR "LockedUntilUtc" < {now})

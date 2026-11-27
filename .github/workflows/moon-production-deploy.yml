@@ -25,6 +25,11 @@ jobs:
           ref: ${{ github.sha }}
       - name: Validate production Compose
         run: docker compose --env-file deploy/production/env.example -f deploy/production/compose.yaml config --quiet
+      - name: Block incomplete coordinated SMS login release
+        run: |
+          echo "SMS login requires an approved coordinated Keycloak/client/UI release and rollback mechanism."
+          echo "Automatic deployment is intentionally blocked for this candidate."
+          exit 1
       - name: Configure SSH
         env:
           DEPLOY_KEY: ${{ secrets.MOON_DEPLOY_SSH_KEY }}

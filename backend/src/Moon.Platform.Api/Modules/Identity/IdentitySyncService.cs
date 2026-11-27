@@ -119,6 +119,8 @@ public sealed class IdentitySyncService(MoonDbContext dbContext, IAuditWriter au
                 on membership.RoleId equals role.Id
             where membership.UserId == user.Id
                   && membership.IsActive
+                  && role.Id != SystemRoles.AuditorId
+                  && role.Code != SystemRoles.Auditor
                   && organization.Status == "active"
             orderby organization.Name, role.Code
             select new CurrentMembership(
@@ -161,7 +163,7 @@ public sealed class IdentitySyncService(MoonDbContext dbContext, IAuditWriter au
     {
         return principal.FindAll("roles")
             .Select(claim => claim.Value)
-            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .Where(value => !string.IsNullOrWhiteSpace(value) && !string.Equals(value, SystemRoles.Auditor, StringComparison.OrdinalIgnoreCase))
             .Distinct(StringComparer.Ordinal)
             .Order(StringComparer.Ordinal)
             .ToArray();

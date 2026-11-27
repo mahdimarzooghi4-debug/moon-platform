@@ -68,3 +68,35 @@ button {
   direction: ltr;
   text-align: right;
 }
+
+/* Review uses natural document flow; user-entered text never sets a fixed height. */
+.main-container.mah-startup-step4 { height: auto !important; min-height: 100vh; overflow: visible !important; }
+.mah-startup-step4 .mah-review-shell { min-width: 0; padding-inline: 16px; }
+.mah-startup-step4 .mah-startup-review { direction: rtl !important; width: 100%; min-width: 0; box-sizing: border-box; padding: 36px; display: grid; gap: 24px; border: 1px solid #e4ebf1; border-radius: 20px; background: #fff; color: #2d3748; text-align: right; }
+.mah-startup-review h2,.mah-startup-review h3,.mah-startup-review p,.mah-startup-review ul,.mah-startup-review dl,.mah-startup-review dd { margin: 0; }
+.mah-startup-review h2 { font-size: 18px; font-weight: 700; color: #1a202c; }
+.mah-startup-review h3 { font-size: 15px; font-weight: 700; color: #1a202c; }
+.mah-startup-review .mah-review-heading { display: grid; gap: 6px; border-bottom: 1px solid #e4ebf1; padding-bottom: 14px; }
+.mah-startup-review .mah-review-heading p { font-size: 14px; color: #718096; }
+.mah-startup-review .mah-review-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); align-items: stretch; gap: 16px; }
+.mah-startup-review .mah-review-box { display: flex; flex-direction: column; min-width: 0; gap: 8px; padding: 18px; border: 1px solid #e2e8f0; border-radius: 12px; background: #f8fafc; }
+.mah-startup-review .mah-review-box header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+.mah-startup-review .mah-review-box a { color: #1476b9; font-weight: 600; font-size: 13px; }
+.mah-startup-review .mah-review-box p,.mah-startup-review .mah-review-box li,.mah-startup-review dd { overflow-wrap: anywhere; white-space: pre-wrap; line-height: 1.85; font-size: 13px; }
+.mah-startup-review .mah-review-box ul { padding-inline-start: 18px; }
+.mah-startup-review .mah-review-details { display: grid; gap: 12px; padding: 18px; border: 1px solid #e2e8f0; border-radius: 12px; }
+.mah-startup-review .mah-review-details dl { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px 20px; }
+.mah-startup-review .mah-review-details dl > div { min-width: 0; border-bottom: 1px solid #e4ebf1; padding-bottom: 8px; }
+.mah-startup-review dt { color: #526275; font-size: 12px; font-weight: 600; }
+.mah-startup-review .mah-review-consents { display: grid; gap: 12px; padding-top: 16px; border-top: 1px solid #e4ebf1; }
+.mah-startup-review .mah-review-consents label { display: flex; direction: rtl; align-items: flex-start; gap: 10px; font-size: 14px; cursor: pointer; }
+.mah-startup-review .mah-review-consents input { flex: 0 0 18px; width: 18px; height: 18px; margin: 3px 0 0; accent-color: #2094e3; }
+.mah-startup-review .mah-review-notice { padding: 14px; border: 1px solid #cbd5e0; border-radius: 12px; background: #edf2f7; font-size: 13px; line-height: 1.9; }
+.mah-startup-review .mah-review-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 12px; padding-top: 16px; border-top: 1px solid #e4ebf1; }
+.mah-startup-review .mah-review-actions button { min-height: 44px; padding: 10px 20px; border: 1px solid #e2e8f0; border-radius: 12px; background: white; font-weight: 600; font-size: 14px; cursor: pointer; }
+.mah-startup-review .mah-review-actions button.mah-review-submit { background: #1476b9; color: white; border-color: #1476b9; }
+.mah-startup-review button:focus-visible,.mah-startup-review input:focus-visible,.mah-startup-review a:focus-visible { outline: 2px solid #2094e3; outline-offset: 3px; }
+@media (max-width: 700px) {
+  .mah-startup-step4 .mah-startup-review { padding: 20px 16px; }
+  .mah-startup-review .mah-review-grid,.mah-startup-review .mah-review-details dl { grid-template-columns: minmax(0,1fr); }
+}

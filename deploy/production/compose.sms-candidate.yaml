@@ -1,0 +1,41 @@
+# Opt-in deployment candidate ONLY. Do not use until operational readiness and explicit release approval.
+# The running realm and its client flow are not changed by this overlay.
+services:
+  keycloak:
+    image: moon-platform/keycloak:${MOON_SMS_KEYCLOAK_IMAGE_TAG:?set reviewed candidate image SHA}
+    command: ["start", "--optimized"]
+    environment:
+      KC_PROXY_TRUSTED_ADDRESSES: "172.30.88.10"
+      MOON_LOGIN_OTP_JDBC_URL: jdbc:postgresql://moon-login-otp-db:5432/moon_login_otp
+      MOON_LOGIN_OTP_DB_USER: moon_login_otp
+      MOON_LOGIN_OTP_DB_PASSWORD: ${MOON_LOGIN_OTP_DB_PASSWORD:?set unique OTP DB password}
+      MOON_LOGIN_OTP_HMAC_KEY: ${MOON_LOGIN_OTP_HMAC_KEY:?set independent stable base64 HMAC key}
+      MOON_SMS_IR_API_KEY: ${MOON_SMS_IR_API_KEY:?set authorized SMS.ir secret}
+      MOON_SMS_IR_LOGIN_TEMPLATE_ID: ${MOON_SMS_IR_LOGIN_TEMPLATE_ID:?set verified SMS template}
+      MOON_SMS_IR_LOGIN_CODE_PARAMETER: ${MOON_SMS_IR_LOGIN_CODE_PARAMETER:?set verified code parameter}
+    depends_on:
+      moon-login-otp-db:
+        condition: service_healthy
+  moon-login-otp-db:
+    image: public.ecr.aws/docker/library/postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: moon_login_otp
+      POSTGRES_USER: moon_login_otp_owner
+      POSTGRES_PASSWORD: ${MOON_LOGIN_OTP_OWNER_PASSWORD:?set separate OTP database owner password}
+      MOON_LOGIN_OTP_DB_PASSWORD: ${MOON_LOGIN_OTP_DB_PASSWORD:?set restricted OTP application password}
+    volumes:
+      - moon-login-otp-postgres:/var/lib/postgresql
+      - ./otp-db-init/10-create-app-role.sh:/docker-entrypoint-initdb.d/10-create-app-role.sh:ro
+      - ../../backend/keycloak/sms-login/schema.sql:/docker-entrypoint-initdb.d/20-moon-login-otp.sql:ro
+      - ./otp-db-init/30-grant-app-role.sql:/docker-entrypoint-initdb.d/30-grant-app-role.sql:ro
+    healthcheck:
+      # TCP + authenticated schema access, not the temporary initialization socket.
+      test: ["CMD-SHELL", "PGPASSWORD=\"$MOON_LOGIN_OTP_DB_PASSWORD\" psql -h 127.0.0.1 -U moon_login_otp -d moon_login_otp -v ON_ERROR_STOP=1 -c 'SELECT count(*) FROM moon_login_otp_challenge; SELECT count(*) FROM moon_login_otp_send;' >/dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - private
+volumes:
+  moon-login-otp-postgres:

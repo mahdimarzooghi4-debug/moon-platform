@@ -11,7 +11,7 @@ namespace Moon.Platform.Api.Modules.StartupRegistration;
 public sealed class StartupApplication
 {
     public Guid Id { get; init; } = Guid.NewGuid();
-    [MaxLength(48)] public required string TrackingCode { get; init; }
+    [MaxLength(48)] public required string TrackingCode { get; set; }
     [MaxLength(160)] public required string Name { get; init; }
     [MaxLength(120)] public required string ContactName { get; init; }
     [MaxLength(11)] public required string Mobile { get; init; }
@@ -33,6 +33,7 @@ public sealed class StartupApplication
 public sealed record ApproveStartupApplicationRequest(string? TemporaryPassword);
 
 internal sealed record StartupMobileRequest(string? Mobile, string? Code);
+internal sealed record TrackStartupApplicationRequest(string? TrackingCode, string? Mobile, string? MobileVerification);
 
 public static class StartupRegistrationEndpoints
 {
@@ -122,7 +123,7 @@ public static class StartupRegistrationEndpoints
                 Logo = logoContent,
                 LegalDocument = legalContent,
                 IdentityDocument = identityContent,
-                TrackingCode = Convert.ToHexString(RandomNumberGenerator.GetBytes(24))
+                TrackingCode = StartupTrackingCode.Create()
             };
             var submitted = false;
             if (verification.Enabled && !verification.TryReserve(mobile, form["mobileVerification"].ToString()))
@@ -130,7 +131,29 @@ public static class StartupRegistrationEndpoints
             try
             {
                 db.StartupApplications.Add(application);
-                await db.SaveChangesAsync(ct);
+                db.OutboxMessages.Add(RegistrationSmsNotice.Create(application.Id, RegistrationSmsNotice.Submitted));
+                // The database unique index is the authoritative concurrency guard.
+                // Retry only a collision on that exact index, never other failures.
+                var indexName = db.Model.FindEntityType(typeof(StartupApplication))!
+                    .GetIndexes().Single(index => index.Properties.Count == 1
+                        && index.Properties[0].Name == nameof(StartupApplication.TrackingCode))
+                    .GetDatabaseName();
+                for (var attempt = 0; ; attempt++)
+                {
+                    try
+                    {
+                        await db.SaveChangesAsync(ct);
+                        break;
+                    }
+                    catch (DbUpdateException error) when (error.InnerException is Npgsql.PostgresException pg
+                        && pg.SqlState == Npgsql.PostgresErrorCodes.UniqueViolation
+                        && indexName is not null && pg.ConstraintName == indexName)
+                    {
+                        if (attempt >= 4)
+                            return Results.StatusCode(StatusCodes.Status503ServiceUnavailable);
+                        application.TrackingCode = StartupTrackingCode.Create();
+                    }
+                }
                 submitted = true;
             }
             finally
@@ -145,15 +168,41 @@ public static class StartupRegistrationEndpoints
         registration.MapGet("/{trackingCode}", async Task<IResult> (
             string trackingCode, MoonDbContext db, CancellationToken ct) =>
         {
-            if (trackingCode.Length != 48 || !trackingCode.All(Uri.IsHexDigit))
-                return Results.NotFound();
-
-            var code = trackingCode.ToUpperInvariant();
+            var code = StartupTrackingCode.Normalize(trackingCode);
+            if (!StartupTrackingCode.IsLegacyBearerCode(code)) return Results.NotFound();
             var result = await db.StartupApplications.AsNoTracking()
                 .Where(application => application.TrackingCode == code)
                 .Select(application => new { application.Status, application.SubmittedAtUtc })
                 .SingleOrDefaultAsync(ct);
             return result is null ? Results.NotFound() : Results.Ok(result);
+        });
+
+        // A ten-digit reference alone is never an authorization credential.
+        // The existing SMS challenge must be verified for the submitted mobile.
+        // Consume the proof even on a miss so it cannot enumerate references.
+        registration.MapPost("/track", async Task<IResult> (
+            TrackStartupApplicationRequest request, MoonDbContext db,
+            StartupMobileVerification verification, CancellationToken ct) =>
+        {
+            var code = StartupTrackingCode.Normalize(request.TrackingCode);
+            if (code is null || !StartupMobileVerification.IsMobile(request.Mobile))
+                return Results.NotFound();
+            if (!verification.Enabled) return Results.StatusCode(StatusCodes.Status503ServiceUnavailable);
+            var mobile = request.Mobile!;
+            if (!verification.TryReserve(mobile, request.MobileVerification ?? ""))
+                return Results.BadRequest(new { code = "mobile_verification_required" });
+            try
+            {
+                var result = await db.StartupApplications.AsNoTracking()
+                    .Where(application => application.TrackingCode == code && application.Mobile == mobile)
+                    .Select(application => new { application.Status, application.SubmittedAtUtc })
+                    .SingleOrDefaultAsync(ct);
+                return result is null ? Results.NotFound() : Results.Ok(result);
+            }
+            finally
+            {
+                verification.Complete(mobile, submitted: true);
+            }
         });
 
         endpoints.MapGet("/api/v1/creative-house/startup-applications", async Task<IResult> (
@@ -260,6 +309,7 @@ public static class StartupRegistrationEndpoints
             {
                 await keycloak.EnableAsync(pendingSubject, ct);
                 application.Status = "approved";
+                db.OutboxMessages.Add(RegistrationSmsNotice.Create(application.Id, RegistrationSmsNotice.Approved));
                 await db.SaveChangesAsync(ct);
                 await transaction.CommitAsync(ct);
                 return Results.NoContent();
@@ -290,10 +340,22 @@ public static class StartupRegistrationEndpoints
             application.Status = "pending_activation";
             await db.SaveChangesAsync(ct);
             await transaction.CommitAsync(ct);
+            await transaction.DisposeAsync();
 
             await keycloak.EnableAsync(subject, ct);
-            application.Status = "approved";
+            db.ChangeTracker.Clear();
+            await using var finalTransaction = await db.Database.BeginTransactionAsync(ct);
+            var finalApplication = (await db.StartupApplications
+                .FromSqlInterpolated($"SELECT * FROM moon.startup_applications WHERE \"Id\" = {id} FOR UPDATE")
+                .ToListAsync(ct)).SingleOrDefault();
+            if (finalApplication is null || finalApplication.ActivationSubject != subject)
+                return Results.Conflict();
+            if (finalApplication.Status == "approved") return Results.NoContent();
+            if (finalApplication.Status != "pending_activation") return Results.Conflict();
+            finalApplication.Status = "approved";
+            db.OutboxMessages.Add(RegistrationSmsNotice.Create(finalApplication.Id, RegistrationSmsNotice.Approved));
             await db.SaveChangesAsync(ct);
+            await finalTransaction.CommitAsync(ct);
             return Results.NoContent();
         }).RequireAuthorization();
     }

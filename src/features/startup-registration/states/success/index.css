@@ -60,3 +60,13 @@ textarea {
   direction: ltr;
   text-align: right;
 }
+
+.mah-startup-success .mah-startup-success-card { max-width: calc(100% - 32px); min-width: 0; }
+.mah-startup-success .mah-tracking-box { direction: rtl; display: grid; justify-items: center; gap: 12px; width: 100%; min-width: 0; padding: 18px; border-radius: 12px; background: #f7fafc; }
+.mah-startup-success .mah-tracking-label { font-size: 14px; color: #718096; }
+.mah-startup-success .mah-tracking-code { direction: ltr; unicode-bidi: isolate; max-width: 100%; overflow-wrap: anywhere; word-break: break-word; text-align: center; color: #1476b9; font-size: clamp(15px,3.5vw,20px); font-weight: 700; font-variant-numeric: tabular-nums; user-select: all; }
+.mah-startup-success .mah-tracking-copy { padding: 8px 14px; border: 1px solid #bee3f8; border-radius: 8px; background: white; color: #1476b9; font-weight: 600; }
+.mah-startup-success .mah-tracking-estimate { display: flex; justify-content: space-between; gap: 10px; width: 100%; flex-wrap: wrap; padding-top: 12px; border-top: 1px solid #e4ebf1; font-size: 13px; color: #718096; }
+.mah-startup-success .mah-tracking-estimate strong { color: #1476b9; }
+.mah-startup-success .mah-startup-success-card > div { max-width: 100%; }
+.mah-startup-success .mah-startup-success-card span.text-center { white-space: normal; height: auto; max-width: 100%; }

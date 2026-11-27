@@ -161,7 +161,8 @@ public sealed class Phase0PostgresTests : IAsyncLifetime
         Assert.Single(listedTarget.Memberships);
 
         var roles = await admin.ListRolesAsync();
-        Assert.Equal(8, roles.Count);
+        Assert.Equal(7, roles.Count);
+        Assert.DoesNotContain(roles, x => x.Code == SystemRoles.Auditor);
         Assert.Contains(roles, x => x.Code == SystemRoles.Startup && x.ActiveMemberCount == 1);
 
         Assert.True(await admin.SetMembershipActiveAsync(
@@ -198,6 +199,37 @@ public sealed class Phase0PostgresTests : IAsyncLifetime
         Assert.Contains("identity.membership.deactivated", auditActions);
         Assert.Contains("identity.user.deactivated", auditActions);
         Assert.Contains("identity.organization.deactivated", auditActions);
+    }
+
+    [Fact]
+    public async Task Retired_auditor_is_not_assignable_or_effective_but_historical_rows_are_preserved()
+    {
+        await using var db = CreateDbContext();
+        var writer = new AuditWriter(db);
+        var admin = new AdminAccessService(db, writer);
+        var organization = new Organization { Name = "Legacy org", Type = "company", Status = "active" };
+        var user = new AppUser { ExternalSubject = "legacy-auditor" };
+        db.Organizations.Add(organization);
+        db.Users.Add(user);
+        await db.SaveChangesAsync();
+        var legacy = new Membership
+        {
+            UserId = user.Id, OrganizationId = organization.Id, RoleId = SystemRoles.AuditorId, IsActive = false
+        };
+        db.Memberships.Add(legacy);
+        await db.SaveChangesAsync();
+        Assert.NotNull(await db.Roles.FindAsync(SystemRoles.AuditorId));
+        Assert.Null(await admin.GrantMembershipAsync(user.Id, organization.Id, SystemRoles.Auditor, "admin", "grant-denied", null));
+        Assert.False(await admin.SetMembershipActiveAsync(legacy.Id, true, "admin", "activate-denied", null));
+        Assert.False(await new OrganizationAccessService(db).IsMemberAsync(user.ExternalSubject, organization.Id));
+        var identity = await new IdentitySyncService(db, writer).GetCurrentAsync(
+            TestPrincipal(user.ExternalSubject, "Legacy", SystemRoles.Auditor));
+        Assert.NotNull(identity);
+        Assert.Empty(identity!.IdentityRoles);
+        Assert.Empty(identity.Memberships);
+        Assert.Contains((await admin.GetUserAsync(user.Id))!.Memberships, x => x.MembershipId == legacy.Id && !x.IsActive);
+        legacy.IsActive = true;
+        await Assert.ThrowsAsync<DbUpdateException>(() => db.SaveChangesAsync());
     }
 
     private static System.Security.Claims.ClaimsPrincipal TestPrincipal(

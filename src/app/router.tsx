@@ -1,6 +1,6 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import CompanyRegistrationPage from "../features/company-registration";
+import CompanyRegistrationUnavailable from "../features/company-registration/Unavailable";
 import StartupRegistrationPage from "../features/startup-registration";
 import AuthEntryPage from "../page";
 
@@ -56,17 +56,7 @@ const SearchResultsInitialPage = lazy(() => import("../search-results/states/ini
 const SearchResultsLoadingPage = lazy(() => import("../search-results/states/loading"));
 const SearchResultsErrorPage = lazy(() => import("../search-results/states/error"));
 const SearchResultsEmptyPage = lazy(() => import("../search-results/states/empty"));
-const RegistrationTrackPage = lazy(() => import("../registration-track"));
-const RegistrationTrackApprovedPage = lazy(() => import("../registration-track/states/approved"));
-const RegistrationTrackNotFoundPage = lazy(() => import("../registration-track/states/not-found"));
-const RegistrationTrackErrorPage = lazy(() => import("../registration-track/states/error"));
-const RegistrationTrackNeedsEditPage = lazy(() => import("../registration-track/states/needs-edit"));
-const RegistrationTrackRejectedPage = lazy(() => import("../registration-track/states/rejected"));
-const CompanyRegistrationStep2Page = lazy(() => import("../features/company-registration/states/step2"));
-const CompanyRegistrationStep3Page = lazy(() => import("../features/company-registration/states/step3"));
-const CompanyRegistrationStep4Page = lazy(() => import("../features/company-registration/states/step4"));
-const CompanyRegistrationSuccessPage = lazy(() => import("../features/company-registration/states/success"));
-const CompanyRegistrationStatusPage = lazy(() => import("../features/company-registration/status"));
+const RegistrationTrackPage = lazy(() => import("../features/startup-registration/TrackingPage"));
 const NotFoundPage = lazy(() => import("../not-found"));
 const StartupsDirectoryPage = lazy(() => import("../startups-directory"));
 const StartupDirectorySampleProfilePage = lazy(() => import("../startups-directory/SampleProfile"));
@@ -259,19 +249,19 @@ export function AppRouter() {
         <Route path="/search" element={lazyElement(SearchResultsPage)} />
         <Route path="/404" element={lazyElement(NotFoundPage)} />
         <Route path="/registration/track" element={lazyElement(RegistrationTrackPage)} />
-        <Route path="/registration/track/states/approved" element={lazyElement(RegistrationTrackApprovedPage)} />
-        <Route path="/registration/track/states/not-found" element={lazyElement(RegistrationTrackNotFoundPage)} />
-        <Route path="/registration/track/states/error" element={lazyElement(RegistrationTrackErrorPage)} />
-        <Route path="/registration/track/states/needs-edit" element={lazyElement(RegistrationTrackNeedsEditPage)} />
-        <Route path="/registration/track/states/rejected" element={lazyElement(RegistrationTrackRejectedPage)} />
+        <Route path="/registration/track/states/approved" element={lazyElement(RegistrationTrackPage)} />
+        <Route path="/registration/track/states/not-found" element={lazyElement(RegistrationTrackPage)} />
+        <Route path="/registration/track/states/error" element={lazyElement(RegistrationTrackPage)} />
+        <Route path="/registration/track/states/needs-edit" element={lazyElement(RegistrationTrackPage)} />
+        <Route path="/registration/track/states/rejected" element={lazyElement(RegistrationTrackPage)} />
 
         <Route path="/auth" element={<AuthEntryPage />} />
-        <Route path="/register/company/states/step2" element={lazyElement(CompanyRegistrationStep2Page)} />
-        <Route path="/register/company/states/step3" element={lazyElement(CompanyRegistrationStep3Page)} />
-        <Route path="/register/company/states/step4" element={lazyElement(CompanyRegistrationStep4Page)} />
-        <Route path="/register/company/states/success" element={lazyElement(CompanyRegistrationSuccessPage)} />
-        <Route path="/register/company/status" element={lazyElement(CompanyRegistrationStatusPage)} />
-        <Route path="/register/company" element={<CompanyRegistrationPage />} />
+        <Route path="/register/company/states/step2" element={<CompanyRegistrationUnavailable />} />
+        <Route path="/register/company/states/step3" element={<CompanyRegistrationUnavailable />} />
+        <Route path="/register/company/states/step4" element={<CompanyRegistrationUnavailable />} />
+        <Route path="/register/company/states/success" element={<CompanyRegistrationUnavailable />} />
+        <Route path="/register/company/status" element={<CompanyRegistrationUnavailable />} />
+        <Route path="/register/company" element={<CompanyRegistrationUnavailable />} />
         <Route path="/register/startup/states/step2" element={lazyElement(StartupRegistrationStep2Page)} />
         <Route path="/register/startup/states/step3" element={lazyElement(StartupRegistrationStep3Page)} />
         <Route path="/register/startup/states/step4" element={lazyElement(StartupRegistrationStep4Page)} />

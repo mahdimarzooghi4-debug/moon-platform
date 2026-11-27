@@ -8,6 +8,7 @@ public static class SystemRoles
     public const string Startup = "startup";
     public const string Finance = "finance";
     public const string Supervisor = "supervisor";
+    // Retired: retained only for historical references and migration compatibility.
     public const string Auditor = "auditor";
     public const string SystemAdmin = "system_admin";
 

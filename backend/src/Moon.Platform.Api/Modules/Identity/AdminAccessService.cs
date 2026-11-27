@@ -300,6 +300,7 @@ public sealed class AdminAccessService(MoonDbContext dbContext, IAuditWriter aud
     {
         return await dbContext.Roles
             .AsNoTracking()
+            .Where(x => x.Id != SystemRoles.AuditorId && x.Code != SystemRoles.Auditor)
             .OrderBy(x => x.Code)
             .Select(role => new AdminRole(
                 role.Id,
@@ -319,11 +320,13 @@ public sealed class AdminAccessService(MoonDbContext dbContext, IAuditWriter aud
         CancellationToken cancellationToken = default)
     {
         roleCode = roleCode.Trim();
+        if (string.Equals(roleCode, SystemRoles.Auditor, StringComparison.OrdinalIgnoreCase))
+            return null;
         var userExists = await dbContext.Users.AnyAsync(x => x.Id == userId, cancellationToken);
         var organizationExists = await dbContext.Organizations.AnyAsync(x => x.Id == organizationId && x.Status == "active", cancellationToken);
         var role = await dbContext.Roles.SingleOrDefaultAsync(x => x.Code == roleCode, cancellationToken);
 
-        if (!userExists || !organizationExists || role is null)
+        if (!userExists || !organizationExists || role is null || role.Id == SystemRoles.AuditorId)
         {
             return null;
         }
@@ -387,6 +390,10 @@ public sealed class AdminAccessService(MoonDbContext dbContext, IAuditWriter aud
         {
             return false;
         }
+
+        if (isActive && (membership.RoleId == SystemRoles.AuditorId ||
+            await dbContext.Roles.AnyAsync(x => x.Id == membership.RoleId && x.Code == SystemRoles.Auditor, cancellationToken)))
+            return false;
 
         if (membership.IsActive == isActive)
         {

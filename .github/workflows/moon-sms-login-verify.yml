@@ -1,0 +1,252 @@
+name: Moon SMS Login Verify
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  otp-policy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Compile and test isolated OTP policy
+        run: |
+          set -euo pipefail
+          out=$(mktemp -d)
+          trap 'rm -rf "$out"' EXIT
+          javac -Xlint:all -Werror -d "$out" $(find backend/keycloak/sms-login/src/main -name '*.java') backend/keycloak/sms-login/src/test/java/ir/mah/identity/LoginOtpChallengeTest.java
+          java -cp "$out" ir.mah.identity.LoginOtpChallengeTest
+  postgres-otp:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_DB: otp_test
+          POSTGRES_USER: otp_owner
+          POSTGRES_PASSWORD: ci-only-owner
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U otp_owner -d otp_test"
+          --health-interval 10s --health-timeout 5s --health-retries 10
+    env:
+      OTP_TEST_JDBC: jdbc:postgresql://localhost:5432/otp_test
+      OTP_TEST_USER: otp_app
+      OTP_TEST_PASSWORD: ci-only-app
+      OTP_TEST_OWNER: otp_owner
+      OTP_TEST_OWNER_PASSWORD: ci-only-owner
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Install test-only PostgreSQL JDBC and CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpostgresql-jdbc-java postgresql-client
+      - name: Test real PostgreSQL atomic transitions and shared limits
+        run: |
+          set -euo pipefail
+          PGPASSWORD="$OTP_TEST_OWNER_PASSWORD" psql -h localhost -U "$OTP_TEST_OWNER" -d otp_test -v ON_ERROR_STOP=1 \
+            --set=app_password="$OTP_TEST_PASSWORD" <<'SQL'
+          CREATE ROLE otp_app LOGIN PASSWORD :'app_password'
+            NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOREPLICATION NOBYPASSRLS;
+          REVOKE CREATE ON SCHEMA public FROM PUBLIC;
+          GRANT CONNECT ON DATABASE otp_test TO otp_app;
+          GRANT USAGE ON SCHEMA public TO otp_app;
+          SQL
+          PGPASSWORD="$OTP_TEST_OWNER_PASSWORD" psql -h localhost -U "$OTP_TEST_OWNER" -d otp_test -v ON_ERROR_STOP=1 -f backend/keycloak/sms-login/schema.sql
+          PGPASSWORD="$OTP_TEST_OWNER_PASSWORD" psql -h localhost -U "$OTP_TEST_OWNER" -d otp_test -v ON_ERROR_STOP=1 \
+            -c 'GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE moon_login_otp_challenge, moon_login_otp_send TO otp_app;'
+          role_flags="$(PGPASSWORD="$OTP_TEST_OWNER_PASSWORD" psql -h localhost -U "$OTP_TEST_OWNER" -d otp_test -Atc \
+            "SELECT (NOT rolsuper AND NOT rolcreatedb AND NOT rolcreaterole AND NOT rolbypassrls) FROM pg_roles WHERE rolname='otp_app'")"
+          test "$role_flags" = "t"
+          if PGPASSWORD="$OTP_TEST_PASSWORD" psql -h localhost -U "$OTP_TEST_USER" -d otp_test -v ON_ERROR_STOP=1 \
+            -c 'CREATE TABLE otp_app_must_not_ddl(id integer)'; then
+            echo "Restricted OTP application role unexpectedly created a table"
+            exit 1
+          fi
+          PGPASSWORD="$OTP_TEST_PASSWORD" psql -h localhost -U "$OTP_TEST_USER" -d otp_test -v ON_ERROR_STOP=1 \
+            -c 'SELECT count(*) FROM moon_login_otp_challenge' >/dev/null
+          out=$(mktemp -d)
+          trap 'rm -rf "$out"' EXIT
+          javac -Xlint:all -Werror -cp /usr/share/java/postgresql.jar -d "$out" $(find backend/keycloak/sms-login/src -name '*.java')
+          java -cp "$out:/usr/share/java/postgresql.jar" ir.mah.identity.PostgresLoginOtpStoreTest
+          PGPASSWORD="$OTP_TEST_PASSWORD" psql -h localhost -U "$OTP_TEST_USER" -d otp_test -v ON_ERROR_STOP=1 <<'SQL'
+          INSERT INTO moon_login_otp_challenge VALUES
+            (repeat('a',64),repeat('b',64),'00000000-0000-0000-0000-000000000001',clock_timestamp()-interval '1 second',repeat('c',64),0,'PENDING_DELIVERY'),
+            (repeat('d',64),repeat('e',64),'00000000-0000-0000-0000-000000000002',clock_timestamp()+interval '120 seconds',repeat('f',64),0,'READY');
+          INSERT INTO moon_login_otp_send VALUES
+            ('00000000-0000-0000-0000-000000000001',repeat('a',64),repeat('b',64),repeat('c',64),clock_timestamp()-interval '3601 seconds'),
+            ('00000000-0000-0000-0000-000000000002',repeat('a',64),repeat('b',64),repeat('c',64),clock_timestamp());
+          SQL
+          PGPASSWORD="$OTP_TEST_PASSWORD" psql -h localhost -U "$OTP_TEST_USER" -d otp_test -v ON_ERROR_STOP=1 -f backend/keycloak/sms-login/cleanup-expired.sql
+          remaining="$(PGPASSWORD="$OTP_TEST_PASSWORD" psql -h localhost -U "$OTP_TEST_USER" -d otp_test -Atc "SELECT (SELECT count(*) FROM moon_login_otp_challenge WHERE challenge_id='00000000-0000-0000-0000-000000000001')=0 AND (SELECT count(*) FROM moon_login_otp_challenge WHERE challenge_id='00000000-0000-0000-0000-000000000002')=1 AND (SELECT count(*) FROM moon_login_otp_send WHERE challenge_id='00000000-0000-0000-0000-000000000001')=0 AND (SELECT count(*) FROM moon_login_otp_send WHERE challenge_id='00000000-0000-0000-0000-000000000002')=1")"
+          test "$remaining" = t
+
+  sms-transport:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Verify SMS.ir protocol with a local HTTP server (no live SMS)
+        run: |
+          set -euo pipefail
+          root=backend/keycloak/sms-login
+          out=$(mktemp -d)
+          trap 'rm -rf "$out"' EXIT
+          mvn -B -q -f "$root/transport/pom.xml" org.apache.maven.plugins:maven-dependency-plugin:3.9.0:build-classpath -Dmdep.outputFile="$out/classpath"
+          cp=$(cat "$out/classpath")
+          javac -Xlint:all -Werror -cp "$cp" -d "$out" $(find "$root/src/main" "$root/transport/src" -name '*.java')
+          java -cp "$out:$cp" ir.mah.identity.SmsIrLoginSenderTest
+
+  keycloak-provider-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Compile provider against Keycloak 26.7.3
+        run: |
+          set -euo pipefail
+          root=backend/keycloak/sms-login
+          mvn -B -q -f "$root/pom.xml" -Dmaven.test.skip=true package
+          jar="$root/target/moon-sms-login-1.0.0.jar"
+          jar tf "$jar" | grep -Fx 'META-INF/services/org.keycloak.authentication.AuthenticatorFactory'
+          jar tf "$jar" | grep -Fx 'theme-resources/templates/moon-sms-login.ftl'
+          jar tf "$jar" | grep -Fx 'ir/mah/identity/MoonSmsAuthenticator.class'
+      - name: Verify provider installation on disposable exact-version Keycloak
+        run: |
+          set -euo pipefail
+          jar="$PWD/backend/keycloak/sms-login/target/moon-sms-login-1.0.0.jar"
+          chmod a+r "$jar"
+          docker run --rm -v "$jar:/opt/keycloak/providers/moon-sms-login.jar:ro" quay.io/keycloak/keycloak:26.7.3 build --db=postgres
+
+  frontend-oidc-entry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: node tests/moon-oidc-entry.test.mjs
+
+  keycloak-browser-integration:
+    # Playwright 1.51 supports Ubuntu 24.04, not the newer ubuntu-latest image.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install disposable Chromium test dependencies
+        run: |
+          python -m pip install playwright==1.51.0
+          python -m playwright install --with-deps chromium
+      - name: Run real Keycloak browser and PostgreSQL integration with isolated SMS HTTPS
+        run: bash backend/keycloak/sms-login/integration/run.sh
+
+  sms-deployment-candidate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Build optimized provider image (no production transfer)
+        run: |
+          set -euo pipefail
+          root=backend/keycloak/sms-login
+          mvn -B -q -f "$root/pom.xml" -Dmaven.test.skip=true package
+          docker build -t "moon-platform/keycloak:$GITHUB_SHA" "$root"
+          docker run --rm "moon-platform/keycloak:$GITHUB_SHA" start --optimized --help >/dev/null
+      - name: Validate candidate Compose using disposable credentials
+        env:
+          MOON_LOGIN_OTP_DB_PASSWORD: ci-only-separate-otp-app
+          MOON_LOGIN_OTP_OWNER_PASSWORD: ci-only-separate-otp-owner
+          MOON_SMS_IR_API_KEY: ci-only-not-a-real-key
+          MOON_SMS_IR_LOGIN_TEMPLATE_ID: '123456'
+          MOON_SMS_IR_LOGIN_CODE_PARAMETER: LOGIN_CODE
+        run: |
+          set -euo pipefail
+          export MOON_SMS_KEYCLOAK_IMAGE_TAG="$GITHUB_SHA"
+          export MOON_LOGIN_OTP_HMAC_KEY="$(openssl rand -base64 32)"
+          docker compose --env-file deploy/production/env.example \
+            -f deploy/production/compose.yaml -f deploy/production/compose.sms-candidate.yaml \
+            config --format json | python3 deploy/production/validate-sms-candidate.py
+          if MOON_LOGIN_OTP_HMAC_KEY=invalid docker compose --env-file deploy/production/env.example \
+            -f deploy/production/compose.yaml -f deploy/production/compose.sms-candidate.yaml \
+            config --format json | python3 deploy/production/validate-sms-candidate.py; then
+            echo "Invalid HMAC key unexpectedly accepted"
+            exit 1
+          fi
+          if MOON_SMS_IR_LOGIN_TEMPLATE_ID= MOON_SMS_IR_STARTUP_TEMPLATE_ID=743974 docker compose --env-file deploy/production/env.example \
+            -f deploy/production/compose.yaml -f deploy/production/compose.sms-candidate.yaml \
+            config --format json >/dev/null 2>&1; then
+            echo "Missing login template unexpectedly accepted"
+            exit 1
+          fi
+          compose=(docker compose --env-file deploy/production/env.example -f deploy/production/compose.yaml -f deploy/production/compose.sms-candidate.yaml)
+          cleanup() { "${compose[@]}" down --volumes --remove-orphans >/dev/null 2>&1 || true; }
+          trap cleanup EXIT
+          "${compose[@]}" up -d moon-login-otp-db
+          ready=0
+          for _ in $(seq 1 60); do
+            # TCP is unavailable in the temporary init-only PostgreSQL process.
+            # Check the actual restricted runtime login and both initialized tables.
+            if "${compose[@]}" exec -T -e PGPASSWORD="$MOON_LOGIN_OTP_DB_PASSWORD" moon-login-otp-db \
+              psql -h 127.0.0.1 -U moon_login_otp -d moon_login_otp -v ON_ERROR_STOP=1 \
+              -c 'SELECT count(*) FROM moon_login_otp_challenge; SELECT count(*) FROM moon_login_otp_send;' >/dev/null 2>&1; then
+              ready=1; break
+            fi
+            sleep 1
+          done
+          if [ "$ready" != 1 ]; then
+            echo "OTP DB did not complete initialization with the runtime role" >&2
+            exit 1
+          fi
+          flags=$("${compose[@]}" exec -T -e PGPASSWORD="$MOON_LOGIN_OTP_OWNER_PASSWORD" moon-login-otp-db \
+            psql -h 127.0.0.1 -U moon_login_otp_owner -d moon_login_otp -v ON_ERROR_STOP=1 -Atc \
+            "SELECT (NOT rolsuper AND NOT rolcreatedb AND NOT rolcreaterole AND NOT rolbypassrls) FROM pg_roles WHERE rolname='moon_login_otp'")
+          test "$flags" = "t"
+          if "${compose[@]}" exec -T -e PGPASSWORD="$MOON_LOGIN_OTP_DB_PASSWORD" moon-login-otp-db \
+            psql -h 127.0.0.1 -U moon_login_otp -d moon_login_otp -v ON_ERROR_STOP=1 \
+            -c 'CREATE TABLE moon_login_otp_must_not_ddl(id integer)' >/dev/null 2>&1; then
+            echo "OTP runtime role unexpectedly created a table"
+            exit 1
+          fi
+          "${compose[@]}" exec -T -e PGPASSWORD="$MOON_LOGIN_OTP_DB_PASSWORD" moon-login-otp-db \
+            psql -h 127.0.0.1 -U moon_login_otp -d moon_login_otp -v ON_ERROR_STOP=1 \
+            -c 'SELECT count(*) FROM moon_login_otp_challenge' >/dev/null
+
+  release-bundle-contract:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify bundle manifest and reject mismatched and unsafe artifacts
+        run: python3 deploy/production/test-sms-release-bundle.py
+      - name: Verify private immutable runtime baseline and drift rejection
+        run: python3 deploy/production/test-sms-runtime-baseline.py
+      - name: Verify aggregate account inventory and fail-closed reporting
+        run: python3 deploy/production/test-sms-account-readiness.py
