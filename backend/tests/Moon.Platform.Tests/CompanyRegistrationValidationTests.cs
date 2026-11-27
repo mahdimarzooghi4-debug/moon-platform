@@ -15,6 +15,22 @@ public sealed class CompanyRegistrationValidationTests
     public void StructuralIdentifierValidation(string value, int length, bool expected)
         => Assert.Equal(expected, CompanyRegistrationValidation.IsDigits(value, length));
 
+    [Theory]
+    [InlineData(null, false)]
+    [InlineData("", false)]
+    [InlineData("   ", false)]
+    [InlineData("00123", true)]
+    [InlineData("A-001", true)]
+    public void NewApplicationsRequireTaxOfficeCode(string? value, bool expected)
+        => Assert.Equal(expected, CompanyRegistrationValidation.IsTaxOfficeCodeValid(value));
+
+    [Fact]
+    public void TaxOfficeCodeRespectsStorageBound()
+    {
+        Assert.True(CompanyRegistrationValidation.IsTaxOfficeCodeValid(new string('1', 50)));
+        Assert.False(CompanyRegistrationValidation.IsTaxOfficeCodeValid(new string('1', 51)));
+    }
+
     [Fact]
     public void DocumentsRequireSupportedSignatures()
     {

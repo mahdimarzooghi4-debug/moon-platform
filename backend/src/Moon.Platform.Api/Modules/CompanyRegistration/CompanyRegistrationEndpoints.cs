@@ -51,6 +51,7 @@ public static class CompanyRegistrationEndpoints
             };
             if (fields.Any(x => x.Value.Length > x.Max || (x.Required && x.Value.Length == 0))
                 || (Value("representativeFirstName").Length + 1 + Value("representativeLastName").Length > 200)
+                || !CompanyRegistrationValidation.IsTaxOfficeCodeValid(Value("taxOfficeCode"))
                 || !CompanyRegistrationValidation.IsDigits(Value("nationalIdentifier"), 11)
                 || !CompanyRegistrationValidation.IsDigits(Value("representativeNationalId"), 10)
                 || !CompanyRegistrationValidation.IsDigits(Value("postalCode"), 10)
@@ -108,6 +109,7 @@ public static class CompanyRegistrationEndpoints
                     TaxIdentifier = Value("taxIdentifier"),
                     TaxFileStatus = Value("taxFileStatus"),
                     TaxOffice = Value("taxOffice"),
+                    TaxOfficeCode = Value("taxOfficeCode"),
                     Notes = Value("notes"),
                     RepresentativeLetter = contents[0],
                     EstablishmentNotice = contents[1],
@@ -163,6 +165,9 @@ internal sealed record CompanyTrackingRequest(string? TrackingCode, string? Mobi
 public static class CompanyRegistrationValidation
 {
     // Structural validation only; never claims verification by a government registry.
+    public static bool IsTaxOfficeCodeValid(string? value) =>
+        !string.IsNullOrWhiteSpace(value) && value.Length <= 50;
+
     public static bool IsDigits(string value, int count) => value.Length == count && value.All(char.IsAsciiDigit);
     public static bool IsSupportedDocument(byte[] bytes) =>
         bytes.AsSpan().StartsWith("%PDF-"u8)

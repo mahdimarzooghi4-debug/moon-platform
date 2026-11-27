@@ -49,6 +49,7 @@ namespace Moon.Platform.Api.Infrastructure.Persistence.Migrations
                     b.Property<string>("TaxIdentifier").IsRequired().HasMaxLength(50).HasColumnType("character varying(50)");
                     b.Property<string>("TaxFileStatus").IsRequired().HasMaxLength(100).HasColumnType("character varying(100)");
                     b.Property<string>("TaxOffice").HasMaxLength(200).HasColumnType("character varying(200)");
+                    b.Property<string>("TaxOfficeCode").HasMaxLength(50).HasColumnType("character varying(50)");
                     b.Property<string>("Notes").HasMaxLength(4000).HasColumnType("character varying(4000)");
                     b.Property<string>("TrackingCode").IsRequired().HasMaxLength(10).HasColumnType("character varying(10)");
                     b.Property<string>("Status").IsRequired().HasMaxLength(32).HasColumnType("character varying(32)");

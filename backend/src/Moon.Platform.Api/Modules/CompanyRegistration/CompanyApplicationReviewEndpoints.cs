@@ -47,7 +47,7 @@ public static class CompanyApplicationReviewEndpoints
                     x.ActivityField, x.Website, x.Province, x.City, x.Address, x.PostalCode,
                     x.RepresentativeFirstName, x.RepresentativeLastName, x.RepresentativeNationalId,
                     x.RepresentativePosition, x.Mobile, x.Email, x.Telephone, x.EconomicCode,
-                    x.TaxIdentifier, x.TaxFileStatus, x.TaxOffice, x.Notes, x.Status, x.TrackingCode, x.SubmittedAtUtc
+                    x.TaxIdentifier, x.TaxFileStatus, x.TaxOffice, x.TaxOfficeCode, x.Notes, x.Status, x.TrackingCode, x.SubmittedAtUtc
                 }).SingleOrDefaultAsync(ct);
             if (item is null) return Results.NotFound();
             await audit.AppendAsync(new AuditWriteRequest(actor!.ExternalSubject, "company_application.detail_read",

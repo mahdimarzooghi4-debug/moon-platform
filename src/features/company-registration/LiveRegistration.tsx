@@ -32,6 +32,7 @@ const groups: readonly Field[][] = [
     {key:"economicCode",label:"کد اقتصادی",max:50,numericText:true},
     {key:"taxIdentifier",label:"شناسه یا کد مالیاتی",max:50,numericText:true},
     {key:"taxFileStatus",label:"وضعیت پرونده مالیاتی",max:100},
+    {key:"taxOfficeCode",label:"کد اداره امور مالیاتی",max:50,numericText:true},
     {key:"taxOffice",label:"نام اداره امور مالیاتی",max:200,optional:true},
     {key:"notes",label:"توضیحات تکمیلی",max:4000,optional:true,multiline:true},
   ],

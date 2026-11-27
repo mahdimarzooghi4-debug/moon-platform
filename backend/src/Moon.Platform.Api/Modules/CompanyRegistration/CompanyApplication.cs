@@ -28,6 +28,8 @@ public sealed class CompanyApplication
     [MaxLength(50)] public required string TaxIdentifier { get; init; }
     [MaxLength(100)] public required string TaxFileStatus { get; init; }
     [MaxLength(200)] public string? TaxOffice { get; init; }
+    // Nullable only for historical applications; new public submissions require a code.
+    [MaxLength(50)] public string? TaxOfficeCode { get; init; }
     [MaxLength(4000)] public string? Notes { get; init; }
     [MaxLength(10)] public required string TrackingCode { get; set; }
     [MaxLength(32)] public required string Status { get; set; }

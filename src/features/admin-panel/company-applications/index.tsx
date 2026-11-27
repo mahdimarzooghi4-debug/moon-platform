@@ -12,9 +12,9 @@ const labels: Record<string,string> = {
  registrationDate:"تاریخ ثبت",activityField:"حوزه فعالیت",website:"وب‌سایت",province:"استان",city:"شهر",address:"نشانی",postalCode:"کد پستی",
  representativeFirstName:"نام نماینده",representativeLastName:"نام خانوادگی نماینده",representativeNationalId:"کد ملی نماینده",
  representativePosition:"سمت",mobile:"موبایل",email:"ایمیل",telephone:"تلفن",economicCode:"کد اقتصادی",
- taxIdentifier:"شناسه مالیاتی",taxFileStatus:"وضعیت پرونده مالیاتی",taxOffice:"اداره مالیاتی",notes:"توضیحات",trackingCode:"کد پیگیری"
+ taxIdentifier:"شناسه مالیاتی",taxFileStatus:"وضعیت پرونده مالیاتی",taxOfficeCode:"کد اداره امور مالیاتی",taxOffice:"نام اداره امور مالیاتی",notes:"توضیحات",trackingCode:"کد پیگیری"
 };
-const numeric = new Set(["nationalIdentifier","registrationNumber","registrationDate","postalCode","representativeNationalId","mobile","telephone","economicCode","taxIdentifier","trackingCode"]);
+const numeric = new Set(["nationalIdentifier","registrationNumber","registrationDate","postalCode","representativeNationalId","mobile","telephone","economicCode","taxIdentifier","taxOfficeCode","trackingCode"]);
 const docs = { representativeLetter:"معرفی‌نامه نماینده",establishmentNotice:"آگهی تأسیس",articlesOfAssociation:"اساسنامه",latestChangesNotice:"آخرین آگهی تغییرات" };
 async function request(suffix:string, signal?:AbortSignal) {
  const session=await getValidSession();
