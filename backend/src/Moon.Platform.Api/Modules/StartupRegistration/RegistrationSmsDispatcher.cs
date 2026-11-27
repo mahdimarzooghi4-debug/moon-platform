@@ -75,6 +75,7 @@ public sealed class RegistrationSmsDispatcher(
                 if (application is not null
                     && (message.EventType != RegistrationSmsNotice.Approved || application.Status == "approved")
                     && StartupMobileVerification.IsMobile(application.Mobile)
+                    && application.TrackingCode.Length == 10
                     && StartupTrackingCode.Normalize(application.TrackingCode) == application.TrackingCode)
                 {
                     mobile = application.Mobile;

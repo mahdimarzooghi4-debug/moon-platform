@@ -28,14 +28,15 @@ public sealed class RegistrationSmsDispatcherTests : IAsyncLifetime
     }
 
     [Theory]
-    [InlineData(true)]
-    [InlineData(false)]
-    public async Task SendsCommittedEventsOnceAndRecordsProviderOutcome(bool accepted)
+    [InlineData(true, false)]
+    [InlineData(false, false)]
+    [InlineData(true, true)]
+    public async Task SendsCommittedEventsOnceAndRecordsProviderOutcome(bool accepted, bool legacy)
     {
         var app = new StartupApplication
         {
             Name = "Synthetic", ContactName = "Synthetic Representative", Mobile = "09000000000",
-            Email = "test@example.invalid", Description = "Fixture", TrackingCode = "0123456789",
+            Email = "test@example.invalid", Description = "Fixture", TrackingCode = legacy ? new string('A', 48) : "0123456789",
             Status = "approved"
         };
         await using (var db = CreateDb())
@@ -63,16 +64,18 @@ public sealed class RegistrationSmsDispatcherTests : IAsyncLifetime
         Assert.True(await dispatcher.DispatchOneAsync(CancellationToken.None));
         Assert.True(await dispatcher.DispatchOneAsync(CancellationToken.None));
         Assert.False(await dispatcher.DispatchOneAsync(CancellationToken.None));
-        Assert.Equal(new[] { "411055", "833279" }, fake.Templates.OrderBy(x => x).ToArray());
+        if (legacy) Assert.Empty(fake.Templates);
+        else Assert.Equal(new[] { "411055", "833279" }, fake.Templates.OrderBy(x => x).ToArray());
         await using var verify = CreateDb();
         var messages = await verify.OutboxMessages.ToListAsync();
         Assert.Equal(2, messages.Count);
         Assert.All(messages, message =>
         {
             Assert.Equal("{}", message.PayloadJson);
-            Assert.Equal(1, message.PublishAttempts);
-            Assert.Equal(accepted, message.PublishedAtUtc.HasValue);
-            Assert.Equal(!accepted, message.DeadLetteredAtUtc.HasValue);
+            Assert.Equal(legacy ? 0 : 1, message.PublishAttempts);
+            Assert.Equal(accepted && !legacy, message.PublishedAtUtc.HasValue);
+            Assert.Equal(!accepted || legacy, message.DeadLetteredAtUtc.HasValue);
+            if (legacy) Assert.Equal("sms_source_invalid", message.LastError);
         });
     }
 
