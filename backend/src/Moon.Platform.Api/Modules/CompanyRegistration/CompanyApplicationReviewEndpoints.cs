@@ -13,9 +13,7 @@ public static class CompanyApplicationReviewEndpoints
     public static bool MayRead(CurrentIdentity? identity, IConfiguration config) =>
         identity is { IsActive: true }
         && identity.IdentityRoles.Contains(SystemRoles.SystemAdmin, StringComparer.Ordinal)
-        && config.GetValue<bool>("CompanyRegistration:ReviewEnabled")
-        && config.GetSection("CompanyRegistration:ReviewerSubjects").Get<string[]>() is { } allowed
-        && allowed.Contains(identity.ExternalSubject, StringComparer.Ordinal);
+        && config.GetValue<bool>("CompanyRegistration:ReviewEnabled");
 
     public static void MapCompanyApplicationReviewEndpoints(this IEndpointRouteBuilder endpoints)
     {

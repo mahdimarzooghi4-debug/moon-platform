@@ -59,7 +59,6 @@ services:
       CompanyRegistration__Enabled: ${MOON_COMPANY_REGISTRATION_ENABLED:-false}
       CompanyRegistration__ReviewEnabled: ${MOON_COMPANY_REVIEW_ENABLED:-false}
       CompanyRegistration__ApprovalEnabled: ${MOON_COMPANY_APPROVAL_ENABLED:-false}
-      CompanyRegistration__ReviewerSubjects__0: ${MOON_COMPANY_REVIEWER_SUBJECT:-}
       ExternalServices__Payment__Provider: Disabled
       MehradSso__Enabled: "false"
     expose:

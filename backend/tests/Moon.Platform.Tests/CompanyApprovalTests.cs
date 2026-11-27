@@ -59,7 +59,6 @@ public sealed class CompanyApprovalTests : IAsyncLifetime
         {
             ["CompanyRegistration:ReviewEnabled"] = "true",
             ["CompanyRegistration:ApprovalEnabled"] = "true",
-            ["CompanyRegistration:ReviewerSubjects:0"] = admin.ExternalSubject,
             ["KeycloakProvisioning:Authority"] = "https://fixture.invalid/realms/moon",
             ["KeycloakProvisioning:ClientSecret"] = "fixture"
         }).Build();
@@ -86,7 +85,8 @@ public sealed class CompanyApprovalTests : IAsyncLifetime
             Assert.Equal("pending_activation", (await pending.Organizations.SingleAsync()).Status);
             Assert.Empty(await pending.OutboxMessages.ToListAsync());
         }
-        Assert.Equal(204, ((IStatusCodeHttpResult)await Approve(true, admin)).StatusCode);
+        var successor = admin with { UserId = Guid.NewGuid(), ExternalSubject = "fixture-successor" };
+        Assert.Equal(204, ((IStatusCodeHttpResult)await Approve(true, successor)).StatusCode);
         Assert.Equal(204, ((IStatusCodeHttpResult)await Approve(true, admin)).StatusCode);
         await using var verify = Db();
         var approved = await verify.CompanyApplications.SingleAsync();
