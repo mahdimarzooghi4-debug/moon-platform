@@ -48,7 +48,7 @@ export default function TrackingPage() {
         <form onSubmit={submit} className="grid gap-4">
           <label className="grid gap-2 text-sm font-semibold">نوع درخواست<select value={kind} disabled={busy || !!destination} onChange={e => { setKind(e.target.value === "company" ? "company" : "startup"); setReference(""); setStatus(""); setError(""); }} className="w-full rounded-xl border border-slate-300 p-3"><option value="startup">استارتاپ</option><option value="company">شرکت یا سازمان</option></select></label>
           <label className="grid gap-2 text-sm font-semibold">کد پیگیری
-            <input dir="ltr" required maxLength={48} value={reference} disabled={busy || !!destination} onChange={e => setReference(e.currentTarget.value)} className="w-full rounded-xl border border-slate-300 p-3 text-right" />
+            <input dir="ltr" required maxLength={48} value={reference} disabled={busy || !!destination} onChange={e => { const value = e.currentTarget.value; setReference(/^[0-9۰-۹٠-٩]*$/.test(value) ? localizePersianNumericInput(e.currentTarget) : value); }} className="w-full rounded-xl border border-slate-300 p-3 text-right" />
           </label>
           <label className="grid gap-2 text-sm font-semibold">شماره موبایل
             <input dir="ltr" type="tel" required inputMode="numeric" maxLength={16} value={mobile} disabled={busy || !!destination} onChange={e => setMobile(localizePersianNumericInput(e.currentTarget))} className="w-full rounded-xl border border-slate-300 p-3 text-right" />

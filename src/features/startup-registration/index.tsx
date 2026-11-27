@@ -142,7 +142,7 @@ export default function Main() {
                   </span>
                 </div>
                 <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[73]">
-                  <input aria-label="سال شروع فعالیت" maxLength={160} data-registration-detail="سال شروع فعالیت" data-registration-key="startYear" defaultValue={registrationDraft.startYear ?? ""} onChange={event => { registrationDraft.startYear = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
+                  <input aria-label="سال شروع فعالیت" maxLength={160} data-registration-detail="سال شروع فعالیت" data-registration-key="startYear" defaultValue={toPersianLoginDigits(registrationDraft.startYear ?? "")} onChange={event => { registrationDraft.startYear = localizePersianNumericInput(event.currentTarget); }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
                 </div>
               </div>
               <div className="flex w-[450px] flex-col gap-[8px] items-end shrink-0 flex-nowrap relative z-[75]">

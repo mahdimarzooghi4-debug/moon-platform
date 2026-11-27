@@ -1,3 +1,4 @@
+import { localizePersianNumericInput, toPersianLoginDigits } from "../../../../auth/oidc";
 import { registrationDraft } from "../../draft";
 import React from "react";
 import RegistrationStepper from "../../RegistrationStepper";
@@ -155,7 +156,7 @@ export default function Main() {
                     </span>
                   </div>
                   <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[97]">
-                    <input aria-label="تعداد مشتریان پرداخت‌کننده" maxLength={160} data-registration-detail="تعداد مشتریان پرداخت‌کننده" data-registration-key="paidCustomers" defaultValue={registrationDraft.paidCustomers ?? ""} onChange={event => { registrationDraft.paidCustomers = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
+                    <input aria-label="تعداد مشتریان پرداخت‌کننده" maxLength={160} data-registration-detail="تعداد مشتریان پرداخت‌کننده" data-registration-key="paidCustomers" defaultValue={toPersianLoginDigits(registrationDraft.paidCustomers ?? "")} onChange={event => { registrationDraft.paidCustomers = localizePersianNumericInput(event.currentTarget); }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
                   </div>
                 </div>
                 <div className="flex w-[450px] flex-col gap-[8px] items-end shrink-0 flex-nowrap relative z-[99]">
@@ -165,7 +166,7 @@ export default function Main() {
                     </span>
                   </div>
                   <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[102]">
-                    <input aria-label="تعداد کاربران فعال" maxLength={160} data-registration-detail="تعداد کاربران فعال" data-registration-key="activeUsers" defaultValue={registrationDraft.activeUsers ?? ""} onChange={event => { registrationDraft.activeUsers = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
+                    <input aria-label="تعداد کاربران فعال" maxLength={160} data-registration-detail="تعداد کاربران فعال" data-registration-key="activeUsers" defaultValue={toPersianLoginDigits(registrationDraft.activeUsers ?? "")} onChange={event => { registrationDraft.activeUsers = localizePersianNumericInput(event.currentTarget); }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
                   </div>
                 </div>
               </div>
@@ -177,7 +178,7 @@ export default function Main() {
                     </span>
                   </div>
                   <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[108]">
-                    <input aria-label="نرخ رشد" maxLength={160} data-registration-detail="نرخ رشد" data-registration-key="growth" defaultValue={registrationDraft.growth ?? ""} onChange={event => { registrationDraft.growth = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
+                    <input aria-label="نرخ رشد" maxLength={160} data-registration-detail="نرخ رشد" data-registration-key="growth" defaultValue={toPersianLoginDigits(registrationDraft.growth ?? "")} onChange={event => { registrationDraft.growth = localizePersianNumericInput(event.currentTarget); }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
                   </div>
                 </div>
                 <div className="flex w-[450px] flex-col gap-[8px] items-end shrink-0 flex-nowrap relative z-[110]">
@@ -187,7 +188,7 @@ export default function Main() {
                     </span>
                   </div>
                   <div className="flex h-[48px] pt-0 pr-[16px] pb-0 pl-[16px] gap-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[113]">
-                    <input aria-label="درآمد ماهانه" maxLength={160} data-registration-detail="درآمد ماهانه" data-registration-key="monthlyRevenue" defaultValue={registrationDraft.monthlyRevenue ?? ""} onChange={event => { registrationDraft.monthlyRevenue = event.target.value; }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
+                    <input aria-label="درآمد ماهانه" maxLength={160} data-registration-detail="درآمد ماهانه" data-registration-key="monthlyRevenue" defaultValue={toPersianLoginDigits(registrationDraft.monthlyRevenue ?? "")} onChange={event => { registrationDraft.monthlyRevenue = localizePersianNumericInput(event.currentTarget); }} className="min-w-0 w-full bg-transparent text-right text-sm text-[#1a202c]" />
                   </div>
                 </div>
               </div>
