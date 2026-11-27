@@ -70,7 +70,7 @@ export default function Main() {
         </span>
       </div>
       <div className="mah-about-hero flex pt-[64px] pr-[120px] pb-[80px] pl-[120px] gap-[64px] justify-end items-center self-stretch shrink-0 flex-nowrap relative z-[19]">
-        <div className="flex w-[520px] h-[420px] items-start shrink-0 flex-nowrap bg-[url(/assets/mah-hero/about.svg)] bg-cover bg-no-repeat rounded-[24px] relative overflow-hidden z-20">
+        <div className="flex w-[520px] h-[420px] items-start shrink-0 flex-nowrap bg-[url(/assets/mah-hero/about.webp)] bg-cover bg-no-repeat rounded-[24px] relative overflow-hidden z-20">
           <div className="flex h-[91px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] justify-between items-start shrink-0 flex-nowrap bg-[rgba(0,0,0,0.7)] rounded-[16px] absolute bottom-[24px] left-[24px] right-[24px] z-[21]">
             <div className="flex flex-col gap-[4px] items-center grow shrink-0 basis-0 flex-nowrap relative z-[22]">
               <span className="flex w-[76px] h-[28px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[18px] font-bold leading-[28px] text-[#fff] relative text-right whitespace-nowrap z-[23]">
