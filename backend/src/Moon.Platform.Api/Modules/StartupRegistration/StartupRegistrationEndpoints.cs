@@ -131,6 +131,7 @@ public static class StartupRegistrationEndpoints
             try
             {
                 db.StartupApplications.Add(application);
+                db.OutboxMessages.Add(RegistrationSmsNotice.Create(application.Id, RegistrationSmsNotice.Submitted));
                 // The database unique index is the authoritative concurrency guard.
                 // Retry only a collision on that exact index, never other failures.
                 var indexName = db.Model.FindEntityType(typeof(StartupApplication))!
@@ -308,6 +309,7 @@ public static class StartupRegistrationEndpoints
             {
                 await keycloak.EnableAsync(pendingSubject, ct);
                 application.Status = "approved";
+                db.OutboxMessages.Add(RegistrationSmsNotice.Create(application.Id, RegistrationSmsNotice.Approved));
                 await db.SaveChangesAsync(ct);
                 await transaction.CommitAsync(ct);
                 return Results.NoContent();
@@ -338,10 +340,22 @@ public static class StartupRegistrationEndpoints
             application.Status = "pending_activation";
             await db.SaveChangesAsync(ct);
             await transaction.CommitAsync(ct);
+            await transaction.DisposeAsync();
 
             await keycloak.EnableAsync(subject, ct);
-            application.Status = "approved";
+            db.ChangeTracker.Clear();
+            await using var finalTransaction = await db.Database.BeginTransactionAsync(ct);
+            var finalApplication = (await db.StartupApplications
+                .FromSqlInterpolated($"SELECT * FROM moon.startup_applications WHERE \"Id\" = {id} FOR UPDATE")
+                .ToListAsync(ct)).SingleOrDefault();
+            if (finalApplication is null || finalApplication.ActivationSubject != subject)
+                return Results.Conflict();
+            if (finalApplication.Status == "approved") return Results.NoContent();
+            if (finalApplication.Status != "pending_activation") return Results.Conflict();
+            finalApplication.Status = "approved";
+            db.OutboxMessages.Add(RegistrationSmsNotice.Create(finalApplication.Id, RegistrationSmsNotice.Approved));
             await db.SaveChangesAsync(ct);
+            await finalTransaction.CommitAsync(ct);
             return Results.NoContent();
         }).RequireAuthorization();
     }

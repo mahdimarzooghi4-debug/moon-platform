@@ -214,6 +214,8 @@ builder.Services.AddAuthorization(options =>
 });
 
 builder.Services.AddHttpClient<SmsIrProvider>(client => client.Timeout = TimeSpan.FromSeconds(10));
+if (builder.Configuration.GetValue<bool>("ExternalServices:Sms:RegistrationNotificationsEnabled"))
+    builder.Services.AddHostedService<RegistrationSmsDispatcher>();
 builder.Services.AddScoped<ISmsProvider>(services =>
     string.Equals(builder.Configuration["ExternalServices:Sms:Provider"], "SmsIr", StringComparison.OrdinalIgnoreCase)
         ? services.GetRequiredService<SmsIrProvider>()
