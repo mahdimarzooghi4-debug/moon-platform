@@ -82,6 +82,37 @@ jobs:
             "$archive" "$target:$remote_archive"
           echo "Transfer complete; loading image on server"
           ssh "${ssh_args[@]}" "$target" "docker load -i '$remote_archive' && rm -f -- '$remote_archive'"
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build web image on GitHub Actions
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true
+          tags: moon-platform/web:${{ github.sha }}
+          cache-from: type=gha,scope=moon-production-web
+          cache-to: type=gha,scope=moon-production-web,mode=max
+          build-args: |
+            VITE_OIDC_AUTHORITY=https://mahcsr.ir/identity/realms/moon
+            VITE_OIDC_CLIENT_ID=moon-web
+            VITE_API_BASE_URL=https://mahcsr.ir
+            NODE_OPTIONS=--max-old-space-size=5120
+      - name: Transfer web image
+        env:
+          DEPLOY_HOST: ${{ secrets.MOON_DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.MOON_DEPLOY_USER }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          archive="$RUNNER_TEMP/moon-web-$IMAGE_TAG.tar.gz"
+          remote_archive="/opt/moon/.moon-web-$IMAGE_TAG.tar.gz"
+          target="$DEPLOY_USER@$DEPLOY_HOST"
+          docker save "moon-platform/web:$IMAGE_TAG" | gzip -1 > "$archive"
+          rsync --partial --info=progress2 --outbuf=L --timeout=180 \
+            -e "ssh -i $HOME/.ssh/moon_deploy -o BatchMode=yes -o ConnectTimeout=15 -o ServerAliveInterval=30 -o ServerAliveCountMax=4" \
+            "$archive" "$target:$remote_archive"
+          ssh -i "$HOME/.ssh/moon_deploy" -o BatchMode=yes -o ConnectTimeout=15 "$target" \
+            "docker load -i '$remote_archive' && rm -f -- '$remote_archive'"
       - name: Build and deploy on server
         env:
           DEPLOY_HOST: ${{ secrets.MOON_DEPLOY_HOST }}
@@ -119,12 +150,7 @@ jobs:
 
           bash deploy/production/preflight.sh
 
-          docker build \
-            --build-arg VITE_OIDC_AUTHORITY=https://mahcsr.ir/identity/realms/moon \
-            --build-arg VITE_OIDC_CLIENT_ID=moon-web \
-            --build-arg VITE_API_BASE_URL=https://mahcsr.ir \
-            --build-arg NODE_OPTIONS=--max-old-space-size=5120 \
-            --tag "moon-platform/web:$IMAGE_TAG" .
+          docker image inspect "moon-platform/web:$IMAGE_TAG" >/dev/null
           if [ "$UPDATE_API" = true ]; then
             docker compose --profile migrations --env-file deploy/production/.env.production -f deploy/production/compose.yaml run --rm migrate
             docker compose --env-file deploy/production/.env.production -f deploy/production/compose.yaml up -d --remove-orphans
