@@ -1,6 +1,6 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import CompanyRegistrationUnavailable from "../features/company-registration/Unavailable";
+const CompanyRegistrationPage = lazy(() => import("../features/company-registration/LiveRegistration"));
 import StartupRegistrationPage from "../features/startup-registration";
 import AuthEntryPage from "../page";
 
@@ -256,12 +256,12 @@ export function AppRouter() {
         <Route path="/registration/track/states/rejected" element={lazyElement(RegistrationTrackPage)} />
 
         <Route path="/auth" element={<AuthEntryPage />} />
-        <Route path="/register/company/states/step2" element={<CompanyRegistrationUnavailable />} />
-        <Route path="/register/company/states/step3" element={<CompanyRegistrationUnavailable />} />
-        <Route path="/register/company/states/step4" element={<CompanyRegistrationUnavailable />} />
-        <Route path="/register/company/states/success" element={<CompanyRegistrationUnavailable />} />
-        <Route path="/register/company/status" element={<CompanyRegistrationUnavailable />} />
-        <Route path="/register/company" element={<CompanyRegistrationUnavailable />} />
+        <Route path="/register/company/states/step2" element={<Navigate to="/register/company" replace />} />
+        <Route path="/register/company/states/step3" element={<Navigate to="/register/company" replace />} />
+        <Route path="/register/company/states/step4" element={<Navigate to="/register/company" replace />} />
+        <Route path="/register/company/states/success" element={lazyElement(CompanyRegistrationPage)} />
+        <Route path="/register/company/status" element={lazyElement(RegistrationTrackPage)} />
+        <Route path="/register/company" element={lazyElement(CompanyRegistrationPage)} />
         <Route path="/register/startup/states/step2" element={lazyElement(StartupRegistrationStep2Page)} />
         <Route path="/register/startup/states/step3" element={lazyElement(StartupRegistrationStep3Page)} />
         <Route path="/register/startup/states/step4" element={lazyElement(StartupRegistrationStep4Page)} />

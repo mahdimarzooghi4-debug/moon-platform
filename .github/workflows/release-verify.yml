@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - main
+      - feat/keycloak-central-sms-login
   workflow_dispatch:
 
 jobs:

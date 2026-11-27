@@ -1,10 +1,13 @@
 import { useRef, useState, type FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { companyAvailability, trackCompanyApplication } from "../company-registration/liveApi";
 import { localizePersianNumericInput, normalizeIranMobile, toPersianLoginDigits } from "../../auth/oidc";
 import { confirmStartupMobile, sendStartupMobileCode, startupApplicationStatus, trackStartupApplicationWithMobile } from "./api";
 
 export default function TrackingPage() {
-  const [reference, setReference] = useState(() => (() => { const code = sessionStorage.getItem("moon-startup-tracking-code") ?? ""; return /^[0-9]{10}$/.test(code) ? toPersianLoginDigits(code) : code; })());
+  const location = useLocation();
+  const [kind, setKind] = useState<"startup" | "company">(location.pathname === "/register/company/status" ? "company" : "startup");
+  const [reference, setReference] = useState(() => { const code = sessionStorage.getItem(location.pathname === "/register/company/status" ? "moon-company-tracking-code" : "moon-startup-tracking-code") ?? ""; return /^[0-9]{10}$/.test(code) ? toPersianLoginDigits(code) : code; });
   const [mobile, setMobile] = useState("");
   const [otp, setOtp] = useState("");
   const [destination, setDestination] = useState("");
@@ -21,12 +24,13 @@ export default function TrackingPage() {
       const canonicalMobile = normalizeIranMobile(mobile);
       if (!/^09[0-9]{9}$/.test(canonicalMobile)) throw new Error("شماره موبایل را درست وارد کنید.");
       if (!destination) {
+        if (kind === "company" && !await companyAvailability()) throw new Error("پیگیری ثبت‌نام شرکت‌ها هنوز فعال نیست.");
         await sendStartupMobileCode(canonicalMobile);
         setDestination(canonicalMobile);
       } else {
         const token = await confirmStartupMobile(destination, normalizeIranMobile(otp));
         setDestination(""); setOtp("");
-        const result = await trackStartupApplicationWithMobile(reference.trim(), destination, token);
+        const result = await (kind === "company" ? trackCompanyApplication : trackStartupApplicationWithMobile)(reference.trim(), destination, token);
         setStatus(result ? startupApplicationStatus(result.status) : "درخواستی با این کد و شماره موبایل پیدا نشد.");
       }
     } catch (cause) {
@@ -39,9 +43,10 @@ export default function TrackingPage() {
   return (
     <main dir="rtl" className="mx-auto flex min-h-screen max-w-xl flex-col justify-center px-4 py-12">
       <section className="rounded-2xl border border-slate-200 bg-white p-6 text-right sm:p-8">
-        <h1 className="mb-3 text-xl font-bold text-slate-800">پیگیری درخواست ثبت‌نام استارتاپ</h1>
+        <h1 className="mb-3 text-xl font-bold text-slate-800">پیگیری درخواست ثبت‌نام</h1>
         <p className="mb-6 text-sm leading-7 text-slate-600">کد پیگیری و شماره موبایل ثبت‌شده را وارد کنید. وضعیت درخواست پس از تأیید پیامکی نمایش داده می‌شود.</p>
         <form onSubmit={submit} className="grid gap-4">
+          <label className="grid gap-2 text-sm font-semibold">نوع درخواست<select value={kind} disabled={busy || !!destination} onChange={e => { setKind(e.target.value === "company" ? "company" : "startup"); setReference(""); setStatus(""); setError(""); }} className="w-full rounded-xl border border-slate-300 p-3"><option value="startup">استارتاپ</option><option value="company">شرکت یا سازمان</option></select></label>
           <label className="grid gap-2 text-sm font-semibold">کد پیگیری
             <input dir="ltr" required maxLength={48} value={reference} disabled={busy || !!destination} onChange={e => setReference(e.currentTarget.value)} className="w-full rounded-xl border border-slate-300 p-3 text-right" />
           </label>
@@ -56,7 +61,6 @@ export default function TrackingPage() {
         </form>
         {error && <p role="alert" className="mt-4 text-sm text-red-700">{error}</p>}
         {status && <p role="status" className="mt-4 rounded-xl bg-slate-100 p-4 text-sm">{status}</p>}
-        <p className="mt-5 text-xs text-slate-500">پیگیری ثبت‌نام شرکت‌ها هنوز فعال نیست.</p>
         <Link to="/" className="mt-4 inline-block text-sm text-[#1476b9]">بازگشت به صفحه اصلی</Link>
       </section>
     </main>

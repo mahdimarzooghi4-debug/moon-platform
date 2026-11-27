@@ -4,10 +4,10 @@ import "./registration-stepper.css";
 const labels = ["اطلاعات پایه", "محصول و تیم", "اثر اجتماعی و مدارک", "بازبینی و ارسال"];
 const digits = ["۱", "۲", "۳", "۴"];
 
-export default function RegistrationStepper({ current }: { current: 1 | 2 | 3 | 4 }) {
+export default function RegistrationStepper({ current, stepLabels = labels }: { current: 1 | 2 | 3 | 4; stepLabels?: readonly string[] }) {
   return (
     <nav aria-label="مراحل ثبت‌نام" className="mah-startup-progress" dir="rtl">
-      {labels.map((label, index) => {
+      {stepLabels.map((label, index) => {
         const step = index + 1;
         return (
           <React.Fragment key={label}>
