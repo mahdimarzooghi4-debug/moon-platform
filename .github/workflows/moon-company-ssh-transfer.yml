@@ -18,10 +18,10 @@ jobs:
       contents: read
       actions: read
     env:
-      RELEASE_SHA: 2349e4636301ad4b5c0e0c572f10033acb667f2d
-      SOURCE_RUN: '45968039848'
-      SOURCE_ARTIFACT: '15184237022'
-      SOURCE_DIGEST: e6f0558187c102e6dcf0281f8d718f7bc14dfec67f00ccf33f97254074113846
+      RELEASE_SHA: c9b14b1accd951eddc52ebc0c099679f3905bc69
+      SOURCE_RUN: '45970822879'
+      SOURCE_ARTIFACT: '15184364094'
+      SOURCE_DIGEST: bd90817eb7e047659908e83738416fa7e6473b996a3f7e254505575e1ebd16e1
     steps:
       - name: Download and verify the original reviewed artifact
         env:
@@ -51,7 +51,7 @@ jobs:
           PY
           gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$SOURCE_ARTIFACT/zip" > "$out/artifact.zip"
           echo "$SOURCE_DIGEST  $out/artifact.zip" | sha256sum -c -
-          test "$(stat -c %s "$out/artifact.zip")" = 645525526
+          test "$(stat -c %s "$out/artifact.zip")" = 645531624
       - name: Transfer verified ZIP only with strict SSH and resumable rsync
         env:
           DEPLOY_KEY: ${{ secrets.MOON_DEPLOY_SSH_KEY }}
@@ -99,7 +99,7 @@ jobs:
             echo COMPLETE
           else
             if [ -f artifact.zip.partial ]; then
-              test "$(stat -c %s artifact.zip.partial)" -le 645525526
+              test "$(stat -c %s artifact.zip.partial)" -le 645531624
             fi
             echo PARTIAL
           fi
@@ -132,7 +132,7 @@ jobs:
           test -f artifact.zip.partial && test ! -L artifact.zip.partial && test -O artifact.zip.partial
           test "$(stat -c %a artifact.zip.partial)" = 600
           test "$(stat -c %h artifact.zip.partial)" = 1
-          test "$(stat -c %s artifact.zip.partial)" = 645525526
+          test "$(stat -c %s artifact.zip.partial)" = 645531624
           echo "$digest  artifact.zip.partial" | sha256sum -c -
           test ! -e artifact.zip && test ! -L artifact.zip
           # Atomic no-overwrite publication of the verified ZIP.
