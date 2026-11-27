@@ -129,55 +129,9 @@ function markHeroLayout(root: HTMLElement) {
   description?.classList.add("mah-company-hero-description");
 }
 
-function styleProjectCards(root: HTMLElement) {
-  const elements = Array.from(root.querySelectorAll<HTMLElement>("div"));
-  const firstImage = elements.find((element) =>
-    codiaPngPath(element)?.endsWith("/OVPcmhB9Gi.png"),
-  );
-
-  const firstCard = firstImage?.parentElement;
-  const cardRow = firstCard?.parentElement;
-  if (!(firstCard instanceof HTMLElement) || !(cardRow instanceof HTMLElement)) return;
-
-  const cards = Array.from(cardRow.children).filter(
-    (child): child is HTMLElement => child instanceof HTMLElement,
-  );
-  if (cards.length < 3) return;
-
-  const middleCard = cards[1];
-
-  // Keep the requested middle card as an exact copy of Project Card 1.
-  if (middleCard.dataset.mahCopiedFromFirst !== "true") {
-    middleCard.innerHTML = firstCard.innerHTML;
-    middleCard.dataset.mahCopiedFromFirst = "true";
-  }
-
-  // Layout/alignment belongs to index.css. This helper only identifies the
-  // Figma card row/cards and preserves the requested middle-card copy.
-  cardRow.classList.add("mah-company-projects-row");
-  cards.slice(0, 3).forEach((card, index) => {
-    card.classList.add("mah-company-project-card");
-    card.setAttribute("dir", "rtl");
-
-    // Figma cards are plain divs: give their detail actions real destinations.
-    // The middle card deliberately copies the first rural-women card.
-    const href = index === 2 ? "/projects/family-health" : "/projects/variants/rural-women";
-    const detailText = Array.from(card.querySelectorAll<HTMLElement>("span")).find(
-      (node) => normalize(node.textContent) === "مشاهده جزئیات پروژه",
-    );
-    const button = detailText?.parentElement;
-    if (button instanceof HTMLElement) {
-      button.dataset.mahCompanyHref = href;
-      button.setAttribute("role", "link");
-      button.setAttribute("aria-label", "مشاهده جزئیات پروژه");
-      button.setAttribute("tabindex", "0");
-      button.style.cursor = "pointer";
-    }
-  });
-}
-
 function markCompanyLinks(root: HTMLElement) {
   root.querySelectorAll<HTMLElement>("span, a, button, div").forEach((element) => {
+    if (element.closest('a[href], button, #company-live-projects, .mah-company-recommendations')) return;
     const label = normalize(element.textContent);
     const href = companyRoutes[label];
     if (!href) return;
@@ -196,7 +150,6 @@ function enhanceCompanyPage() {
 
   root.classList.add("mah-companies-page");
   markHeroLayout(root);
-  styleProjectCards(root);
   markCompanyLinks(root);
   void repairFigmaSvgAssets(root);
 
