@@ -3,15 +3,16 @@ using Microsoft.EntityFrameworkCore;
 using Moon.Platform.Api.Common.Auditing;
 using Moon.Platform.Api.Infrastructure.Persistence;
 using Moon.Platform.Api.Modules.Identity;
+using Moon.Platform.Api.Modules.StartupRegistration;
 
 namespace Moon.Platform.Api.Modules.CompanyRegistration;
 
-// Read-only management. The existing admin policy is necessary but not
-// sufficient: an explicit review grant is required before accessing PII.
+// Owner-confirmed authority: system_admin; production review remains opt-in.
 public static class CompanyApplicationReviewEndpoints
 {
     public static bool MayRead(CurrentIdentity? identity, IConfiguration config) =>
         identity is { IsActive: true }
+        && identity.IdentityRoles.Contains(SystemRoles.SystemAdmin, StringComparer.Ordinal)
         && config.GetValue<bool>("CompanyRegistration:ReviewEnabled")
         && config.GetSection("CompanyRegistration:ReviewerSubjects").Get<string[]>() is { } allowed
         && allowed.Contains(identity.ExternalSubject, StringComparer.Ordinal);
@@ -33,6 +34,7 @@ public static class CompanyApplicationReviewEndpoints
                 .Select(x => new { x.Id, x.Name, x.Status, x.TrackingCode, x.SubmittedAtUtc }).ToListAsync(ct);
             await audit.AppendAsync(new AuditWriteRequest(actor!.ExternalSubject, "company_application.list_read",
                 "company_application", "list", context.TraceIdentifier), ct);
+            context.Response.Headers.CacheControl = "no-store";
             return Results.Ok(items);
         });
 
@@ -54,6 +56,100 @@ public static class CompanyApplicationReviewEndpoints
                 "company_application", id.ToString("D"), context.TraceIdentifier), ct);
             context.Response.Headers.CacheControl = "no-store";
             return Results.Ok(item);
+        });
+
+        group.MapPost("/{id:guid}/approve", async Task<IResult> (Guid id, CompanyApprovalRequest request,
+            ClaimsPrincipal principal, HttpContext context, IIdentitySyncService identity, IConfiguration config,
+            MoonDbContext db, IAuditWriter audit, KeycloakAccountClient keycloak, CancellationToken ct) =>
+        {
+            var actor = await identity.GetCurrentAsync(principal, ct);
+            if (!MayRead(actor, config) || !config.GetValue<bool>("CompanyRegistration:ApprovalEnabled"))
+                return Results.Forbid();
+            if (!request.ConfirmReview)
+                return Results.BadRequest(new { code = "explicit_review_required" });
+
+            await using var transaction = await db.Database.BeginTransactionAsync(ct);
+            // Serialize this operation across company applications, including duplicate
+            // national identifiers. No automatic merger into existing organizations.
+            await db.Database.ExecuteSqlRawAsync("SELECT pg_advisory_xact_lock(27112026, 324)", ct);
+            var application = (await db.CompanyApplications
+                .FromSqlInterpolated($"SELECT * FROM moon.company_applications WHERE \"Id\" = {id} FOR UPDATE")
+                .ToListAsync(ct)).SingleOrDefault();
+            if (application is null) return Results.NotFound();
+            if (application.Status == "approved") return Results.NoContent();
+            if (application.Status is not ("pending_review" or "pending_activation"))
+                return Results.Conflict();
+            if (await db.CompanyApplications.AnyAsync(x => x.Id != id
+                && x.NationalIdentifier == application.NationalIdentifier
+                && (x.Status == "approved" || x.Status == "pending_activation"), ct))
+                return Results.Conflict(new { code = "company_identity_conflict" });
+
+            if (application.Status == "pending_review")
+            {
+                if (application.ActivationSubject is not null || application.ActivatedOrganizationId is not null)
+                    return Results.Conflict(new { code = "activation_lineage_conflict" });
+                var role = await db.Roles.SingleAsync(x => x.Code == SystemRoles.Company, ct);
+                var subject = await keycloak.CreateSmsOnlyDisabledAsync(application.Mobile,
+                    application.RepresentativeFirstName, application.RepresentativeLastName, application.Email, ct);
+                if (subject is null)
+                    return Results.Conflict(new { code = "account_exists_or_pending" });
+
+                var organization = new Organization { Name = application.Name, Type = "company" };
+                var user = new AppUser { ExternalSubject = subject,
+                    DisplayName = $"{application.RepresentativeFirstName} {application.RepresentativeLastName}" };
+                db.Organizations.Add(organization);
+                db.Users.Add(user);
+                db.Memberships.Add(new Membership { UserId = user.Id, OrganizationId = organization.Id, RoleId = role.Id });
+                application.ActivationSubject = subject;
+                application.ActivatedOrganizationId = organization.Id;
+                application.Status = "pending_activation";
+                await audit.AppendAsync(new AuditWriteRequest(actor!.ExternalSubject, "company_application.approval_requested",
+                    "company_application", id.ToString("D"), context.TraceIdentifier,
+                    OrganizationId: organization.Id.ToString("D")), ct);
+                await transaction.CommitAsync(ct);
+            }
+            else
+            {
+                // Finish the original activation only, never attach an arbitrary user.
+                if (application.ActivationSubject is null || application.ActivatedOrganizationId is null)
+                    return Results.Conflict(new { code = "activation_lineage_conflict" });
+                await transaction.CommitAsync(ct);
+            }
+
+            var activationSubject = application.ActivationSubject!;
+            var organizationId = application.ActivatedOrganizationId!.Value;
+            await transaction.DisposeAsync();
+            db.ChangeTracker.Clear();
+
+            // A retry can resume a committed pending activation. Recheck the
+            // organization, membership and exact user before enabling the account.
+            await using var finish = await db.Database.BeginTransactionAsync(ct);
+            var current = (await db.CompanyApplications
+                .FromSqlInterpolated($"SELECT * FROM moon.company_applications WHERE \"Id\" = {id} FOR UPDATE")
+                .ToListAsync(ct)).SingleOrDefault();
+            if (current is null || current.ActivationSubject != activationSubject
+                || current.ActivatedOrganizationId != organizationId) return Results.Conflict();
+            if (current.Status == "approved") return Results.NoContent();
+            if (current.Status != "pending_activation") return Results.Conflict();
+            var authorized = await (
+                from u in db.Users
+                join m in db.Memberships on u.Id equals m.UserId
+                join o in db.Organizations on m.OrganizationId equals o.Id
+                join r in db.Roles on m.RoleId equals r.Id
+                where u.ExternalSubject == activationSubject && u.IsActive && m.IsActive
+                    && o.Id == organizationId && o.Type == "company" && o.Status == "active"
+                    && r.Code == SystemRoles.Company
+                select m.Id).AnyAsync(ct);
+            if (!authorized) return Results.Conflict(new { code = "activation_lineage_conflict" });
+
+            await keycloak.EnableAsync(activationSubject, ct);
+            current.Status = "approved";
+            db.OutboxMessages.Add(RegistrationSmsNotice.Create(id, RegistrationSmsNotice.Approved, "company_application"));
+            await audit.AppendAsync(new AuditWriteRequest(actor!.ExternalSubject, "company_application.account_activated",
+                "company_application", id.ToString("D"), context.TraceIdentifier,
+                OrganizationId: organizationId.ToString("D")), ct);
+            await finish.CommitAsync(ct);
+            return Results.NoContent();
         });
 
         group.MapGet("/{id:guid}/documents/{kind}", async Task<IResult> (Guid id, string kind,
@@ -85,3 +181,5 @@ public static class CompanyApplicationReviewEndpoints
         });
     }
 }
+
+public sealed record CompanyApprovalRequest(bool ConfirmReview);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { getValidSession, toPersianLoginDigits } from "../../../auth/oidc";
 import { AdminSidebar } from "../components/AdminSidebar";
@@ -31,6 +31,9 @@ export default function CompanyApplications() {
  const [loading,setLoading]=useState(true);
  const [error,setError]=useState("");
  const [busy,setBusy]=useState(false);
+ const [confirmed,setConfirmed]=useState(false);
+ const approvalLock=useRef(false);
+ useEffect(()=>setConfirmed(false),[selected]);
  useEffect(()=>{
    const controller=new AbortController();
    setItems([]);setDetail(null);setSelected("");setLoading(true);setError("");
@@ -45,6 +48,21 @@ export default function CompanyApplications() {
       .catch(e=>{if(!controller.signal.aborted)setError(e.message);});
    return()=>controller.abort();
  },[selected]);
+ async function approve(){
+   if(!detail||busy||!confirmed||approvalLock.current)return;
+   const id=detail.id; approvalLock.current=true;setBusy(true);setError("");
+   try {
+     const session=await getValidSession();
+     if(!session)throw new Error("ابتدا وارد حساب مجاز شوید.");
+     const response=await fetch(path+"/"+encodeURIComponent(id)+"/approve",{method:"POST",headers:{Authorization:"Bearer "+session.accessToken,"Content-Type":"application/json"},body:JSON.stringify({confirmReview:true})});
+     const refreshed=await request("/"+encodeURIComponent(id)).then(r=>r.json()) as Detail;
+     setDetail(current=>current?.id===id?refreshed:current);
+     setItems(old=>old.map(item=>item.id===id?{...item,status:refreshed.status}:item));
+     if(!response.ok)throw new Error(response.status===403?"اختیار فعال‌سازی یا تنظیمات انتشار مجاز نیست.":response.status===409?"تعارض هویت یا فعال‌سازی؛ نیازمند بررسی مدیر سامانه.":"فعال‌سازی تأیید نشد. وضعیت پرونده را دوباره بررسی کنید.");
+     if(refreshed.status!=="approved")throw new Error("فعال‌سازی هنوز تأیید نشده است.");
+   }catch(e){setError(e instanceof Error?e.message:"فعال‌سازی تأیید نشد.");}
+   finally{approvalLock.current=false;setBusy(false);setConfirmed(false);}
+ }
  async function download(kind:string){
    if(!detail||busy)return;setBusy(true);setError("");
    try {
@@ -54,11 +72,11 @@ export default function CompanyApplications() {
      anchor.href=url;anchor.download=name;anchor.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
    } catch(e){setError(e instanceof Error?e.message:"دریافت مدرک انجام نشد.");}finally{setBusy(false);}
  }
- return <div dir="rtl" className="min-h-screen bg-[#f5f8fb]"><AdminSidebar active="organizations"/><main className="mx-auto max-w-5xl px-4 py-8 lg:mr-[250px]"><Link to="/panel/admin/organizations" className="text-sm text-[#1476b9]">بازگشت به سازمان‌ها</Link><h1 className="my-5 text-xl font-bold text-[#17324d]">درخواست‌های ثبت‌نام شرکت‌ها</h1><p className="mb-5 text-sm text-slate-600">مشاهده پرونده و دریافت مدارک. این بخش هنوز اختیار تأیید یا فعال‌سازی حساب ندارد.</p>
+ return <div dir="rtl" className="min-h-screen bg-[#f5f8fb]"><AdminSidebar active="organizations"/><main className="mx-auto max-w-5xl px-4 py-8 lg:mr-[250px]"><Link to="/panel/admin/organizations" className="text-sm text-[#1476b9]">بازگشت به سازمان‌ها</Link><h1 className="my-5 text-xl font-bold text-[#17324d]">درخواست‌های ثبت‌نام شرکت‌ها</h1><p className="mb-5 text-sm text-slate-600">بررسی پرونده و فعال‌سازی حساب فقط توسط مدیر سامانه ماه؛ این تأیید به معنی صدور گواهی ماده ۱۷۲ نیست.</p>
  {error&&<p role="alert" className="my-4 rounded-lg bg-red-50 p-3 text-red-700">{error}</p>}
- <section className="rounded-xl border bg-white p-5">{loading?<p role="status">در حال دریافت...</p>:!items.length?<p>{error?"فهرست در دسترس نیست.":"در این صفحه پرونده‌ای وجود ندارد."}</p>:<div className="grid gap-3">{items.map(item=><button key={item.id} type="button" onClick={()=>setSelected(item.id)} className="flex flex-wrap justify-between gap-3 rounded-lg border p-4 text-right"><strong>{item.name}</strong><bdi>{toPersianLoginDigits(item.trackingCode)}</bdi><span>{item.status==="pending_review"?"در انتظار بررسی":item.status}</span><span className="text-[#1476b9]">مشاهده پرونده</span></button>)}</div>}
- <div className="mt-4 flex gap-4"><button disabled={page===1||loading} onClick={()=>setPage(x=>x-1)}>صفحه قبل</button><span>{toPersianLoginDigits(String(page))}</span><button disabled={loading||items.length<50} onClick={()=>setPage(x=>x+1)}>صفحه بعد</button></div></section>
+ <section className="rounded-xl border bg-white p-5">{loading?<p role="status">در حال دریافت...</p>:!items.length?<p>{error?"فهرست در دسترس نیست.":"در این صفحه پرونده‌ای وجود ندارد."}</p>:<div className="grid gap-3">{items.map(item=><button key={item.id} type="button" disabled={busy} onClick={()=>setSelected(item.id)} className="flex flex-wrap justify-between gap-3 rounded-lg border p-4 text-right"><strong>{item.name}</strong><bdi>{toPersianLoginDigits(item.trackingCode)}</bdi><span>{item.status==="pending_review"?"در انتظار بررسی":item.status}</span><span className="text-[#1476b9]">مشاهده پرونده</span></button>)}</div>}
+ <div className="mt-4 flex gap-4"><button disabled={page===1||loading||busy} onClick={()=>setPage(x=>x-1)}>صفحه قبل</button><span>{toPersianLoginDigits(String(page))}</span><button disabled={loading||busy||items.length<50} onClick={()=>setPage(x=>x+1)}>صفحه بعد</button></div></section>
  {selected&&!detail&&!error&&<p role="status" className="mt-4">در حال دریافت پرونده...</p>}
- {detail&&<section className="mt-5 rounded-xl border bg-white p-5"><div className="flex justify-between"><h2 className="font-bold">{detail.name}</h2><button onClick={()=>{setSelected("");setDetail(null);}}>بستن پرونده</button></div><dl className="my-5 grid gap-4 sm:grid-cols-2">{Object.entries(labels).map(([key,label])=><div key={key} className="min-w-0"><dt className="text-xs text-slate-500">{label}</dt><dd className="break-words">{numeric.has(key)?toPersianLoginDigits(detail[key]??"—"):detail[key]||"—"}</dd></div>)}</dl><h3 className="font-bold">مدارک ثبت‌شده</h3><div className="mt-3 grid gap-3 sm:grid-cols-2">{Object.entries(docs).map(([key,label])=><button key={key} disabled={busy} onClick={()=>void download(key)} className="rounded-lg border p-3 text-[#1476b9]">دریافت {label}</button>)}</div></section>}
+ {detail&&<section className="mt-5 rounded-xl border bg-white p-5"><div className="flex justify-between"><h2 className="font-bold">{detail.name}</h2><button disabled={busy} onClick={()=>{setSelected("");setDetail(null);}}>بستن پرونده</button></div><dl className="my-5 grid gap-4 sm:grid-cols-2">{Object.entries(labels).map(([key,label])=><div key={key} className="min-w-0"><dt className="text-xs text-slate-500">{label}</dt><dd className="break-words">{numeric.has(key)?toPersianLoginDigits(detail[key]??"—"):detail[key]||"—"}</dd></div>)}</dl><h3 className="font-bold">مدارک ثبت‌شده</h3><div className="mt-3 grid gap-3 sm:grid-cols-2">{Object.entries(docs).map(([key,label])=><button key={key} disabled={busy} onClick={()=>void download(key)} className="rounded-lg border p-3 text-[#1476b9]">دریافت {label}</button>)}</div>{(detail.status==="pending_review"||detail.status==="pending_activation")&&<div className="mt-6 border-t pt-4"><label className="flex items-start gap-2 text-sm"><input type="checkbox" disabled={busy} checked={confirmed} onChange={e=>setConfirmed(e.target.checked)}/>بررسی اطلاعات و مدارک انجام شده و فعال‌سازی حساب سازمانی را تأیید می‌کنم.</label><button type="button" disabled={busy||!confirmed} onClick={()=>void approve()} className="mt-3 rounded-xl bg-[#1476b9] px-5 py-3 text-white disabled:opacity-50">{detail.status==="pending_activation"?"تکمیل فعال‌سازی":"تأیید و فعال‌سازی حساب"}</button></div>}{detail.status==="approved"&&<p role="status" className="mt-4 text-green-700">حساب سازمانی فعال شده است.</p>}</section>}
  </main></div>;
 }

@@ -56,6 +56,8 @@ namespace Moon.Platform.Api.Infrastructure.Persistence.Migrations
                     b.Property<byte[]>("EstablishmentNotice").IsRequired().HasColumnType("bytea");
                     b.Property<byte[]>("ArticlesOfAssociation").IsRequired().HasColumnType("bytea");
                     b.Property<byte[]>("LatestChangesNotice").IsRequired().HasColumnType("bytea");
+                    b.Property<string>("ActivationSubject").HasMaxLength(36).HasColumnType("character varying(36)");
+                    b.Property<Guid?>("ActivatedOrganizationId").HasColumnType("uuid");
                     b.HasKey("Id");
                     b.HasIndex("TrackingCode").IsUnique();
                     b.ToTable("company_applications", "moon");

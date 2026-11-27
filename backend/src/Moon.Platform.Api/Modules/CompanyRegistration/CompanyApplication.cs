@@ -35,5 +35,7 @@ public sealed class CompanyApplication
     public required byte[] EstablishmentNotice { get; init; }
     public required byte[] ArticlesOfAssociation { get; init; }
     public required byte[] LatestChangesNotice { get; init; }
+    [MaxLength(36)] public string? ActivationSubject { get; set; }
+    public Guid? ActivatedOrganizationId { get; set; }
     public DateTimeOffset SubmittedAtUtc { get; init; } = DateTimeOffset.UtcNow;
 }

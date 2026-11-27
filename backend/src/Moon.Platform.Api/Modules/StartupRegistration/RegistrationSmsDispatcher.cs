@@ -89,7 +89,7 @@ public sealed class RegistrationSmsDispatcher(
                     .Select(x => new { x.Mobile, x.TrackingCode, x.Status })
                     .SingleOrDefaultAsync(ct);
                 if (company is not null
-                    && message.EventType == RegistrationSmsNotice.Submitted
+                    && (message.EventType == RegistrationSmsNotice.Submitted || company.Status == "approved")
                     && StartupMobileVerification.IsMobile(company.Mobile)
                     && StartupTrackingCode.Normalize(company.TrackingCode) == company.TrackingCode)
                 {

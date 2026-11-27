@@ -20,6 +20,7 @@ public sealed class CompanyApplicationReviewAccessTests
         Assert.True(CompanyApplicationReviewEndpoints.MayRead(active, config));
         Assert.False(CompanyApplicationReviewEndpoints.MayRead(active with { IsActive = false }, config));
         Assert.False(CompanyApplicationReviewEndpoints.MayRead(active with { ExternalSubject = "unlisted" }, config));
+        Assert.False(CompanyApplicationReviewEndpoints.MayRead(active with { IdentityRoles = [SystemRoles.ProductOwner] }, config));
         Assert.False(CompanyApplicationReviewEndpoints.MayRead(null, config));
         Assert.False(CompanyApplicationReviewEndpoints.MayRead(active, new ConfigurationBuilder().Build()));
     }
