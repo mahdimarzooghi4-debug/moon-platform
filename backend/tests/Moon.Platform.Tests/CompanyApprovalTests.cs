@@ -130,7 +130,7 @@ public sealed class CompanyApprovalTests : IAsyncLifetime
                 return response;
             }
             Assert.Equal(HttpMethod.Put, request.Method);
-            Assert.EndsWith("/" + subject, request.RequestUri.AbsolutePath);
+            Assert.EndsWith("/" + subject, request.RequestUri!.AbsolutePath);
             Enables++;
             if (Enables == 1) throw new HttpRequestException("fixture: uncertain acknowledgement");
             return new(HttpStatusCode.NoContent);

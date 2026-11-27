@@ -166,24 +166,24 @@ public static class CompanyApplicationReviewEndpoints
             if (current.Status != "pending_activation") return Results.Conflict();
             // Keep Moon access disabled until the same transaction records approval.
             // Keycloak enable can succeed even when the acknowledgement or DB commit fails.
-            var user = (await db.Users.FromSqlInterpolated(
+            var pendingUser = (await db.Users.FromSqlInterpolated(
                 $"SELECT * FROM moon.users WHERE \"ExternalSubject\" = {activationSubject} FOR UPDATE")
                 .ToListAsync(ct)).SingleOrDefault();
-            var organization = (await db.Organizations.FromSqlInterpolated(
+            var pendingOrganization = (await db.Organizations.FromSqlInterpolated(
                 $"SELECT * FROM moon.organizations WHERE \"Id\" = {organizationId} FOR UPDATE")
                 .ToListAsync(ct)).SingleOrDefault();
-            if (user is null || user.IsActive || organization is null || organization.Type != "company"
-                || organization.Status != "pending_activation")
+            if (pendingUser is null || pendingUser.IsActive || pendingOrganization is null || pendingOrganization.Type != "company"
+                || pendingOrganization.Status != "pending_activation")
                 return Results.Conflict(new { code = "activation_lineage_conflict" });
             var membership = (await db.Memberships.FromSqlInterpolated(
-                $"SELECT * FROM moon.memberships WHERE \"UserId\" = {user.Id} AND \"OrganizationId\" = {organizationId} AND \"RoleId\" = {SystemRoles.CompanyId} FOR UPDATE")
+                $"SELECT * FROM moon.memberships WHERE \"UserId\" = {pendingUser.Id} AND \"OrganizationId\" = {organizationId} AND \"RoleId\" = {SystemRoles.CompanyId} FOR UPDATE")
                 .ToListAsync(ct)).SingleOrDefault();
             if (membership is null || membership.IsActive)
                 return Results.Conflict(new { code = "activation_lineage_conflict" });
 
             await keycloak.EnableAsync(activationSubject, ct);
-            user.IsActive = true;
-            organization.Status = "active";
+            pendingUser.IsActive = true;
+            pendingOrganization.Status = "active";
             membership.IsActive = true;
             current.Status = "approved";
             db.OutboxMessages.Add(RegistrationSmsNotice.Create(id, RegistrationSmsNotice.Approved, "company_application"));
