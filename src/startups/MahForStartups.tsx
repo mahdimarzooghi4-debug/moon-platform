@@ -1040,7 +1040,16 @@ export default function MahForStartups() {
           مشاهده همه سؤالات متداول ←
         </span>
       </div>
-      <div className="flex pt-[120px] pr-[120px] pb-[80px] pl-[120px] flex-col gap-[24px] items-center self-stretch shrink-0 flex-nowrap bg-[#fcfbf8] border-solid border-b border-b-[#e4ebf1] relative z-[451]">
+      <section className="self-stretch px-[clamp(16px,8.33vw,120px)] py-8 bg-[#fcfbf8]" aria-label="راهنمای آماده‌سازی مدارک">
+        <div dir="rtl" className="flex flex-wrap items-center justify-between gap-6 w-full bg-white rounded-[24px] border border-[#e4ebf1] p-[clamp(16px,2.5vw,32px)]">
+          <div className="flex flex-col gap-2 flex-1 min-w-[min(100%,280px)]">
+            <h2 className="text-[16px] font-bold leading-[25px] text-[#17324d] text-right">برای آماده‌سازی مدارک و طرح اولیه نیاز به راهنمایی دارید؟</h2>
+            <p className="text-[13px] leading-[20px] text-[#60758a] text-right">کارشناسان خانه خلاق ماه در مسیر طراحی منطقی پروژه و نگارش پروپوزال در کنار شما خواهند بود.</p>
+          </div>
+          <a href="/contact" className="inline-flex min-h-[44px] shrink-0 items-center justify-center rounded-[12px] border border-[#e4ebf1] bg-white px-5 py-[11px] text-[14px] font-medium text-[#1476b9] text-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">تماس با پشتیبانی</a>
+        </div>
+      </section>
+      <div className="flex pt-[64px] pr-[120px] pb-[80px] pl-[120px] flex-col gap-[24px] items-center self-stretch shrink-0 flex-nowrap bg-[#fcfbf8] border-solid border-b border-b-[#e4ebf1] relative z-[451]">
         <span className="h-[50px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[32px] font-extrabold leading-[50px] text-[#17324d] relative text-center whitespace-nowrap z-[452]">
           پروژه دارای اثر اجتماعی خود را در سامانه ماه ثبت کنید
         </span>
@@ -1064,22 +1073,6 @@ export default function MahForStartups() {
           * شروع فرآیند به منزله پذیرش قطعی طرح یا تضمین صدور گواهی جذب مالی
           نخواهد بود.
         </span>
-      </div>
-      <div className="flex w-[1200px] h-[113px] pt-[32px] pr-[32px] pb-[32px] pl-[32px] justify-between items-center shrink-0 flex-nowrap bg-[#fff] rounded-[24px] border-solid border border-[#e4ebf1] absolute bottom-[340px] left-0 z-[445]">
-        <div className="flex w-[137px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[446]">
-          <span className="flex w-[97px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#2094e3] relative text-center whitespace-nowrap z-[447]">
-            تماس با پشتیبانی
-          </span>
-        </div>
-        <div className="flex w-[491px] flex-col gap-[4px] items-end shrink-0 flex-nowrap relative z-[448]">
-          <span className="flex w-[366px] h-[25px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[16px] font-bold leading-[25px] text-[#17324d] relative text-right whitespace-nowrap z-[449]">
-            برای آماده‌سازی مدارک و طرح اولیه نیاز به راهنمایی دارید؟
-          </span>
-          <span className="flex w-[491px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#60758a] relative text-right whitespace-nowrap z-[450]">
-            کارشناسان خانه خلاق ماه در مسیر طراحی منطقی پروژه و نگارش پروپوزال
-            در کنار شما خواهند بود.
-          </span>
-        </div>
       </div>
       <div className="flex pt-[80px] pr-[120px] pb-[40px] pl-[120px] flex-col gap-[40px] items-end self-stretch shrink-0 flex-nowrap bg-[#111e30] relative z-[460]">
         <div className="flex gap-[48px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[461]">
