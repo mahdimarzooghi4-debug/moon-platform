@@ -56,7 +56,7 @@ export default function MahForStartups() {
           </span>
         </div>
         <div className="flex gap-[48px] items-center self-stretch shrink-0 flex-nowrap relative z-20">
-          <div className="flex w-[480px] h-[380px] flex-col items-start shrink-0 flex-nowrap bg-[url(/assets/codia/SnXXWFmbfG.png)] bg-cover bg-no-repeat rounded-[24px] relative overflow-hidden z-[21]" />
+          <div className="flex w-[480px] h-[380px] flex-col items-start shrink-0 flex-nowrap bg-[url(/assets/mah-hero/startups.svg)] bg-cover bg-no-repeat rounded-[24px] relative overflow-hidden z-[21]" />
           <div className="mah-startups-hero-copy flex flex-col gap-[24px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[22]">
             <span className="flex w-[672px] h-[100px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[32px] font-extrabold leading-[50px] text-[#17324d] relative text-right z-[23]">
               راهکار اجتماعی خود را به یک پروژه قابل‌سنجش تبدیل کنید

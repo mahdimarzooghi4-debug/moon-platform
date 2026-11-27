@@ -105,10 +105,7 @@ async function repairFigmaSvgAssets(root: HTMLElement) {
 }
 
 function markHeroLayout(root: HTMLElement) {
-  const elements = Array.from(root.querySelectorAll<HTMLElement>("div"));
-  const heroImage = elements.find((element) =>
-    codiaPngPath(element)?.endsWith("/484NJFWM9O.png"),
-  );
+  const heroImage = root.querySelector<HTMLElement>(".mah-company-hero-image");
   const heroRow = heroImage?.parentElement;
   if (!(heroImage instanceof HTMLElement) || !(heroRow instanceof HTMLElement)) return;
 

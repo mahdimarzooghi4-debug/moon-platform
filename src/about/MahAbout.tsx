@@ -75,7 +75,7 @@ export default function Main() {
         </span>
       </div>
       <div className="mah-about-hero flex pt-[64px] pr-[120px] pb-[80px] pl-[120px] gap-[64px] justify-end items-center self-stretch shrink-0 flex-nowrap relative z-[19]">
-        <div className="flex w-[520px] h-[420px] items-start shrink-0 flex-nowrap bg-[url(/assets/codia/u77cV3iroB.png)] bg-cover bg-no-repeat rounded-[24px] relative overflow-hidden z-20">
+        <div className="flex w-[520px] h-[420px] items-start shrink-0 flex-nowrap bg-[url(/assets/mah-hero/about.svg)] bg-cover bg-no-repeat rounded-[24px] relative overflow-hidden z-20">
           <div className="flex h-[91px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] justify-between items-start shrink-0 flex-nowrap bg-[rgba(0,0,0,0.7)] rounded-[16px] absolute bottom-[24px] left-[24px] right-[24px] z-[21]">
             <div className="flex flex-col gap-[4px] items-center grow shrink-0 basis-0 flex-nowrap relative z-[22]">
               <span className="flex w-[76px] h-[28px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[18px] font-bold leading-[28px] text-[#fff] relative text-right whitespace-nowrap z-[23]">
@@ -1050,37 +1050,8 @@ export default function Main() {
           </div>
         </div>
       </div>
-      <div className="flex pt-[80px] pr-[120px] pb-[80px] pl-[120px] flex-col gap-[32px] items-end self-stretch shrink-0 flex-nowrap bg-[#fff] relative z-[450]">
-        <div className="flex flex-col gap-[12px] items-end self-stretch shrink-0 flex-nowrap relative z-[451]">
-          <span className="h-[50px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[32px] font-extrabold leading-[50px] text-[#17324d] relative text-center whitespace-nowrap z-[452]">
-            تصاویری از روایت‌های واقعی اثر اجتماعی
-          </span>
-          <span className="h-[26px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[16px] font-normal leading-[26px] text-[#60758a] relative text-center whitespace-nowrap z-[453]">
-            گوشه‌هایی از تلاش مستمر تیم‌های استارتاپی و توانمندی جامعه بومی در
-            سراسر کشور
-          </span>
-        </div>
-        <div className="flex gap-[24px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[454]">
-          <div className="flex w-[384px] flex-col gap-[16px] items-end shrink-0 flex-nowrap relative z-[455]">
-            <div className="h-[240px] self-stretch shrink-0 bg-[url(/assets/codia/9DNqG9ZvgZ.png)] bg-cover bg-no-repeat rounded-[16px] relative z-[456]" />
-            <span className="h-[20px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-medium leading-[20px] text-[#17324d] relative text-right whitespace-nowrap z-[457]">
-              کارگاه آموزشی توانمندسازی زنان روستایی - استان گلستان
-            </span>
-          </div>
-          <div className="flex w-[384px] flex-col gap-[16px] items-end shrink-0 flex-nowrap relative z-[458]">
-            <div className="h-[240px] self-stretch shrink-0 bg-[url(/assets/codia/8atOfM7EhX.png)] bg-cover bg-no-repeat rounded-[16px] relative z-[459]" />
-            <span className="h-[20px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-medium leading-[20px] text-[#17324d] relative text-right whitespace-nowrap z-[460]">
-              طرح بهبود معیشت کشاورزان - استان سیستان و بلوچستان
-            </span>
-          </div>
-          <div className="flex w-[384px] flex-col gap-[16px] items-end shrink-0 flex-nowrap relative z-[461]">
-            <div className="h-[240px] self-stretch shrink-0 bg-[url(/assets/codia/6HepQUDPmx.png)] bg-cover bg-no-repeat rounded-[16px] relative z-[462]" />
-            <span className="h-[20px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-medium leading-[20px] text-[#17324d] relative text-right whitespace-nowrap z-[463]">
-              بهره‌مند طرح تجهیز کارگاه نساجی بومی - استان گلستان
-            </span>
-          </div>
-        </div>
-      </div>
+      {/* Public project/report APIs do not expose approved public images yet.
+          Do not present illustrative or private evidence as actual project photographs. */}
       <div className="flex pt-[64px] pr-[120px] pb-[64px] pl-[120px] flex-col gap-[32px] items-end self-stretch shrink-0 flex-nowrap relative z-[464]">
         <div className="flex flex-col gap-[12px] items-end self-stretch shrink-0 flex-nowrap relative z-[465]">
           <span className="h-[50px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[32px] font-extrabold leading-[50px] text-[#17324d] relative text-center whitespace-nowrap z-[466]">

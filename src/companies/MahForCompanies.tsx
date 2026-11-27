@@ -72,7 +72,7 @@ export default function MahForCompanies() {
         </span>
       </div>
       <div className="flex pt-[48px] pr-[120px] pb-[48px] pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[19]">
-        <div className="flex w-[480px] h-[400px] items-start shrink-0 flex-nowrap bg-[url(/assets/codia/484NJFWM9O.png)] bg-cover bg-no-repeat rounded-[24px] relative overflow-hidden z-20">
+        <div className="mah-company-hero-image flex w-[480px] h-[400px] items-start shrink-0 flex-nowrap bg-[url(/assets/mah-hero/companies.svg)] bg-cover bg-no-repeat rounded-[24px] relative overflow-hidden z-20">
           <div className="flex h-[91px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] justify-between items-start shrink-0 flex-nowrap bg-[url(/assets/codia/9hnNVXY0hN.png)] bg-cover bg-no-repeat absolute bottom-0 left-[-380px] right-[480px] z-[21]" />
         </div>
         <div className="mah-companies-hero-copy flex flex-col gap-[24px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[22]">
