@@ -1,0 +1,147 @@
+name: Moon Company Candidate SSH Transfer
+# One-time operator-authorized transfer only. No docker load, migration or deployment.
+on:
+  pull_request:
+    branches: [feat/keycloak-central-sms-login]
+    paths:
+      - '.github/workflows/moon-company-ssh-transfer.yml'
+permissions: {}
+concurrency:
+  group: moon-production
+  cancel-in-progress: false
+jobs:
+  transfer-reviewed-candidate:
+    if: github.repository == 'mahdimarzooghi4-debug/moon-platform' && github.event.pull_request.number == 324 && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'feat/company-registration-foundation'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    permissions:
+      contents: read
+      actions: read
+    env:
+      RELEASE_SHA: 2349e4636301ad4b5c0e0c572f10033acb667f2d
+      SOURCE_RUN: '45968039848'
+      SOURCE_ARTIFACT: '15184237022'
+      SOURCE_DIGEST: e6f0558187c102e6dcf0281f8d718f7bc14dfec67f00ccf33f97254074113846
+    steps:
+      - name: Download and verify the original reviewed artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          out="$RUNNER_TEMP/moon-ssh-transfer"
+          mkdir -p "$out"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN" > "$out/run.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$SOURCE_ARTIFACT" > "$out/artifact.json"
+          python3 - "$out" <<'PY'
+          import json, os, pathlib, sys
+          p = pathlib.Path(sys.argv[1])
+          run = json.loads((p / "run.json").read_text())
+          artifact = json.loads((p / "artifact.json").read_text())
+          sha = os.environ["RELEASE_SHA"]
+          assert run["id"] == int(os.environ["SOURCE_RUN"])
+          assert run["head_sha"] == sha and run["conclusion"] == "success"
+          assert run["name"] == "Moon SMS Release Bundle"
+          assert artifact["id"] == int(os.environ["SOURCE_ARTIFACT"])
+          assert artifact["name"] == "moon-sms-candidate-" + sha
+          assert artifact["workflow_run"]["id"] == run["id"]
+          assert artifact["workflow_run"]["head_sha"] == sha and artifact["expired"] is False
+          assert artifact["digest"] == "sha256:" + os.environ["SOURCE_DIGEST"]
+          PY
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$SOURCE_ARTIFACT/zip" > "$out/artifact.zip"
+          echo "$SOURCE_DIGEST  $out/artifact.zip" | sha256sum -c -
+          test "$(stat -c %s "$out/artifact.zip")" = 645525526
+      - name: Transfer verified ZIP only with strict SSH and resumable rsync
+        env:
+          DEPLOY_KEY: ${{ secrets.MOON_DEPLOY_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.MOON_DEPLOY_KNOWN_HOSTS }}
+          DEPLOY_HOST: ${{ secrets.MOON_DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.MOON_DEPLOY_USER }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          test -n "$DEPLOY_KEY" && test -n "$KNOWN_HOSTS"
+          test -n "$DEPLOY_HOST" && test -n "$DEPLOY_USER"
+          [[ "$DEPLOY_USER" =~ ^[a-zA-Z0-9_][a-zA-Z0-9_.-]*$ ]]
+          [[ "$DEPLOY_HOST" =~ ^[a-zA-Z0-9][a-zA-Z0-9.-]*$ ]]
+          keydir=$(mktemp -d)
+          trap 'rm -rf -- "$keydir"' EXIT
+          printf '%s\n' "$DEPLOY_KEY" > "$keydir/key"
+          printf '%s\n' "$KNOWN_HOSTS" > "$keydir/known_hosts"
+          chmod 600 "$keydir/key" "$keydir/known_hosts"
+          unset DEPLOY_KEY KNOWN_HOSTS
+          ssh_args=(-i "$keydir/key" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=$keydir/known_hosts" -o GlobalKnownHostsFile=/dev/null -o BatchMode=yes -o ConnectTimeout=15 -o ServerAliveInterval=30 -o ServerAliveCountMax=4)
+          target="$DEPLOY_USER@$DEPLOY_HOST"
+          remote="/opt/moon/.sms-transfer-$RELEASE_SHA"
+          # Dedicated staging path, independent of the operator's existing download.
+          # A completed file is never overwritten.
+          state=$(ssh "${ssh_args[@]}" "$target" "bash -s -- '$remote' '$SOURCE_DIGEST'" <<'REMOTE'
+          set -euo pipefail
+          umask 077
+          dir="$1"
+          digest="$2"
+          command -v rsync >/dev/null
+          if [ ! -e "$dir" ] && [ ! -L "$dir" ]; then mkdir -m 700 -- "$dir"; fi
+          test -d "$dir" && test ! -L "$dir" && test -O "$dir"
+          test "$(stat -c %a "$dir")" = 700
+          cd "$dir"
+          for f in artifact.zip artifact.zip.partial; do
+            if [ -e "$f" ] || [ -L "$f" ]; then
+              test -f "$f" && test ! -L "$f" && test -O "$f"
+              test "$(stat -c %a "$f")" = 600
+              test "$(stat -c %h "$f")" = 1
+            fi
+          done
+          if [ -f artifact.zip ]; then
+            echo "$digest  artifact.zip" | sha256sum -c - >/dev/null
+            echo COMPLETE
+          else
+            if [ -f artifact.zip.partial ]; then
+              test "$(stat -c %s artifact.zip.partial)" -le 645525526
+            fi
+            echo PARTIAL
+          fi
+          REMOTE
+          )
+          case "$state" in
+            COMPLETE) echo "Previously transferred artifact verified; no transfer necessary." ;;
+            PARTIAL)
+              # --append-verify preserves the partial file across disconnects and checks
+              # its prefix. The independent pinned full digest is still mandatory.
+              for attempt in 1 2 3; do
+                if rsync --partial --append-verify --chmod=F600 --info=progress2 --outbuf=L --timeout=180 \
+                    -e "ssh -i $keydir/key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$keydir/known_hosts -o GlobalKnownHostsFile=/dev/null -o BatchMode=yes -o ConnectTimeout=15 -o ServerAliveInterval=30 -o ServerAliveCountMax=4" \
+                    "$RUNNER_TEMP/moon-ssh-transfer/artifact.zip" "$target:$remote/artifact.zip.partial"; then
+                  break
+                else
+                  status=$?
+                  if [ "$attempt" -eq 3 ]; then exit "$status"; fi
+                  case "$status" in 10|12|30|35|255) sleep "$((attempt * 15))" ;; *) exit "$status" ;; esac
+                fi
+              done
+              ssh "${ssh_args[@]}" "$target" "bash -s -- '$remote' '$SOURCE_DIGEST'" <<'REMOTE'
+          set -euo pipefail
+          umask 077
+          dir="$1"
+          digest="$2"
+          test -d "$dir" && test ! -L "$dir" && test -O "$dir"
+          test "$(stat -c %a "$dir")" = 700
+          cd "$dir"
+          test -f artifact.zip.partial && test ! -L artifact.zip.partial && test -O artifact.zip.partial
+          test "$(stat -c %a artifact.zip.partial)" = 600
+          test "$(stat -c %h artifact.zip.partial)" = 1
+          test "$(stat -c %s artifact.zip.partial)" = 645525526
+          echo "$digest  artifact.zip.partial" | sha256sum -c -
+          test ! -e artifact.zip && test ! -L artifact.zip
+          # Atomic no-overwrite publication of the verified ZIP.
+          ln -- artifact.zip.partial artifact.zip
+          rm -- artifact.zip.partial
+          echo "REMOTE_ARTIFACT_VERIFIED"
+          REMOTE
+              ;;
+            *) echo "Unexpected remote state; no transfer performed" >&2; exit 1 ;;
+          esac
+          echo "Verified artifact path: $remote/artifact.zip"
+          echo "No images loaded; no runtime changes performed."
