@@ -19,17 +19,10 @@ export default function Main() {
   const trackingCode = params.get("code") || "MAH-P-۱۴۰۵-۰۰۲۸۴۶";
   const mobile = params.get("mobile") || "";
 
-  const detailsQuery = new URLSearchParams();
-  if (trackingCode) detailsQuery.set("code", trackingCode);
-  if (mobile) detailsQuery.set("mobile", mobile);
-  const detailsHref = `/participation/track/details?${detailsQuery.toString()}`;
 
   return (
     <>
       <div className="receipt-actions" dir="rtl">
-        <a href={detailsHref} className="receipt-action receipt-action-secondary">
-          بازگشت به جزئیات
-        </a>
         <button type="button" className="receipt-action receipt-action-primary" onClick={() => window.print()}>
           چاپ / ذخیره PDF
         </button>

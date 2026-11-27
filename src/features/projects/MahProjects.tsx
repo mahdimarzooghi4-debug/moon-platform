@@ -11,7 +11,6 @@ function Header() {
     <header className="flex w-full items-center justify-between border-b border-[#e4ebf1] bg-white px-[120px] py-[16px]" dir="ltr">
       <div className="flex w-[384px] items-center gap-[12px]">
         <Link to="/auth" className="flex h-[44px] w-[120px] items-center justify-center rounded-[12px] border-[1.5px] border-[#2094e3] bg-white text-[14px] font-medium text-[#2094e3] no-underline" dir="rtl">ورود کاربران</Link>
-        <Link to="/participation/track" className="flex h-[44px] w-[120px] items-center justify-center rounded-[12px] border-[1.5px] border-[#2094e3] bg-white text-[14px] font-medium text-[#2094e3] no-underline" dir="rtl">پیگیری مشارکت</Link>
         <a href="#projects-grid" className="flex h-[44px] w-[120px] items-center justify-center rounded-[12px] bg-[#2094e3] text-[14px] font-medium text-white no-underline" dir="rtl">شروع مشارکت</a>
       </div>
       <div className="flex items-center gap-[40px]">
@@ -115,7 +114,6 @@ function Footer() {
           <strong className="text-[14px] font-bold text-white">پشتیبانی</strong>
           <Link to="/contact" className="text-[13px] text-[#e4ebf1] no-underline">تماس با ما</Link>
           <Link to="/faq" className="text-[13px] text-[#e4ebf1] no-underline">سؤالات متداول</Link>
-          <Link to="/participation/track" className="text-[13px] text-[#e4ebf1] no-underline">پیگیری مشارکت</Link>
         </div>
         <div className="flex w-[180px] flex-col items-end gap-[12px] text-right" dir="rtl">
           <strong className="text-[14px] font-bold text-white">دسترسی سریع</strong>
