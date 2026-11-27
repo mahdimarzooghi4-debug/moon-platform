@@ -194,7 +194,7 @@ export default function PublicPageInteractions() {
       const root = document.querySelector<HTMLElement>(".main-container");
       if (!root) return;
       enhancePublicLogo(root);
-      if (!root.classList.contains("mah-live-news") && STATIC_PUBLIC_PATH.test(pathname)) enhance(root, pathname);
+      if (!root.classList.contains("mah-live-news") && !root.classList.contains("mah-live-project-detail") && STATIC_PUBLIC_PATH.test(pathname)) enhance(root, pathname);
     };
 
     apply();

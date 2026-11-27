@@ -70,8 +70,7 @@ const ProjectsPage = lazy(() => import("../features/projects/MahProjects"));
 const ProjectsLoadingPage = lazy(() => import("../features/projects/states/loading"));
 const ProjectsEmptyPage = lazy(() => import("../features/projects/states/empty"));
 const ProjectsErrorPage = lazy(() => import("../features/projects/states/error"));
-const ProjectDetailsPage = lazy(() => import("../features/project-details"));
-const ProjectRuralWomenPage = lazy(() => import("../features/project-details/variants/rural-women"));
+const ProjectDetailsPage = lazy(() => import("../features/projects/PublicProjectDetail"));
 
 const StartupPanelDashboardPage = lazy(() => import("../features/startup-panel"));
 const StartupPanelProjectsPage = lazy(() => import("../features/startup-panel/projects"));
@@ -374,7 +373,7 @@ export function AppRouter() {
         <Route path="/projects/states/loading" element={lazyElement(ProjectsLoadingPage)} />
         <Route path="/projects/states/empty" element={lazyElement(ProjectsEmptyPage)} />
         <Route path="/projects/states/error" element={lazyElement(ProjectsErrorPage)} />
-        <Route path="/projects/variants/rural-women" element={lazyElement(ProjectRuralWomenPage)} />
+        <Route path="/projects/variants/rural-women" element={lazyElement(ProjectsPage)} />
         <Route path="/projects/:projectId" element={lazyElement(ProjectDetailsPage)} />
         <Route path="*" element={lazyElement(NotFoundPage)} />
       </Routes>

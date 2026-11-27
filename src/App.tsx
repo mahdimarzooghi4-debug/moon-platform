@@ -9,7 +9,6 @@ import StartupTeamMemberAddPage from "./features/startup-registration/states/ste
 import ProjectImpactDocumentsPage from "./project-impact-report/documents";
 import HowItWorksInteractions from "./how-it-works/HowItWorksInteractions";
 import FaqInteractions from "./faq/FaqInteractions";
-import ProjectDetailsInteractions from "./features/project-details/ProjectDetailsInteractions";
 import EmdadCertificateIssuerSettings from "./features/emdad-certificate-issuer-settings";
 import FundManagerReportDetailPage from "./panels/fund-manager/report-detail";
 import FundManagerFinancialHistoryPage from "./panels/fund-manager/financial-history";
@@ -72,7 +71,6 @@ export default function App() {
         <PublicPageInteractions />
         <HowItWorksInteractions />
         <FaqInteractions />
-        <ProjectDetailsInteractions />
         <EmdadCertificateIssuerSettings />
         {standalonePage ?? <AppRouter />}
         {isFundManagerPage ? <FundManagerSharedSidebar pathname={pathname} /> : null}

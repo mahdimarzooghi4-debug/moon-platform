@@ -1,0 +1,25 @@
+.mah-live-project-detail{width:100%;max-width:1440px;margin:auto;background:#fcfbf8;color:#17324d;direction:rtl!important;text-align:right}
+.mah-public-project-results{width:100%;padding:32px clamp(16px,8.33vw,120px);direction:rtl!important;box-sizing:border-box;color:#17324d;text-align:right}
+.mah-public-project-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;width:100%;direction:rtl!important}
+.mah-public-project-card{display:flex!important;flex-direction:column;align-items:stretch;gap:14px;border:1px solid #e4ebf1;background:#fcfbf8;border-radius:24px;padding:24px;min-width:0;direction:rtl!important;text-align:right;box-shadow:0 4px 16px #162d4714;overflow-wrap:anywhere}
+.mah-public-project-card h1,.mah-public-project-card h2{font-size:20px;font-weight:700;color:#17324d;text-align:right}
+.mah-public-project-card p{font-size:14px;color:#60758a;line-height:1.8;text-align:right}
+.mah-public-project-badges{display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap;font-size:12px;color:#1476b9}
+.mah-public-project-funding{display:grid;gap:8px;margin-top:auto;font-size:13px}
+.mah-public-project-funding>div{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.mah-public-project-funding progress{width:100%;height:10px;accent-color:#2094e3}
+.mah-public-project-primary{display:inline-flex;justify-content:center;background:#2094e3!important;color:#fff!important;border-radius:12px;padding:11px 20px;text-decoration:none;border:0;font-weight:600}
+.mah-public-project-filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;background:white;border:1px solid #e4ebf1;padding:24px;border-radius:16px}
+.mah-public-project-filters label{display:grid;gap:6px;min-width:0;font-size:13px}
+.mah-project-search,.mah-project-filter-actions{grid-column:1/-1}
+.mah-project-filter-actions{display:flex;gap:12px;flex-wrap:wrap}
+.mah-public-project-results input,.mah-public-project-results select,.mah-public-project-results button{padding:10px;border:1px solid #e4ebf1;background:white;border-radius:10px;min-width:0;font:inherit}
+.mah-public-project-results button:disabled{opacity:.5}
+.mah-public-project-chips{display:flex;gap:8px;flex-wrap:wrap;padding:16px 0}
+.mah-public-project-pagination{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:24px;direction:rtl!important}
+.mah-public-project-pagination nav{display:flex;gap:6px;flex-wrap:wrap;direction:ltr!important}
+.mah-public-project-pagination [aria-current=page]{border-color:#2094e3;background:#eaf5fd;color:#1476b9}
+.mah-public-project-status{grid-column:1/-1;padding:24px;color:#60758a;direction:rtl;text-align:right}
+.mah-project-description{white-space:pre-wrap}
+@media(max-width:900px){.mah-public-project-grid,.mah-public-project-filters{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.mah-public-project-grid,.mah-public-project-filters{grid-template-columns:1fr}}
