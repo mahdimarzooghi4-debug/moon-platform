@@ -19,6 +19,7 @@ using Moon.Platform.Api.Modules.Execution;
 using Moon.Platform.Api.Modules.Funding;
 using Moon.Platform.Api.Modules.Identity;
 using Moon.Platform.Api.Modules.StartupRegistration;
+using Moon.Platform.Api.Modules.CompanyRegistration;
 using Moon.Platform.Api.Modules.Projects;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -300,6 +301,7 @@ app.MapGet("/api/v1/organizations/{organizationId:guid}/access", (Guid organizat
 })).RequireAuthorization(OrganizationPolicies.Member);
 
 app.MapStartupRegistrationEndpoints();
+app.MapCompanyRegistrationEndpoints();
 app.MapAdminAccessEndpoints();
 app.MapAdminManagementEndpoints();
 app.MapAdminNewsImageEndpoints();

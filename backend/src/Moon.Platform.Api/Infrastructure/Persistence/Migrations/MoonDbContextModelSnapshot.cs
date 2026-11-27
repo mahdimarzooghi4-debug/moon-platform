@@ -23,6 +23,44 @@ namespace Moon.Platform.Api.Infrastructure.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Moon.Platform.Api.Modules.CompanyRegistration.CompanyApplication", b =>
+                {
+                    b.Property<Guid>("Id").ValueGeneratedOnAdd().HasColumnType("uuid");
+                    b.Property<DateTimeOffset>("SubmittedAtUtc").HasColumnType("timestamp with time zone");
+                    b.Property<string>("NationalIdentifier").IsRequired().HasMaxLength(11).HasColumnType("character varying(11)");
+                    b.Property<string>("Name").IsRequired().HasMaxLength(200).HasColumnType("character varying(200)");
+                    b.Property<string>("RegistrationNumber").IsRequired().HasMaxLength(40).HasColumnType("character varying(40)");
+                    b.Property<string>("LegalForm").IsRequired().HasMaxLength(100).HasColumnType("character varying(100)");
+                    b.Property<string>("RegistrationDate").IsRequired().HasMaxLength(40).HasColumnType("character varying(40)");
+                    b.Property<string>("ActivityField").IsRequired().HasMaxLength(200).HasColumnType("character varying(200)");
+                    b.Property<string>("Website").HasMaxLength(254).HasColumnType("character varying(254)");
+                    b.Property<string>("Province").IsRequired().HasMaxLength(100).HasColumnType("character varying(100)");
+                    b.Property<string>("City").IsRequired().HasMaxLength(100).HasColumnType("character varying(100)");
+                    b.Property<string>("Address").IsRequired().HasMaxLength(1000).HasColumnType("character varying(1000)");
+                    b.Property<string>("PostalCode").IsRequired().HasMaxLength(10).HasColumnType("character varying(10)");
+                    b.Property<string>("RepresentativeFirstName").IsRequired().HasMaxLength(100).HasColumnType("character varying(100)");
+                    b.Property<string>("RepresentativeLastName").IsRequired().HasMaxLength(100).HasColumnType("character varying(100)");
+                    b.Property<string>("RepresentativeNationalId").IsRequired().HasMaxLength(10).HasColumnType("character varying(10)");
+                    b.Property<string>("RepresentativePosition").IsRequired().HasMaxLength(120).HasColumnType("character varying(120)");
+                    b.Property<string>("Mobile").IsRequired().HasMaxLength(11).HasColumnType("character varying(11)");
+                    b.Property<string>("Email").IsRequired().HasMaxLength(254).HasColumnType("character varying(254)");
+                    b.Property<string>("Telephone").HasMaxLength(40).HasColumnType("character varying(40)");
+                    b.Property<string>("EconomicCode").IsRequired().HasMaxLength(50).HasColumnType("character varying(50)");
+                    b.Property<string>("TaxIdentifier").IsRequired().HasMaxLength(50).HasColumnType("character varying(50)");
+                    b.Property<string>("TaxFileStatus").IsRequired().HasMaxLength(100).HasColumnType("character varying(100)");
+                    b.Property<string>("TaxOffice").HasMaxLength(200).HasColumnType("character varying(200)");
+                    b.Property<string>("Notes").HasMaxLength(4000).HasColumnType("character varying(4000)");
+                    b.Property<string>("TrackingCode").IsRequired().HasMaxLength(10).HasColumnType("character varying(10)");
+                    b.Property<string>("Status").IsRequired().HasMaxLength(32).HasColumnType("character varying(32)");
+                    b.Property<byte[]>("RepresentativeLetter").IsRequired().HasColumnType("bytea");
+                    b.Property<byte[]>("EstablishmentNotice").IsRequired().HasColumnType("bytea");
+                    b.Property<byte[]>("ArticlesOfAssociation").IsRequired().HasColumnType("bytea");
+                    b.Property<byte[]>("LatestChangesNotice").IsRequired().HasColumnType("bytea");
+                    b.HasKey("Id");
+                    b.HasIndex("TrackingCode").IsUnique();
+                    b.ToTable("company_applications", "moon");
+                });
+
             modelBuilder.Entity("Moon.Platform.Api.Modules.StartupRegistration.StartupApplication", b =>
                 {
                     b.Property<Guid>("Id").ValueGeneratedOnAdd().HasColumnType("uuid");

@@ -82,6 +82,22 @@ public sealed class RegistrationSmsDispatcher(
                     template = configuration[RegistrationSmsNotice.TemplateKey(message.EventType)!];
                 }
             }
+            if (message.AggregateType == "company_application" && Guid.TryParse(message.AggregateId, out var companyId))
+            {
+                var company = await db.CompanyApplications.AsNoTracking()
+                    .Where(x => x.Id == companyId)
+                    .Select(x => new { x.Mobile, x.TrackingCode, x.Status })
+                    .SingleOrDefaultAsync(ct);
+                if (company is not null
+                    && message.EventType == RegistrationSmsNotice.Submitted
+                    && StartupMobileVerification.IsMobile(company.Mobile)
+                    && StartupTrackingCode.Normalize(company.TrackingCode) == company.TrackingCode)
+                {
+                    mobile = company.Mobile;
+                    code = company.TrackingCode;
+                    template = configuration[RegistrationSmsNotice.TemplateKey(message.EventType)!];
+                }
+            }
             if (mobile is null || code is null || template is null)
             {
                 MarkTerminal(message, "sms_source_invalid");
