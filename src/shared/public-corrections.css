@@ -24,3 +24,6 @@
 .main-container .mah-public-header-actions a {border:1px solid #2094e3;border-radius:12px;padding:10px 18px;color:#111;}
 .main-container .mah-public-header-actions a:first-child {background:#2094e3;color:white;}
 .main-container .mah-public-header a:focus-visible {outline:2px solid #1476b9;outline-offset:3px;}
+
+/* Keep the current Contact navigation link clickable without an underline. */
+.main-container.mah-contact-page .mah-public-header nav a[aria-current="page"] {text-decoration:none!important;}

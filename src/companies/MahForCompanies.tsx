@@ -304,7 +304,7 @@ export default function MahForCompanies() {
           امداد به استارتاپ مجری پرداخت می‌شوند.
         </span>
       </div>
-      <section id="company-live-projects" dir="rtl" className="self-stretch bg-white px-[clamp(16px,8.33vw,120px)] py-20 flex flex-col gap-10" aria-labelledby="company-project-heading">
+      <section id="company-live-projects" dir="rtl" className="mah-company-live-section self-stretch bg-white px-[clamp(16px,8.33vw,120px)] py-20 flex flex-col gap-10" aria-labelledby="company-project-heading">
         <div className="text-center flex flex-col gap-3">
           <h2 id="company-project-heading" className="text-center text-[32px] font-extrabold text-[#17324d]">پروژه‌های آماده مشارکت سازمانی</h2>
           <p className="text-center text-[#60758a]">پروژه‌های فعال و منتشرشده در سامانه ماه</p>
@@ -313,7 +313,7 @@ export default function MahForCompanies() {
           <p className="text-center text-[#60758a]" role={failed?"alert":"status"}>{failed?"دریافت پروژه‌ها از سرور انجام نشد.":projects===null?"در حال دریافت پروژه‌ها…":matches!==null?"پروژه‌ای مطابق فیلترها پیدا نشد.":"هنوز پروژه فعالی برای مشارکت منتشر نشده است."}</p>}
         {projects!==null&&projects.length>0&&<a href="/projects" className="self-center text-[#1476b9] font-bold">مشاهده همه پروژه‌ها ←</a>}
       </section>
-      {projects!==null&&projects.length>0&&<section dir="rtl" className="self-stretch bg-[#f0f4f8] px-[clamp(16px,8.33vw,120px)] py-20 flex flex-col gap-10">
+      {projects!==null&&projects.length>0&&<section dir="rtl" className="mah-company-live-section self-stretch bg-[#f0f4f8] px-[clamp(16px,8.33vw,120px)] py-20 flex flex-col gap-10">
         <div className="text-center flex flex-col gap-3">
           <h2 className="text-center text-[32px] font-extrabold text-[#17324d]">پروژه متناسب با اولویت‌های سازمان خود پیدا کنید</h2>
           <p className="text-center text-[#60758a]">فیلتر پروژه‌های منتشرشده براساس اطلاعات واقعی سامانه</p>
