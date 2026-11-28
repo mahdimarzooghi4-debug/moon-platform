@@ -35,7 +35,6 @@ const routesByPath: Record<string, Record<string, string>> = {
   },
   [SUCCESS_PATH]: {
     ...commonRoutes,
-    "پیگیری درخواست": STATUS_PATH,
   },
   [STATUS_PATH]: {
     "بازگشت به صفحه اصلی": "/",

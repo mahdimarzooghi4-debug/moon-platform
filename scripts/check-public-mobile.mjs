@@ -135,4 +135,27 @@ try {
       } finally { await page.close(); }
     }
   }
+  // Receipt UX: keep the actual tracking code and copy action, but do not
+  // offer a tracking-navigation button on either registration success page.
+  // Synthetic session receipts only; no registration or SMS requests.
+  for (const width of [390, 1440]) {
+    for (const kind of ["company", "startup"]) {
+      const page = await browser.newPage({ viewport: { width, height: 900 } });
+      try {
+        await page.addInitScript(({kind}) => sessionStorage.setItem(
+          "moon-" + kind + "-tracking-code", "1234567890"), {kind});
+        await page.route("**/api/**", route => route.fulfill({ status: 503, body: "" }));
+        await page.route("**/api/v1/public/company-applications/availability", route => route.fulfill({json:{enabled:true}}));
+        await page.route("https://mahcsr.ir/**", route => route.abort());
+        await page.goto(base + "/register/" + kind + "/states/success", {waitUntil:"domcontentloaded"});
+        await page.getByRole("button", {name:"کپی کد پیگیری", exact:true}).waitFor();
+        await page.getByText("۱۲۳۴۵۶۷۸۹۰", {exact:true}).waitFor();
+        await page.getByRole("link", {name:"بازگشت به صفحه اصلی", exact:true}).waitFor();
+        for (const role of ["button", "link"]) {
+          assert.equal(await page.getByRole(role, {name:/^پیگیری (درخواست|ثبت[‌ ]نام)$/}).count(), 0);
+        }
+        console.log("Registration receipt smoke:", kind, width);
+      } finally { await page.close(); }
+    }
+  }
 } finally { await browser.close(); }
