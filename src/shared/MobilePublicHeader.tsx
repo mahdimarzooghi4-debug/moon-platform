@@ -10,6 +10,7 @@ const links = [
 ] as const;
 
 const supported = new Set(["/", "/startups", "/for-startups", "/companies", "/for-companies", "/about", "/projects", "/projects/variants/rural-women", "/contact", "/contact-support", "/news", "/faq", "/privacy-policy", "/terms", "/how-it-works", "/article-172-guide", "/impact", "/impact-overview", "/impact-reports"]);
+const isCatalogLayout = (path: string) => /^(\/search(?:\/states\/(?:initial|loading|error|empty))?|\/startups-directory(?:\/[^/]+)?|\/startups\/directory|\/startups\/profile\/states\/(?:no-projects|unavailable)|\/404)$/.test(path) || /^\/startups\/[^/]+$/.test(path);
 const isLiveDetail = (path: string) => /^\/(projects|news)\/[^/]+$/.test(path) || /^\/projects\/[^/]+\/impact-report$/.test(path);
 
 export default function MobilePublicHeader({ pathname }: { pathname: string }) {
@@ -18,10 +19,10 @@ export default function MobilePublicHeader({ pathname }: { pathname: string }) {
   useEffect(() => {
     if (details.current) details.current.open = false;
   }, [path]);
-  if (!supported.has(path) && !isLiveDetail(path)) return null;
+  if (!supported.has(path) && !isLiveDetail(path) && !isCatalogLayout(path)) return null;
   const active = path === "/contact-support" ? "/contact" : path.startsWith("/projects/") ? "/projects" : path.replace(/^\/for-/, "/");
   return (
-    <header className="mah-mobile-public-header" dir="rtl" aria-label="سربرگ موبایل ماه">
+    <header className="mah-mobile-public-header" data-catalog-layout={isCatalogLayout(path) ? (path.startsWith("/search") ? "search" : "catalog") : undefined} dir="rtl" aria-label="سربرگ موبایل ماه">
       <div className="mah-mobile-header-top">
         <a href="/" aria-label="سامانه ماه، صفحه اصلی"><img src="/assets/codia/4T7A4AiY30.png" alt="ماه" width="137" height="46" /></a>
         <details ref={details} className="mah-mobile-menu" onKeyDown={event => {

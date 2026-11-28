@@ -7,7 +7,7 @@ const { chromium } = require("playwright");
 const browser = await chromium.launch({ headless: true });
 const base = process.env.MOON_TEST_URL || "http://127.0.0.1:4173";
 const marketingPages = ["/", "/startups", "/companies", "/about"];
-const extraPages = { "/projects": ".mah-projects-page", "/projects/layout-fixture": ".mah-live-project-detail", "/news": ".mah-live-news", "/news/layout-fixture": ".mah-live-news", "/contact": ".mah-contact-page", "/faq": ".faq-page", "/privacy-policy": ".mah-legal-page", "/terms": ".mah-legal-page", "/how-it-works": ".mah-how-it-works-page", "/article-172-guide": ".article-172-page", "/impact": ".mah-live-impact-page", "/impact-reports": ".mah-live-impact-page", "/projects/layout-fixture/impact-report?reportId=layout-report": ".mah-live-impact-page" };
+const extraPages = { "/projects": ".mah-projects-page", "/projects/layout-fixture": ".mah-live-project-detail", "/news": ".mah-live-news", "/news/layout-fixture": ".mah-live-news", "/contact": ".mah-contact-page", "/faq": ".faq-page", "/privacy-policy": ".mah-legal-page", "/terms": ".mah-legal-page", "/how-it-works": ".mah-how-it-works-page", "/article-172-guide": ".article-172-page", "/impact": ".mah-live-impact-page", "/impact-reports": ".mah-live-impact-page", "/projects/layout-fixture/impact-report?reportId=layout-report": ".mah-live-impact-page", "/startups-directory": ".mah-startups-directory-page", "/startups-directory/family-health": "main", "/startups/layout-fixture": ".main-container", "/startups/profile/states/no-projects": ".main-container", "/startups/profile/states/unavailable": ".main-container", "/search": ".main-container", "/search/states/initial": ".main-container", "/search/states/loading": ".main-container", "/search/states/error": ".main-container", "/search/states/empty": ".main-container", "/404": ".main-container" };
 const pages = [...marketingPages, ...Object.keys(extraPages)];
 try {
   for (const width of [320, 390, 768, 1024, 1440]) {
@@ -94,7 +94,7 @@ try {
             if (path === "/impact" || path === "/impact-reports" || path.includes("/impact-report?"))
               await root.locator("article").first().waitFor();
             const bad = await root.evaluate(el => {
-              const selectors = "section,article,form,input,select,textarea,.mah-mobile-support-topics > div,.mah-contact-info,.mah-live-news-feature,.mah-projects-hero-row,.mah-projects-hero-stats,.mah-how-it-works-page > div,.article-172-page > div";
+              const selectors = "section,article,form,input,select,textarea,.mah-directory-card,.mah-directory-intro,.mah-directory-kpis,.mah-directory-process-row,.mah-mobile-support-topics > div,.mah-contact-info,.mah-live-news-feature,.mah-projects-hero-row,.mah-projects-hero-stats,.mah-how-it-works-page > div,.article-172-page > div";
               return [el, ...el.querySelectorAll(selectors)].flatMap(n => {
                 const r = n.getBoundingClientRect();
                 return r.width > 0 && (r.left < -1 || r.right > innerWidth + 1)
@@ -132,6 +132,35 @@ try {
           assert.deepEqual(clipped, [], "KPI text clipped at " + width);
         }
         console.log("Public layout smoke:", path, width);
+      } finally { await page.close(); }
+    }
+  }
+  // Layout-only registration checks. No actual application or SMS requests.
+  for (const width of [320, 390, 768, 1024, 1440]) {
+    for (const [path, selector] of [
+      ["/register/startup", ".mah-startup-step1"],
+      ["/register/startup/states/step2", ".mah-startup-step2"],
+      ["/register/startup/states/step3", ".mah-startup-step3"],
+      ["/register/startup/states/step4", ".mah-startup-step4"],
+      ["/register/company", ".mah-company-registration"],
+      ["/registration/track", "main"],
+    ]) {
+      const page=await browser.newPage({viewport:{width,height:900}});
+      try {
+        await page.route("**/api/**", route=>route.fulfill({status:503,body:""}));
+        await page.route("**/api/v1/public/company-applications/availability", route=>route.fulfill({json:{enabled:true}}));
+        await page.route("https://mahcsr.ir/**", route=>route.abort());
+        await page.goto(base+path,{waitUntil:"domcontentloaded"});
+        const root=page.locator(selector);
+        await root.waitFor({state:"visible"});
+        if(width<=1024){
+          const bad=await root.evaluate(el=>[el,...el.querySelectorAll("input:not([type=file]),select,textarea,form,.mah-startup-progress,.mah-startup-review")].flatMap(n=>{
+            const r=n.getBoundingClientRect();
+            return r.width>0&&(r.left < -1||r.right>innerWidth+1)?[{tag:n.tagName,class:n.className,left:r.left,right:r.right}]:[];
+          }));
+          assert.deepEqual(bad,[],path+" registration bounds "+width);
+        }
+        console.log("Registration layout:",path,width);
       } finally { await page.close(); }
     }
   }
