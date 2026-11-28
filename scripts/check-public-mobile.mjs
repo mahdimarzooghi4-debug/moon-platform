@@ -15,6 +15,14 @@ try {
         // Layout-only check: no production calls and no invented business data.
         await page.route("**/api/**", route => route.fulfill({ status: 503, body: "" }));
         await page.route("https://mahcsr.ir/**", route => route.abort());
+        // Local synthetic fixture to exercise long numbers; never a production value.
+        const kpis = { startupCount: 1234567, activeProjectCount: 12345,
+          beneficiaryCount: 1234567, jobsCreated: 123456,
+          funding: [{ currency: "IRR", amountMinor: 1234567000000000 }] };
+        if (path === "/") {
+          await page.route("**/api/v1/public/landing-kpis", route =>
+            route.fulfill({ json: kpis }));
+        }
         await page.goto(base + path, { waitUntil: "domcontentloaded" });
         const hero = page.locator(".mah-mobile-hero-row");
         await hero.waitFor({ state: "visible" });
@@ -38,6 +46,33 @@ try {
           });
           for (const box of boxes) assert.ok(box.x >= -1 && box.right <= width + 1 && box.width > 0, path + " hero bounds " + width + JSON.stringify(box));
           assert.ok(boxes[2].bottom <= boxes[1].top + 1, path + " hero copy above media " + width);
+        }
+        if (path === "/" && width <= 1024) {
+          const numbers = page.locator(".mah-impact-number");
+          const fmt = new Intl.NumberFormat("fa-IR", { maximumFractionDigits: 0 });
+          const money = new Intl.NumberFormat("fa-IR", { maximumFractionDigits: 1 });
+          const expected = [money.format(123456.7), fmt.format(kpis.activeProjectCount),
+            fmt.format(kpis.jobsCreated), fmt.format(kpis.beneficiaryCount), fmt.format(kpis.startupCount)];
+          await page.waitForFunction(values =>
+            Array.from(document.querySelectorAll(".mah-impact-number"), el => el.textContent.trim()).join("|") === values.join("|"), expected);
+          assert.equal(await numbers.count(), 5);
+          const clipped = await page.locator(".mah-impact-card").evaluateAll(cards =>
+            cards.flatMap((card, i) => {
+              const bounds = card.getBoundingClientRect();
+              const problems = [];
+              for (const el of card.querySelectorAll(".mah-impact-number, .mah-impact-unit, .mah-impact-label")) {
+                const range = document.createRange();
+                range.selectNodeContents(el);
+                for (const rect of range.getClientRects()) {
+                  if (rect.left < bounds.left - 1 || rect.right > bounds.right + 1 ||
+                      rect.top < bounds.top - 1 || rect.bottom > bounds.bottom + 1 ||
+                      rect.left < -1 || rect.right > innerWidth + 1)
+                    problems.push({ card: i, text: el.textContent.trim(), left: rect.left, right: rect.right });
+                }
+              }
+              return problems;
+            }));
+          assert.deepEqual(clipped, [], "KPI text clipped at " + width);
         }
         console.log("Public layout smoke:", path, width);
       } finally { await page.close(); }
