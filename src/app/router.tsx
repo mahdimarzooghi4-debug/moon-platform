@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
+import MobilePublicHeader from "../shared/MobilePublicHeader";
 const CompanyRegistrationPage = lazy(() => import("../features/company-registration/LiveRegistration"));
 import StartupRegistrationPage from "../features/startup-registration";
 import AuthEntryPage from "../page";
@@ -165,9 +166,15 @@ function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
   );
 }
 
+function RoutedMobilePublicHeader() {
+  const { pathname } = useLocation();
+  return <MobilePublicHeader pathname={pathname} />;
+}
+
 export function AppRouter() {
   return (
     <BrowserRouter>
+      <RoutedMobilePublicHeader />
       <Routes>
         <Route path="/" element={lazyElement(LandingPage)} />
         <Route path="/about" element={lazyElement(AboutPage)} />

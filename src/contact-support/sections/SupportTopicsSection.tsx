@@ -1,7 +1,7 @@
 export function SupportTopicsSection() {
   return (
     <div className="flex pt-[8px] pr-[120px] pb-[32px] pl-[120px] flex-col items-end self-stretch shrink-0 flex-nowrap relative z-[35]">
-      <div className="flex gap-[20px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[37]">
+      <div className="mah-mobile-support-topics flex gap-[20px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[37]">
         <div className="flex h-[220px] pt-[24px] pr-[24px] pb-[24px] pl-[24px] flex-col gap-[20px] items-end grow shrink-0 basis-0 flex-nowrap bg-[#fff] rounded-[20px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[38]">
           <div className="flex flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[39]">
             <span className="flex w-[86px] h-[28px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[18px] font-bold leading-[28px] text-[#17324d] relative text-right whitespace-nowrap z-40">

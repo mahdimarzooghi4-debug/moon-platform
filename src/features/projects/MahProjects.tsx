@@ -40,8 +40,8 @@ function InternalHero() {
   return (
     <section className="flex w-full flex-col items-end gap-[20px] border-b border-[#e4ebf1] bg-[#fcfbf8] px-[120px] py-[48px]">
       <div className="flex w-full justify-end"><p className="text-[12px] font-normal text-[#60758a]" dir="rtl">صفحه اصلی / پروژه‌ها</p></div>
-      <div className="flex w-full items-center justify-between" dir="ltr">
-        <div className="flex items-center gap-[24px]">
+      <div className="mah-projects-hero-row flex w-full items-center justify-between" dir="ltr">
+        <div className="mah-projects-hero-stats flex items-center gap-[24px]">
           {stats.map(([value, label], index) => (
             <React.Fragment key={label}>
               <div className="flex flex-col items-center gap-[4px] whitespace-nowrap" dir="rtl">
@@ -68,7 +68,7 @@ function TrustBar() {
     { text: "اثر پروژه توسط خانه خلاق و نوآوری آینه تأیید شده است", icon: icon("shield-check") },
   ];
   return (
-    <section className="flex w-full items-center justify-between border-b border-[#e4ebf1] bg-[#eaf5fd] px-[120px] py-[20px]" dir="ltr">
+    <section className="mah-projects-trust-bar flex w-full items-center justify-between border-b border-[#e4ebf1] bg-[#eaf5fd] px-[120px] py-[20px]" dir="ltr">
       {items.map((item) => (
         <div key={item.text} className="flex items-center gap-[8px]" dir="ltr">
           <p className="whitespace-nowrap text-right text-[13px] font-medium text-[#2094e3]" dir="rtl">{item.text}</p>
@@ -84,7 +84,7 @@ function FinalCta() {
     <section className="flex w-full flex-col items-center gap-[24px] border-y border-[#e4ebf1] bg-[#fcfbf8] px-[120px] py-[80px]" dir="rtl">
       <h2 className="text-center text-[32px] font-extrabold text-[#17324d]">پروژه مناسب خود را پیدا نکردید؟</h2>
       <p className="text-center text-[14px] font-normal text-[#60758a]">با مشاهده همه حوزه‌های اثر یا تماس با تیم ماه، مسیر مشارکت مناسب را پیدا کنید.</p>
-      <div className="flex items-start gap-[16px]" dir="ltr">
+      <div className="mah-projects-cta-actions flex items-start gap-[16px]" dir="ltr">
         <Link to="/contact" className="flex min-h-[44px] items-center justify-center rounded-[12px] border border-[#e4ebf1] bg-white px-[20px] py-[11px] text-[14px] font-medium text-[#2094e3] no-underline">تماس با ما</Link>
         <a href="#projects-grid" className="flex min-h-[44px] items-center justify-center rounded-[12px] bg-[#2094e3] px-[20px] py-[11px] text-[14px] font-medium text-white no-underline">شروع مشارکت</a>
       </div>

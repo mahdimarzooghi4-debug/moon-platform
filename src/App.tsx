@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { AppProviders } from "./app/AppProviders";
 import { AppRouter } from "./app/router";
 import { AuthGate } from "./auth/AuthGate";
-import MobilePublicHeader from "./shared/MobilePublicHeader";
 import "./shared/public-mobile.css";
 import ManagedPublicContent from "./shared/ManagedPublicContent";
 import PublicFooter from "./shared/PublicFooter";
@@ -74,7 +73,6 @@ export default function App() {
         <HowItWorksInteractions />
         <FaqInteractions />
         <EmdadCertificateIssuerSettings />
-        <MobilePublicHeader pathname={pathname} />
         {standalonePage ?? <AppRouter />}
         {isFundManagerPage ? <FundManagerSharedSidebar pathname={pathname} /> : null}
         {isEmdadPage ? <EmdadSharedSidebar pathname={pathname} /> : null}

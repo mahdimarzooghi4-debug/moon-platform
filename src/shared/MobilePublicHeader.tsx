@@ -9,7 +9,8 @@ const links = [
   ["/about", "درباره ما"],
 ] as const;
 
-const supported = new Set(["/", "/startups", "/for-startups", "/companies", "/for-companies", "/about"]);
+const supported = new Set(["/", "/startups", "/for-startups", "/companies", "/for-companies", "/about", "/projects", "/projects/variants/rural-women", "/contact", "/contact-support", "/news"]);
+const isLiveDetail = (path: string) => /^\/(projects|news)\/[^/]+$/.test(path);
 
 export default function MobilePublicHeader({ pathname }: { pathname: string }) {
   const details = useRef<HTMLDetailsElement>(null);
@@ -17,8 +18,8 @@ export default function MobilePublicHeader({ pathname }: { pathname: string }) {
   useEffect(() => {
     if (details.current) details.current.open = false;
   }, [path]);
-  if (!supported.has(path)) return null;
-  const active = path.replace(/^\/for-/, "/");
+  if (!supported.has(path) && !isLiveDetail(path)) return null;
+  const active = path === "/contact-support" ? "/contact" : path.startsWith("/projects/") ? "/projects" : path.replace(/^\/for-/, "/");
   return (
     <header className="mah-mobile-public-header" dir="rtl" aria-label="سربرگ موبایل ماه">
       <div className="mah-mobile-header-top">
