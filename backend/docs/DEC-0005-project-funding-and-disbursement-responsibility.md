@@ -17,6 +17,12 @@ Scope: Project participation funds and payment responsibilities in the five-role
 
 In the Emdad pilot, project participation funds are paid to the official account of کمیته امداد امام خمینی (ره); Emdad pays the implementing startup directly after the applicable Aineh approval. Future organizations follow the same business model, subject to their actual official account and legal authority. Moon is the information management and monitoring platform, not the recipient, custodian or payout intermediary of these project funds. Aineh's approval establishes performance approval, not bank settlement evidence.
 
+## Approved execution-stage planning authority
+
+The implementing startup defines its project execution stages and the funding amount required for each stage. The manager of the single creative house Aineh reviews and approves the proposed execution stages and their respective funding amounts. The approved plan is the authoritative basis for stage-level execution and financial controls; neither the startup nor the organization may unilaterally approve that plan. Aineh's plan approval is distinct from subsequent satisfactory-performance approval and does not itself authorize or prove an actual payout. The organization pays the startup directly after applicable performance approval under the approved funding model.
+
+Preserve the approved stage plan and its financial terms with auditable lineage. The plan approval timing, revision procedure, exact amount/currency validation and caps, funding availability requirements, evidence, advance payments and partial disbursement rules require explicit subsequent contracts. Do not invent a percentage, threshold, automatic payment, or permission to change an approved plan.
+
 ## Financial separation and integrity
 
 Project participation funds are independent of Moon's own revenue and of fund capital. Fund capital is supplied exclusively by Moon itself; neither incoming project participation nor organization-to-startup payments are automatically recognized as Moon income or fund capital.
@@ -25,6 +31,6 @@ Preserve the existing financial integrity controls: verified provider/bank evide
 
 ## Contracts still required
 
-Define project-to-organization association and assignment authority, verified beneficiary account mapping, stage plans, performance evidence, partial approvals, amounts and payment caps, payout confirmation/reconciliation evidence, exceptions, refunds/corrections, and exact financial permissions and controls. Determine the treatment of any advance payments and the conditions for project closure explicitly; do not infer them. The existing payment-provider boundary remains in force until real integrations and commercial/legal contracts are confirmed.
+Define project-to-organization association and assignment authority, verified beneficiary account mapping, stage plan lifecycle, performance evidence, partial approvals, amount validation and payment caps, payout confirmation/reconciliation evidence, exceptions, refunds/corrections, and exact financial permissions and controls. Determine the treatment of any advance payments and the conditions for project closure explicitly; do not infer them. The existing payment-provider boundary remains in force until real integrations and commercial/legal contracts are confirmed.
 
 Keep public pages unchanged for Emdad pilot, exactly five role types, and one creative house Aineh. No role addition, migration, application code change, merge or deployment is authorized by this documentation. Continue Business → Technical → Backlog → Sprint → Code → Code Review → Stage → QA → Release Approval.
