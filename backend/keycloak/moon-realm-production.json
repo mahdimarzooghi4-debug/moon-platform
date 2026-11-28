@@ -59,6 +59,9 @@
       "webOrigins": [
         "https://mahcsr.ir"
       ],
+      "attributes": {
+        "post.logout.redirect.uris": "https://mahcsr.ir/auth"
+      },
       "protocolMappers": [
         {
           "name": "moon-realm-roles",
