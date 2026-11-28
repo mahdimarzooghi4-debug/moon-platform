@@ -19,4 +19,21 @@ done
 curl -fsS -D "$tmp/headers" -o /dev/null "$base/about"
 grep -Eqi '^Cache-Control: no-cache' "$tmp/headers"
 test "$(curl -sS -o /dev/null -w '%{http_code}' "$base/assets/mah-hero/missing.webp")" = 404
+# Existing project asset URLs keep their original response for legacy clients.
+path="/assets/company-panel/project-rural-women-employment.png"
+curl -fsS -H 'Accept: image/webp,image/png' -D "$tmp/headers" -o "$tmp/optimized" "$base$path"
+grep -Eqi '^Content-Type: image/webp' "$tmp/headers"
+grep -Eqi '^Vary: Accept' "$tmp/headers"
+grep -Eqi '^X-Content-Type-Options: nosniff' "$tmp/headers"
+grep -Eqi '^Cache-Control: max-age=86400' "$tmp/headers"
+test "$(head -c 4 "$tmp/optimized")" = RIFF
+curl -fsS -H 'Accept: image/png' -D "$tmp/headers" -o "$tmp/original" "$base$path"
+grep -Eqi '^Content-Type: image/png' "$tmp/headers"
+grep -Eqi '^Vary: Accept' "$tmp/headers"
+test "$(stat -c %s "$tmp/optimized")" -lt "$(stat -c %s "$tmp/original")"
+curl -fsS -H 'Accept: image/webp;q=0,image/png' -o "$tmp/rejected" "$base$path"
+cmp "$tmp/original" "$tmp/rejected"
+curl -fsS -H 'Accept: image/webp,image/png' -D "$tmp/headers" -o /dev/null "$base/assets/codia/4T7A4AiY30.png"
+grep -Eqi '^Content-Type: image/(png|webp)' "$tmp/headers"
+test "$(curl -sS -H 'Accept: image/webp' -o /dev/null -w '%{http_code}' "$base/assets/missing.png")" = 404
 echo "PUBLIC_ASSET_CACHE_CONTRACT_VERIFIED"
