@@ -1,15 +1,15 @@
 # DEC-0007 — Delegated panel user and access management
 
-Status: Business decision explicitly approved by the product owner on 2026-11-28.
+Status: Business decision approved and amended by the product owner on 2026-11-28. The subsequent explicit single-user rule for companies and startups supersedes earlier five-panel delegation language.
 Related: DEC-0002, DEC-0004, DEC-0005, DEC-0006. Scope: five-panel user administration and permission delegation, not implementation.
 
 ## Approved business model
 
-- The principal Moon administrator designates the principal administrator of each panel's actual organization/context (Aineh, each organization, each company, each startup). The principal Moon administrator also manages internal Moon users.
-- Each designated principal panel administrator manages their own context's subordinate users and assigns configurable capability/operation permissions within that context. No fixed user count is implied. Each person has an independent account and mobile-based authentication, not shared credentials.
+- The principal Moon administrator designates the principal administrator of Aineh and each organization, and manages internal Moon users. Company and startup access remains subject to their respective approved registration/activation authority under DEC-0004. Each company and each startup has only one active panel user.
+- Only Moon administration, Aineh and each organization support multiple users and delegated capability/operation permissions within their own context. Each company and each startup has a single active panel user, no subordinate accounts and no user/permission-management workspace. Enforce the single-active-user rule in the backend including concurrent grants and replacement. All panel users have independent mobile-based authentication, not shared credentials.
 - The central Moon administrator oversees system-wide access; oversight does not grant unrelated business approval, payment, certificate issuance or other operational authority. No delegated user may grant permissions beyond their own authority or outside their authorized context.
 - Exactly five business role/panel types remain. A principal designation and granular permission grants are access-control concepts within these roles, not sixth or additional business roles. Aineh remains a single creative house; all organizations use one reusable panel with distinct context.
-- All five panels provide user/access management to authorized principal administrators. All actions and access changes are attributable to the actual actor and auditable.
+- Only the three multi-user panel types provide subordinate user/access management to authorized principal administrators. Company and startup have own account/security settings, not delegated administration. Preserve historic identities and revoke prior access on authorized replacement; the exact replacement/verification/revocation process remains to be specified. All actions and access changes are attributable to the actual actor and auditable.
 - Sensitive financial operations, approvals and official certificate issuance remain limited by the approved business authority, applicable legal eligibility, signatory rules and financial controls. Delegation alone cannot confer legal authority or bypass required checks.
 
 ## Technical and Business contracts still needed
@@ -18,4 +18,4 @@ Define the principal designation/appointment/replacement/revocation and bootstra
 
 ## Delivery
 
-Apply this common requirement to all five panel reviews. No application code, production account creation, authentication configuration changes, migrations, merge or deploy authorized. PR #324 stays Draft/Open. Public site remains frozen.
+Apply this amended requirement to all five panel reviews. Earlier company/startup multi-user proposals are superseded. No application code, production account creation, authentication configuration changes, migrations, merge or deploy authorized. PR #324 stays Draft/Open. Public site remains frozen.
