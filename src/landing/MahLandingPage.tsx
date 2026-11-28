@@ -61,7 +61,7 @@ export default function Main() {
   }, []);
   return (
     <>
-    <div className="main-container flex w-[1440px] flex-col items-center flex-nowrap bg-[#fcfbf8] relative overflow-hidden mx-auto my-0">
+    <div className="main-container mah-home-page flex w-[1440px] flex-col items-center flex-nowrap bg-[#fcfbf8] relative overflow-hidden mx-auto my-0">
       <div className="flex pt-[16px] pr-[120px] pb-[16px] pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] border-solid border-t border-t-[#e4ebf1] relative">
         <div className="flex w-[384px] gap-[12px] justify-end items-center shrink-0 flex-nowrap relative z-[1]">
           <div className="flex w-[120px] h-[44px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border-[1.5px] border-[#2094e3] relative overflow-hidden z-[2]">
@@ -102,9 +102,9 @@ export default function Main() {
         </div>
       </div>
       <div className="flex pt-[96px] pr-[120px] pb-[96px] pl-[120px] flex-col gap-[64px] items-center self-stretch shrink-0 flex-nowrap bg-[#fcfbf8] relative overflow-hidden z-[17]">
-        <div className="flex gap-[64px] items-center self-stretch shrink-0 flex-nowrap relative z-[18]">
+        <div className="mah-mobile-hero-row flex gap-[64px] items-center self-stretch shrink-0 flex-nowrap relative z-[18]">
           <div className="flex flex-col items-center grow shrink-0 basis-0 flex-nowrap relative z-[19]">
-            <div className="flex h-[380px] flex-col justify-center items-center self-stretch shrink-0 flex-nowrap bg-[rgba(17,30,48,0.06)] bg-cover bg-no-repeat rounded-[24px] relative overflow-hidden z-20" style={{ backgroundImage: `url(${import.meta.env.PROD ? "/assets/mah-hero/landing.webp" : "/assets/codia/rO73Py6N6q.png"})` }}>
+            <div className="mah-mobile-hero-media flex h-[380px] flex-col justify-center items-center self-stretch shrink-0 flex-nowrap bg-[rgba(17,30,48,0.06)] bg-cover bg-no-repeat rounded-[24px] relative overflow-hidden z-20" style={{ backgroundImage: `url(${import.meta.env.PROD ? "/assets/mah-hero/landing.webp" : "/assets/codia/rO73Py6N6q.png"})` }}>
               <div className="flex h-[71px] pt-0 pr-0 pb-0 pl-0 justify-between items-start shrink-0 flex-nowrap absolute top-[19px] left-[19px] right-[19px] z-[21]" />
               <button
                 type="button"
@@ -118,7 +118,7 @@ export default function Main() {
               </button>
             </div>
           </div>
-          <div className="flex flex-col gap-[24px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[25]">
+          <div className="mah-mobile-hero-copy flex flex-col gap-[24px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[25]">
             <div className="flex flex-col gap-[16px] items-end self-stretch shrink-0 flex-nowrap relative z-[26]">
               <span className="flex w-[568px] h-[204px] justify-end items-start self-stretch shrink-0 font-['Vazirmatn'] text-[48px] font-extrabold leading-[68px] text-[#17324d] relative text-right z-[27]">
                 تغییر یک سرنوشت، از انتخاب ساده امروز ما شروع می‌شود

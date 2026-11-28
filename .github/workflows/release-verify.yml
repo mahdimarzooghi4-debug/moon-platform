@@ -55,6 +55,15 @@ jobs:
       - run: npm run build
         env:
           NODE_OPTIONS: --max-old-space-size=5120
+      - name: Public responsive browser smoke
+        run: |
+          npm install --prefix "$RUNNER_TEMP/moon-browser" --no-save --package-lock=false playwright@1.56.1
+          "$RUNNER_TEMP/moon-browser/node_modules/.bin/playwright" install --with-deps chromium
+          npm run preview -- --host 127.0.0.1 --port 4173 --strictPort > "$RUNNER_TEMP/moon-preview.log" 2>&1 &
+          preview=$!
+          trap 'kill "$preview" 2>/dev/null || true' EXIT
+          curl -fsS --retry 15 --retry-connrefused --retry-delay 1 http://127.0.0.1:4173/ >/dev/null
+          MOON_BROWSER_TOOLS="$RUNNER_TEMP/moon-browser" node scripts/check-public-mobile.mjs
 
   backend:
     runs-on: ubuntu-latest
