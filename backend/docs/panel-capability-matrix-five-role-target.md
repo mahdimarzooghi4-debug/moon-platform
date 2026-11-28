@@ -1,8 +1,8 @@
 # Five-panel target — Business capability matrix
 
-Status: working Business design, 2026-11-28. Approved responsibilities are derived from DEC-0002 through DEC-0005. Suggested navigation, read models and unresolved permissions are not independently approved. This is not a Technical contract, implementation acceptance or release approval.
+Status: working Business design, 2026-11-28. Approved responsibilities are derived from DEC-0002 through amended DEC-0007. Suggested navigation, read models and unresolved permissions are not independently approved. This is not a Technical contract, implementation acceptance or release approval.
 
-Baseline: PR #324, `bb0d8acf874a0d7c70f9af71bda5ea7909f5621b`, Release Verify #267 and Bundle #97 successful. Existing routes inspected in src/app/router.tsx; a route is not proof of a working API or real financial capability.
+Reconciled baseline: PR #324, `842b9f7a5ee3d45cf550c07850c1031a5c4a3c75`, Release Verify #286, Bundle #116 (attempt 2), SSH Transfer #80 successful. Existing routes inspected in src/app/router.tsx; a route is not proof of a working API or real financial capability.
 
 ## 1. Manager of Moon (مدیر سامانه ماه)
 
@@ -10,7 +10,7 @@ Baseline: PR #324, `bb0d8acf874a0d7c70f9af71bda5ea7909f5621b`, Release Verify #2
 | --- | --- |
 | Company applications and activation | Approved: review company registration and activate on approval (DEC-0004). |
 | Organizations | Approved: define multiple organizations through admin; Emdad pilot (DEC-0002). |
-| Users and access management | Existing admin capability; proposed retain with only five operational role types. Exact grants and migration require Technical contract. |
+| Users and access management | Approved: multi-user access management for Moon, Aineh and each organization only; Moon principal appoints Aineh/organization principals. Exactly one active user per company/startup; no subordinate accounts. Exact grants and migration require Technical contract. |
 | Projects, funding and cross-organization reporting | Approved central recording and monitoring remit (DEC-0005); read visibility and reporting design proposed, no implicit project/performance approval or organization payout authority. |
 | Revenue | Approved: record receipts from organizations (Emdad pilot), startups and fund income attributable to Moon (DEC-0003). |
 | Fund | Approved Moon-only capital source; retain useful fund-management capabilities in central admin, as proposed and confirmed in conversation. Exact capital operations, investments, returns, allocation and authorizations require separate contract. |
@@ -26,7 +26,8 @@ Suggested navigation: overview, companies, organizations, users/access, project 
 | Project evaluation | Approved project approval authority (DEC-0004); no second evaluator role. |
 | Progress and performance | Approved review and satisfactory-performance approval authority (DEC-0004/0005). |
 | Evaluation history and reports | Existing route family; proposed preserve audit and read views. |
-| Publication, closeout, freeze/risk and expense-related review | Exact authority remains open; do not derive from general approval authority. |
+| Organization assignment, publication and stoppage | Approved: Aineh assigns exactly one registered organization and alone approves publication, with no Moon/organization veto; Aineh alone decides stoppage if approved plan cannot be executed. Organization immutable after first financial participation. Closeout, report publication/revision and expense-review details remain open. |
+| Users and access | Approved multi-user panel under designated principal, DEC-0007; exact grants remain open. |
 
 No multi-creative-house registry or startup assignment/transfer. No authority to issue official tax certificates or execute organization payout.
 
@@ -35,12 +36,12 @@ No multi-creative-house registry or startup assignment/transfer. No authority to
 | Capability | Business basis / boundary |
 | --- | --- |
 | Profile and registration | Existing profile routes; own startup, reviewed by Aineh. |
-| Define/submit projects | Existing project creation/version/submit flow; Aineh approves. Organization association selection and approval not decided. |
+| Define/submit projects | Existing project creation/version/submit flow; Aineh approves. Aineh alone determines one registered organization and approves publication (DEC-0006). Startup proposes stage amounts, minimum funding to start and project-specific advance if needed (DEC-0005). |
 | Execution stages and progress reports | Existing stage/report routes; submit evidence for Aineh review. |
 | Financial status | Proposed own project receipts/payout status; organization pays directly. Distinguish approval from confirmed external payment. |
 | Payments to Moon | Revenue source approved (DEC-0003); existing financing-fee route is not an approved tariff or automatic charge. |
 
-No self-approval, other-startup access or automatic payout. Profile/document and settings capabilities preserved subject to review.
+Exactly one active user per startup; no delegated user management. No self-approval, other-startup access or automatic payout. Profile/document and settings capabilities preserved subject to review.
 
 ## 4. Company (شرکت)
 
@@ -52,7 +53,7 @@ No self-approval, other-startup access or automatic payout. Profile/document and
 | Project reports | Existing report routes; proposed access to authorized published/project-related reports. |
 | Tax certificates | Approved official issuance by legally authorized organization; Moon displays confirmed final certificate to relevant company. Existing unavailable routes stay honest until actual issuance contract is implemented. |
 
-No authority to approve own application or issue certificates. Company cannot access another company's records.
+Exactly one active user per company; no delegated user management. Fund participates through ordinary company workflow only (DEC-0003). No authority to approve own application or issue certificates. Company cannot access another company's records.
 
 ## 5. Organization (سازمان)
 
@@ -63,6 +64,7 @@ No authority to approve own application or issue certificates. Company cannot ac
 | Stage payments | Approved direct payment to implementing startup after applicable Aineh approval (DEC-0005); separate external payment evidence and reconciliation. |
 | Tax certificates | Approved official issuance within actual legal authority (DEC-0004); versioned certificate contracts and issuance grants needed. |
 | Payment history and financial reporting | Existing Emdad routes; proposed retain scoped real records. |
+| Users and access | Approved multi-user panel per organization under designated principal (DEC-0007). |
 
 No independent approval of startup/project/performance under the approved allocation. No access to other organizations' nonpublic data. No assumed fund capital contribution or allocation rights. No special workflow for a future tax administration organization.
 
@@ -76,9 +78,9 @@ No independent approval of startup/project/performance under the approved alloca
 
 ## Business decisions still open before affected implementation
 
-1. Project organization relationship: cardinality, who selects/changes it and when it becomes fixed; historical project mapping.
-2. Project publication, progress/impact publication, risk/freeze, expense review, execution closeout responsibilities.
-3. Stage schedule, evidence, advances, payout caps, partial approvals, actual payment reconciliation and correction/refund rules.
+1. Exact assignment timing, pre-participation reassignment policy, authoritative lock event, in-flight payment handling and historical mapping. Cardinality, assignment authority and post-participation lock already approved.
+2. Project publication transition/prerequisites, progress/impact report publication, expense review, stoppage settlement and execution closeout. Publication and stoppage authority already approved.
+3. Stage and threshold lifecycle, evidence, advance release/offset, payout caps, partial approvals, reconciliation, attributable unspent-share calculation and actual refund/transfer rules. No execution-plan amendment.
 4. Fund operating policy, investment/return model, and commercial/accounting rules for revenue; no invented percentages or calculations.
 5. Organization onboarding/account validation, tax certificate types/eligibility and issuer grants, issuance evidence, provider contracts.
 6. Detailed access and lifecycle rules (review/rejection/resubmission/suspension) and audit-preserving migration.
