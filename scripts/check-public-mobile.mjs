@@ -7,7 +7,7 @@ const { chromium } = require("playwright");
 const browser = await chromium.launch({ headless: true });
 const base = process.env.MOON_TEST_URL || "http://127.0.0.1:4173";
 const marketingPages = ["/", "/startups", "/companies", "/about"];
-const extraPages = { "/projects": ".mah-projects-page", "/projects/layout-fixture": ".mah-live-project-detail", "/news": ".mah-live-news", "/news/layout-fixture": ".mah-live-news", "/contact": ".mah-contact-page" };
+const extraPages = { "/projects": ".mah-projects-page", "/projects/layout-fixture": ".mah-live-project-detail", "/news": ".mah-live-news", "/news/layout-fixture": ".mah-live-news", "/contact": ".mah-contact-page", "/faq": ".faq-page", "/privacy-policy": ".mah-legal-page", "/terms": ".mah-legal-page" };
 const pages = [...marketingPages, ...Object.keys(extraPages)];
 try {
   for (const width of [320, 390, 768, 1024, 1440]) {
@@ -67,7 +67,7 @@ try {
           for (const box of boxes) assert.ok(box.x >= -1 && box.right <= width + 1 && box.width > 0, path + " hero bounds " + width + JSON.stringify(box));
           assert.ok(boxes[2].bottom <= boxes[1].top + 1, path + " hero copy above media " + width);
           } else {
-            const desktop = root.locator(":scope > header");
+            const desktop = root.locator(":scope > header, :scope > .faq-header");
             assert.equal(await desktop.isVisible(), false, path + " duplicate header");
             if (path === "/projects" || path === "/projects/layout-fixture")
               await root.locator(".mah-public-project-card").first().waitFor();

@@ -274,3 +274,51 @@
   body.mah-public-rtl #app .mah-projects-page h1 { font-size: 26px; }
   body.mah-public-rtl #app .mah-live-news-filter > label { flex-basis: 100%; }
 }
+
+/* Footer-linked FAQ and legal documents: preserve all content and allow
+ * local table scrolling, never horizontal page scrolling. */
+@media (max-width: 1024px) {
+  body.mah-public-rtl #app :is(.faq-page, .mah-legal-page) {
+    width: 100% !important; max-width: 100% !important; min-width: 0 !important;
+  }
+  body.mah-public-rtl #app :is(.faq-page, .mah-legal-page) > header:first-child,
+  body.mah-public-rtl #app .faq-page > .faq-header:first-child { display: none !important; }
+  body.mah-public-rtl #app .faq-page .faq-category-card {
+    height: auto; min-height: 125px; min-width: 0;
+  }
+  body.mah-public-rtl #app .faq-page .faq-category-card p {
+    white-space: normal; overflow-wrap: anywhere; overflow: visible;
+  }
+  body.mah-public-rtl #app .faq-page .faq-feedback { flex-wrap: wrap; }
+  body.mah-public-rtl #app .faq-page .faq-feedback-buttons button { min-height: 44px; }
+  body.mah-public-rtl #app .mah-legal-page > :is(section, div) {
+    padding-inline: clamp(16px, 4vw, 32px) !important;
+    height: auto;
+  }
+  body.mah-public-rtl #app .mah-legal-page > main {
+    width: 100% !important;
+    max-width: 100% !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    padding: 24px clamp(16px, 4vw, 32px);
+    gap: 24px;
+  }
+  body.mah-public-rtl #app .mah-legal-page > main > :is(article, aside) {
+    min-width: 0; max-width: 100%;
+  }
+  body.mah-public-rtl #app .mah-legal-page > main > aside { grid-row: 1; }
+  body.mah-public-rtl #app .mah-legal-page article > section { overflow-wrap: anywhere; padding: 20px; }
+  body.mah-public-rtl #app .mah-legal-page article .flex { flex-wrap: wrap; }
+  body.mah-public-rtl #app .mah-legal-page .mah-legal-table-scroll {
+    overflow-x: auto; max-width: 100%; direction: rtl;
+  }
+  body.mah-public-rtl #app .mah-legal-page .mah-legal-table-scroll table { min-width: 440px; }
+  body.mah-public-rtl #app .mah-legal-page .mah-legal-table-scroll:focus-visible { outline: 2px solid #2094e3; }
+  body.mah-public-rtl #app .mah-legal-page .grid-cols-6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  body.mah-public-rtl #app .mah-legal-page :is(.grid-cols-2, .grid-cols-6) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  body.mah-public-rtl #app .mah-legal-page > section > div.rounded-\[22px\] { padding: 16px; }
+  body.mah-public-rtl #app .mah-legal-page h1 { font-size: 26px; }
+}

@@ -9,7 +9,7 @@ const links = [
   ["/about", "درباره ما"],
 ] as const;
 
-const supported = new Set(["/", "/startups", "/for-startups", "/companies", "/for-companies", "/about", "/projects", "/projects/variants/rural-women", "/contact", "/contact-support", "/news"]);
+const supported = new Set(["/", "/startups", "/for-startups", "/companies", "/for-companies", "/about", "/projects", "/projects/variants/rural-women", "/contact", "/contact-support", "/news", "/faq", "/privacy-policy", "/terms"]);
 const isLiveDetail = (path: string) => /^\/(projects|news)\/[^/]+$/.test(path);
 
 export default function MobilePublicHeader({ pathname }: { pathname: string }) {
