@@ -11,3 +11,8 @@ Project status overview: fundraising, executing, completed and stopped. Follow-u
 Approved target navigation (based on the dashboard review): dashboard, users and access, companies, startups, organizations, projects, funding, individual contributors, revenue, fund, reports, support requests, content management, settings. Startup and project access in Moon admin is monitoring, not Aineh approval. No new operational role. The central admin does not receive project funds or issue official tax certificates.
 
 Technical must define authoritative read models, exact KPI semantics, scope, date/currency handling, deduplication and unknown/error/empty states before implementation. The old dashboard shows sample records; do not claim them as operational totals. The public-site freeze remains. No runtime change, migration, merge or production release authorized.
+
+## Amended execution requirements (DEC-0005)
+Full verified funding of the approved total project target is mandatory before Aineh explicitly authorizes execution and determines the official start date. No lower start threshold. Startup designs the operational and financial plan (stages, schedule, outputs/KPIs, budgets, payment amounts/timing, project-specific advance if needed); Aineh reviews and approves it. Complete fulfillment of stage obligations is required for satisfactory-performance approval; no partial approval or progress-proportional stage settlement. Actual organization payment and reconciliation remain distinct; approved advances are separate and their release/offset details remain open. No amendment during execution.
+
+Show fully funded projects awaiting Aineh authorization and official start date; Moon monitors, does not authorize start.

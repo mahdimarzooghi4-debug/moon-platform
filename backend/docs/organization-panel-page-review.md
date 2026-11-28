@@ -22,3 +22,8 @@ New workspaces: authoritative organization receipt evidence, approved stage plan
 ## Delivery
 
 Existing page source review complete, not production acceptance. Proposed designs need owner approval. No code, migration, account creation, payment, merge or deploy. PR #324 remains Draft/Open. Public site frozen. Apply common panel spacing and centered Moon logo per shared UI decision.
+
+## Amended execution requirements (DEC-0005)
+Full verified funding of the approved total project target is mandatory before Aineh explicitly authorizes execution and determines the official start date. No lower start threshold. Startup designs the operational and financial plan (stages, schedule, outputs/KPIs, budgets, payment amounts/timing, project-specific advance if needed); Aineh reviews and approves it. Complete fulfillment of stage obligations is required for satisfactory-performance approval; no partial approval or progress-proportional stage settlement. Actual organization payment and reconciliation remain distinct; approved advances are separate and their release/offset details remain open. No amendment during execution.
+
+Show full funding, start authorization and official date; no organization start command.

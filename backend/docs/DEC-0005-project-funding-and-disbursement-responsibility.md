@@ -1,6 +1,6 @@
 # DEC-0005 — Project funding and disbursement responsibility
 
-Status: Business decision explicitly approved by the product owner on 2026-11-28.
+Status: Business decision explicitly approved and amended by the product owner on 2026-11-28.
 Related: [DEC-0002](DEC-0002-national-csr-pilot-and-five-role-model.md), [DEC-0003](DEC-0003-moon-platform-revenue-model.md), [DEC-0004](DEC-0004-approval-and-certificate-authority.md).
 Scope: Project participation funds and payment responsibilities in the five-role model. This is not production payment activation.
 
@@ -10,7 +10,8 @@ Scope: Project participation funds and payment responsibilities in the five-role
 | --- | --- |
 | Financial participation in a project | Company or individual |
 | Receive project participation funds | Relevant organization, directly into its official account |
-| Review progress and approve satisfactory performance (حسن انجام کار) | مدیر خانه خلاق آینه |
+| Authorize start after full verified funding and determine official start date | مدیر خانه خلاق آینه |
+| Review progress and approve complete satisfactory performance (حسن انجام کار) | مدیر خانه خلاق آینه |
 | Pay project funds to the implementing startup in stages following Aineh approval | Relevant organization, directly |
 | Record and monitor project financial flows | سامانه ماه, under central administration |
 | Official tax certificate issuance | Relevant legally authorized organization |
@@ -19,19 +20,21 @@ In the Emdad pilot, project participation funds are paid to the official account
 
 ## Approved execution-stage planning authority
 
-The implementing startup defines its project execution stages and the funding amount required for each stage. The manager of the single creative house Aineh reviews and approves the proposed execution stages and their respective funding amounts. The approved plan is the authoritative basis for stage-level execution and financial controls; neither the startup nor the organization may unilaterally approve that plan. Aineh's plan approval is distinct from subsequent satisfactory-performance approval and does not itself authorize or prove an actual payout. The organization pays the startup directly after applicable performance approval under the approved funding model.
+The implementing startup designs the operational and financial plan, including stages, schedule, outputs, KPIs, stage budgets, payment amounts and timing and any project-specific advance. Aineh reviews and approves, not designs, the plan. The manager of the single creative house Aineh reviews and approves the proposed execution stages and their respective funding amounts. The approved plan is the authoritative basis for stage-level execution and financial controls; neither the startup nor the organization may unilaterally approve that plan. Aineh's plan approval is distinct from subsequent satisfactory-performance approval and does not itself authorize or prove an actual payout. The organization pays the startup directly after applicable performance approval under the approved funding model.
 
-Preserve the approved stage plan and its financial terms with auditable lineage. The plan approval timing, any permissible pre-execution revision procedure, exact amount/currency validation and caps, funding availability requirements, evidence, advance payments and partial disbursement rules require explicit subsequent contracts. Do not invent a percentage, threshold, automatic payment, or permission to change an approved plan.
+Preserve the approved stage plan and its financial terms with auditable lineage. The plan approval timing, any permissible pre-execution revision procedure, exact amount/currency validation and caps, funding availability requirements, evidence, advance payments and detailed disbursement rules require explicit subsequent contracts. Do not invent a percentage, threshold, automatic payment, or permission to change an approved plan.
 
-## Approved minimum funding for execution start
+## Owner-approved full funding, start authorization and complete stage performance (2026-11-28)
 
-The startup proposes the minimum financial resources required to begin execution of its project. Aineh reviews and approves this project-specific start threshold. Execution may begin only when the approved minimum is met by verified, reconciled project participation funds attributable to the assigned organization, subject to the other valid execution prerequisites. Full project funding or full first-stage funding is not a universally mandatory starting threshold. The minimum is distinct from the total project funding target and the approved amounts for individual execution stages. No fixed global percentage, default threshold, unverified commitment or provider callback may substitute for the approved minimum and authoritative financial evidence.
+Supersedes the earlier project-specific minimum-start-funding rule. Execution requires full (100%) funding of the approved total project funding target, established by verified reconciled receipts attributable to the assigned organization, plus explicit Aineh start authorization and an official start date determined by Aineh. Full funding alone is not authorization or automatic disbursement. Remove the lower minimum-start field.
 
-Technical must adapt the existing versioned funding-target, ledger-derived allocable balance and FundingThresholdReached controls without conflating the overall funding target with the execution-start threshold or treating an internal ledger posting as proof of external bank receipt. Specify version binding, amount/currency validation, handling of financial-record corrections, any permissible pre-execution threshold revisions, the exact start transition and subsequent funding shortfalls before implementation; no in-execution plan amendment is permitted. Reaching the threshold does not authorize automatic disbursement or waive Aineh performance approval.
+The startup designs and proposes the operational and financial plan: stages, schedule, deliverables, KPIs, stage budgets, proposed payment amounts and timing, and any project-specific advance. Aineh reviews and approves, not designs, the plan. Relative-duration versus calendar-date representation remains open. No approved plan amendment during execution.
+
+Each stage must be completed in full against its approved obligations before Aineh confirms satisfactory performance. No partial acceptance or progress-proportional stage settlement. Organization pays according to the approved financial plan and applicable conditions, independently evidenced and reconciled. Separately approved advances are not partial performance acceptance; exact advance offset/recovery/release, payout caps, timing and financial corrections remain open. No double or automatic payment. Start authorization, stage approval, payment and closure remain distinct.
 
 ## Approved project-specific advance payment policy
 
-Advance payment requirements vary by project. No universal advance-payment amount, percentage or mandatory advance applies. In the context of the proposed planning flow, the startup proposes project-specific advance requirements, if any, and Aineh reviews them as part of the financial and execution plan. The organization remains the direct payer; Moon records and monitors the financial flow. Any approved advance is distinct from a payment following satisfactory-performance approval. Do not treat general plan approval or attainment of the execution-start funding threshold as an automatic advance release.
+Advance payment requirements vary by project. No universal advance-payment amount, percentage or mandatory advance applies. In the context of the proposed planning flow, the startup proposes project-specific advance requirements, if any, and Aineh reviews them as part of the financial and execution plan. The organization remains the direct payer; Moon records and monitors the financial flow. Any approved advance is distinct from a payment following satisfactory-performance approval. Do not treat general plan approval or attainment of full project funding as an automatic advance release.
 
 The exact advance authorization and release prerequisites, whether advances are defined at project or stage level, treatment against later payments, insufficient funds, recovery/refund, and external payment evidence remain to be specified before implementation. No invented default amount, automatic transfer or double payment is authorized.
 
@@ -61,6 +64,6 @@ Preserve the existing financial integrity controls: verified provider/bank evide
 
 ## Contracts still required
 
-Define project-to-organization association and assignment authority, verified beneficiary account mapping, stage plan lifecycle, performance evidence, partial approvals, amount validation and payment caps, payout confirmation/reconciliation evidence, exceptions, refunds/corrections, and exact financial permissions and controls. Determine the detailed treatment of project-specific advance payments and the conditions for project closure explicitly; do not infer them. The existing payment-provider boundary remains in force until real integrations and commercial/legal contracts are confirmed.
+Define project-to-organization association and assignment authority, verified beneficiary account mapping, stage plan lifecycle, complete-performance evidence, amount validation and payment caps, payout confirmation/reconciliation evidence, exceptions, refunds/corrections, and exact financial permissions and controls. Determine the detailed treatment of project-specific advance payments and the conditions for project closure explicitly; do not infer them. The existing payment-provider boundary remains in force until real integrations and commercial/legal contracts are confirmed.
 
 Keep public pages unchanged for Emdad pilot, exactly five role types, and one creative house Aineh. No role addition, migration, application code change, merge or deployment is authorized by this documentation. Continue Business → Technical → Backlog → Sprint → Code → Code Review → Stage → QA → Release Approval.

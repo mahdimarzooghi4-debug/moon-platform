@@ -26,7 +26,7 @@ Suggested navigation: overview, companies, organizations, users/access, project 
 | Project evaluation | Approved project approval authority (DEC-0004); no second evaluator role. |
 | Progress and performance | Approved review and satisfactory-performance approval authority (DEC-0004/0005). |
 | Evaluation history and reports | Existing route family; proposed preserve audit and read views. |
-| Organization assignment, publication and stoppage | Approved: Aineh assigns exactly one registered organization and alone approves publication, with no Moon/organization veto; Aineh alone decides stoppage if approved plan cannot be executed. Organization immutable after first financial participation. Closeout, report publication/revision and expense-review details remain open. |
+| Organization assignment, publication and stoppage | Approved: Aineh assigns exactly one registered organization and alone approves publication, with no Moon/organization veto; Aineh alone decides stoppage if approved plan cannot be executed. Organization immutable after first financial participation. Aineh authorizes start only after full verified funding and determines official start date. Stage performance acceptance requires complete obligations, no partial acceptance. Closeout, report publication/revision and expense-review details remain open. |
 | Users and access | Approved multi-user panel under designated principal, DEC-0007; exact grants remain open. |
 
 No multi-creative-house registry or startup assignment/transfer. No authority to issue official tax certificates or execute organization payout.
@@ -36,7 +36,7 @@ No multi-creative-house registry or startup assignment/transfer. No authority to
 | Capability | Business basis / boundary |
 | --- | --- |
 | Profile and registration | Existing profile routes; own startup, reviewed by Aineh. |
-| Define/submit projects | Existing project creation/version/submit flow; Aineh approves. Aineh alone determines one registered organization and approves publication (DEC-0006). Startup proposes stage amounts, minimum funding to start and project-specific advance if needed (DEC-0005). |
+| Define/submit projects | Existing project creation/version/submit flow; Aineh approves. Aineh alone determines one registered organization and approves publication (DEC-0006). Startup designs operational plan, stages, schedule, KPIs, budgets, payment amounts/timing and any project-specific advance (DEC-0005). |
 | Execution stages and progress reports | Existing stage/report routes; submit evidence for Aineh review. |
 | Financial status | Proposed own project receipts/payout status; organization pays directly. Distinguish approval from confirmed external payment. |
 | Payments to Moon | Revenue source approved (DEC-0003); existing financing-fee route is not an approved tariff or automatic charge. |
@@ -80,7 +80,7 @@ No independent approval of startup/project/performance under the approved alloca
 
 1. Exact assignment timing, pre-participation reassignment policy, authoritative lock event, in-flight payment handling and historical mapping. Cardinality, assignment authority and post-participation lock already approved.
 2. Project publication transition/prerequisites, progress/impact report publication, expense review, stoppage settlement and execution closeout. Publication and stoppage authority already approved.
-3. Stage and threshold lifecycle, evidence, advance release/offset, payout caps, partial approvals, reconciliation, attributable unspent-share calculation and actual refund/transfer rules. No execution-plan amendment.
+3. Stage and full-funding/start-authorization lifecycle, complete-performance evidence, advance release/offset, payout caps (partial acceptance prohibited), reconciliation, attributable unspent-share calculation and actual refund/transfer rules. No execution-plan amendment.
 4. Fund operating policy, investment/return model, and commercial/accounting rules for revenue; no invented percentages or calculations.
 5. Organization onboarding/account validation, tax certificate types/eligibility and issuer grants, issuance evidence, provider contracts.
 6. Detailed access and lifecycle rules (review/rejection/resubmission/suspension) and audit-preserving migration.

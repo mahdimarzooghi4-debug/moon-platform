@@ -10,7 +10,8 @@ Scope: five-role target operating model, not an implementation or production app
 | --- | --- |
 | Startup registration/acceptance | مدیر خانه خلاق آینه |
 | Project approval | مدیر خانه خلاق آینه |
-| Confirmation of satisfactory completion (حسن انجام کار) | مدیر خانه خلاق آینه |
+| Execution start authorization after full verified funding and official start date | مدیر خانه خلاق آینه |
+| Confirmation of complete satisfactory completion (حسن انجام کار) | مدیر خانه خلاق آینه |
 | Company registration approval and activation | مدیر سامانه ماه |
 | Official Article 172 certificate or other tax certificate issuance | Relevant organization (سازمان), acting through a legally authorized issuer |
 
@@ -23,7 +24,7 @@ The organization, not Moon or Aineh, officially issues applicable tax certificat
 ## Remaining business contracts and technical gates
 
 - Define review criteria, evidence, rejection/resubmission, approval reversal or suspension, project publication authority and transitions separately. Do not assume those rules from this allocation.
-- Define satisfactory completion evidence, whether assessed per milestone or at project close, and its relationship to payment/release independently. No automatic settlement is approved.
+- Define satisfactory completion evidence, at stage level (complete fulfillment required, no partial acceptance), final closeout and relationship to payment/release independently. No automatic settlement is approved.
 - Define organization-project association, funding flow, organization-specific supervision, fund controls, certificate eligibility, issuance grants, official numbering/signature and other tax certificate types before implementing related operations.
 - Enforce authorization and data scope in Backend, with immutable/auditable decisions and negative tests. Retain existing registration and financial history; do not widen grants as a shortcut to retiring old roles.
 - Exactly five role types, one creative house Aineh, multiple organizations with Emdad pilot. Public site freeze remains. No new role, production deployment, data migration, or code change is authorized by this record.
