@@ -23,6 +23,12 @@ The implementing startup defines its project execution stages and the funding am
 
 Preserve the approved stage plan and its financial terms with auditable lineage. The plan approval timing, revision procedure, exact amount/currency validation and caps, funding availability requirements, evidence, advance payments and partial disbursement rules require explicit subsequent contracts. Do not invent a percentage, threshold, automatic payment, or permission to change an approved plan.
 
+## Approved minimum funding for execution start
+
+The startup proposes the minimum financial resources required to begin execution of its project. Aineh reviews and approves this project-specific start threshold. Execution may begin only when the approved minimum is met by verified, reconciled project participation funds attributable to the assigned organization, subject to the other valid execution prerequisites. Full project funding or full first-stage funding is not a universally mandatory starting threshold. The minimum is distinct from the total project funding target and the approved amounts for individual execution stages. No fixed global percentage, default threshold, unverified commitment or provider callback may substitute for the approved minimum and authoritative financial evidence.
+
+Technical must adapt the existing versioned funding-target, ledger-derived allocable balance and FundingThresholdReached controls without conflating the overall funding target with the execution-start threshold or treating an internal ledger posting as proof of external bank receipt. Specify version binding, amount/currency validation, handling of corrections, threshold revisions, the exact start transition and subsequent funding shortfalls before implementation. Reaching the threshold does not authorize automatic disbursement or waive Aineh performance approval.
+
 ## Financial separation and integrity
 
 Project participation funds are independent of Moon's own revenue and of fund capital. Fund capital is supplied exclusively by Moon itself; neither incoming project participation nor organization-to-startup payments are automatically recognized as Moon income or fund capital.
