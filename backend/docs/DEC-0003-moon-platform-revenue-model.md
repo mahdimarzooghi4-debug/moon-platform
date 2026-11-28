@@ -27,6 +27,12 @@ The product owner explicitly approved that the fund is not restricted to Moon st
 
 Fund capital remains exclusively supplied by Moon. Record actual capital allocations, investments, returns and income with authoritative supporting evidence, independently of project contributions and Moon operating revenue. No automatic financial movement or reclassification is authorized.
 
+## Approved fund participation in Moon projects through ordinary company flow
+
+If the fund chooses to contribute money to a project on Moon, it must register and participate through the same ordinary company role and workflow as other company participants: company registration, review/approval and activation by the Moon administrator, project selection, participation and payment directly to the project's assigned organization's official account, authoritative payment confirmation and ordinary follow-up. The fund management section does not offer a direct project funding shortcut, a privileged funding route, automatic activation or an exception to project controls. No sixth role or dedicated fund participant panel. The registration must use a real legally authorized entity and representative; do not invent a separate legal identity for the fund, registration credentials, or tax eligibility. The exact legal identity and authorized representation remain to be confirmed.
+
+The recording-only investment management boundary above remains in force; ordinary company participation is distinct from fund investment execution. Link genuine corresponding records where applicable with auditable lineage and no duplicate monetary effect. Do not assume that a project contribution is a recoverable investment, generates profit, or qualifies for a tax certificate. Certificate eligibility and issuance remain subject to DEC-0004 and applicable authority; the same project stoppage and contributor instruction rules in DEC-0005 apply. Fund accounting classification and any conflict-of-interest controls require explicit contracts.
+
 ## Proposed detail for subsequent business/technical contract (not yet approved)
 
 A record could carry source category, identifiable payer/source reference, amount and currency, date of receipt, payment/document reference and description, with traceable audit history. Revenue totals and per-source breakdowns may be derived from valid records. Determine actual fields, authorization, corrections, duplicate prevention, reconciliation and reporting contract before implementation; preserve existing ledger and financial control boundaries.
