@@ -26,6 +26,7 @@ jobs:
           web = next(c for c in realm["clients"] if c["clientId"] == "moon-web")
           assert web["redirectUris"] == ["https://mahcsr.ir/auth/callback"]
           assert web["webOrigins"] == ["https://mahcsr.ir"]
+          assert web["attributes"]["post.logout.redirect.uris"] == "https://mahcsr.ir/auth"
           config = Path("deploy/production/Caddyfile").read_text()
           assert "reverse_proxy api:8080" in config
           assert "reverse_proxy keycloak:8080" in config
@@ -50,6 +51,7 @@ jobs:
           node-version: '22'
           cache: npm
       - run: npm ci --no-audit --no-fund
+      - run: node --test tests/oidc-logout.test.mjs
       - run: npm run build
         env:
           NODE_OPTIONS: --max-old-space-size=5120

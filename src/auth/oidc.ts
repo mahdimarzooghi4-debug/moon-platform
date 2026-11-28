@@ -271,6 +271,26 @@ export function clearSession() {
   sessionStorage.removeItem(PENDING_KEY);
 }
 
+// Explicit logout differs from clearSession(), which is also used for errors.
+export function logout() {
+  const session = readStoredSession();
+  clearSession();
+  sessionStorage.removeItem("moon.auth.dev-panel-preview");
+  localStorage.removeItem("moon.auth.dev-panel-preview");
+
+  if (!session?.accessToken) {
+    window.location.replace("/auth");
+    return;
+  }
+
+  const params = new URLSearchParams({
+    client_id: clientId,
+    post_logout_redirect_uri: `${window.location.origin}/auth`,
+  });
+  if (session.idToken) params.set("id_token_hint", session.idToken);
+  window.location.replace(`${authority}/protocol/openid-connect/logout?${params.toString()}`);
+}
+
 const PANEL_RULES: Array<{ prefix: string; roles: string[] }> = [
   { prefix: "/panel/startup", roles: ["startup"] },
   { prefix: "/panel/company", roles: ["company"] },
