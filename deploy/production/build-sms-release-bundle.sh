@@ -35,9 +35,26 @@ for attempt in 1 2 3; do
 done
 docker build -t "moon-platform/keycloak:$sha" backend/keycloak/sms-login
 docker build -t "moon-platform/api:$sha" -f backend/Dockerfile backend
-docker build --build-arg VITE_OIDC_AUTHORITY=https://mahcsr.ir/identity/realms/moon \
-  --build-arg VITE_OIDC_CLIENT_ID=moon-web --build-arg VITE_API_BASE_URL=https://mahcsr.ir \
-  --build-arg NODE_OPTIONS=--max-old-space-size=5120 -t "moon-platform/web:$sha" .
+# Public ECR has repeatedly returned HTTP 429 for the pinned Node base image.
+# Retry only a registry rate-limit error; preserve the selected image source and
+# fail closed on every other build failure or on exhausted attempts.
+web_build_log="$(mktemp)"
+trap 'rm -f -- "$archive.partial" "$maven_log" "$web_build_log"' EXIT
+for attempt in 1 2 3 4; do
+  if docker build --build-arg VITE_OIDC_AUTHORITY=https://mahcsr.ir/identity/realms/moon \
+      --build-arg VITE_OIDC_CLIENT_ID=moon-web --build-arg VITE_API_BASE_URL=https://mahcsr.ir \
+      --build-arg NODE_OPTIONS=--max-old-space-size=5120 -t "moon-platform/web:$sha" . 2>&1 | tee "$web_build_log"; then
+    break
+  else
+    status=$?
+    if [ "$attempt" -eq 4 ] || ! grep -Eqi 'public\.ecr\.aws.*(429 Too Many Requests|toomanyrequests|Data limit exceeded)' "$web_build_log"; then
+      exit "$status"
+    fi
+    delay=$((60 * (2 ** (attempt - 1))))
+    echo "Public ECR rate limited the web build; retry $((attempt + 1))/4 in ${delay}s" >&2
+    sleep "$delay"
+  fi
+done
 bash deploy/production/check-public-asset-cache.sh "moon-platform/web:$sha"
 docker save "moon-platform/api:$sha" "moon-platform/web:$sha" "moon-platform/keycloak:$sha" | gzip -1 > "$archive.partial"
 mv "$archive.partial" "$archive"
