@@ -1,7 +1,6 @@
-import { clearSession } from "../../auth/oidc";
+import { logout as endSession } from "../../auth/oidc";
 
 const CREATIVE_HOUSE_ROOT = ".creative-house-dashboard";
-const DEV_PANEL_PREVIEW_KEY = "moon.auth.dev-panel-preview";
 const REPORT_DETAIL_RETURN_KEY = "mah.creativeHouse.reportDetailReturnTo.v1";
 
 const SETTINGS_ROOT = `${CREATIVE_HOUSE_ROOT}[data-name="ayeneh-settings"]`;
@@ -295,9 +294,7 @@ document.addEventListener("click", (event) => {
   );
   if (logout) {
     event.preventDefault();
-    clearSession();
-    sessionStorage.removeItem(DEV_PANEL_PREVIEW_KEY);
-    window.location.assign("/auth");
+    endSession();
     return;
   }
 
