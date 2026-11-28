@@ -80,10 +80,13 @@ public static class AdminNewsImageEndpoints
 
             await using var stream = new MemoryStream((int)file.Length);
             await file.CopyToAsync(stream, cancellationToken);
-            item.ImageFileName = file.FileName.Length <= 240 ? file.FileName : file.FileName[..240];
-            item.ImageContentType = file.ContentType;
-            item.ImageSize = file.Length;
-            item.ImageData = stream.ToArray();
+            var optimized = await DisplayImageOptimizer.OptimizeAsync(stream.ToArray(), file.ContentType, file.FileName, DisplayImageKind.News, cancellationToken);
+            if (optimized is null)
+                return Results.BadRequest(new { code = "news_image_invalid_data", message = "A valid, static JPEG, PNG or WebP within the supported image dimensions is required." });
+            item.ImageFileName = optimized.FileName;
+            item.ImageContentType = optimized.ContentType;
+            item.ImageSize = optimized.Data.LongLength;
+            item.ImageData = optimized.Data;
             item.UpdatedAtUtc = DateTimeOffset.UtcNow;
             await dbContext.SaveChangesAsync(cancellationToken);
 
