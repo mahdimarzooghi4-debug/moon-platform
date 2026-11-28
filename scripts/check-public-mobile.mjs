@@ -7,7 +7,7 @@ const { chromium } = require("playwright");
 const browser = await chromium.launch({ headless: true });
 const base = process.env.MOON_TEST_URL || "http://127.0.0.1:4173";
 const marketingPages = ["/", "/startups", "/companies", "/about"];
-const extraPages = { "/projects": ".mah-projects-page", "/projects/layout-fixture": ".mah-live-project-detail", "/news": ".mah-live-news", "/news/layout-fixture": ".mah-live-news", "/contact": ".mah-contact-page", "/faq": ".faq-page", "/privacy-policy": ".mah-legal-page", "/terms": ".mah-legal-page" };
+const extraPages = { "/projects": ".mah-projects-page", "/projects/layout-fixture": ".mah-live-project-detail", "/news": ".mah-live-news", "/news/layout-fixture": ".mah-live-news", "/contact": ".mah-contact-page", "/faq": ".faq-page", "/privacy-policy": ".mah-legal-page", "/terms": ".mah-legal-page", "/how-it-works": ".mah-how-it-works-page", "/article-172-guide": ".article-172-page", "/impact": ".mah-live-impact-page", "/impact-reports": ".mah-live-impact-page", "/projects/layout-fixture/impact-report?reportId=layout-report": ".mah-live-impact-page" };
 const pages = [...marketingPages, ...Object.keys(extraPages)];
 try {
   for (const width of [320, 390, 768, 1024, 1440]) {
@@ -40,6 +40,20 @@ try {
         if (path.startsWith("/news")) {
           await page.route("**/api/v1/public/content/news", route => route.fulfill({ json: [news] }));
         }
+        const metric = { metricId: "layout-metric", key: "layout_test_metric_long_identifier",
+          label: "شاخص آزمایشی چیدمان", unit: "نفر", aggregation: "sum", targetValue: 123456789,
+          actualValue: 12345678, sortOrder: 1 };
+        const report = { impactReportId: "layout-report", projectId: "layout-fixture", stageId: "layout-stage",
+          stageSequenceNumber: 1, stageTitle: "مرحله آزمایشی", title: "گزارش آزمایشی چیدمان",
+          summary: "متن آزمایشی گزارش", methodology: "روش آزمایشی", geography: "منطقه آزمایشی",
+          publishedAtUtc: "2026-01-01T00:00:00Z", metrics: [metric],
+          financialSnapshots: [{ currency: "IRR", approvedExpenseMinor: 123456789000, releasedMinor: 12345678900, capturedAtUtc: "2026-01-01T00:00:00Z" }] };
+        await page.route("**/api/v1/public/impact-overview", route => route.fulfill({ json: {
+          projectCount: 1234567, reportCount: 1234567, lastPublishedAtUtc: report.publishedAtUtc,
+          metrics: [{ ...metric, reportCount: 1 }]
+        } }));
+        await page.route("**/api/v1/public/impact-reports", route => route.fulfill({ json: [report] }));
+        await page.route("**/api/v1/public/impact-reports/layout-report", route => route.fulfill({ json: report }));
         await page.goto(base + path, { waitUntil: "domcontentloaded" });
         const hero = page.locator(".mah-mobile-hero-row");
         const marketing = marketingPages.includes(path);
@@ -77,8 +91,10 @@ try {
               await root.locator(".mah-live-news-article").waitFor();
             if (path === "/contact")
               await root.locator("#mah-support-form").waitFor();
+            if (path === "/impact" || path === "/impact-reports" || path.includes("/impact-report?"))
+              await root.locator("article").first().waitFor();
             const bad = await root.evaluate(el => {
-              const selectors = "section,article,form,input,select,textarea,.mah-mobile-support-topics > div,.mah-contact-info,.mah-live-news-feature,.mah-projects-hero-row,.mah-projects-hero-stats";
+              const selectors = "section,article,form,input,select,textarea,.mah-mobile-support-topics > div,.mah-contact-info,.mah-live-news-feature,.mah-projects-hero-row,.mah-projects-hero-stats,.mah-how-it-works-page > div,.article-172-page > div";
               return [el, ...el.querySelectorAll(selectors)].flatMap(n => {
                 const r = n.getBoundingClientRect();
                 return r.width > 0 && (r.left < -1 || r.right > innerWidth + 1)

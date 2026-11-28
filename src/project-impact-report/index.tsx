@@ -83,7 +83,7 @@ export default function Main() {
   return (
     <main
       dir="rtl"
-      className="min-h-screen bg-[#fcfbf8] px-6 py-10 font-['Vazirmatn'] text-[#17324d] md:px-12 lg:px-[120px]"
+      className="mah-live-impact-page min-h-screen bg-[#fcfbf8] px-6 py-10 font-['Vazirmatn'] text-[#17324d] md:px-12 lg:px-[120px]"
     >
       <div className="mx-auto flex w-full max-w-[1100px] flex-col gap-7">
         <nav className="flex flex-wrap items-center justify-between gap-3 text-sm">

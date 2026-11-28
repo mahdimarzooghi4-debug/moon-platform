@@ -9,8 +9,8 @@ const links = [
   ["/about", "درباره ما"],
 ] as const;
 
-const supported = new Set(["/", "/startups", "/for-startups", "/companies", "/for-companies", "/about", "/projects", "/projects/variants/rural-women", "/contact", "/contact-support", "/news", "/faq", "/privacy-policy", "/terms"]);
-const isLiveDetail = (path: string) => /^\/(projects|news)\/[^/]+$/.test(path);
+const supported = new Set(["/", "/startups", "/for-startups", "/companies", "/for-companies", "/about", "/projects", "/projects/variants/rural-women", "/contact", "/contact-support", "/news", "/faq", "/privacy-policy", "/terms", "/how-it-works", "/article-172-guide", "/impact", "/impact-overview", "/impact-reports"]);
+const isLiveDetail = (path: string) => /^\/(projects|news)\/[^/]+$/.test(path) || /^\/projects\/[^/]+\/impact-report$/.test(path);
 
 export default function MobilePublicHeader({ pathname }: { pathname: string }) {
   const details = useRef<HTMLDetailsElement>(null);
