@@ -36,4 +36,17 @@ cmp "$tmp/original" "$tmp/rejected"
 curl -fsS -H 'Accept: image/webp,image/png' -D "$tmp/headers" -o /dev/null "$base/assets/codia/4T7A4AiY30.png"
 grep -Eqi '^Content-Type: image/(png|webp)' "$tmp/headers"
 test "$(curl -sS -H 'Accept: image/webp' -o /dev/null -w '%{http_code}' "$base/assets/missing.png")" = 404
+# Verify every canonical project photograph is delivered as a lighter WebP.
+for photo in family-health rural-women-employment teen-skills; do
+  path="/assets/company-panel/project-$photo.png"
+  curl -fsS -H 'Accept: image/webp,image/png' -D "$tmp/headers" -o "$tmp/optimized" "$base$path"
+  grep -Eqi '^Content-Type: image/webp' "$tmp/headers"
+  grep -Eqi '^Vary: Accept' "$tmp/headers"
+  test "$(head -c 4 "$tmp/optimized")" = RIFF
+  curl -fsS -H 'Accept: image/png' -o "$tmp/original" "$base$path"
+  before="$(stat -c %s "$tmp/original")"
+  after="$(stat -c %s "$tmp/optimized")"
+  test "$((after * 4))" -lt "$((before * 3))"
+  echo "PROJECT_PHOTO_BYTES $photo $before $after"
+done
 echo "PUBLIC_ASSET_CACHE_CONTRACT_VERIFIED"
