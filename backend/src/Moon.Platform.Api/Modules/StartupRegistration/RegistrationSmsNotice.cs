@@ -7,16 +7,18 @@ public static class RegistrationSmsNotice
     public const string Submitted = "StartupRegistrationSmsSubmitted";
     public const string Approved = "StartupRegistrationSmsApproved";
 
-    public static OutboxMessage Create(Guid applicationId, string eventType)
+    public static OutboxMessage Create(Guid applicationId, string eventType, string aggregateType = "startup_application")
     {
-        if (applicationId == Guid.Empty || eventType is not (Submitted or Approved))
+        if (applicationId == Guid.Empty || eventType is not (Submitted or Approved)
+            || aggregateType is not ("startup_application" or "company_application"))
             throw new ArgumentException("Invalid registration notice");
         return new OutboxMessage
         {
             EventType = eventType,
-            AggregateType = "startup_application",
+            AggregateType = aggregateType,
             AggregateId = applicationId.ToString("D"),
-            DeduplicationKey = $"{eventType}:{applicationId:D}",
+            DeduplicationKey = aggregateType == "startup_application"
+                ? $"{eventType}:{applicationId:D}" : $"{eventType}:{aggregateType}:{applicationId:D}",
             PayloadJson = "{}",
             CorrelationId = applicationId.ToString("D")
         };

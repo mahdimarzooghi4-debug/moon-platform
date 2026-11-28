@@ -55,6 +55,8 @@ public sealed class Phase1PublishTests : IAsyncLifetime
             "publish-create",
             "127.0.0.1");
         Assert.True(created.Succeeded);
+        Assert.Empty(await PublicProjectCatalog.ListAsync(db, null));
+        Assert.Empty(await PublicProjectCatalog.ListAsync(db, created.Project!.ProjectId));
 
         var submitted = await projects.SubmitAsync(
             created.Project!.ProjectId,
@@ -114,6 +116,13 @@ public sealed class Phase1PublishTests : IAsyncLifetime
         Assert.Equal(ProjectStatuses.Published, published.Project!.Status);
         Assert.Equal(publisher.ExternalSubject, published.Project.PublishedBySubject);
         Assert.NotNull(published.Project.PublishedAtUtc);
+        var publicCard = Assert.Single(await PublicProjectCatalog.ListAsync(db, null));
+        Assert.Equal(published.Project.ProjectId, publicCard.ProjectId);
+        Assert.Equal("Publishable project", publicCard.Title);
+        Assert.Equal(organization.Name, publicCard.Startup);
+        Assert.Null(publicCard.FundingPercent);
+        Assert.Null(publicCard.Region);
+        Assert.Empty(await PublicProjectCatalog.ListAsync(db, Guid.NewGuid()));
 
         var currentVersion = await db.ProjectVersions.SingleAsync(
             x => x.ProjectId == submitted.Project.ProjectId && x.VersionNumber == submitted.Project.CurrentVersionNumber);

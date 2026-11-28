@@ -34,6 +34,28 @@ public sealed class KeycloakAccountClient(HttpClient client, IConfiguration conf
             : throw new InvalidOperationException("Keycloak did not return the new user ID.");
     }
 
+    // A company representative uses the existing SMS login, not a shared
+    // administrator-issued password. Do not mark phone ownership in Keycloak
+    // through an invented attribute or introduce password authentication.
+    public async Task<string?> CreateSmsOnlyDisabledAsync(
+        string username, string firstName, string lastName, string email, CancellationToken cancellationToken)
+    {
+        var (usersUrl, token) = await AuthenticateAsync(cancellationToken);
+        using var request = new HttpRequestMessage(HttpMethod.Post, usersUrl);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        request.Content = JsonContent.Create(new
+        {
+            username, firstName, lastName, email, enabled = false,
+            requiredActions = Array.Empty<string>()
+        });
+        using var response = await client.SendAsync(request, cancellationToken);
+        if (response.StatusCode == System.Net.HttpStatusCode.Conflict) return null;
+        response.EnsureSuccessStatusCode();
+        var subject = response.Headers.Location?.OriginalString.TrimEnd('/').Split('/').Last();
+        return Guid.TryParseExact(subject, "D", out _)
+            ? subject : throw new InvalidOperationException("Keycloak did not return the new user ID.");
+    }
+
     public async Task EnableAsync(string subject, CancellationToken cancellationToken)
     {
         var (usersUrl, token) = await AuthenticateAsync(cancellationToken);

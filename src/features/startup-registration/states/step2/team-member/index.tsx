@@ -1,3 +1,4 @@
+import { localizePersianNumericInput } from "../../../../../auth/oidc";
 import { FormEvent, useState } from "react";
 import { navigateRegistration } from "../../../navigation";
 import { registrationDraft } from "../../../draft";
@@ -112,7 +113,7 @@ export default function StartupTeamMemberAddPage() {
           <div className="grid grid-cols-2 gap-[16px]">
             <label className="flex flex-col gap-[8px] text-right text-[14px] font-semibold text-[#2d3748]">
               <span>شماره موبایل</span>
-              <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="۰۹۱۲۳۴۵۶۷۸۹" inputMode="tel" className="h-[48px] rounded-[12px] border border-[#e4ebf1] px-[16px] text-right font-normal" />
+              <input value={phone} onChange={(e) => setPhone(localizePersianNumericInput(e.currentTarget))} placeholder="۰۹۱۲۳۴۵۶۷۸۹" inputMode="tel" className="h-[48px] rounded-[12px] border border-[#e4ebf1] px-[16px] text-right font-normal" />
             </label>
             <label className="flex flex-col gap-[8px] text-right text-[14px] font-semibold text-[#2d3748]">
               <span>ایمیل</span>

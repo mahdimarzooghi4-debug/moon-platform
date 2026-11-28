@@ -5,11 +5,6 @@ export function QuickLinksSection() {
         <span className="flex w-[139px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[78]">
           دسترسی سریع به ابزارها:
         </span>
-        <div className="flex w-[143px] pt-[8px] pr-[16px] pb-[8px] pl-[16px] items-center shrink-0 flex-nowrap bg-[#fff] rounded-[10px] border-solid border border-[#e4ebf1] relative z-[68]">
-          <span className="flex w-[111px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-medium leading-[20px] text-[#2094e3] relative text-right whitespace-nowrap z-[69]">
-            پیگیری مشارکت فردی
-          </span>
-        </div>
         <div className="flex w-[202px] pt-[8px] pr-[16px] pb-[8px] pl-[16px] items-center shrink-0 flex-nowrap bg-[#fff] rounded-[10px] border-solid border border-[#e4ebf1] relative z-[70]">
           <span className="flex w-[170px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-medium leading-[20px] text-[#2094e3] relative text-right whitespace-nowrap z-[71]">
             پیگیری ثبت‌نام شرکت یا استارتاپ

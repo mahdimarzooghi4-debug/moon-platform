@@ -53,7 +53,7 @@ export default function IndividualCheckout() {
   };
 
   return (
-    <div className="main-container mx-auto flex w-[1440px] max-w-full flex-col items-center bg-[#fcfbf8] text-right text-[#17324d]" dir="rtl">
+    <div className="main-container mah-individual-checkout mx-auto flex w-[1440px] max-w-full flex-col items-center bg-[#fcfbf8] text-right text-[#17324d]" dir="rtl">
       <CheckoutHeader onBack={() => navigate(projectPath)} />
       <main className="flex w-full items-start gap-8 px-[120px] pb-24" dir="ltr">
         <CheckoutSidebar amount={amount} onProject={() => navigate(projectPath)} onCompany={() => navigate(companyPath)} />

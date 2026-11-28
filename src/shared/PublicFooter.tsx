@@ -132,7 +132,6 @@ export default function PublicFooter() {
             <strong>پشتیبانی</strong>
             <FooterLink href="/contact">تماس با ما</FooterLink>
             <FooterLink href="/faq">سؤالات متداول</FooterLink>
-            <FooterLink href="/participation/track">پیگیری مشارکت</FooterLink>
           </nav>
 
           <nav className="moon-footer-column" aria-label="حقوقی">

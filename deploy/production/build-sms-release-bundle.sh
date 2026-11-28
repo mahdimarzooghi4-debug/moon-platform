@@ -35,9 +35,48 @@ for attempt in 1 2 3; do
 done
 docker build -t "moon-platform/keycloak:$sha" backend/keycloak/sms-login
 docker build -t "moon-platform/api:$sha" -f backend/Dockerfile backend
-docker build --build-arg VITE_OIDC_AUTHORITY=https://mahcsr.ir/identity/realms/moon \
-  --build-arg VITE_OIDC_CLIENT_ID=moon-web --build-arg VITE_API_BASE_URL=https://mahcsr.ir \
-  --build-arg NODE_OPTIONS=--max-old-space-size=5120 -t "moon-platform/web:$sha" .
+# The release runner uses the same Node 22 / npm ci / WebP build as Release
+# Verify. Package its fresh output in the unchanged Nginx runtime stage;
+# this removes the public ECR Node manifest lookup from candidate builds.
+# The normal server Dockerfile is unchanged.
+test "$(node -p 'process.versions.node.split(".")[0]')" = 22
+command -v cwebp >/dev/null
+test ! -e dist
+web_context="$(mktemp -d)"
+trap 'rm -f -- "$archive.partial" "$maven_log"; rm -rf -- "$web_context"' EXIT
+npm ci --no-audit --no-fund
+VITE_OIDC_AUTHORITY=https://mahcsr.ir/identity/realms/moon \
+  VITE_OIDC_CLIENT_ID=moon-web VITE_API_BASE_URL=https://mahcsr.ir \
+  NODE_OPTIONS=--max-old-space-size=5120 npm run build
+git diff --quiet
+git diff --cached --quiet
+test -s dist/index.html
+mv dist "$web_context/dist"
+mkdir -p "$web_context/deploy"
+cp deploy/nginx.conf "$web_context/deploy/nginx.conf"
+# Derive the runtime recipe from the reviewed Dockerfile, rather than
+# maintaining a second runtime configuration. Reject unexpected changes.
+python3 - "$web_context/Dockerfile" <<'PY'
+from pathlib import Path
+import sys
+
+source = Path("Dockerfile").read_text()
+runtime = "FROM ghcr.io/nginx/nginx-unprivileged:stable-alpine AS runtime\n"
+assert source.count(runtime) == 1
+expected = (
+    runtime
+    + "COPY deploy/nginx.conf /etc/nginx/conf.d/default.conf\n"
+    + "COPY --from=build /app/dist /usr/share/nginx/html\n\n"
+    + "EXPOSE 8080"
+)
+actual = runtime + source.split(runtime, 1)[1].strip() 
+assert actual == expected, "Unexpected runtime Dockerfile; review candidate packaging"
+Path(sys.argv[1]).write_text(
+    actual.replace("COPY --from=build /app/dist ", "COPY dist ") + "\n"
+)
+PY
+docker build -t "moon-platform/web:$sha" "$web_context"
+bash deploy/production/check-public-asset-cache.sh "moon-platform/web:$sha"
 docker save "moon-platform/api:$sha" "moon-platform/web:$sha" "moon-platform/keycloak:$sha" | gzip -1 > "$archive.partial"
 mv "$archive.partial" "$archive"
 python3 deploy/production/sms-release-bundle.py create --release-sha "$sha" --archive "$archive" --manifest "$manifest"

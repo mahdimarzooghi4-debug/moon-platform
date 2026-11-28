@@ -1,6 +1,7 @@
-import { lazy, Suspense } from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import CompanyRegistrationUnavailable from "../features/company-registration/Unavailable";
+import { lazy, Suspense, useLayoutEffect } from "react";
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
+import MobilePublicHeader from "../shared/MobilePublicHeader";
+const CompanyRegistrationPage = lazy(() => import("../features/company-registration/LiveRegistration"));
 import StartupRegistrationPage from "../features/startup-registration";
 import AuthEntryPage from "../page";
 
@@ -30,14 +31,6 @@ const ParticipationCheckoutRedirectingPage = lazy(() => import("../participation
 const ParticipationCheckoutPaymentErrorPage = lazy(() => import("../participation-checkout/payment-error"));
 const ParticipationCheckoutUnavailablePage = lazy(() => import("../participation-checkout/unavailable"));
 const ParticipationModalPage = lazy(() => import("../participation-modal"));
-const ParticipationTrackFormPage = lazy(() => import("../participation-track/form"));
-const ParticipationTrackOtpPage = lazy(() => import("../participation-track/otp"));
-const ParticipationTrackListPage = lazy(() => import("../participation-track/list"));
-const ParticipationTrackDetailsPage = lazy(() => import("../participation-track/details"));
-const ParticipationTrackPendingPage = lazy(() => import("../participation-track/pending"));
-const ParticipationTrackCompletedPage = lazy(() => import("../participation-track/completed"));
-const ParticipationTrackFailedPage = lazy(() => import("../participation-track/failed"));
-const ParticipationTrackEmptyPage = lazy(() => import("../participation-track/empty"));
 const PaymentResultSuccessPage = lazy(() => import("../payment-result/success"));
 const PaymentResultFailedPage = lazy(() => import("../payment-result/failed"));
 const PaymentResultPendingPage = lazy(() => import("../payment-result/pending"));
@@ -46,11 +39,13 @@ const PaymentResultErrorsPage = lazy(() => import("../payment-result/errors"));
 const PaymentResultReceiptPage = lazy(() => import("../payment-result/receipt"));
 const FaqPage = lazy(() => import("../faq"));
 const ContactSupportPage = lazy(() => import("../contact-support"));
-const NewsListPage = lazy(() => import("../news-list"));
-const NewsDetailsPage = lazy(() => import("../news-details"));
+const NewsListPage = lazy(() => import("../news-list/LiveNewsList"));
+const NewsDetailsPage = lazy(() => import("../news-details/LiveNewsDetails"));
 const PrivacyPolicyPage = lazy(() => import("../privacy-policy"));
 const TermsPage = lazy(() => import("../terms"));
 const Article172GuidePage = lazy(() => import("../article-172-guide"));
+const CompanyCertificateUnavailablePage = lazy(() => import("../features/article-172/Unavailable").then(module => ({ default: module.CompanyCertificateUnavailable })));
+const EmdadCertificateUnavailablePage = lazy(() => import("../features/article-172/Unavailable").then(module => ({ default: module.EmdadCertificateUnavailable })));
 const SearchResultsPage = lazy(() => import("../search-results"));
 const SearchResultsInitialPage = lazy(() => import("../search-results/states/initial"));
 const SearchResultsLoadingPage = lazy(() => import("../search-results/states/loading"));
@@ -68,8 +63,7 @@ const ProjectsPage = lazy(() => import("../features/projects/MahProjects"));
 const ProjectsLoadingPage = lazy(() => import("../features/projects/states/loading"));
 const ProjectsEmptyPage = lazy(() => import("../features/projects/states/empty"));
 const ProjectsErrorPage = lazy(() => import("../features/projects/states/error"));
-const ProjectDetailsPage = lazy(() => import("../features/project-details"));
-const ProjectRuralWomenPage = lazy(() => import("../features/project-details/variants/rural-women"));
+const ProjectDetailsPage = lazy(() => import("../features/projects/PublicProjectDetail"));
 
 const StartupPanelDashboardPage = lazy(() => import("../features/startup-panel"));
 const StartupPanelProjectsPage = lazy(() => import("../features/startup-panel/projects"));
@@ -101,9 +95,6 @@ const CompanyParticipationsPage = lazy(() => import("../features/company-panel/p
 const CompanyParticipationDetailPage = lazy(() => import("../features/company-panel/participation-detail"));
 const CompanyReportsPage = lazy(() => import("../features/company-panel/reports"));
 const CompanyReportDetailPage = lazy(() => import("../features/company-panel/report-detail"));
-const CompanyArticle172CertificatesPage = lazy(() => import("../features/company-panel/certificates"));
-const CompanyArticle172CertificateDetailPage = lazy(() => import("../features/company-panel/certificate-detail"));
-const CompanyArticle172CertificateIssuedPage = lazy(() => import("../features/company-panel/certificate-issued"));
 const CompanyOrganizationAccountPage = lazy(() => import("../features/company-panel/account"));
 const CompanyEditOrganizationInfoPage = lazy(() => import("../features/company-panel/account-edit-organization"));
 const CompanyEditOrganizationRepresentativePage = lazy(() => import("../features/company-panel/account-edit-representative"));
@@ -115,6 +106,7 @@ const AdminAddUserPage = lazy(() => import("../features/admin-panel/users-new"))
 const AdminRoleManagementPage = lazy(() => import("../features/admin-panel/roles"));
 const AdminUserDetailPage = lazy(() => import("../features/admin-panel/user-detail"));
 const AdminOrganizationsPage = lazy(() => import("../features/admin-panel/organizations"));
+const CompanyApplicationsPage = lazy(() => import("../features/admin-panel/company-applications"));
 const AdminOrganizationDetailPage = lazy(() => import("../features/admin-panel/organization-detail"));
 const AdminProjectsPage = lazy(() => import("../features/admin-panel/projects"));
 const AdminProjectDetailPage = lazy(() => import("../features/admin-panel/project-detail"));
@@ -124,6 +116,7 @@ const AdminRevenuesPage = lazy(() => import("../features/admin-panel/revenues"))
 const AdminRevenueDetailPage = lazy(() => import("../features/admin-panel/revenue-detail"));
 const AdminReportsPage = lazy(() => import("../features/admin-panel/reports"));
 const AdminReportDetailPage = lazy(() => import("../features/admin-panel/report-detail"));
+const AdminSupportPage = lazy(() => import("../features/admin-panel/support-requests"));
 const AdminContentManagementPage = lazy(() => import("../features/admin-panel/content"));
 const AdminSettingsPage = lazy(() => import("../features/admin-panel/settings"));
 const AdminAccessPolicyPage = lazy(() => import("../features/admin-panel/access-policy"));
@@ -156,9 +149,6 @@ const EmdadDashboardPage = lazy(() => import("../panels/emdad"));
 const EmdadReleaseRequestsPage = lazy(() => import("../panels/emdad/release-requests"));
 const EmdadReleaseRequestDetailPage = lazy(() => import("../panels/emdad/release-requests/detail"));
 const EmdadReleaseSuccessPage = lazy(() => import("../panels/emdad/release-requests/success"));
-const EmdadArticle172ApprovalsPage = lazy(() => import("../panels/emdad/article172-approvals"));
-const EmdadArticle172RequestDetailPage = lazy(() => import("../panels/emdad/article172-approvals/detail"));
-const EmdadArticle172SuccessPage = lazy(() => import("../panels/emdad/article172-approvals/success"));
 const EmdadPaymentHistoryPage = lazy(() => import("../panels/emdad/payment-history"));
 const EmdadPaymentDetailPage = lazy(() => import("../panels/emdad/payment-history/detail"));
 const EmdadFinancialReportsPage = lazy(() => import("../panels/emdad/financial-reports"));
@@ -176,9 +166,26 @@ function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
   );
 }
 
+function RoutedMobilePublicHeader() {
+  const { pathname } = useLocation();
+  // Layout marker only; never changes payment routing or status semantics.
+  useLayoutEffect(() => {
+    const path = pathname.replace(/\/+$/, "") || "/";
+    const state = /^\/participation\/checkout\/(funded|loading|redirecting|payment-error|unavailable)$/.test(path)
+      || /^\/projects\/[^/]+\/participate\/(funded|loading|redirecting|payment-error|unavailable)$/.test(path)
+      || /^\/payment\/result\/(success|failed|pending|canceled|errors)$/.test(path);
+    const kind = state ? "state" : path === "/participation/modal" ? "modal" : path === "/payment/result/receipt" ? "receipt" : null;
+    if (kind) document.body.dataset.mahTransactionLayout = kind;
+    else delete document.body.dataset.mahTransactionLayout;
+    return () => { delete document.body.dataset.mahTransactionLayout; };
+  }, [pathname]);
+  return <MobilePublicHeader pathname={pathname} />;
+}
+
 export function AppRouter() {
   return (
     <BrowserRouter>
+      <RoutedMobilePublicHeader />
       <Routes>
         <Route path="/" element={lazyElement(LandingPage)} />
         <Route path="/about" element={lazyElement(AboutPage)} />
@@ -217,17 +224,8 @@ export function AppRouter() {
         <Route path="/projects/:projectId/participate/payment-error" element={lazyElement(ParticipationCheckoutPaymentErrorPage)} />
         <Route path="/participation/checkout/unavailable" element={lazyElement(ParticipationCheckoutUnavailablePage)} />
         <Route path="/projects/:projectId/participate/unavailable" element={lazyElement(ParticipationCheckoutUnavailablePage)} />
+        <Route path="/participation/track/*" element={<Navigate to="/contact" replace />} />
         <Route path="/participation/modal" element={lazyElement(ParticipationModalPage)} />
-        <Route path="/participation/track" element={lazyElement(ParticipationTrackFormPage)} />
-        <Route path="/participation/track/form" element={lazyElement(ParticipationTrackFormPage)} />
-        <Route path="/participation/track/otp" element={lazyElement(ParticipationTrackOtpPage)} />
-        <Route path="/participation/track/list" element={lazyElement(ParticipationTrackListPage)} />
-        <Route path="/participation/track/details" element={lazyElement(ParticipationTrackDetailsPage)} />
-        <Route path="/participation/track/pending" element={lazyElement(ParticipationTrackPendingPage)} />
-        <Route path="/participation/track/completed" element={lazyElement(ParticipationTrackCompletedPage)} />
-        <Route path="/participation/track/failed" element={lazyElement(ParticipationTrackFailedPage)} />
-        <Route path="/participation/track/empty" element={lazyElement(ParticipationTrackEmptyPage)} />
-        <Route path="/participation/track/:participationId" element={lazyElement(ParticipationTrackDetailsPage)} />
         <Route path="/payment/result/success" element={lazyElement(PaymentResultSuccessPage)} />
         <Route path="/payment/result/failed" element={lazyElement(PaymentResultFailedPage)} />
         <Route path="/payment/result/pending" element={lazyElement(PaymentResultPendingPage)} />
@@ -256,12 +254,12 @@ export function AppRouter() {
         <Route path="/registration/track/states/rejected" element={lazyElement(RegistrationTrackPage)} />
 
         <Route path="/auth" element={<AuthEntryPage />} />
-        <Route path="/register/company/states/step2" element={<CompanyRegistrationUnavailable />} />
-        <Route path="/register/company/states/step3" element={<CompanyRegistrationUnavailable />} />
-        <Route path="/register/company/states/step4" element={<CompanyRegistrationUnavailable />} />
-        <Route path="/register/company/states/success" element={<CompanyRegistrationUnavailable />} />
-        <Route path="/register/company/status" element={<CompanyRegistrationUnavailable />} />
-        <Route path="/register/company" element={<CompanyRegistrationUnavailable />} />
+        <Route path="/register/company/states/step2" element={<Navigate to="/register/company" replace />} />
+        <Route path="/register/company/states/step3" element={<Navigate to="/register/company" replace />} />
+        <Route path="/register/company/states/step4" element={<Navigate to="/register/company" replace />} />
+        <Route path="/register/company/states/success" element={lazyElement(CompanyRegistrationPage)} />
+        <Route path="/register/company/status" element={lazyElement(RegistrationTrackPage)} />
+        <Route path="/register/company" element={lazyElement(CompanyRegistrationPage)} />
         <Route path="/register/startup/states/step2" element={lazyElement(StartupRegistrationStep2Page)} />
         <Route path="/register/startup/states/step3" element={lazyElement(StartupRegistrationStep3Page)} />
         <Route path="/register/startup/states/step4" element={lazyElement(StartupRegistrationStep4Page)} />
@@ -295,9 +293,9 @@ export function AppRouter() {
         <Route path="/panel/company/participations/:participationId" element={lazyElement(CompanyParticipationDetailPage)} />
         <Route path="/panel/company/reports" element={lazyElement(CompanyReportsPage)} />
         <Route path="/panel/company/reports/:reportId" element={lazyElement(CompanyReportDetailPage)} />
-        <Route path="/panel/company/certificates" element={lazyElement(CompanyArticle172CertificatesPage)} />
-        <Route path="/panel/company/certificates/:certificateId/issued" element={lazyElement(CompanyArticle172CertificateIssuedPage)} />
-        <Route path="/panel/company/certificates/:certificateId" element={lazyElement(CompanyArticle172CertificateDetailPage)} />
+        <Route path="/panel/company/certificates" element={lazyElement(CompanyCertificateUnavailablePage)} />
+        <Route path="/panel/company/certificates/:certificateId/issued" element={lazyElement(CompanyCertificateUnavailablePage)} />
+        <Route path="/panel/company/certificates/:certificateId" element={lazyElement(CompanyCertificateUnavailablePage)} />
         <Route path="/panel/company/account" element={lazyElement(CompanyOrganizationAccountPage)} />
         <Route path="/panel/company/account/edit/organization" element={lazyElement(CompanyEditOrganizationInfoPage)} />
         <Route path="/panel/company/account/edit/representative" element={lazyElement(CompanyEditOrganizationRepresentativePage)} />
@@ -310,6 +308,7 @@ export function AppRouter() {
         <Route path="/panel/admin/users" element={lazyElement(AdminUsersRolesPage)} />
         <Route path="/panel/admin/organizations/:organizationId" element={lazyElement(AdminOrganizationDetailPage)} />
         <Route path="/panel/admin/organizations" element={lazyElement(AdminOrganizationsPage)} />
+        <Route path="/panel/admin/company-applications" element={lazyElement(CompanyApplicationsPage)} />
         <Route path="/panel/admin/projects/:projectId" element={lazyElement(AdminProjectDetailPage)} />
         <Route path="/panel/admin/projects" element={lazyElement(AdminProjectsPage)} />
         <Route path="/panel/admin/funding/:fundingId" element={lazyElement(AdminFundingDetailPage)} />
@@ -318,6 +317,7 @@ export function AppRouter() {
         <Route path="/panel/admin/revenues" element={lazyElement(AdminRevenuesPage)} />
         <Route path="/panel/admin/reports/:reportId" element={lazyElement(AdminReportDetailPage)} />
         <Route path="/panel/admin/reports" element={lazyElement(AdminReportsPage)} />
+        <Route path="/panel/admin/support-requests" element={lazyElement(AdminSupportPage)} />
         <Route path="/panel/admin/content" element={lazyElement(AdminContentManagementPage)} />
         <Route path="/panel/admin/settings/access-policy" element={lazyElement(AdminAccessPolicyPage)} />
         <Route path="/panel/admin/settings" element={lazyElement(AdminSettingsPage)} />
@@ -351,9 +351,9 @@ export function AppRouter() {
         <Route path="/panel/emdad/release-requests" element={lazyElement(EmdadReleaseRequestsPage)} />
         <Route path="/panel/emdad/release-requests/detail" element={lazyElement(EmdadReleaseRequestDetailPage)} />
         <Route path="/panel/emdad/release-requests/success" element={lazyElement(EmdadReleaseSuccessPage)} />
-        <Route path="/panel/emdad/article172-approvals" element={lazyElement(EmdadArticle172ApprovalsPage)} />
-        <Route path="/panel/emdad/article172-approvals/detail" element={lazyElement(EmdadArticle172RequestDetailPage)} />
-        <Route path="/panel/emdad/article172-approvals/success" element={lazyElement(EmdadArticle172SuccessPage)} />
+        <Route path="/panel/emdad/article172-approvals" element={lazyElement(EmdadCertificateUnavailablePage)} />
+        <Route path="/panel/emdad/article172-approvals/detail" element={lazyElement(EmdadCertificateUnavailablePage)} />
+        <Route path="/panel/emdad/article172-approvals/success" element={lazyElement(EmdadCertificateUnavailablePage)} />
         <Route path="/panel/emdad/payment-history" element={lazyElement(EmdadPaymentHistoryPage)} />
         <Route path="/panel/emdad/payment-history/detail" element={lazyElement(EmdadPaymentDetailPage)} />
         <Route path="/panel/emdad/financial-reports" element={lazyElement(EmdadFinancialReportsPage)} />
@@ -376,7 +376,7 @@ export function AppRouter() {
         <Route path="/projects/states/loading" element={lazyElement(ProjectsLoadingPage)} />
         <Route path="/projects/states/empty" element={lazyElement(ProjectsEmptyPage)} />
         <Route path="/projects/states/error" element={lazyElement(ProjectsErrorPage)} />
-        <Route path="/projects/variants/rural-women" element={lazyElement(ProjectRuralWomenPage)} />
+        <Route path="/projects/variants/rural-women" element={lazyElement(ProjectsPage)} />
         <Route path="/projects/:projectId" element={lazyElement(ProjectDetailsPage)} />
         <Route path="*" element={lazyElement(NotFoundPage)} />
       </Routes>

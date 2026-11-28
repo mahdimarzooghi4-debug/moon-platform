@@ -1,69 +1,25 @@
-import React, { useEffect, useState } from "react";
-import {
-  listPublicTrustedCompanies,
-  publicTrustedCompanyLogoUrl,
-  type PublicTrustedCompany,
-} from "../features/admin-panel/management-api";
+import {SupportRequestForm} from "../contact-support/sections/SupportRequestForm";
+import React from "react";
+import TrustedCompanyCarousel from "../shared/TrustedCompanyCarousel";
 import CompanyRecommendations from "./CompanyRecommendations";
+import {fetchPublicProjects,type PublicProject} from "../features/projects/public-api";
+import {PublicProjectCard} from "../features/projects/PublicProjectCatalog";
 import "./index.css";
 
-function OrganizationalPartners() {
-  const [companies, setCompanies] = useState<PublicTrustedCompany[] | null>(null);
-  const [loadFailed, setLoadFailed] = useState(false);
-
-  useEffect(() => {
-    let active = true;
-    listPublicTrustedCompanies()
-      .then((items) => {
-        if (active) setCompanies(items);
-      })
-      .catch(() => {
-        if (active) setLoadFailed(true);
-      });
-
-    return () => { active = false; };
-  }, []);
-
-  return (
-    <section
-      aria-labelledby="mah-organizational-partners"
-      dir="rtl"
-      className="relative z-[340] flex flex-col items-center gap-8 self-stretch bg-[#f0f4f8] px-[clamp(16px,8.33vw,120px)] py-16 text-center"
-    >
-      <div className="flex flex-col gap-3">
-        <h2 id="mah-organizational-partners" className="text-[32px] font-extrabold leading-tight text-[#17324d]">
-          همراهان سازمانی ماه
-        </h2>
-        <p className="text-[16px] leading-[25px] text-[#60758a]">
-          شرکت‌هایی که در پروژه‌های دارای اثر اجتماعی تأییدشده مشارکت کرده‌اند.
-        </p>
-      </div>
-      {companies?.length ? (
-        <ul className="flex w-full flex-wrap items-center justify-center gap-x-10 gap-y-5">
-          {companies.map((company) => (
-            <li key={company.id} className="flex min-w-0 max-w-full items-center gap-2 text-lg font-bold text-[#17324d]">
-              {company.hasLogo && (
-                <img src={publicTrustedCompanyLogoUrl(company.id)} alt="" loading="lazy" className="h-10 w-10 shrink-0 rounded-md bg-white object-contain" />
-              )}
-              <span className="min-w-0 break-words text-right">{company.name}</span>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p role="status" className="text-sm text-[#60758a]">
-          {loadFailed ? "فهرست همراهان سازمانی در دسترس نیست." : companies ? "هنوز شرکتی برای نمایش منتشر نشده است." : "در حال دریافت فهرست همراهان سازمانی…"}
-        </p>
-      )}
-      {companies?.some((company) => company.hasLogo) && (
-        <p className="text-[11px] leading-[17px] text-[#60758a]">
-          نمایش لوگوی همکاران به معنای تأیید همه‌جانبه فعالیت‌های تجاری شرکت توسط سامانه ماه نیست.
-        </p>
-      )}
-    </section>
-  );
-}
+function OrganizationalPartners(){return <section dir="rtl" className="flex flex-col items-center gap-8 self-stretch bg-[#f0f4f8] px-[clamp(16px,8.33vw,120px)] py-16 text-center"><h2 className="text-[32px] font-extrabold text-[#17324d]">همراهان سازمانی ماه</h2><p className="text-[#60758a]">شرکت‌هایی که در پروژه‌های دارای اثر اجتماعی تأییدشده مشارکت کرده‌اند.</p><TrustedCompanyCarousel/><p className="text-xs text-[#60758a]">نمایش لوگوی همکاران به معنای تأیید همه‌جانبه فعالیت‌های تجاری شرکت توسط سامانه ماه نیست.</p></section>;}
 
 export default function MahForCompanies() {
+  const [projects,setProjects]=React.useState<PublicProject[]|null>(null);
+  const [failed,setFailed]=React.useState(false);
+  const [matches,setMatches]=React.useState<PublicProject[]|null>(null);
+  React.useEffect(()=>{
+    const controller=new AbortController();
+    fetchPublicProjects(controller.signal).then(items=>{
+      if(!controller.signal.aborted)setProjects(items.filter(p=>!p.isClosed));
+    }).catch(()=>{if(!controller.signal.aborted)setFailed(true)});
+    return()=>controller.abort();
+  },[]);
+  const visible=matches??projects?.slice(0,3)??[];
   return (
     <div className="main-container mah-companies-page flex w-[1440px] flex-col items-center flex-nowrap bg-[#fcfbf8] relative overflow-hidden mx-auto my-0">
       <div className="flex pt-[16px] pr-[120px] pb-[16px] pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] border-solid border-t border-t-[#e4ebf1] relative">
@@ -71,11 +27,6 @@ export default function MahForCompanies() {
           <div className="flex w-[120px] h-[44px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border-[1.5px] border-[#2094e3] relative overflow-hidden z-[2]">
             <span className="flex w-[65px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#2094e3] relative text-center whitespace-nowrap z-[3]">
               ورود کاربران
-            </span>
-          </div>
-          <div className="flex w-[120px] h-[44px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border-[1.5px] border-[#2094e3] relative overflow-hidden z-[4]">
-            <span className="flex w-[89px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#2094e3] relative text-center whitespace-nowrap z-[5]">
-              پیگیری مشارکت
             </span>
           </div>
           <div className="flex w-[120px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#2094e3] rounded-[12px] relative z-[6]">
@@ -110,16 +61,16 @@ export default function MahForCompanies() {
           <div className="w-[137px] h-[46px] shrink-0 bg-[url(/assets/codia/SbaYix9bCr.png)] bg-cover bg-no-repeat relative z-[16]" />
         </div>
       </div>
-      <div className="flex pt-[24px] pr-[120px] pb-0 pl-[120px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[17]">
-        <span className="flex w-[155px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[18]">
-          صفحه اصلی / برای شرکت‌ها
+      <nav aria-label="مسیر صفحه" dir="rtl" className="self-stretch shrink-0 px-[clamp(16px,8.33vw,120px)] pt-6" style={{direction:"rtl",textAlign:"right",width:"100%"}}>
+        <span className="font-['Vazirmatn'] text-[14px] leading-[22px] text-[#60758a]">
+          <a href="/" className="hover:underline">صفحه اصلی</a><span aria-hidden="true"> / </span><span aria-current="page">برای شرکت‌ها</span>
         </span>
-      </div>
-      <div className="flex pt-[48px] pr-[120px] pb-[48px] pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[19]">
-        <div className="flex w-[480px] h-[400px] items-start shrink-0 flex-nowrap bg-[url(/assets/codia/484NJFWM9O.png)] bg-cover bg-no-repeat rounded-[24px] relative overflow-hidden z-20">
+      </nav>
+      <div className="mah-mobile-hero-row flex pt-[48px] pr-[120px] pb-[48px] pl-[120px] justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[19]">
+        <div className="mah-mobile-hero-media mah-company-hero-image flex w-[480px] h-[400px] items-start shrink-0 flex-nowrap bg-[url(/assets/mah-hero/companies.webp)] bg-cover bg-no-repeat rounded-[24px] relative overflow-hidden z-20">
           <div className="flex h-[91px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] justify-between items-start shrink-0 flex-nowrap bg-[url(/assets/codia/9hnNVXY0hN.png)] bg-cover bg-no-repeat absolute bottom-0 left-[-380px] right-[480px] z-[21]" />
         </div>
-        <div className="mah-companies-hero-copy flex flex-col gap-[24px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[22]">
+        <div className="mah-mobile-hero-copy mah-companies-hero-copy flex flex-col gap-[24px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[22]">
           <span className="flex w-[640px] h-[120px] justify-end items-start shrink-0 font-['Vazirmatn'] text-[42px] font-normal leading-[60px] text-[#17324d] relative text-right z-[23]">
             سرمایه اجتماعی شرکت شما، با اثری روشن و قابل سنجش
           </span>
@@ -128,7 +79,7 @@ export default function MahForCompanies() {
             واریز کنید و پیشرفت اجرایی، تحقق KPI و نتایج اثر اجتماعی را در پنل
             سازمانی خود دنبال کنید.
           </span>
-          <div className="mah-companies-hero-actions flex w-[305px] gap-[16px] justify-end items-center shrink-0 flex-nowrap relative z-[25]">
+          <div className="mah-companies-hero-actions mah-request-primary-right flex w-[305px] gap-[16px] justify-end items-center shrink-0 flex-nowrap relative z-[25]">
             <div className="flex w-[132px] pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[26]">
               <span className="flex w-[92px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#2094e3] relative text-center whitespace-nowrap z-[27]">
                 مشاهده پروژه‌ها
@@ -141,9 +92,7 @@ export default function MahForCompanies() {
             </div>
           </div>
           <div className="mah-companies-hero-secondary flex flex-col gap-[6px] items-end self-stretch shrink-0 flex-nowrap relative z-30">
-            <span className="flex w-[185px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#2094e3] relative text-right underline whitespace-nowrap z-[31]">
-              قبلاً ثبت‌نام کرده‌اید؟ ورود سازمانی
-            </span>
+            
             <span className="flex w-[373px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-right whitespace-nowrap z-[32]">
               * ثبت‌نام اولیه رایگان است و به معنای تعهد مالی یا تضمین صدور
               گواهی نیست.
@@ -350,261 +299,22 @@ export default function MahForCompanies() {
           امداد به استارتاپ مجری پرداخت می‌شوند.
         </span>
       </div>
-      <div className="flex pt-[80px] pr-[120px] pb-[80px] pl-[120px] flex-col gap-[40px] items-start self-stretch shrink-0 flex-nowrap bg-[#fff] relative z-[116]">
-        <div className="flex flex-col gap-[12px] items-end self-stretch shrink-0 flex-nowrap relative z-[117]">
-          <span className="h-[50px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[32px] font-extrabold leading-[50px] text-[#17324d] relative text-center whitespace-nowrap z-[118]">
-            پروژه‌های آماده مشارکت سازمانی
-          </span>
-          <span className="flex w-[1200px] h-[25px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[16px] font-normal leading-[25px] text-[#60758a] relative text-center whitespace-nowrap z-[119]">
-            پروژه‌هایی با جامعه هدف مشخص، KPIهای قابل سنجش و مسیر گزارش‌دهی شفاف
-          </span>
+      <section id="company-live-projects" dir="rtl" className="mah-company-live-section self-stretch bg-white px-[clamp(16px,8.33vw,120px)] py-20 flex flex-col gap-10" aria-labelledby="company-project-heading">
+        <div className="text-center flex flex-col gap-3">
+          <h2 id="company-project-heading" className="text-center text-[32px] font-extrabold text-[#17324d]">پروژه‌های آماده مشارکت سازمانی</h2>
+          <p className="text-center text-[#60758a]">پروژه‌های فعال و منتشرشده در سامانه ماه</p>
         </div>
-        <div className="flex gap-[24px] justify-end items-start self-stretch shrink-0 flex-nowrap relative z-[120]">
-          <div className="flex pt-[24px] pr-[24px] pb-[24px] pl-[24px] flex-col gap-[20px] items-end grow shrink-0 basis-0 flex-nowrap bg-[#fcfbf8] rounded-[24px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[121]">
-            <div className="flex h-[180px] flex-col items-start self-stretch shrink-0 flex-nowrap bg-[url(/assets/codia/OVPcmhB9Gi.png)] bg-cover bg-no-repeat rounded-[16px] relative overflow-hidden z-[122]" />
-            <div className="flex flex-col gap-[8px] items-start self-stretch shrink-0 flex-nowrap relative z-[123]">
-              <div className="flex gap-[8px] items-center self-stretch shrink-0 flex-nowrap relative z-[124]">
-                <span className="flex w-[114px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#2094e3] relative text-right whitespace-nowrap z-[125]">
-                  حوزه: اشتغال و معیشت
-                </span>
-                <span className="h-[19px] shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-left whitespace-nowrap z-[126]">
-                  |
-                </span>
-                <span className="flex w-[70px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-right whitespace-nowrap z-[127]">
-                  استان: گلستان
-                </span>
-              </div>
-              <span className="flex w-[245px] h-[28px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[18px] font-bold leading-[28px] text-[#17324d] relative text-right whitespace-nowrap z-[128]">
-                اشتغال زنان روستایی (راهکار سبز)
-              </span>
-            </div>
-            <div className="flex flex-col gap-[12px] items-start self-stretch shrink-0 flex-nowrap relative z-[129]">
-              <div className="flex gap-[16px] items-start self-stretch shrink-0 flex-nowrap relative z-[130]">
-                <div className="flex flex-col gap-[2px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[131]">
-                  <span className="flex w-[62px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-right whitespace-nowrap z-[132]">
-                    فرصت شغلی
-                  </span>
-                  <span className="flex w-[58px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[133]">
-                    ۱۶۰ فرصت
-                  </span>
-                </div>
-                <div className="flex flex-col gap-[2px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[134]">
-                  <span className="flex w-[54px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-right whitespace-nowrap z-[135]">
-                    آموزش‌دیده
-                  </span>
-                  <span className="flex w-[43px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[136]">
-                    ۲۴۰ نفر
-                  </span>
-                </div>
-              </div>
-              <div className="flex gap-[16px] items-start self-stretch shrink-0 flex-nowrap relative z-[137]">
-                <div className="flex flex-col gap-[2px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[138]">
-                  <span className="flex w-[91px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-right whitespace-nowrap z-[139]">
-                    خانوار تحت پوشش
-                  </span>
-                  <span className="flex w-[60px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[140]">
-                    ۳۲۰ خانوار
-                  </span>
-                </div>
-                <div className="flex flex-col gap-[2px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[141]">
-                  <span className="flex w-[38px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-right whitespace-nowrap z-[142]">
-                    روستاها
-                  </span>
-                  <span className="flex w-[52px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[143]">
-                    ۲۴ روستا
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col gap-[8px] items-start self-stretch shrink-0 flex-nowrap relative z-[144]">
-              <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[145]">
-                <span className="flex w-[78px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-right whitespace-nowrap z-[146]">
-                  تأمین مالی: ۵۸٪
-                </span>
-                <span className="flex w-[115px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#17324d] relative text-right whitespace-nowrap z-[147]">
-                  هدف: ۴۰۰ میلیون تومان
-                </span>
-              </div>
-              <div className="flex h-[8px] justify-end items-start self-stretch shrink-0 flex-nowrap bg-[#e4ebf1] rounded-[4px] relative overflow-hidden z-[148]">
-                <div className="w-[232px] self-stretch shrink-0 bg-[#2094e3] relative z-[149]" />
-              </div>
-            </div>
-            <div className="flex pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[150]">
-              <span className="flex w-[122px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#2094e3] relative text-center whitespace-nowrap z-[151]">
-                مشاهده جزئیات پروژه
-              </span>
-            </div>
-          </div>
-          <div className="flex pt-[24px] pr-[24px] pb-[24px] pl-[24px] flex-col gap-[20px] items-end grow shrink-0 basis-0 flex-nowrap bg-[#fcfbf8] rounded-[24px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[152]">
-            <div className="flex h-[180px] flex-col items-start self-stretch shrink-0 flex-nowrap bg-[url(/assets/codia/bZ15zUixSc.png)] bg-cover bg-no-repeat rounded-[16px] relative overflow-hidden z-[153]" />
-            <div className="flex flex-col gap-[8px] items-start self-stretch shrink-0 flex-nowrap relative z-[154]">
-              <div className="flex gap-[8px] items-center self-stretch shrink-0 flex-nowrap relative z-[155]">
-                <span className="flex w-[107px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#2094e3] relative text-right whitespace-nowrap z-[156]">
-                  حوزه: آموزش و اشتغال
-                </span>
-                <span className="h-[19px] shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-left whitespace-nowrap z-[157]">
-                  |
-                </span>
-                <span className="flex w-[101px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-right whitespace-nowrap z-[158]">
-                  استان: خراسان رضوی
-                </span>
-              </div>
-              <span className="flex w-[241px] h-[28px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[18px] font-bold leading-[28px] text-[#17324d] relative text-right whitespace-nowrap z-[159]">
-                آموزش مهارت نوجوانان (مهارت‌نو)
-              </span>
-            </div>
-            <div className="flex flex-col gap-[12px] items-start self-stretch shrink-0 flex-nowrap relative z-[160]">
-              <div className="flex gap-[16px] items-start self-stretch shrink-0 flex-nowrap relative z-[161]">
-                <div className="flex flex-col gap-[2px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[162]">
-                  <span className="flex w-[68px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-right whitespace-nowrap z-[163]">
-                    نوجوانان هدف
-                  </span>
-                  <span className="flex w-[42px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[164]">
-                    ۵۰۰ نفر
-                  </span>
-                </div>
-                <div className="flex flex-col gap-[2px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[165]">
-                  <span className="flex w-[74px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-right whitespace-nowrap z-[166]">
-                    دوره‌های مهارتی
-                  </span>
-                  <span className="flex w-[44px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[167]">
-                    ۲۴ دوره
-                  </span>
-                </div>
-              </div>
-              <div className="flex gap-[16px] items-start self-stretch shrink-0 flex-nowrap relative z-[168]">
-                <div className="flex flex-col gap-[2px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[169]">
-                  <span className="flex w-[66px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-right whitespace-nowrap z-[170]">
-                    کارآموزی فعال
-                  </span>
-                  <span className="flex w-[53px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[171]">
-                    ۹۰ فرصت
-                  </span>
-                </div>
-                <div className="flex flex-col gap-[2px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[172]">
-                  <span className="flex w-[56px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-right whitespace-nowrap z-[173]">
-                    شهرستان‌ها
-                  </span>
-                  <span className="flex w-[65px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[174]">
-                    ۸ شهرستان
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col gap-[8px] items-start self-stretch shrink-0 flex-nowrap relative z-[175]">
-              <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[176]">
-                <span className="flex w-[78px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-right whitespace-nowrap z-[177]">
-                  تأمین مالی: ۴۷٪
-                </span>
-                <span className="flex w-[116px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#17324d] relative text-right whitespace-nowrap z-[178]">
-                  هدف: ۳۰۰ میلیون تومان
-                </span>
-              </div>
-              <div className="flex h-[8px] justify-end items-start self-stretch shrink-0 flex-nowrap bg-[#e4ebf1] rounded-[4px] relative overflow-hidden z-[179]">
-                <div className="w-[141px] self-stretch shrink-0 bg-[#2094e3] relative z-[180]" />
-              </div>
-            </div>
-            <div className="flex pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[181]">
-              <span className="flex w-[122px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#2094e3] relative text-center whitespace-nowrap z-[182]">
-                مشاهده جزئیات پروژه
-              </span>
-            </div>
-          </div>
-          <div className="flex pt-[24px] pr-[24px] pb-[24px] pl-[24px] flex-col gap-[20px] items-end grow shrink-0 basis-0 flex-nowrap bg-[#fcfbf8] rounded-[24px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[183]">
-            <div className="flex h-[180px] flex-col items-start self-stretch shrink-0 flex-nowrap bg-[url(/assets/codia/oniW8J37sN.png)] bg-cover bg-no-repeat rounded-[16px] relative overflow-hidden z-[184]" />
-            <div className="flex flex-col gap-[8px] items-start self-stretch shrink-0 flex-nowrap relative z-[185]">
-              <div className="flex gap-[8px] items-center self-stretch shrink-0 flex-nowrap relative z-[186]">
-                <span className="flex w-[63px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#2094e3] relative text-right whitespace-nowrap z-[187]">
-                  حوزه: سلامت
-                </span>
-                <span className="h-[19px] shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-left whitespace-nowrap z-[188]">
-                  |
-                </span>
-                <span className="flex w-[61px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-right whitespace-nowrap z-[189]">
-                  استان: فارس
-                </span>
-              </div>
-              <span className="flex w-[309px] h-[28px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[18px] font-bold leading-[28px] text-[#17324d] relative text-right whitespace-nowrap z-[190]">
-                سلامت خانواده‌های کم‌برخوردار (سلامت‌یار)
-              </span>
-            </div>
-            <div className="flex flex-col gap-[12px] items-start self-stretch shrink-0 flex-nowrap relative z-[191]">
-              <div className="flex gap-[16px] items-start self-stretch shrink-0 flex-nowrap relative z-[192]">
-                <div className="flex flex-col gap-[2px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[193]">
-                  <span className="flex w-[63px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-right whitespace-nowrap z-[194]">
-                    خانواده هدف
-                  </span>
-                  <span className="flex w-[70px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[195]">
-                    ۳۵۰ خانواده
-                  </span>
-                </div>
-                <div className="flex flex-col gap-[2px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[196]">
-                  <span className="flex w-[90px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-right whitespace-nowrap z-[197]">
-                    غربالگری انجام‌شده
-                  </span>
-                  <span className="flex w-[50px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[198]">
-                    ۷۰۰ مورد
-                  </span>
-                </div>
-              </div>
-              <div className="flex gap-[16px] items-start self-stretch shrink-0 flex-nowrap relative z-[199]">
-                <div className="flex flex-col gap-[2px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[200]">
-                  <span className="flex w-[74px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-right whitespace-nowrap z-[201]">
-                    جلسات آموزشی
-                  </span>
-                  <span className="flex w-[52px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[202]">
-                    ۴۰ جلسه
-                  </span>
-                </div>
-                <div className="flex flex-col gap-[2px] items-end grow shrink-0 basis-0 flex-nowrap relative z-[203]">
-                  <span className="flex w-[88px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-right whitespace-nowrap z-[204]">
-                    مراکز درمانی همکار
-                  </span>
-                  <span className="flex w-[40px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[205]">
-                    ۱۲ مرکز
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col gap-[8px] items-start self-stretch shrink-0 flex-nowrap relative z-[206]">
-              <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap relative z-[207]">
-                <span className="flex w-[77px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#60758a] relative text-right whitespace-nowrap z-[208]">
-                  تأمین مالی: ۶۸٪
-                </span>
-                <span className="flex w-[115px] h-[19px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[12px] font-normal leading-[18.75px] text-[#17324d] relative text-right whitespace-nowrap z-[209]">
-                  هدف: ۵۰۰ میلیون تومان
-                </span>
-              </div>
-              <div className="flex h-[8px] justify-end items-start self-stretch shrink-0 flex-nowrap bg-[#e4ebf1] rounded-[4px] relative overflow-hidden z-[210]">
-                <div className="w-[340px] self-stretch shrink-0 bg-[#2094e3] relative z-[211]" />
-              </div>
-            </div>
-            <div className="flex pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative z-[212]">
-              <span className="flex w-[122px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#2094e3] relative text-center whitespace-nowrap z-[213]">
-                مشاهده جزئیات پروژه
-              </span>
-            </div>
-          </div>
+        {visible.length>0?<div className="mah-public-project-grid">{visible.map(p=><PublicProjectCard key={p.projectId} project={p}/>)}</div>:
+          <p className="text-center text-[#60758a]" role={failed?"alert":"status"}>{failed?"دریافت پروژه‌ها از سرور انجام نشد.":projects===null?"در حال دریافت پروژه‌ها…":matches!==null?"پروژه‌ای مطابق فیلترها پیدا نشد.":"هنوز پروژه فعالی برای مشارکت منتشر نشده است."}</p>}
+        {projects!==null&&projects.length>0&&<a href="/projects" className="self-center text-[#1476b9] font-bold">مشاهده همه پروژه‌ها ←</a>}
+      </section>
+      {projects!==null&&projects.length>0&&<section dir="rtl" className="mah-company-live-section self-stretch bg-[#f0f4f8] px-[clamp(16px,8.33vw,120px)] py-20 flex flex-col gap-10">
+        <div className="text-center flex flex-col gap-3">
+          <h2 className="text-center text-[32px] font-extrabold text-[#17324d]">پروژه متناسب با اولویت‌های سازمان خود پیدا کنید</h2>
+          <p className="text-center text-[#60758a]">فیلتر پروژه‌های منتشرشده براساس اطلاعات واقعی سامانه</p>
         </div>
-        <div className="flex pt-[20px] pr-0 pb-0 pl-0 gap-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap relative z-[214]">
-          <div className="w-[16px] h-[16px] shrink-0 bg-[url(/assets/codia/FtYGEOmkbQ.png)] bg-cover bg-no-repeat relative overflow-hidden z-[215]" />
-          <span className="flex w-[131px] h-[23px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[15px] font-bold leading-[23px] text-[#2094e3] relative text-right whitespace-nowrap z-[216]">
-            مشاهده همه پروژه‌ها
-          </span>
-        </div>
-      </div>
-      <div className="flex pt-[80px] pr-[120px] pb-[80px] pl-[120px] flex-col gap-[40px] items-start self-stretch shrink-0 flex-nowrap bg-[#f0f4f8] relative z-[217]">
-        <div className="flex flex-col gap-[12px] items-end self-stretch shrink-0 flex-nowrap relative z-[218]">
-          <span className="h-[50px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[32px] font-extrabold leading-[50px] text-[#17324d] relative text-center whitespace-nowrap z-[219]">
-            پروژه متناسب با اولویت‌های سازمان خود پیدا کنید
-          </span>
-          <span className="h-[25px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[16px] font-normal leading-[25px] text-[#60758a] relative text-center whitespace-nowrap z-[220]">
-            فیلترهای هوشمند برای انطباق سرمایه‌گذاری اجتماعی با استانداردهای
-            سازمانی شما
-          </span>
-        </div>
-        <CompanyRecommendations />
-      </div>
+        <CompanyRecommendations projects={projects} onApply={setMatches}/>
+      </section>}
       <div className="flex pt-[80px] pr-[120px] pb-[80px] pl-[120px] gap-[64px] justify-end items-center self-stretch shrink-0 flex-nowrap bg-[#fff] relative z-[245]">
         <div className="flex pt-[32px] pr-[32px] pb-[32px] pl-[32px] flex-col gap-[24px] items-end grow shrink-0 basis-0 flex-nowrap bg-[#fcfbf8] rounded-[24px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[246]">
           <span className="h-[28px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[18px] font-bold leading-[28px] text-[#17324d] relative text-right whitespace-nowrap z-[247]">
@@ -1113,7 +823,7 @@ export default function MahForCompanies() {
           </div>
         </div>
       </div>
-      <div className="flex pt-[80px] pr-[120px] pb-[80px] pl-[120px] flex-col gap-[40px] items-start self-stretch shrink-0 flex-nowrap bg-[#fff] relative z-[475]">
+      <div className="mah-request-company-contact flex pt-[80px] pr-[120px] pb-[80px] pl-[120px] flex-col gap-[40px] items-start self-stretch shrink-0 flex-nowrap bg-[#fff] relative z-[475]">
         <div className="flex flex-col gap-[12px] items-end self-stretch shrink-0 flex-nowrap relative z-[476]">
           <span className="flex w-[619px] h-[50px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[32px] font-extrabold leading-[50px] text-[#17324d] relative text-right whitespace-nowrap z-[477]">
             برای انتخاب مسیر مناسب همراهی گفت‌وگو کنیم
@@ -1123,76 +833,7 @@ export default function MahForCompanies() {
             شما ارتباط بگیرد.
           </span>
         </div>
-        <div className="flex w-[720px] pt-[40px] pr-[40px] pb-[40px] pl-[40px] flex-col gap-[24px] items-start shrink-0 flex-nowrap bg-[#fcfbf8] rounded-[24px] border-solid border border-[#e4ebf1] relative shadow-[0_4px_16px_0_rgba(22,45,71,0.08)] z-[479]">
-          <div className="flex flex-col gap-[16px] items-end self-stretch shrink-0 flex-nowrap relative z-[480]">
-            <div className="flex flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[481]">
-              <span className="h-[22px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[482]">
-                نام و نام خانوادگی نماینده
-              </span>
-              <div className="flex pt-[12px] pr-[12px] pb-[12px] pl-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[10px] border-solid border border-[#e4ebf1] relative z-[483]">
-                <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[484]">
-                  مثال: علی احمدی
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[485]">
-              <span className="h-[22px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[486]">
-                نام شرکت یا سازمان
-              </span>
-              <div className="flex pt-[12px] pr-[12px] pb-[12px] pl-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[10px] border-solid border border-[#e4ebf1] relative z-[487]">
-                <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[488]">
-                  مثال: شرکت پیشرو داده
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[489]">
-              <span className="h-[22px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[490]">
-                شماره موبایل سازمانی
-              </span>
-              <div className="flex pt-[12px] pr-[12px] pb-[12px] pl-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[10px] border-solid border border-[#e4ebf1] relative z-[491]">
-                <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[492]">
-                  ۰۹۱۲۳۴۵۶۷۸۹
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[493]">
-              <span className="h-[22px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[494]">
-                ایمیل کاری
-              </span>
-              <div className="flex pt-[12px] pr-[12px] pb-[12px] pl-[12px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[10px] border-solid border border-[#e4ebf1] relative z-[495]">
-                <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[496]">
-                  info@company.com
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[497]">
-              <span className="h-[22px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[498]">
-                موضوع درخواست
-              </span>
-              <div className="flex pt-[12px] pr-[12px] pb-[12px] pl-[12px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[10px] border-solid border border-[#e4ebf1] relative z-[499]">
-                <div className="w-[14px] h-[14px] shrink-0 bg-[url(/assets/codia/c0AQpx1XRe.png)] bg-cover bg-no-repeat relative overflow-hidden z-[500]" />
-                <span className="flex w-[162px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[501]">
-                  انتخاب پروژه دارای اثر اجتماعی مناسب
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-col gap-[8px] items-end self-stretch shrink-0 flex-nowrap relative z-[502]">
-              <span className="h-[22px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-semibold leading-[21.875px] text-[#17324d] relative text-right whitespace-nowrap z-[503]">
-                توضیحات و نیازمندی‌ها
-              </span>
-              <div className="flex h-[100px] pt-[12px] pr-[12px] pb-[12px] pl-[12px] items-start self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[10px] border-solid border border-[#e4ebf1] relative z-[504]">
-                <span className="h-[22px] grow shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-normal leading-[21.875px] text-[#60758a] relative text-right whitespace-nowrap z-[505]">
-                  جزییات بیشتری از اهداف و حوزه‌های ترجیحی سازمان خود بنویسید...
-                </span>
-              </div>
-            </div>
-          </div>
-          <div className="flex pt-[11px] pr-[20px] pb-[11px] pl-[20px] gap-[8px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#2094e3] rounded-[12px] relative z-[509]">
-            <span className="flex w-[117px] h-[22px] justify-center items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#fff] relative text-center whitespace-nowrap z-[510]">
-              ثبت درخواست تماس
-            </span>
-          </div>
-        </div>
+        <div className="w-full max-w-[720px]"><SupportRequestForm company /></div>
       </div>
       <div className="flex pt-[80px] pr-[120px] pb-[80px] pl-[120px] flex-col gap-[24px] items-center self-stretch shrink-0 flex-nowrap bg-[#f7fafc] relative z-[511]">
         <span className="h-[50px] self-stretch shrink-0 basis-auto font-['Vazirmatn'] text-[32px] font-extrabold leading-[50px] text-[#17324d] relative text-center whitespace-nowrap z-[512]">
@@ -1259,9 +900,6 @@ export default function MahForCompanies() {
             </span>
             <span className="flex w-[77px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[538]">
               سؤالات متداول
-            </span>
-            <span className="flex w-[82px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[539]">
-              پیگیری مشارکت
             </span>
           </div>
           <div className="flex w-[180px] flex-col gap-[12px] items-end shrink-0 flex-nowrap relative z-[540]">

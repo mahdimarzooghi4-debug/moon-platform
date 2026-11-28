@@ -44,18 +44,6 @@ export function ContactInfoColumn() {
           </div>
         </div>
 
-        <div className="flex gap-[8px] items-start self-stretch shrink-0 flex-nowrap relative">
-          <a href="mailto:info@mahcsr.ir" className="flex min-h-[44px] px-[20px] py-[11px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] rounded-[12px] border-solid border border-[#e4ebf1] relative">
-            <span className="font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#2094e3] text-center whitespace-nowrap">
-              ارسال ایمیل
-            </span>
-          </a>
-          <a href="tel:+982166485374" className="flex min-h-[44px] px-[20px] py-[11px] gap-[8px] justify-center items-center shrink-0 flex-nowrap bg-[#2094e3] rounded-[12px] relative">
-            <span className="font-['Vazirmatn'] text-[14px] font-medium leading-[22px] text-[#fff] text-center whitespace-nowrap">
-              تماس تلفنی
-            </span>
-          </a>
-        </div>
       </div>
 
       <div className="flex p-[24px] flex-col gap-[16px] items-end self-stretch shrink-0 flex-nowrap bg-[#fcfbf8] rounded-[20px] border-solid border border-[#e4ebf1] relative">
@@ -99,9 +87,6 @@ export function ContactInfoColumn() {
           <span className="self-stretch text-right">✔ گواهی‌های مشارکت سازمانی با امضای رسمی کمیته امداد امام صادر می‌شوند.</span>
           <span className="self-stretch text-right">✔ تمام اطلاعات مشارکت نزد سامانه محفوظ و امن است.</span>
         </div>
-        <span className="font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#2094e3] relative text-right underline whitespace-nowrap">
-          گزارش پیام یا لینک مشکوک
-        </span>
       </div>
     </div>
   );

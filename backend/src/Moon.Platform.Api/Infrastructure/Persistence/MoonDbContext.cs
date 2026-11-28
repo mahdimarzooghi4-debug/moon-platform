@@ -1,3 +1,4 @@
+using Moon.Platform.Api.Modules.Support;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Moon.Platform.Api.Common.Auditing;
@@ -7,6 +8,7 @@ using Moon.Platform.Api.Modules.Execution;
 using Moon.Platform.Api.Modules.Funding;
 using Moon.Platform.Api.Modules.Identity;
 using Moon.Platform.Api.Modules.StartupRegistration;
+using Moon.Platform.Api.Modules.CompanyRegistration;
 using Moon.Platform.Api.Modules.Projects;
 
 namespace Moon.Platform.Api.Infrastructure.Persistence;
@@ -14,6 +16,7 @@ namespace Moon.Platform.Api.Infrastructure.Persistence;
 public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbContext(options)
 {
     public DbSet<StartupApplication> StartupApplications => Set<StartupApplication>();
+    public DbSet<CompanyApplication> CompanyApplications => Set<CompanyApplication>();
     public DbSet<Organization> Organizations => Set<Organization>();
     public DbSet<AppUser> Users => Set<AppUser>();
     public DbSet<Role> Roles => Set<Role>();
@@ -64,6 +67,18 @@ public sealed class MoonDbContext(DbContextOptions<MoonDbContext> options) : DbC
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("moon");
+        modelBuilder.Entity<SupportTicket>(entity =>
+        {
+            entity.ToTable("support_tickets");
+            entity.Property(x => x.Revision).IsConcurrencyToken();
+            entity.HasIndex(x => x.TrackingCode).IsUnique();
+            entity.HasIndex(x => x.SubmittedAtUtc);
+        });
+        modelBuilder.Entity<CompanyApplication>(entity =>
+        {
+            entity.ToTable("company_applications");
+            entity.HasIndex(application => application.TrackingCode).IsUnique();
+        });
         modelBuilder.Entity<StartupApplication>(entity =>
         {
             entity.ToTable("startup_applications");

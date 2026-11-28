@@ -94,7 +94,7 @@ export default function Main() {
               <section className="mah-review-details">
                 <h3>اطلاعات تکمیلی</h3>
                 <dl>{Object.entries(registrationDetails).filter(([, value]) => value).map(([label, value]) => (
-                  <div key={label}><dt>{label}</dt><dd><bdi>{value}</bdi></dd></div>
+                  <div key={label}><dt>{label}</dt><dd><bdi>{["سال شروع فعالیت","تعداد مشتریان پرداخت‌کننده","تعداد کاربران فعال","نرخ رشد","درآمد ماهانه"].includes(label) ? toPersianLoginDigits(value) : value}</bdi></dd></div>
                 ))}</dl>
               </section>
             )}

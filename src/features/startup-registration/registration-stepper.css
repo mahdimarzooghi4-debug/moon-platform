@@ -1,5 +1,5 @@
 
-.main-container .mah-startup-progress {
+.main-container .mah-startup-progress, .mah-company-registration .mah-startup-progress {
   direction: rtl !important; display: flex; align-items: center; justify-content: center;
   width: 100%; padding: 16px 0; gap: 12px; align-self: stretch;
 }
@@ -19,8 +19,14 @@
 .mah-startup-progress .mah-progress-line { flex: 1 1 40px; min-width: 10px; max-width: 40px; height: 1px; background: #cbd5e1; }
 .mah-startup-progress .mah-progress-line[data-complete="true"] { background: #159455; }
 @media (max-width: 700px) {
-  .main-container .mah-startup-progress { gap: 5px; }
+  .main-container .mah-startup-progress, .mah-company-registration .mah-startup-progress { gap: 5px; }
   .mah-startup-progress .mah-progress-step { flex: 1 1 0; flex-direction: column; gap: 4px; min-width: 0; font-size: 11px; }
   .mah-startup-progress .mah-progress-label { text-align: center !important; }
   .mah-startup-progress .mah-progress-line { align-self: flex-start; margin-top: 14px; min-width: 4px; max-width: 20px; }
 }
+
+/* Company registration is not inside the generated startup main-container. */
+.mah-company-registration .mah-startup-progress { flex-wrap: nowrap; gap: 8px; }
+.mah-company-registration .mah-progress-step { flex: 1 1 0; min-width: 0; flex-direction: column; text-align: center; gap: 5px; }
+.mah-company-registration .mah-progress-label { overflow-wrap: anywhere; text-align: center; }
+.mah-company-registration .mah-progress-line { align-self: flex-start; margin-top: 14px; min-width: 4px; }

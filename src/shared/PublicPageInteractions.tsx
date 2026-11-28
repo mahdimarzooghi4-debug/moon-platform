@@ -8,7 +8,6 @@ type Action =
 const COMMON_ROUTES: Record<string, string> = {
   "ورود کاربران": "/auth",
   "ورود/ثبت نام": "/auth",
-  "پیگیری مشارکت": "/participation/track",
   "شروع مشارکت": "/projects",
   "صفحه اصلی": "/",
   "پروژه‌ها": "/projects",
@@ -194,7 +193,7 @@ export default function PublicPageInteractions() {
       const root = document.querySelector<HTMLElement>(".main-container");
       if (!root) return;
       enhancePublicLogo(root);
-      if (STATIC_PUBLIC_PATH.test(pathname)) enhance(root, pathname);
+      if (!root.classList.contains("mah-live-news") && !root.classList.contains("mah-live-project-detail") && STATIC_PUBLIC_PATH.test(pathname)) enhance(root, pathname);
     };
 
     apply();

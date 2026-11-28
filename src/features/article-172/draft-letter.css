@@ -1,0 +1,25 @@
+.mah-article172-draft.company-official-certificate {
+  position: relative; inset: auto; width: min(100%, 1020px); height: auto;
+  min-height: 0; padding: clamp(16px, 4vw, 48px); margin: 0 auto; overflow: visible;
+}
+.mah-article172-draft-banner {
+  border: 1px solid #94661c; color: #754b09; background: #fff8e9;
+  padding: 8px 12px; font-size: 13px; font-weight: 700; text-align: center; margin-bottom: 14px;
+}
+.mah-article172-draft-footer { margin: 16px 0 0; }
+.mah-article172-draft .company-official-fields,
+.mah-article172-draft .company-official-intro,
+.mah-article172-draft .company-official-note,
+.mah-article172-draft .company-official-signature { width: 100%; }
+.mah-article172-draft .company-official-fields > div { height: auto; min-height: 54px; overflow-wrap: anywhere; }
+.mah-article172-draft .company-official-signature { grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.mah-article172-draft .company-official-signature > div { width: auto; transform: none; }
+@media(max-width: 640px) {
+  .mah-article172-draft .company-official-certificate-header { height: auto; grid-template-columns: 1fr; }
+  .mah-article172-draft .company-official-certificate-header > div { text-align: center; justify-self: center; }
+  .mah-article172-draft .company-official-fields { grid-template-columns: 1fr; }
+}
+@media print {
+  .mah-article172-draft-banner { display: block !important; border: 2px solid #754b09 !important; color: #754b09 !important; background: #fff8e9 !important; }
+  .mah-article172-draft .company-official-fields > div { height: auto !important; min-height: 14mm; }
+}

@@ -61,7 +61,6 @@ export function CheckoutFooter({ navigateTo }: { navigateTo: (path: string) => v
           <strong className="w-full text-right text-[14px] text-white">پشتیبانی</strong>
           <FooterButton onClick={() => navigateTo("/contact")}>تماس با ما</FooterButton>
           <FooterButton onClick={() => navigateTo("/faq")}>سؤالات متداول</FooterButton>
-          <FooterButton onClick={() => navigateTo("/participation/track")}>پیگیری مشارکت</FooterButton>
         </div>
 
         <div className="flex h-[182px] w-[150px] flex-col items-start gap-3 text-right">

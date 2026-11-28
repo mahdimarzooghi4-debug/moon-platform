@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# Exercise the actual candidate web image, without connecting to production.
+set -euo pipefail
+image="$1"
+tmp="$(mktemp -d)"
+cid=""
+trap 'if [ -n "$cid" ]; then docker rm -f "$cid" >/dev/null; fi; rm -rf "$tmp"' EXIT
+cid="$(docker run -d -p 127.0.0.1::8080 "$image")"
+address="$(docker port "$cid" 8080/tcp)"
+base="http://$address"
+curl -fsS --retry 10 --retry-connrefused --retry-delay 1 --max-time 5 "$base/healthz" >/dev/null
+for name in landing startups companies about; do
+  curl -fsS -D "$tmp/headers" -o "$tmp/image" "$base/assets/mah-hero/$name.webp"
+  grep -Eqi '^Content-Type: image/webp' "$tmp/headers"
+  grep -Eqi '^Cache-Control: max-age=86400' "$tmp/headers"
+  grep -Eqi '^X-Content-Type-Options: nosniff' "$tmp/headers"
+  test "$(head -c 4 "$tmp/image")" = RIFF
+done
+curl -fsS -D "$tmp/headers" -o /dev/null "$base/about"
+grep -Eqi '^Cache-Control: no-cache' "$tmp/headers"
+test "$(curl -sS -o /dev/null -w '%{http_code}' "$base/assets/mah-hero/missing.webp")" = 404
+# Existing project asset URLs keep their original response for legacy clients.
+path="/assets/company-panel/project-rural-women-employment.png"
+curl -fsS -H 'Accept: image/webp,image/png' -D "$tmp/headers" -o "$tmp/optimized" "$base$path"
+grep -Eqi '^Content-Type: image/webp' "$tmp/headers"
+grep -Eqi '^Vary: Accept' "$tmp/headers"
+grep -Eqi '^X-Content-Type-Options: nosniff' "$tmp/headers"
+grep -Eqi '^Cache-Control: max-age=86400' "$tmp/headers"
+test "$(head -c 4 "$tmp/optimized")" = RIFF
+curl -fsS -H 'Accept: image/png' -D "$tmp/headers" -o "$tmp/original" "$base$path"
+grep -Eqi '^Content-Type: image/png' "$tmp/headers"
+grep -Eqi '^Vary: Accept' "$tmp/headers"
+test "$(stat -c %s "$tmp/optimized")" -lt "$(stat -c %s "$tmp/original")"
+curl -fsS -H 'Accept: image/webp;q=0,image/png' -o "$tmp/rejected" "$base$path"
+cmp "$tmp/original" "$tmp/rejected"
+curl -fsS -H 'Accept: image/webp,image/png' -D "$tmp/headers" -o /dev/null "$base/assets/codia/4T7A4AiY30.png"
+grep -Eqi '^Content-Type: image/(png|webp)' "$tmp/headers"
+test "$(curl -sS -H 'Accept: image/webp' -o /dev/null -w '%{http_code}' "$base/assets/missing.png")" = 404
+# Verify every canonical project photograph is delivered as a lighter WebP.
+for photo in family-health rural-women-employment teen-skills; do
+  path="/assets/company-panel/project-$photo.png"
+  curl -fsS -H 'Accept: image/webp,image/png' -D "$tmp/headers" -o "$tmp/optimized" "$base$path"
+  grep -Eqi '^Content-Type: image/webp' "$tmp/headers"
+  grep -Eqi '^Vary: Accept' "$tmp/headers"
+  test "$(head -c 4 "$tmp/optimized")" = RIFF
+  curl -fsS -H 'Accept: image/png' -o "$tmp/original" "$base$path"
+  before="$(stat -c %s "$tmp/original")"
+  after="$(stat -c %s "$tmp/optimized")"
+  test "$((after * 4))" -lt "$((before * 3))"
+  echo "PROJECT_PHOTO_BYTES $photo $before $after"
+done
+echo "PUBLIC_ASSET_CACHE_CONTRACT_VERIFIED"

@@ -405,3 +405,9 @@ button, input, select, textarea {
   justify-self: end !important;
   flex: 0 0 auto !important;
 }
+
+/* Use the same Persian font as the original Figma content for live catalog and filters. */
+.mah-companies-page .mah-company-live-section,
+.mah-companies-page .mah-company-live-section * {
+  font-family: "Vazirmatn", "Vazirmatn Variable", sans-serif !important;
+}

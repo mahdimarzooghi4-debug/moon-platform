@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - main
+      - feat/keycloak-central-sms-login
   workflow_dispatch:
 
 jobs:
@@ -26,6 +27,7 @@ jobs:
           web = next(c for c in realm["clients"] if c["clientId"] == "moon-web")
           assert web["redirectUris"] == ["https://mahcsr.ir/auth/callback"]
           assert web["webOrigins"] == ["https://mahcsr.ir"]
+          assert web["attributes"]["post.logout.redirect.uris"] == "https://mahcsr.ir/auth"
           config = Path("deploy/production/Caddyfile").read_text()
           assert "reverse_proxy api:8080" in config
           assert "reverse_proxy keycloak:8080" in config
@@ -38,11 +40,12 @@ jobs:
               assert "public.ecr.aws/docker/library/" + name in compose
           assert "image: postgres:" not in compose and "image: caddy:" not in compose
           assert "FROM public.ecr.aws/docker/library/node:22-alpine AS build" in dockerfile
-          assert "FROM public.ecr.aws/nginx/nginx-unprivileged:stable-alpine AS runtime" in dockerfile
+          assert "FROM ghcr.io/nginx/nginx-unprivileged:stable-alpine AS runtime" in dockerfile
 
           PY
   frontend:
-    runs-on: ubuntu-latest
+    # Playwright 1.56.1 supports Ubuntu 24.04, not the latest 26.04 runner.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -50,9 +53,20 @@ jobs:
           node-version: '22'
           cache: npm
       - run: npm ci --no-audit --no-fund
+      - run: node --test tests/oidc-logout.test.mjs
+      - run: sudo apt-get update && sudo apt-get install -y webp
       - run: npm run build
         env:
           NODE_OPTIONS: --max-old-space-size=5120
+      - name: Public responsive browser smoke
+        run: |
+          npm install --prefix "$RUNNER_TEMP/moon-browser" --no-save --package-lock=false playwright@1.56.1
+          "$RUNNER_TEMP/moon-browser/node_modules/.bin/playwright" install --with-deps chromium
+          npm run preview -- --host 127.0.0.1 --port 4173 --strictPort > "$RUNNER_TEMP/moon-preview.log" 2>&1 &
+          preview=$!
+          trap 'kill "$preview" 2>/dev/null || true' EXIT
+          curl -fsS --retry 15 --retry-connrefused --retry-delay 1 http://127.0.0.1:4173/ >/dev/null
+          MOON_BROWSER_TOOLS="$RUNNER_TEMP/moon-browser" node scripts/check-public-mobile.mjs
 
   backend:
     runs-on: ubuntu-latest

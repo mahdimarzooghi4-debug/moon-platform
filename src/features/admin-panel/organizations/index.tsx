@@ -165,7 +165,7 @@ export default function AdminOrganizations() {
       <main className="admin-users-main" dir="rtl">
         <header className="admin-users-header">
           <div className="admin-users-heading"><h1>شرکت‌ها و استارتاپ‌ها</h1><p>شرکت‌ها برای مشاهده مدیریتی و استارتاپ‌ها برای مشاهده، ویرایش و مدیریت دسترسی در یک فهرست مشترک هستند.</p></div>
-          <div className="admin-users-actions"><button className="admin-users-button" type="button" onClick={exportOrganizations}>خروجی فهرست</button></div>
+          <div className="admin-users-actions"><Link to="/panel/admin/company-applications" className="admin-users-button">درخواست‌های ثبت‌نام شرکت‌ها</Link><button className="admin-users-button" type="button" onClick={exportOrganizations}>خروجی فهرست</button></div>
         </header>
 
         <section className="admin-users-kpis" aria-label="شاخص‌های حساب‌ها" style={{ direction: "rtl" }}>

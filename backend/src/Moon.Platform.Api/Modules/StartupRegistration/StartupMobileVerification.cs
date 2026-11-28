@@ -46,7 +46,7 @@ internal sealed class StartupMobileVerification(IConfiguration configuration)
                 return Results.StatusCode(429);
 
             challenge = new Challenge(
-                Digest(mobile, code), now.AddMinutes(5), now.AddMinutes(1),
+                Digest(mobile, code), now.AddMinutes(2), now.AddMinutes(1),
                 recent?.WindowEnds ?? now.AddHours(1), (recent?.SendCount ?? 0) + 1);
             challenges[mobile] = challenge;
             requests.Enqueue((now, address));

@@ -1,3 +1,4 @@
+using Moon.Platform.Api.Infrastructure.Persistence;
 using System.Text.Json;
 using System.Security.Claims;
 
@@ -137,6 +138,14 @@ public static class ProjectEndpoints
             return ToHttpResult(result, context);
         }).RequireAuthorization(ProjectPolicies.Publisher);
 
+        var publicProjects = endpoints.MapGroup("/api/v1/public/projects");
+        publicProjects.MapGet("", async (MoonDbContext db, CancellationToken ct) =>
+            Results.Ok(await PublicProjectCatalog.ListAsync(db, null, ct)));
+        publicProjects.MapGet("/{projectId:guid}", async Task<IResult> (Guid projectId, MoonDbContext db, CancellationToken ct) =>
+        {
+            var project = (await PublicProjectCatalog.ListAsync(db, projectId, ct)).SingleOrDefault();
+            return project is null ? Results.NotFound() : Results.Ok(project);
+        });
         return endpoints;
     }
 

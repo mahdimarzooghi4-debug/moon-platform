@@ -42,9 +42,6 @@ export function SiteFooterSection() {
           <span className="flex w-[77px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[292]">
             سؤالات متداول
           </span>
-          <span className="flex w-[82px] h-[20px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[13px] font-normal leading-[20px] text-[#e4ebf1] relative text-right whitespace-nowrap z-[293]">
-            پیگیری مشارکت
-          </span>
         </div>
         <div className="flex w-[180px] flex-col gap-[12px] items-end shrink-0 flex-nowrap relative z-[294]">
           <span className="flex w-[83px] h-[22px] justify-end items-start shrink-0 basis-auto font-['Vazirmatn'] text-[14px] font-bold leading-[21.875px] text-[#fff] relative text-right whitespace-nowrap z-[295]">

@@ -28,10 +28,12 @@ public sealed class RegistrationSmsDispatcherTests : IAsyncLifetime
     }
 
     [Theory]
-    [InlineData(true, false)]
-    [InlineData(false, false)]
-    [InlineData(true, true)]
-    public async Task SendsCommittedEventsOnceAndRecordsProviderOutcome(bool accepted, bool legacy)
+    [InlineData(true, false, false)]
+    [InlineData(false, false, false)]
+    [InlineData(true, true, false)]
+    [InlineData(true, false, true)]
+    [InlineData(false, false, true)]
+    public async Task SendsCommittedEventsOnceAndRecordsProviderOutcome(bool accepted, bool legacy, bool company)
     {
         var app = new StartupApplication
         {
@@ -41,9 +43,20 @@ public sealed class RegistrationSmsDispatcherTests : IAsyncLifetime
         };
         await using (var db = CreateDb())
         {
-            db.StartupApplications.Add(app);
-            db.OutboxMessages.Add(RegistrationSmsNotice.Create(app.Id, RegistrationSmsNotice.Submitted));
-            db.OutboxMessages.Add(RegistrationSmsNotice.Create(app.Id, RegistrationSmsNotice.Approved));
+            if (company)
+            {
+                var companyApp = CompanyApprovalTests.Application();
+                companyApp.Status = "approved";
+                db.CompanyApplications.Add(companyApp);
+                db.OutboxMessages.Add(RegistrationSmsNotice.Create(companyApp.Id, RegistrationSmsNotice.Submitted, "company_application"));
+                db.OutboxMessages.Add(RegistrationSmsNotice.Create(companyApp.Id, RegistrationSmsNotice.Approved, "company_application"));
+            }
+            else
+            {
+                db.StartupApplications.Add(app);
+                db.OutboxMessages.Add(RegistrationSmsNotice.Create(app.Id, RegistrationSmsNotice.Submitted));
+                db.OutboxMessages.Add(RegistrationSmsNotice.Create(app.Id, RegistrationSmsNotice.Approved));
+            }
             await db.SaveChangesAsync();
         }
         var fake = new FakeSms(accepted);

@@ -332,7 +332,10 @@ public static class AdminManagementEndpoints
             await file.CopyToAsync(stream, cancellationToken);
             try
             {
-                return Results.Ok(await service.SaveTrustedCompanyLogoAsync(id, file.FileName, file.ContentType, stream.ToArray(), RequireActor(principal), context.TraceIdentifier, context.Connection.RemoteIpAddress?.ToString(), cancellationToken));
+                var optimized = await DisplayImageOptimizer.OptimizeAsync(stream.ToArray(), file.ContentType, file.FileName, DisplayImageKind.Logo, cancellationToken);
+                if (optimized is null)
+                    return Results.BadRequest(new { code = "company_logo_invalid_data", message = "A valid, static JPEG, PNG or WebP within the supported image dimensions is required." });
+                return Results.Ok(await service.SaveTrustedCompanyLogoAsync(id, optimized.FileName, optimized.ContentType, optimized.Data, RequireActor(principal), context.TraceIdentifier, context.Connection.RemoteIpAddress?.ToString(), cancellationToken));
             }
             catch (KeyNotFoundException)
             {

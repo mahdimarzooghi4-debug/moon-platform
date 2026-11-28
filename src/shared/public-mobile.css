@@ -1,0 +1,528 @@
+/* First mobile slice: four public marketing pages only.
+ * Keep desktop geometry and protected panel shells unchanged. */
+.mah-mobile-public-header { display: none; }
+
+@media (max-width: 1024px) {
+  body.mah-public-rtl #app .mah-mobile-public-header {
+    display: flex; flex-direction: column; gap: 12px;
+    width: 100%; max-width: 100%; box-sizing: border-box;
+    padding: 12px 16px; color: #17324d; background: white;
+    border-bottom: 1px solid #e4ebf1; font-family: Vazirmatn, sans-serif;
+    direction: rtl;
+  }
+  .mah-mobile-header-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .mah-mobile-header-top img { width: 120px; height: auto; display: block; }
+  .mah-mobile-menu { position: relative; }
+  .mah-mobile-menu summary {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 44px; padding: 8px 12px; cursor: pointer; list-style: none;
+    border: 1px solid #e4ebf1; border-radius: 12px; color: #17324d;
+  }
+  .mah-mobile-menu summary::-webkit-details-marker { display: none; }
+  .mah-mobile-menu nav {
+    position: absolute; inset-inline-end: 0; top: calc(100% + 8px);
+    width: min(240px, 80vw); z-index: 10000; padding: 8px;
+    background: white; border: 1px solid #e4ebf1; border-radius: 12px;
+    box-shadow: 0 8px 24px #17324d20;
+  }
+  .mah-mobile-menu:not([open]) nav { display: none; }
+  .mah-mobile-menu nav a { display: flex; align-items: center; min-height: 44px; padding: 8px 12px; text-decoration: none; color: #17324d; }
+  .mah-mobile-menu nav a[aria-current="page"] { color: #1476b9; background: #eaf5fd; border-radius: 8px; }
+  .mah-mobile-header-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .mah-mobile-header-actions a { display: flex; align-items: center; justify-content: center; min-height: 44px; border: 1px solid #2094e3; border-radius: 12px; text-decoration: none; color: #1476b9; font-size: 14px; }
+  .mah-mobile-header-actions a:last-child { background: #2094e3; color: white; }
+  .mah-mobile-public-header :is(a, summary):focus-visible { outline: 2px solid #1476b9; outline-offset: 2px; }
+
+  body.mah-public-rtl #app :is(.mah-home-page, .mah-startups-page, .mah-companies-page, .mah-about-page) {
+    width: 100% !important; max-width: 100% !important; min-width: 0 !important;
+    margin-inline: auto !important;
+  }
+  body.mah-public-rtl #app :is(.mah-home-page, .mah-startups-page, .mah-companies-page, .mah-about-page) > div:first-child {
+    display: none !important;
+  }
+  body.mah-public-rtl #app :is(.mah-home-page, .mah-startups-page, .mah-companies-page, .mah-about-page) > :is(div, section, nav):not(:first-child) {
+    width: 100% !important; max-width: 100% !important; min-width: 0 !important;
+    padding-inline: clamp(16px, 4vw, 32px) !important;
+  }
+  body.mah-public-rtl #app :is(.mah-home-page, .mah-startups-page, .mah-companies-page, .mah-about-page) > div[class*="pr-[120px]"]:not(:first-child):not(.mah-about-breadcrumb) {
+    padding-block: 32px !important; gap: 24px !important;
+  }
+  body.mah-public-rtl #app :is(.mah-home-page, .mah-startups-page, .mah-companies-page, .mah-about-page) :is(div, span)[class*="w-["] {
+    max-width: 100% !important; min-width: 0 !important;
+  }
+  body.mah-public-rtl #app :is(.mah-home-page, .mah-startups-page, .mah-companies-page, .mah-about-page) span:not([class~="absolute"]) {
+    height: auto !important; white-space: normal !important; overflow-wrap: anywhere;
+  }
+  body.mah-public-rtl #app :is(.mah-home-page, .mah-startups-page, .mah-companies-page, .mah-about-page) :is(img, video) { max-width: 100%; }
+  body.mah-public-rtl #app :is(.mah-home-page, .mah-startups-page, .mah-companies-page, .mah-about-page) .mah-mobile-hero-row {
+    display: flex !important; flex-direction: column-reverse !important; align-items: stretch !important;
+    width: 100% !important; height: auto !important; gap: 24px !important;
+  }
+  body.mah-public-rtl #app .mah-mobile-hero-row > div {
+    width: 100% !important; max-width: 100% !important; min-width: 0 !important; flex: 0 0 auto !important;
+  }
+  body.mah-public-rtl #app .mah-mobile-hero-row .mah-mobile-hero-media {
+    width: 100% !important; height: auto !important; min-height: 0 !important;
+    aspect-ratio: 4 / 3; background-position: center !important;
+  }
+  body.mah-public-rtl #app .mah-mobile-hero-row .mah-mobile-hero-copy {
+    width: 100% !important; align-items: stretch !important; gap: 16px !important;
+  }
+  body.mah-public-rtl #app .mah-mobile-hero-copy > span:first-child,
+  body.mah-public-rtl #app .mah-home-page .mah-mobile-hero-copy > div:first-child > span:first-child {
+    display: block !important; width: 100% !important; font-size: clamp(26px, 5vw, 36px) !important;
+    line-height: 1.55 !important; height: auto !important;
+  }
+  body.mah-public-rtl #app .mah-mobile-hero-copy :is(.mah-startups-hero-actions, .mah-companies-hero-actions, .mah-request-about-cta, [class~="z-[28]"]) {
+    flex-wrap: wrap !important; width: 100% !important; gap: 10px !important;
+  }
+  body.mah-public-rtl #app .mah-about-page .mah-mobile-hero-media > div[class~="absolute"] {
+    left: 8px !important; right: 8px !important; bottom: 8px !important;
+    height: auto !important; padding: 8px !important; gap: 4px !important;
+  }
+  body.mah-public-rtl #app .mah-about-page .mah-mobile-hero-media span {
+    width: auto !important; font-size: 11px !important; line-height: 1.5 !important;
+  }
+  /* Reflow generated content rows, without changing inner icon/text pairs. */
+  body.mah-public-rtl #app :is(.mah-startups-page, .mah-companies-page, .mah-about-page) > div:not(:first-child)[class~="flex"]:not([class~="flex-col"]):not(.mah-mobile-hero-row):not(.mah-about-breadcrumb),
+  body.mah-public-rtl #app :is(.mah-startups-page, .mah-companies-page, .mah-about-page) > div:not(:first-child) > div[class~="flex"]:not([class~="flex-col"]):has(> div[class~="flex-col"]:nth-child(2)),
+  body.mah-public-rtl #app .mah-startups-page div[class~="w-[1200px]"] {
+    flex-wrap: wrap !important; gap: 16px !important; height: auto !important; align-items: stretch !important;
+  }
+  body.mah-public-rtl #app :is(.mah-startups-page, .mah-companies-page, .mah-about-page) > div:not(:first-child) > div[class~="flex"]:not([class~="flex-col"]):has(> div[class~="flex-col"]:nth-child(2)) > div[class~="flex-col"],
+  body.mah-public-rtl #app .mah-startups-page div[class~="w-[1200px]"] > div[class~="flex-col"] {
+    flex: 1 1 260px !important; min-width: 0 !important; height: auto !important;
+  }
+  body.mah-public-rtl #app :is(.mah-startups-page, .mah-companies-page, .mah-about-page) > div:not(:first-child)[class~="flex"]:not([class~="flex-col"]):not(.mah-mobile-hero-row):not(.mah-about-breadcrumb) > div[class~="flex-col"] {
+    flex: 1 1 280px !important; height: auto !important; min-width: 0 !important;
+  }
+  body.mah-public-rtl #app .mah-home-page [class~="z-[38]"] { padding: 0 !important; }
+}
+@media (max-width: 600px) {
+  body.mah-public-rtl #app .mah-home-page [class~="z-[78]"] { grid-template-columns: minmax(0, 1fr) !important; }
+  body.mah-public-rtl #app :is(.mah-startups-page, .mah-companies-page, .mah-about-page) > div:not(:first-child) > div[class~="flex"]:not([class~="flex-col"]):has(> div[class~="flex-col"]:nth-child(2)) > div[class~="flex-col"] {
+    flex-basis: 100% !important; width: 100% !important;
+  }
+}
+
+/* Landing KPI cards: real counts must never be clipped by desktop Figma widths. */
+@media (max-width: 1024px) {
+  body.mah-public-rtl #app .mah-home-page .mah-impact-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+    width: 100% !important;
+    height: auto !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+  body.mah-public-rtl #app .mah-home-page .mah-impact-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    padding: 14px !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+    direction: rtl;
+  }
+  body.mah-public-rtl #app .mah-home-page .mah-impact-value {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    direction: rtl !important;
+    justify-content: flex-start !important;
+    align-items: baseline !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    gap: 4px 8px !important;
+    overflow: visible !important;
+  }
+  body.mah-public-rtl #app .mah-home-page .mah-impact-value > :is(.mah-impact-number, .mah-impact-unit) {
+    display: block !important;
+    flex: 0 1 auto !important;
+    width: auto !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+    text-align: right !important;
+  }
+  body.mah-public-rtl #app .mah-home-page .mah-impact-number {
+    order: -1;
+    font-size: clamp(22px, 5.6vw, 30px) !important;
+    line-height: 1.35 !important;
+    unicode-bidi: isolate;
+  }
+  body.mah-public-rtl #app .mah-home-page .mah-impact-unit {
+    line-height: 1.6 !important;
+  }
+  body.mah-public-rtl #app .mah-home-page .mah-impact-label {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    white-space: normal !important;
+    text-align: right !important;
+  }
+}
+@media (min-width: 381px) and (max-width: 600px) {
+  body.mah-public-rtl #app .mah-home-page .mah-impact-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  body.mah-public-rtl #app .mah-home-page .mah-impact-card:last-child {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 380px) {
+  body.mah-public-rtl #app .mah-home-page .mah-impact-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
+
+/* Second public slice: live catalog, news, and contact/support.
+ * Keep protected panels, registration and desktop rules unchanged. */
+@media (max-width: 1024px) {
+  body.mah-public-rtl #app :is(.mah-projects-page, .mah-live-project-detail, .mah-live-news, .mah-contact-page) {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+  body.mah-public-rtl #app :is(.mah-projects-page, .mah-live-project-detail, .mah-live-news, .mah-contact-page) > header:first-child {
+    display: none !important;
+  }
+  body.mah-public-rtl #app .mah-projects-page > :is(section, footer),
+  body.mah-public-rtl #app .mah-contact-page > div,
+  body.mah-public-rtl #app .mah-live-news-wrap,
+  body.mah-public-rtl #app .mah-public-project-results {
+    padding-inline: clamp(16px, 4vw, 32px) !important;
+    box-sizing: border-box;
+    min-width: 0;
+  }
+  body.mah-public-rtl #app .mah-projects-hero-row {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 24px;
+  }
+  body.mah-public-rtl #app .mah-projects-hero-row > div { min-width: 0; }
+  body.mah-public-rtl #app .mah-projects-hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+  body.mah-public-rtl #app .mah-projects-hero-stats > div {
+    min-width: 0;
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+    text-align: center;
+  }
+  body.mah-public-rtl #app .mah-projects-hero-stats > div.w-px { display: none; }
+  body.mah-public-rtl #app .mah-projects-trust-bar {
+    flex-wrap: wrap;
+    gap: 12px;
+    direction: rtl;
+  }
+  body.mah-public-rtl #app .mah-projects-trust-bar > div { min-width: 0; max-width: 100%; }
+  body.mah-public-rtl #app .mah-projects-trust-bar p { white-space: normal; overflow-wrap: anywhere; }
+  body.mah-public-rtl #app .mah-projects-trust-bar img { flex: 0 0 16px; }
+  body.mah-public-rtl #app .mah-projects-cta-actions { flex-wrap: wrap; justify-content: center; }
+  body.mah-public-rtl #app :is(.mah-public-project-card, .mah-live-news-card, .mah-live-news-feature, .mah-live-news-article) { min-width: 0; overflow-wrap: anywhere; }
+  body.mah-public-rtl #app :is(.mah-public-project-filters, .mah-live-news-filter) :is(input,select) { width: 100%; max-width: 100%; min-width: 0; min-height: 44px; }
+  body.mah-public-rtl #app .mah-live-news-filter > label,
+  body.mah-public-rtl #app .mah-live-news-feature > div { min-width: 0; }
+  body.mah-public-rtl #app .mah-contact-page .mah-mobile-support-topics {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  body.mah-public-rtl #app .mah-contact-page .mah-mobile-support-topics > div {
+    height: auto !important;
+    min-width: 0;
+    padding: 16px !important;
+    align-self: stretch;
+  }
+  body.mah-public-rtl #app .mah-contact-page :is(.mah-mobile-support-topics, .mah-contact-quick-links, .mah-contact-info) span {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+  }
+  body.mah-public-rtl #app .mah-contact-page .mah-contact-quick-links > div {
+    width: 100%;
+    min-width: 0;
+    gap: 8px;
+  }
+  body.mah-public-rtl #app .mah-contact-page .mah-contact-quick-links > div > div {
+    max-width: 100%;
+    height: auto;
+  }
+  body.mah-public-rtl #app .mah-contact-page .mah-contact-details {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px !important;
+  }
+  body.mah-public-rtl #app .mah-contact-page .mah-contact-info .justify-between {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  body.mah-public-rtl #app .mah-contact-page .mah-live-support { padding: 16px; }
+  body.mah-public-rtl #app .mah-contact-page .mah-live-support :is(input,select,textarea,button) { min-height: 44px; }
+}
+@media (max-width: 600px) {
+  body.mah-public-rtl #app .mah-contact-page .mah-mobile-support-topics { grid-template-columns: minmax(0, 1fr); }
+  body.mah-public-rtl #app .mah-projects-trust-bar > div { width: 100%; }
+  body.mah-public-rtl #app .mah-projects-page h1 { font-size: 26px; }
+  body.mah-public-rtl #app .mah-live-news-filter > label { flex-basis: 100%; }
+}
+
+/* Footer-linked FAQ and legal documents: preserve all content and allow
+ * local table scrolling, never horizontal page scrolling. */
+@media (max-width: 1024px) {
+  body.mah-public-rtl #app :is(.faq-page, .mah-legal-page) {
+    width: 100% !important; max-width: 100% !important; min-width: 0 !important;
+  }
+  body.mah-public-rtl #app :is(.faq-page, .mah-legal-page) > header:first-child,
+  body.mah-public-rtl #app .faq-page > .faq-header:first-child { display: none !important; }
+  body.mah-public-rtl #app .faq-page .faq-category-card {
+    height: auto; min-height: 125px; min-width: 0;
+  }
+  body.mah-public-rtl #app .faq-page .faq-category-card p {
+    white-space: normal; overflow-wrap: anywhere; overflow: visible;
+  }
+  body.mah-public-rtl #app .faq-page .faq-feedback { flex-wrap: wrap; }
+  body.mah-public-rtl #app .faq-page .faq-feedback-buttons button { min-height: 44px; }
+  body.mah-public-rtl #app .mah-legal-page > :is(section, div) {
+    padding-inline: clamp(16px, 4vw, 32px) !important;
+    height: auto;
+  }
+  body.mah-public-rtl #app .mah-legal-page > main {
+    width: 100% !important;
+    max-width: 100% !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    padding: 24px clamp(16px, 4vw, 32px);
+    gap: 24px;
+  }
+  body.mah-public-rtl #app .mah-legal-page > main > :is(article, aside) {
+    min-width: 0; max-width: 100%;
+  }
+  body.mah-public-rtl #app .mah-legal-page > main > aside { grid-row: 1; }
+  body.mah-public-rtl #app .mah-legal-page article > section { overflow-wrap: anywhere; padding: 20px; }
+  body.mah-public-rtl #app .mah-legal-page article .flex { flex-wrap: wrap; }
+  body.mah-public-rtl #app .mah-legal-page .mah-legal-table-scroll {
+    overflow-x: auto; max-width: 100%; direction: rtl;
+  }
+  body.mah-public-rtl #app .mah-legal-page .mah-legal-table-scroll table { min-width: 440px; }
+  body.mah-public-rtl #app .mah-legal-page .mah-legal-table-scroll:focus-visible { outline: 2px solid #2094e3; }
+  body.mah-public-rtl #app .mah-legal-page .grid-cols-6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  body.mah-public-rtl #app .mah-legal-page :is(.grid-cols-2, .grid-cols-6) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  body.mah-public-rtl #app .mah-legal-page > section > div.rounded-\[22px\] { padding: 16px; }
+  body.mah-public-rtl #app .mah-legal-page h1 { font-size: 26px; }
+}
+
+/* Public explanatory pages retain their desktop Figma layout, but reflow
+ * cards and multi-column sections instead of shrinking the desktop canvas. */
+@media (max-width: 1024px) {
+  body.mah-public-rtl #app :is(.mah-how-it-works-page, .article-172-page) {
+    width: 100% !important; max-width: 100% !important; min-width: 0 !important;
+  }
+  body.mah-public-rtl #app :is(.mah-how-it-works-page, .article-172-page) > div:first-child {
+    display: none !important;
+  }
+  body.mah-public-rtl #app :is(.mah-how-it-works-page, .article-172-page) > :is(div, section):not(:first-child) {
+    width: 100% !important; min-width: 0 !important; max-width: 100% !important;
+    padding-inline: clamp(16px, 4vw, 32px) !important;
+  }
+  body.mah-public-rtl #app :is(.mah-how-it-works-page, .article-172-page) > :is(div, section)[class*="80px"] {
+    padding-block: 32px !important; gap: 24px !important;
+  }
+  body.mah-public-rtl #app :is(.mah-how-it-works-page, .article-172-page) :is(div,article,span,p)[class*="w-["] {
+    max-width: 100% !important; min-width: 0 !important;
+  }
+  body.mah-public-rtl #app :is(.mah-how-it-works-page, .article-172-page) :is(span,p,h2,h3):not(.absolute) {
+    height: auto !important; white-space: normal !important; overflow-wrap: anywhere;
+  }
+  body.mah-public-rtl #app :is(.mah-how-it-works-page, .article-172-page) :is(div,article).flex-col:not(.absolute) {
+    min-width: 0; max-width: 100%;
+  }
+  body.mah-public-rtl #app :is(.mah-how-it-works-page, .article-172-page) :is(div,article).flex-col[style*="height"],
+  body.mah-public-rtl #app :is(.mah-how-it-works-page, .article-172-page) :is(div,article).flex-col[class*="h-["]:has(> :is(span,p,h2,h3)) {
+    height: auto !important;
+  }
+  body.mah-public-rtl #app :is(.mah-how-it-works-page, .article-172-page) [class~="z-20"] {
+    flex-direction: column-reverse !important; gap: 24px !important; align-items: stretch !important;
+  }
+  body.mah-public-rtl #app :is(.mah-how-it-works-page, .article-172-page) [class~="z-20"] > div {
+    width: 100% !important; min-width: 0 !important; flex: 0 0 auto !important;
+  }
+  body.mah-public-rtl #app :is(.mah-how-it-works-page, .article-172-page) [class~="z-20"] > div:first-child {
+    height: auto !important; min-height: 240px; padding: 16px !important;
+  }
+  body.mah-public-rtl #app .mah-how-it-works-page :is([class~="z-[52]"],[class~="z-[138]"],[class~="z-[251]"],[class~="z-[296]"],[class~="z-[341]"],[class~="z-[383]"],[class~="z-[414]"],[class~="z-[491]"],[class~="z-[544]"]) ,
+  body.mah-public-rtl #app .article-172-page :is([class~="z-[59]"],[class~="z-[64]"],[class~="z-[93]"],[class~="z-[279]"]) {
+    flex-wrap: wrap !important; height: auto !important; gap: 16px !important; align-items: stretch !important;
+  }
+  body.mah-public-rtl #app .mah-how-it-works-page :is([class~="z-[52]"],[class~="z-[138]"],[class~="z-[251]"],[class~="z-[296]"],[class~="z-[341]"],[class~="z-[383]"],[class~="z-[414]"],[class~="z-[491]"],[class~="z-[544]"]) > div,
+  body.mah-public-rtl #app .article-172-page :is([class~="z-[59]"],[class~="z-[64]"],[class~="z-[93]"],[class~="z-[279]"]) > div {
+    flex: 1 1 260px !important; min-width: 0 !important; max-width: 100% !important; height: auto !important;
+  }
+  body.mah-public-rtl #app .mah-how-it-works-page [class~="z-[77]"] {
+    width: 100% !important; display: flex !important; flex-direction: column-reverse !important; gap: 12px !important;
+  }
+  body.mah-public-rtl #app .mah-how-it-works-page [class~="z-[77]"] > div[class~="w-[1200px]"] {
+    display: grid !important; direction: rtl; width: 100% !important; height: auto !important;
+    grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px !important;
+  }
+  body.mah-public-rtl #app .mah-how-it-works-page [class~="z-[77]"] > div[class~="w-[1200px]"] > div[class~="w-[282px]"] {
+    grid-row: auto !important; width: 100% !important; height: auto !important; min-height: 0 !important;
+    position: relative !important; inset: auto !important; direction: ltr;
+  }
+  body.mah-public-rtl #app .mah-how-it-works-page [class~="z-[77]"] > div[class~="w-[1200px]"] > div:not([class~="w-[282px]"]) {
+    display: none !important;
+  }
+  body.mah-public-rtl #app .article-172-page section :is(.grid-cols-2,.grid-cols-3,.grid-cols-4) {
+    grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+  }
+  body.mah-public-rtl #app .article-172-page section [class*="col-start-"] { grid-column-start: auto !important; }
+  body.mah-public-rtl #app .article-172-page section [class~="gap-[48px]"].flex:not(.flex-col),
+  body.mah-public-rtl #app .article-172-page section [class~="gap-[16px]"].flex:not(.flex-col):has(> div[class~="w-[160px]"]) {
+    flex-wrap: wrap; gap: 12px !important;
+  }
+  body.mah-public-rtl #app .article-172-page section [class~="gap-[48px]"].flex:not(.flex-col) > div {
+    flex: 1 1 260px; min-width: 0;
+  }
+  body.mah-public-rtl #app .article-172-page section [class~="w-[160px]"] { width: auto; flex: 1 1 140px; height: auto !important; }
+  body.mah-public-rtl #app .article-172-page section button { white-space: normal; max-width: 100%; }
+  body.mah-public-rtl #app .article-172-page section:last-of-type > div.flex:not(.flex-col) { flex-wrap: wrap; justify-content: center; }
+  body.mah-public-rtl #app .mah-live-impact-page {
+    width: 100%; min-width: 0; max-width: 100%; padding-inline: clamp(16px,4vw,32px);
+    overflow-wrap: anywhere;
+  }
+  body.mah-public-rtl #app .mah-live-impact-page :is(article,section,dl,dd,.grid) { min-width: 0; }
+  body.mah-public-rtl #app .mah-live-impact-page .mah-impact-report-identifier { white-space: normal; overflow-wrap: anywhere; }
+}
+@media (max-width: 600px) {
+  body.mah-public-rtl #app .mah-how-it-works-page [class~="z-[77]"] > div[class~="w-[1200px]"],
+  body.mah-public-rtl #app .article-172-page section :is(.grid-cols-2,.grid-cols-3,.grid-cols-4) {
+    grid-template-columns: minmax(0,1fr) !important;
+  }
+  body.mah-public-rtl #app :is(.mah-how-it-works-page, .article-172-page) [class~="z-20"] > div:last-child > div:first-child > span:first-child {
+    font-size: 28px !important; line-height: 1.6 !important;
+  }
+  body.mah-public-rtl #app .article-172-page section :is(div,article)[class~="p-[32px]"],
+  body.mah-public-rtl #app .article-172-page section :is(div,article)[class~="p-[36px]"] { padding: 16px !important; }
+  body.mah-public-rtl #app .mah-how-it-works-page :is([class~="z-[52]"],[class~="z-[138]"],[class~="z-[251]"],[class~="z-[296]"],[class~="z-[341]"],[class~="z-[383]"],[class~="z-[414]"],[class~="z-[491]"],[class~="z-[544]"]) > div,
+  body.mah-public-rtl #app .article-172-page :is([class~="z-[59]"],[class~="z-[64]"],[class~="z-[93]"],[class~="z-[279]"]) > div {
+    flex-basis: 100% !important; width: 100% !important;
+  }
+}
+
+/* Catalog and search: route-scoped layout only. Preserve sample/empty states. */
+@media (max-width: 1024px) {
+  body.mah-public-rtl #app:has(> .mah-mobile-public-header[data-catalog-layout]) > .main-container { width:100% !important; max-width:100% !important; min-width:0 !important; height:auto !important; }
+  body.mah-public-rtl #app:has(> .mah-mobile-public-header[data-catalog-layout]) > .main-container > div:first-child { display:none !important; }
+  body.mah-public-rtl #app:has(> .mah-mobile-public-header[data-catalog-layout]) > .main-container > div:not(:first-child) { width:100% !important; min-width:0 !important; max-width:100% !important; padding-inline:clamp(16px,4vw,32px) !important; }
+  body.mah-public-rtl #app:has(> .mah-mobile-public-header[data-catalog-layout]) > .main-container :is(div,span,a,p)[class*="w-["] { max-width:100% !important; min-width:0 !important; }
+  body.mah-public-rtl #app:has(> .mah-mobile-public-header[data-catalog-layout]) > .main-container :is(span,p,a,button):not(.absolute):not(.sr-only) { height:auto !important; white-space:normal !important; overflow-wrap:anywhere; }
+  body.mah-public-rtl #app:has(> .mah-mobile-public-header[data-catalog-layout]) > .main-container div.flex-col:has(> :is(span,p,div.flex-col)):not(.absolute) { min-width:0; max-width:100%; height:auto !important; }
+  body.mah-public-rtl #app:has(> .mah-mobile-public-header[data-catalog-layout]) > .main-container div.flex:not(.flex-col):not(.absolute):has(> div.flex-col:nth-child(2)),
+  body.mah-public-rtl #app:has(> .mah-mobile-public-header[data-catalog-layout]) > .main-container > div:nth-child(2) > div.flex:not(.flex-col),
+  body.mah-public-rtl #app:has(> .mah-mobile-public-header[data-catalog-layout="search"]) > .main-container > div.flex:not(.flex-col):not(:first-child),
+  body.mah-public-rtl #app:has(> .mah-mobile-public-header[data-catalog-layout="search"]) > .main-container > div:not(:first-child) > div.flex:not(.flex-col),
+  body.mah-public-rtl #app:has(> .mah-mobile-public-header[data-catalog-layout]) > .main-container.mah-startups-directory-page :is(.mah-directory-intro,.mah-directory-impact-row,.mah-directory-process-row,.mah-directory-row) { flex-wrap:wrap !important; gap:12px !important; height:auto !important; }
+  body.mah-public-rtl #app:has(> .mah-mobile-public-header[data-catalog-layout]) > .main-container div.flex:not(.flex-col):not(.absolute):has(> div.flex-col:nth-child(2)) > div.flex-col,
+  body.mah-public-rtl #app:has(> .mah-mobile-public-header[data-catalog-layout]) > .main-container > div:nth-child(2) > div.flex:not(.flex-col) > div.flex-col,
+  body.mah-public-rtl #app:has(> .mah-mobile-public-header[data-catalog-layout]) > .main-container.mah-startups-directory-page :is(.mah-directory-intro,.mah-directory-impact-row,.mah-directory-process-row) > div.flex-col { flex:1 1 260px !important; min-width:0 !important; height:auto !important; }
+  body.mah-public-rtl #app:has(> .mah-mobile-public-header[data-catalog-layout]) > .main-container.mah-startups-directory-page .mah-directory-row > .mah-directory-card { flex:0 0 calc((100% - 12px)/2) !important; max-width:calc((100% - 12px)/2) !important; height:auto !important; min-width:0 !important; }
+  body.mah-public-rtl #app:has(> .mah-mobile-public-header[data-catalog-layout]) > .main-container.mah-startups-directory-page .mah-directory-row > .mah-directory-card[hidden] { display:none !important; }
+  body.mah-public-rtl #app:has(> .mah-mobile-public-header[data-catalog-layout]) > .main-container.mah-startups-directory-page .mah-directory-kpis > div { flex-wrap:wrap !important; gap:12px !important; }
+  body.mah-public-rtl #app:has(> .mah-mobile-public-header[data-catalog-layout]) > .main-container.mah-startups-directory-page .mah-directory-kpis > div > div { flex:1 1 140px !important; min-width:0; }
+
+  /* Startup registration: retain stepper, validation and submission behavior. */
+  body.mah-public-rtl #app :is(.mah-startup-step1,.mah-startup-step2,.mah-startup-step3,.mah-startup-step4,.mah-startup-success) { width:100% !important; max-width:100% !important; min-width:0 !important; height:auto !important; min-height:100vh; }
+  body.mah-public-rtl #app :is(.mah-startup-step1,.mah-startup-step2,.mah-startup-step3,.mah-startup-step4,.mah-startup-success) > div:first-child { height:auto !important; min-height:72px; padding:12px 16px !important; flex-wrap:wrap !important; gap:12px !important; }
+  body.mah-public-rtl #app :is(.mah-startup-step1,.mah-startup-step2,.mah-startup-step3,.mah-startup-step4,.mah-startup-success) > div:not(:first-child) { width:100% !important; max-width:100% !important; min-width:0 !important; padding:24px 16px !important; }
+  body.mah-public-rtl #app :is(.mah-startup-step1,.mah-startup-step2,.mah-startup-step3,.mah-startup-step4,.mah-startup-success) :is(div,span,p,label,input,select,textarea,button,a)[class*="w-["] { max-width:100% !important; min-width:0 !important; }
+  body.mah-public-rtl #app :is(.mah-startup-step1,.mah-startup-step2,.mah-startup-step3,.mah-startup-step4,.mah-startup-success) :is(span,p,label,a):not(.sr-only):not(.mah-progress-number) { height:auto !important; white-space:normal !important; overflow-wrap:anywhere; }
+  body.mah-public-rtl #app :is(.mah-startup-step1,.mah-startup-step2,.mah-startup-step3) div.flex-col:not(.absolute) { min-width:0; max-width:100%; height:auto !important; }
+  body.mah-public-rtl #app :is(.mah-startup-step1,.mah-startup-step2,.mah-startup-step3) div.flex:not(.flex-col):has(> div.flex-col:nth-child(2)),
+  body.mah-public-rtl #app :is(.mah-startup-step1,.mah-startup-step2,.mah-startup-step3) .mah-registration-field-row { flex-wrap:wrap !important; height:auto !important; gap:12px !important; }
+  body.mah-public-rtl #app :is(.mah-startup-step1,.mah-startup-step2,.mah-startup-step3) div.flex:not(.flex-col):has(> div.flex-col:nth-child(2)) > div.flex-col,
+  body.mah-public-rtl #app :is(.mah-startup-step1,.mah-startup-step2,.mah-startup-step3) .mah-registration-field-row > div { flex:1 1 260px !important; min-width:0 !important; max-width:100% !important; height:auto !important; }
+  body.mah-public-rtl #app :is(.mah-startup-step1,.mah-startup-step2,.mah-startup-step3,.mah-startup-step4,.mah-startup-success) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),select,textarea) { min-width:0; max-width:100%; min-height:44px; }
+}
+@media (max-width: 600px) {
+  body.mah-public-rtl #app:has(> .mah-mobile-public-header[data-catalog-layout]) > .main-container div.flex:not(.flex-col):not(.absolute):has(> div.flex-col:nth-child(2)) > div.flex-col,
+  body.mah-public-rtl #app :is(.mah-startup-step1,.mah-startup-step2,.mah-startup-step3) div.flex:not(.flex-col):has(> div.flex-col:nth-child(2)) > div.flex-col,
+  body.mah-public-rtl #app :is(.mah-startup-step1,.mah-startup-step2,.mah-startup-step3) .mah-registration-field-row > div { flex-basis:100% !important; width:100% !important; }
+  body.mah-public-rtl #app:has(> .mah-mobile-public-header[data-catalog-layout]) > .main-container.mah-startups-directory-page .mah-directory-row > .mah-directory-card { flex-basis:100% !important; max-width:100% !important; }
+  body.mah-public-rtl #app:has(> .mah-mobile-public-header[data-catalog-layout]) > .main-container div:is([class~="p-[32px]"],[class~="pr-[32px]"]),
+  body.mah-public-rtl #app :is(.mah-startup-step1,.mah-startup-step2,.mah-startup-step3,.mah-startup-step4,.mah-startup-success) div:is([class~="p-[32px]"],[class~="pr-[32px]"]),
+  body.mah-public-rtl #app :is(.mah-startup-step1,.mah-startup-step2,.mah-startup-step3,.mah-startup-step4,.mah-startup-success) .mah-startup-success-card { padding-inline:16px !important; }
+  body.mah-public-rtl #app :is(.mah-startup-step1,.mah-startup-step2,.mah-startup-step3,.mah-startup-step4,.mah-startup-success) > div:last-child span { max-width:100%; }
+}
+
+/* Public financial layouts: scoped to payment routes and screen media.
+ * Keep print receipt dimensions and all transaction/authentication behavior unchanged. */
+@media screen and (max-width: 1439px) {
+  #app .mah-individual-checkout { width:100% !important; min-width:0; }
+  #app .mah-individual-checkout > :is(header,section,main,footer) { padding-inline:clamp(16px,5vw,120px) !important; }
+  #app .mah-individual-checkout > main > aside { width:min(32%,370px) !important; min-width:0; }
+  #app .mah-individual-checkout > main > div { flex:1 1 0 !important; width:auto !important; min-width:0; }
+  #app .mah-individual-checkout > main > div > section > div.flex:has(> div[class~="w-[355px]"]) { gap:16px !important; flex-wrap:wrap; }
+  #app .mah-individual-checkout div[class~="w-[355px]"] { flex:1 1 280px !important; min-width:0; max-width:100%; width:auto !important; }
+  #app .mah-individual-checkout :is(p,span,strong,button) { overflow-wrap:anywhere; min-width:0; }
+  #app .mah-individual-checkout > footer > div:first-child { flex-wrap:wrap; }
+  body[data-mah-transaction-layout="state"] #app > .main-container { width:100% !important; min-width:0 !important; max-width:100% !important; height:auto !important; }
+  body[data-mah-transaction-layout="state"] #app > .main-container > div { max-width:100% !important; min-width:0 !important; padding-inline:clamp(16px,5vw,120px) !important; }
+  body[data-mah-transaction-layout="state"] #app > .main-container > div:first-child { flex-wrap:wrap; gap:12px !important; height:auto !important; min-height:80px; }
+  body[data-mah-transaction-layout="state"] #app > .main-container > div:not(:first-child)[class~="h-[709px]"] { min-height:420px; height:auto !important; padding-block:48px !important; }
+  body[data-mah-transaction-layout="state"] #app > .main-container :is(div,span,a,p)[class*="w-["] { min-width:0 !important; max-width:100% !important; }
+  body[data-mah-transaction-layout="state"] #app > .main-container :is(span,p,button,a):not(.absolute):not(.sr-only) { white-space:normal !important; height:auto !important; overflow-wrap:anywhere; }
+  body[data-mah-transaction-layout="state"] #app > .main-container div.flex-col:has(> :is(span,p,div.flex-col)):not(.absolute) { height:auto !important; min-width:0; max-width:100%; }
+  body[data-mah-transaction-layout="state"] #app > .main-container div.flex:not(.flex-col):not(.absolute) { flex-wrap:wrap !important; }
+  body[data-mah-transaction-layout="state"] #app > .main-container div.flex:not(.flex-col):not(.absolute):has(> div.flex-col:nth-child(2)) { height:auto !important; gap:12px !important; }
+  body[data-mah-transaction-layout="state"] #app > .main-container div.flex:not(.flex-col):not(.absolute):has(> div.flex-col:nth-child(2)) > div.flex-col { flex:1 1 280px !important; min-width:0 !important; }
+}
+@media screen and (max-width: 1024px) {
+  #app .mah-auth-entry { width:100%; min-width:0; }
+  #app .mah-auth-entry > header { padding:12px 16px !important; height:auto !important; min-height:80px; flex-wrap:wrap; gap:8px; }
+  #app .mah-auth-entry > main { padding:24px 16px !important; }
+  #app .mah-auth-entry > main > div { width:min(780px,100%) !important; min-width:0; padding:clamp(16px,4vw,32px) !important; }
+  #app .mah-auth-entry > main > div > div:first-child { flex-wrap:wrap; gap:12px; }
+  #app .mah-auth-entry > main .grid > button { height:auto !important; min-height:144px; min-width:0; overflow-wrap:anywhere; }
+  #app .mah-auth-entry > footer { height:auto !important; padding:20px 16px !important; }
+  #app .mah-auth-entry > footer > div { width:100% !important; max-width:780px; height:auto !important; text-align:center; }
+  #app .mah-auth-entry p { flex-wrap:wrap; overflow-wrap:anywhere; }
+  #app .mah-individual-checkout > header { height:auto !important; min-height:80px; flex-wrap:wrap; gap:16px; }
+  #app .mah-individual-checkout > header > div { flex-wrap:wrap; gap:12px; }
+  #app .mah-individual-checkout > section > div[class~="w-[600px]"] { width:100% !important; max-width:600px; gap:8px !important; flex-wrap:wrap; }
+  #app .mah-individual-checkout > main { flex-direction:column !important; gap:24px !important; }
+  #app .mah-individual-checkout > main > :is(aside,div) { width:100% !important; flex:0 0 auto !important; min-width:0; }
+  #app .mah-individual-checkout section { min-width:0; }
+  #app .mah-individual-checkout :is(input,select,textarea) { max-width:100%; min-width:0; }
+  #app .mah-individual-checkout div:has(> input[aria-label^="رقم "]) { gap:4px !important; }
+  #app .mah-individual-checkout input[aria-label^="رقم "] { flex:1 1 0; width:auto !important; min-width:0; max-width:44px; }
+}
+@media screen and (max-width: 680px) {
+  #app .mah-auth-entry > main .grid { grid-template-columns:minmax(0,1fr) !important; gap:12px; }
+  #app .mah-auth-entry > main .grid > button { min-height:0; }
+  #app .mah-individual-checkout > main > :is(aside,div) > section { padding:16px !important; }
+  #app .mah-individual-checkout div[class~="w-[355px]"] { width:100% !important; flex:0 0 100% !important; padding-inline:12px; }
+  #app .mah-individual-checkout > main div.flex.justify-between:has(> strong) { flex-wrap:wrap; gap:8px; }
+  #app .mah-individual-checkout > main div.flex.justify-between:has(> h2) { flex-wrap:wrap; gap:8px; }
+  body[data-mah-transaction-layout="state"] #app > .main-container div:is([class~="pr-[36px]"],[class~="pr-[32px]"],[class~="pr-[24px]"]) { padding-inline:16px !important; }
+  body[data-mah-transaction-layout="state"] #app > .main-container div.flex:not(.flex-col):not(.absolute):has(> div.flex-col:nth-child(2)) > div.flex-col { flex-basis:100% !important; }
+  body[data-mah-transaction-layout="modal"] #app > .main-container { width:min(480px,100%) !important; max-width:100%; height:auto !important; padding:16px !important; }
+  body[data-mah-transaction-layout="modal"] #app > .main-container :is(div,span,button)[class*="w-["] { max-width:100% !important; min-width:0 !important; }
+  body[data-mah-transaction-layout="modal"] #app > .main-container :is(span,button,p) { height:auto !important; white-space:normal !important; overflow-wrap:anywhere; }
+  body[data-mah-transaction-layout="modal"] #app > .main-container div.flex:not(.flex-col):not(.absolute) { flex-wrap:wrap !important; gap:8px !important; }
+  body[data-mah-transaction-layout="receipt"] #app > .receipt-actions { width:min(595px,calc(100% - 32px)) !important; flex-wrap:wrap; }
+  body[data-mah-transaction-layout="receipt"] #app > .main-container { width:min(595px,100%) !important; height:auto !important; min-height:0; padding:20px 16px !important; }
+  body[data-mah-transaction-layout="receipt"] #app > .main-container :is(div,span,p)[class*="w-["] { max-width:100% !important; min-width:0 !important; }
+  body[data-mah-transaction-layout="receipt"] #app > .main-container :is(span,p) { height:auto !important; white-space:normal !important; overflow-wrap:anywhere; }
+  body[data-mah-transaction-layout="receipt"] #app > .main-container div.flex.justify-between { gap:8px; flex-wrap:wrap !important; }
+}

@@ -1,6 +1,9 @@
 FROM public.ecr.aws/docker/library/node:22-alpine AS build
 WORKDIR /app
 
+# WebP encoder for the public hero build step.
+RUN apk add --no-cache libwebp-tools
+
 COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
 
@@ -20,7 +23,7 @@ RUN test -n "$VITE_OIDC_AUTHORITY" \
     && test -n "$VITE_API_BASE_URL" \
     && npm run build
 
-FROM public.ecr.aws/nginx/nginx-unprivileged:stable-alpine AS runtime
+FROM ghcr.io/nginx/nginx-unprivileged:stable-alpine AS runtime
 COPY deploy/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/dist /usr/share/nginx/html
 

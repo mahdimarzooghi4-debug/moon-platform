@@ -1,0 +1,33 @@
+# Moon — Organization panel Business review
+
+Status: source-only page review and working design proposals, 2026-11-28. Baseline 22e31488a183521c04719c6fcfdded8d57c07791. Operator cannot access the live organization panel; no live visual, authentication, transaction or end-to-end testing was performed. DEC-0002 through amended DEC-0007 govern. Emdad is the first organization, not a separate panel type. Preserve history and actual records; do not import demo records as authoritative financial data.
+
+## Existing code inventory and proposed target
+
+| Source under src/panels/emdad | Findings and target |
+| --- | --- |
+| index.tsx; SharedSidebar.tsx; interactions.ts | Static dashboard, legacy Emdad routes, local release-request data, old fund metrics. Replace with reusable scoped organization shell, real name/logo, projects, confirmed receipts, payouts, reconciled balances, payment/certificate/stoppage queues. Unknown is not zero. |
+| release-requests/index.tsx; detail/index.tsx; success/index.tsx; payment-actions.ts; success/payment-action.ts | Generated sample pages and browser-local request/receipt context and success states. Proposed authoritative queue by project/stage/approved plan version, Aineh satisfactory-performance decision, actual applicable payment conditions, amount, verified beneficiary and status; separate decision, actual payment, reconciliation and receipt. Organization pays directly, Moon records and monitors. No payment triggered by Aineh approval alone, no unapproved plan amendment. |
+| payment-history/index.tsx; detail/index.tsx; registration.ts; context-registration.ts | Browser-local recording of entered payment data and sample detail, including old fund share. Proposed actual scoped payment and receipt ledger views, transaction-specific IDs, real bank evidence, audit, reconciliation and deduplication. Do not treat local entries, dates or generated refs as proof of transfer. |
+| financial-reports/index.tsx | Static report presentation. Proposed verified receipts and payouts by project, date, participant type and stage, balances, pending items, refunds/transfers, certificates; scoped exports. Define accounting/reconciliation rules before totals. |
+| article172-approvals/*; actual src/features/article-172/Unavailable.tsx | Live routes intentionally unavailable; sample official-looking screens are references. Moon creates unofficial draft, actual authorized organization issuer reviews and officially issues, exact number/date/evidence and committed final record; authorized company access and notice afterward. Existing certificate issuer settings use browser-local storage (src/features/emdad-certificate-issuer-settings and src/shared/certificateIssuerSettings.ts); not official authority or signature. Other tax certificates require actual legal authority and versioned contracts. |
+| fund-synergy/*; fund-synergy-history/index.tsx; fund-returns/index.tsx; fund-payments/index.tsx; demo-data.ts | Old 10% allocation and 70% return concepts, special fund payment path, static and browser-local demo records; demo-data imported by src/main.tsx. Retire conflicting operational paths and sample seeding, preserve verified historic records and review legacy local data without treating it as financial truth. Moon alone supplies fund capital; fund may invest anywhere within actual authority and is recorded in Moon admin. If participating in Moon project, fund follows ordinary company flow. No special organization fund transfers or percentage rules. |
+
+## Proposed navigation and additional workspaces
+
+Dashboard; organization projects; incoming company/individual contributions; payments to startups; transaction history; authorized tax certificate issuance; stopped projects; financial and performance reports; organization profile; delegated users/access; support; settings. Organization sees only assigned projects and its own transactions. Organization cannot approve startup registration, projects or satisfactory performance, or issue outside legal authority. Aineh alone determines one registered organization per project and organization is locked after first financial participation. No auto reassignment.
+
+New workspaces: authoritative organization receipt evidence, approved stage plan and payout queue, stopped project authenticated instructions and actual refund/transfer evidence, scoped financial reporting, organization profile/official accounts/issuer evidence, multi-user permissions (amended DEC-0007). No invented payout prerequisites, legal tax eligibility, banking integration, unspent-share formula, transfer authority, signatory policy or credentials. Direct payment and reconciliation require actual evidence. Stoppage decision belongs to Aineh; participant chooses refund, own replacement project or explicit delegation of replacement selection; no deemed consent or automatic transaction.
+
+## Delivery
+
+Existing page source review complete, not production acceptance. Proposed designs need owner approval. No code, migration, account creation, payment, merge or deploy. PR #324 remains Draft/Open. Public site frozen. Apply common panel spacing and centered Moon logo per shared UI decision.
+
+## Amended execution requirements (DEC-0005)
+Full verified funding of the approved total project target is mandatory before Aineh explicitly authorizes execution and determines the official start date. No lower start threshold. Startup designs the operational and financial plan (stages, schedule, outputs/KPIs, budgets, payment amounts/timing, project-specific advance if needed); Aineh reviews and approves it. Complete fulfillment of stage obligations is required for satisfactory-performance approval; no partial approval or progress-proportional stage settlement. Actual organization payment and reconciliation remain distinct; approved advances are separate and their release/offset details remain open. No amendment during execution.
+
+Show full funding, start authorization and official date; no organization start command.
+
+## Complete project intake and stage reporting amendment (DEC-0004/0005)
+View authorized published reports for each registered stage. Aineh report approval authorizes automatic publication without organization approval. Organization settles approved financial obligations; final operational completion is approved by Aineh, separate from actual settlement. No organization report veto or universal advance formula.
+No public-site/runtime change authorized; detailed technical evidence and delivery contracts remain open.

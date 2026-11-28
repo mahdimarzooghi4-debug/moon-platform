@@ -84,6 +84,7 @@ public sealed class Phase2PaymentTests : IAsyncLifetime
         Assert.NotNull(afterWebhookPayment.ProviderNotifiedAtUtc);
         Assert.Null(afterWebhookPayment.VerifiedAtUtc);
         Assert.Null(afterWebhookPayment.ReconciledAtUtc);
+        Assert.False(await db.OutboxMessages.AnyAsync(x => x.EventType == PaymentConfirmationSmsNotice.EventType));
 
         var webhookReplay = await service.HandleWebhookAsync(
             "event-001",
@@ -127,6 +128,15 @@ public sealed class Phase2PaymentTests : IAsyncLifetime
             "127.0.0.1");
         Assert.True(verified.Succeeded);
         Assert.Equal(PaymentStatuses.Verified, verified.Payment!.Status);
+        var smsNotice = await db.OutboxMessages.SingleAsync(x => x.EventType == PaymentConfirmationSmsNotice.EventType);
+        Assert.Equal(intent.Payment.PaymentId.ToString("D"), smsNotice.AggregateId);
+        Assert.Equal($"{PaymentConfirmationSmsNotice.EventType}:{intent.Payment.PaymentId:D}", smsNotice.DeduplicationKey);
+        Assert.Equal("{}", smsNotice.PayloadJson);
+        Assert.Null(smsNotice.PublishedAtUtc);
+        var verifyReplay = await service.VerifyAsync(intent.Payment.PaymentId, "finance-subject", "payment-verify-replay", "127.0.0.1");
+        Assert.True(verifyReplay.Succeeded);
+        Assert.True(verifyReplay.Replayed);
+        Assert.Equal(1, await db.OutboxMessages.CountAsync(x => x.EventType == PaymentConfirmationSmsNotice.EventType));
 
         var afterVerifyCommitment = await db.FundingCommitments.AsNoTracking().SingleAsync();
         Assert.Equal(CommitmentStatuses.AwaitingPayment, afterVerifyCommitment.Status);
@@ -216,6 +226,7 @@ public sealed class Phase2PaymentTests : IAsyncLifetime
         Assert.Equal(CommitmentStatuses.AwaitingPayment, commitment.Status);
         Assert.Null(payment.VerifiedAtUtc);
         Assert.Null(commitment.ReconciledAtUtc);
+        Assert.False(await db.OutboxMessages.AnyAsync(x => x.EventType == PaymentConfirmationSmsNotice.EventType));
     }
 
     private PaymentService CreateService(MoonDbContext db, FakePaymentGateway gateway) =>

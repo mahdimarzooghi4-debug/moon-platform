@@ -7,7 +7,6 @@ type Action =
 
 const ACTIONS: Record<string, Action> = {
   "ورود کاربران": { type: "route", value: "/auth" },
-  "پیگیری مشارکت": { type: "route", value: "/participation/track" },
   "شروع مشارکت": { type: "route", value: "/projects" },
   "درباره ما": { type: "route", value: "/about" },
   "تماس با ما": { type: "route", value: "/contact" },

@@ -1,0 +1,10 @@
+.mah-live-support{width:100%!important;max-width:100%;align-self:flex-start;direction:rtl!important;background:#fff;border:1px solid #e4ebf1;border-radius:20px;padding:24px;box-sizing:border-box;color:#17324d;text-align:right}
+.mah-live-support form,.mah-live-support fieldset,.mah-live-support section{display:grid;gap:14px;min-width:0;border:0;padding:0;margin:0}
+.mah-live-support label{display:grid;gap:6px;font-size:14px;color:#17324d}
+.mah-live-support input,.mah-live-support select,.mah-live-support textarea{width:100%;min-width:0;border:1px solid #dbe4ec;border-radius:10px;padding:11px;background:#fcfbf8;font:inherit}
+.mah-live-support button{border:1px solid #2094e3;border-radius:12px;padding:10px 16px;font:inherit;color:#1476b9;background:white}
+.mah-live-support button[type=submit]{background:#2094e3;color:white}
+.mah-live-support button:disabled{opacity:.5;cursor:not-allowed}
+.mah-support-actions,.mah-support-verify{display:flex;flex-wrap:wrap;gap:12px;align-items:end}
+.mah-support-code{overflow-wrap:anywhere;font-weight:700;font-size:18px}
+.mah-support-error{color:#b91c1c}

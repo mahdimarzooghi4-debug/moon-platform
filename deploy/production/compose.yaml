@@ -56,6 +56,9 @@ services:
       ExternalServices__Sms__RegistrationNotificationsEnabled: ${MOON_SMS_REGISTRATION_NOTIFICATIONS_ENABLED:-false}
       ExternalServices__Sms__RegistrationSubmittedTemplateId: ${MOON_SMS_REGISTRATION_SUBMITTED_TEMPLATE_ID:-411055}
       ExternalServices__Sms__RegistrationApprovedTemplateId: ${MOON_SMS_REGISTRATION_APPROVED_TEMPLATE_ID:-833279}
+      CompanyRegistration__Enabled: ${MOON_COMPANY_REGISTRATION_ENABLED:-false}
+      CompanyRegistration__ReviewEnabled: ${MOON_COMPANY_REVIEW_ENABLED:-false}
+      CompanyRegistration__ApprovalEnabled: ${MOON_COMPANY_APPROVAL_ENABLED:-false}
       ExternalServices__Payment__Provider: Disabled
       MehradSso__Enabled: "false"
     expose:

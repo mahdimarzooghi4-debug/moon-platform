@@ -400,6 +400,8 @@ public sealed class PaymentService(
             ipAddress,
             cancellationToken);
 
+        await _outboxWriter.EnqueueAsync(PaymentConfirmationSmsNotice.Create(payment, correlationId), cancellationToken);
+
         await transaction.CommitAsync(cancellationToken);
         return PaymentOperationResult.Success(ToView(payment));
     }

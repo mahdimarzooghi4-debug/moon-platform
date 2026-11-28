@@ -138,7 +138,7 @@ export default function Main() {
 
   return (
     <div
-      className="main-container min-h-screen flex flex-col items-center bg-[#f7fafc]"
+      className="main-container mah-auth-entry min-h-screen flex flex-col items-center bg-[#f7fafc]"
       dir="rtl"
       style={{ fontFamily: "'Vazirmatn', sans-serif" }}
     >
