@@ -164,6 +164,45 @@ try {
       } finally { await page.close(); }
     }
   }
+  // Public checkout and result layouts only. No submit, OTP, payment, or print
+  // actions; existing sample result values are NOT transaction evidence.
+  const financialPaths = [
+    ["/auth", ".mah-auth-entry"],
+    ["/participation/checkout", ".mah-individual-checkout"],
+    ["/projects/layout-fixture/participate", ".mah-individual-checkout"],
+    ...["funded","loading","redirecting","payment-error","unavailable"].flatMap(state=>[
+      ["/participation/checkout/"+state, ".main-container"],
+      ["/projects/layout-fixture/participate/"+state, ".main-container"],
+    ]),
+    ["/participation/modal", ".main-container"],
+    ...["success","failed","pending","canceled","errors","receipt"].map(state=>["/payment/result/"+state,".main-container"]),
+  ];
+  for (const width of [320,390,768,1024,1440]) {
+    for (const [path,selector] of financialPaths) {
+      const page = await browser.newPage({viewport:{width,height:900}});
+      try {
+        await page.route("**/api/**", route=>route.fulfill({status:503,body:""}));
+        await page.route("https://mahcsr.ir/**", route=>route.abort());
+        await page.goto(base+path,{waitUntil:"domcontentloaded"});
+        const root=page.locator(selector);
+        await root.waitFor({state:"visible"});
+        if(width<=1024) {
+          const bad=await root.evaluate(el=>[el,...el.querySelectorAll("input:not([type=file]),select,textarea,button,form,main,aside,section,header")].flatMap(n=>{
+            const r=n.getBoundingClientRect();
+            return r.width>0&&(r.left < -1||r.right>innerWidth+1)?[{tag:n.tagName,class:n.className,left:r.left,right:r.right}]:[];
+          }));
+          assert.deepEqual(bad,[],path+" financial layout bounds "+width);
+          assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),path+" document overflow "+width);
+        }
+        if(path==="/auth") {
+          await page.getByRole("button",{name:/استارتاپ‌ها/}).click();
+          await page.getByRole("link",{name:"ثبت‌نام استارتاپ",exact:true}).waitFor();
+          assert.equal(await page.getByRole("button",{name:"ادامه و دریافت کد تأیید",exact:true}).isEnabled(),false);
+        }
+        console.log("Public financial layout:",path,width);
+      } finally { await page.close(); }
+    }
+  }
   // Receipt UX: keep the actual tracking code and copy action, but do not
   // offer a tracking-navigation button on either registration success page.
   // Synthetic session receipts only; no registration or SMS requests.

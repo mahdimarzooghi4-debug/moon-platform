@@ -464,3 +464,65 @@
   body.mah-public-rtl #app :is(.mah-startup-step1,.mah-startup-step2,.mah-startup-step3,.mah-startup-step4,.mah-startup-success) .mah-startup-success-card { padding-inline:16px !important; }
   body.mah-public-rtl #app :is(.mah-startup-step1,.mah-startup-step2,.mah-startup-step3,.mah-startup-step4,.mah-startup-success) > div:last-child span { max-width:100%; }
 }
+
+/* Public financial layouts: scoped to payment routes and screen media.
+ * Keep print receipt dimensions and all transaction/authentication behavior unchanged. */
+@media screen and (max-width: 1439px) {
+  #app .mah-individual-checkout { width:100% !important; min-width:0; }
+  #app .mah-individual-checkout > :is(header,section,main,footer) { padding-inline:clamp(16px,5vw,120px) !important; }
+  #app .mah-individual-checkout > main > aside { width:min(32%,370px) !important; min-width:0; }
+  #app .mah-individual-checkout > main > div { flex:1 1 0 !important; width:auto !important; min-width:0; }
+  #app .mah-individual-checkout > main > div > section > div.flex:has(> div[class~="w-[355px]"]) { gap:16px !important; flex-wrap:wrap; }
+  #app .mah-individual-checkout div[class~="w-[355px]"] { flex:1 1 280px !important; min-width:0; max-width:100%; width:auto !important; }
+  #app .mah-individual-checkout :is(p,span,strong,button) { overflow-wrap:anywhere; min-width:0; }
+  #app .mah-individual-checkout > footer > div:first-child { flex-wrap:wrap; }
+  body[data-mah-transaction-layout="state"] #app > .main-container { width:100% !important; min-width:0 !important; max-width:100% !important; height:auto !important; }
+  body[data-mah-transaction-layout="state"] #app > .main-container > div { max-width:100% !important; min-width:0 !important; padding-inline:clamp(16px,5vw,120px) !important; }
+  body[data-mah-transaction-layout="state"] #app > .main-container > div:first-child { flex-wrap:wrap; gap:12px !important; height:auto !important; min-height:80px; }
+  body[data-mah-transaction-layout="state"] #app > .main-container > div:not(:first-child)[class~="h-[709px]"] { min-height:420px; height:auto !important; padding-block:48px !important; }
+  body[data-mah-transaction-layout="state"] #app > .main-container :is(div,span,a,p)[class*="w-["] { min-width:0 !important; max-width:100% !important; }
+  body[data-mah-transaction-layout="state"] #app > .main-container :is(span,p,button,a):not(.absolute):not(.sr-only) { white-space:normal !important; height:auto !important; overflow-wrap:anywhere; }
+  body[data-mah-transaction-layout="state"] #app > .main-container div.flex-col:has(> :is(span,p,div.flex-col)):not(.absolute) { height:auto !important; min-width:0; max-width:100%; }
+  body[data-mah-transaction-layout="state"] #app > .main-container div.flex:not(.flex-col):not(.absolute) { flex-wrap:wrap !important; }
+  body[data-mah-transaction-layout="state"] #app > .main-container div.flex:not(.flex-col):not(.absolute):has(> div.flex-col:nth-child(2)) { height:auto !important; gap:12px !important; }
+  body[data-mah-transaction-layout="state"] #app > .main-container div.flex:not(.flex-col):not(.absolute):has(> div.flex-col:nth-child(2)) > div.flex-col { flex:1 1 280px !important; min-width:0 !important; }
+}
+@media screen and (max-width: 1024px) {
+  #app .mah-auth-entry { width:100%; min-width:0; }
+  #app .mah-auth-entry > header { padding:12px 16px !important; height:auto !important; min-height:80px; flex-wrap:wrap; gap:8px; }
+  #app .mah-auth-entry > main { padding:24px 16px !important; }
+  #app .mah-auth-entry > main > div { width:min(780px,100%) !important; min-width:0; padding:clamp(16px,4vw,32px) !important; }
+  #app .mah-auth-entry > main > div > div:first-child { flex-wrap:wrap; gap:12px; }
+  #app .mah-auth-entry > main .grid > button { height:auto !important; min-height:144px; min-width:0; overflow-wrap:anywhere; }
+  #app .mah-auth-entry > footer { height:auto !important; padding:20px 16px !important; }
+  #app .mah-auth-entry > footer > div { width:100% !important; max-width:780px; height:auto !important; text-align:center; }
+  #app .mah-auth-entry p { flex-wrap:wrap; overflow-wrap:anywhere; }
+  #app .mah-individual-checkout > header { height:auto !important; min-height:80px; flex-wrap:wrap; gap:16px; }
+  #app .mah-individual-checkout > header > div { flex-wrap:wrap; gap:12px; }
+  #app .mah-individual-checkout > section > div[class~="w-[600px]"] { width:100% !important; max-width:600px; gap:8px !important; flex-wrap:wrap; }
+  #app .mah-individual-checkout > main { flex-direction:column !important; gap:24px !important; }
+  #app .mah-individual-checkout > main > :is(aside,div) { width:100% !important; flex:0 0 auto !important; min-width:0; }
+  #app .mah-individual-checkout section { min-width:0; }
+  #app .mah-individual-checkout :is(input,select,textarea) { max-width:100%; min-width:0; }
+  #app .mah-individual-checkout div:has(> input[aria-label^="رقم "]) { gap:4px !important; }
+  #app .mah-individual-checkout input[aria-label^="رقم "] { flex:1 1 0; width:auto !important; min-width:0; max-width:44px; }
+}
+@media screen and (max-width: 680px) {
+  #app .mah-auth-entry > main .grid { grid-template-columns:minmax(0,1fr) !important; gap:12px; }
+  #app .mah-auth-entry > main .grid > button { min-height:0; }
+  #app .mah-individual-checkout > main > :is(aside,div) > section { padding:16px !important; }
+  #app .mah-individual-checkout div[class~="w-[355px]"] { width:100% !important; flex:0 0 100% !important; padding-inline:12px; }
+  #app .mah-individual-checkout > main div.flex.justify-between:has(> strong) { flex-wrap:wrap; gap:8px; }
+  #app .mah-individual-checkout > main div.flex.justify-between:has(> h2) { flex-wrap:wrap; gap:8px; }
+  body[data-mah-transaction-layout="state"] #app > .main-container div:is([class~="pr-[36px]"],[class~="pr-[32px]"],[class~="pr-[24px]"]) { padding-inline:16px !important; }
+  body[data-mah-transaction-layout="state"] #app > .main-container div.flex:not(.flex-col):not(.absolute):has(> div.flex-col:nth-child(2)) > div.flex-col { flex-basis:100% !important; }
+  body[data-mah-transaction-layout="modal"] #app > .main-container { width:min(480px,100%) !important; max-width:100%; height:auto !important; padding:16px !important; }
+  body[data-mah-transaction-layout="modal"] #app > .main-container :is(div,span,button)[class*="w-["] { max-width:100% !important; min-width:0 !important; }
+  body[data-mah-transaction-layout="modal"] #app > .main-container :is(span,button,p) { height:auto !important; white-space:normal !important; overflow-wrap:anywhere; }
+  body[data-mah-transaction-layout="modal"] #app > .main-container div.flex:not(.flex-col):not(.absolute) { flex-wrap:wrap !important; gap:8px !important; }
+  body[data-mah-transaction-layout="receipt"] #app > .receipt-actions { width:min(595px,calc(100% - 32px)) !important; flex-wrap:wrap; }
+  body[data-mah-transaction-layout="receipt"] #app > .main-container { width:min(595px,100%) !important; height:auto !important; min-height:0; padding:20px 16px !important; }
+  body[data-mah-transaction-layout="receipt"] #app > .main-container :is(div,span,p)[class*="w-["] { max-width:100% !important; min-width:0 !important; }
+  body[data-mah-transaction-layout="receipt"] #app > .main-container :is(span,p) { height:auto !important; white-space:normal !important; overflow-wrap:anywhere; }
+  body[data-mah-transaction-layout="receipt"] #app > .main-container div.flex.justify-between { gap:8px; flex-wrap:wrap !important; }
+}

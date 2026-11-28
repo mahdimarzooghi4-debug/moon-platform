@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useLayoutEffect } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import MobilePublicHeader from "../shared/MobilePublicHeader";
 const CompanyRegistrationPage = lazy(() => import("../features/company-registration/LiveRegistration"));
@@ -168,6 +168,17 @@ function lazyElement(Page: React.LazyExoticComponent<React.ComponentType>) {
 
 function RoutedMobilePublicHeader() {
   const { pathname } = useLocation();
+  // Layout marker only; never changes payment routing or status semantics.
+  useLayoutEffect(() => {
+    const path = pathname.replace(/\/+$/, "") || "/";
+    const state = /^\/participation\/checkout\/(funded|loading|redirecting|payment-error|unavailable)$/.test(path)
+      || /^\/projects\/[^/]+\/participate\/(funded|loading|redirecting|payment-error|unavailable)$/.test(path)
+      || /^\/payment\/result\/(success|failed|pending|canceled|errors)$/.test(path);
+    const kind = state ? "state" : path === "/participation/modal" ? "modal" : path === "/payment/result/receipt" ? "receipt" : null;
+    if (kind) document.body.dataset.mahTransactionLayout = kind;
+    else delete document.body.dataset.mahTransactionLayout;
+    return () => { delete document.body.dataset.mahTransactionLayout; };
+  }, [pathname]);
   return <MobilePublicHeader pathname={pathname} />;
 }
 
