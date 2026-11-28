@@ -16,3 +16,7 @@ Technical must define authoritative read models, exact KPI semantics, scope, dat
 Full verified funding of the approved total project target is mandatory before Aineh explicitly authorizes execution and determines the official start date. No lower start threshold. Startup designs the operational and financial plan (stages, schedule, outputs/KPIs, budgets, payment amounts/timing, project-specific advance if needed); Aineh reviews and approves it. Complete fulfillment of stage obligations is required for satisfactory-performance approval; no partial approval or progress-proportional stage settlement. Actual organization payment and reconciliation remain distinct; approved advances are separate and their release/offset details remain open. No amendment during execution.
 
 Show fully funded projects awaiting Aineh authorization and official start date; Moon monitors, does not authorize start.
+
+## Complete project intake and stage reporting amendment (DEC-0004/0005)
+Monitor actual stage report approvals/publication, project-scoped SMS delivery, Aineh final operational completion and independent organization financial settlement. No Moon report approval, closure override or mass notification. Only confirmed contributors of same project receive stage-publication SMS.
+No public-site/runtime change authorized; detailed technical evidence and delivery contracts remain open.

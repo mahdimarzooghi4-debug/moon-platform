@@ -33,3 +33,7 @@ Source review complete; no visual/live acceptance. Existing project APIs and rec
 
 ## Amended execution requirements (DEC-0005)
 Full verified funding of the approved total project target is mandatory before Aineh explicitly authorizes execution and determines the official start date. No lower start threshold. Startup designs the operational and financial plan (stages, schedule, outputs/KPIs, budgets, payment amounts/timing, project-specific advance if needed); Aineh reviews and approves it. Complete fulfillment of stage obligations is required for satisfactory-performance approval; no partial approval or progress-proportional stage settlement. Actual organization payment and reconciliation remain distinct; approved advances are separate and their release/offset details remain open. No amendment during execution.
+
+## Complete project intake and stage reporting amendment (DEC-0004/0005)
+Startup designs the complete operational and financial plan and coordinates it with Aineh outside Moon, before registering a complete project. No in-system negotiation/co-design or accepted incomplete project. Submit a report and evidence for every approved stage. Aineh approves the report, triggering automatic publication of its authorized representation; Aineh confirms final operational completion, independent of organization settlement.
+No public-site/runtime change authorized; detailed technical evidence and delivery contracts remain open.

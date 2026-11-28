@@ -31,3 +31,7 @@ Finish remaining panel/cross-panel review and owner approval before Technical, B
 Full verified funding of the approved total project target is mandatory before Aineh explicitly authorizes execution and determines the official start date. No lower start threshold. Startup designs the operational and financial plan (stages, schedule, outputs/KPIs, budgets, payment amounts/timing, project-specific advance if needed); Aineh reviews and approves it. Complete fulfillment of stage obligations is required for satisfactory-performance approval; no partial approval or progress-proportional stage settlement. Actual organization payment and reconciliation remain distinct; approved advances are separate and their release/offset details remain open. No amendment during execution.
 
 Add an explicit start authorization queue for fully funded projects, separate from plan approval/publication/payment.
+
+## Complete project intake and stage reporting amendment (DEC-0004/0005)
+Review and coordination of the complete operational/financial plan precede registration and occur outside Moon. Retain formal approval/publication of complete registered project. For every registered stage, approve actual report; this authorizes automatic publication without Moon/organization review. SMS only to confirmed financial contributors of that project after actual publication. Aineh approves final operational completion; organization settlement independent.
+No public-site/runtime change authorized; detailed technical evidence and delivery contracts remain open.

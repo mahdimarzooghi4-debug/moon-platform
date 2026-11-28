@@ -26,7 +26,7 @@ Suggested navigation: overview, companies, organizations, users/access, project 
 | Project evaluation | Approved project approval authority (DEC-0004); no second evaluator role. |
 | Progress and performance | Approved review and satisfactory-performance approval authority (DEC-0004/0005). |
 | Evaluation history and reports | Existing route family; proposed preserve audit and read views. |
-| Organization assignment, publication and stoppage | Approved: Aineh assigns exactly one registered organization and alone approves publication, with no Moon/organization veto; Aineh alone decides stoppage if approved plan cannot be executed. Organization immutable after first financial participation. Aineh authorizes start only after full verified funding and determines official start date. Stage performance acceptance requires complete obligations, no partial acceptance. Closeout, report publication/revision and expense-review details remain open. |
+| Organization assignment, publication and stoppage | Approved: Aineh assigns exactly one registered organization and alone approves publication, with no Moon/organization veto; Aineh alone decides stoppage if approved plan cannot be executed. Organization immutable after first financial participation. Aineh authorizes start only after full verified funding and determines official start date. Stage performance acceptance requires complete obligations, no partial acceptance. Aineh approves final operational completion and each stage report; report approval authorizes automatic publication without second approval. Financial closeout, report revision and expense-review details remain open. |
 | Users and access | Approved multi-user panel under designated principal, DEC-0007; exact grants remain open. |
 
 No multi-creative-house registry or startup assignment/transfer. No authority to issue official tax certificates or execute organization payout.
@@ -36,8 +36,8 @@ No multi-creative-house registry or startup assignment/transfer. No authority to
 | Capability | Business basis / boundary |
 | --- | --- |
 | Profile and registration | Existing profile routes; own startup, reviewed by Aineh. |
-| Define/submit projects | Existing project creation/version/submit flow; Aineh approves. Aineh alone determines one registered organization and approves publication (DEC-0006). Startup designs operational plan, stages, schedule, KPIs, budgets, payment amounts/timing and any project-specific advance (DEC-0005). |
-| Execution stages and progress reports | Existing stage/report routes; submit evidence for Aineh review. |
+| Define/submit projects | Existing project creation/version/submit flow; Aineh approves. Aineh alone determines one registered organization and approves publication (DEC-0006). Startup designs complete operational and financial plan and coordinates with Aineh outside Moon before registering complete project (DEC-0005). |
+| Execution stages and progress reports | Existing stage/report routes; submit actual evidence per approved stage for Aineh review and automatic publication after report approval. |
 | Financial status | Proposed own project receipts/payout status; organization pays directly. Distinguish approval from confirmed external payment. |
 | Payments to Moon | Revenue source approved (DEC-0003); existing financing-fee route is not an approved tariff or automatic charge. |
 
@@ -79,10 +79,20 @@ No independent approval of startup/project/performance under the approved alloca
 ## Business decisions still open before affected implementation
 
 1. Exact assignment timing, pre-participation reassignment policy, authoritative lock event, in-flight payment handling and historical mapping. Cardinality, assignment authority and post-participation lock already approved.
-2. Project publication transition/prerequisites, progress/impact report publication, expense review, stoppage settlement and execution closeout. Publication and stoppage authority already approved.
+2. Project publication transition/prerequisites, report revision and visibility details, expense review, stoppage settlement and financial closeout. Project and stage report publication, final operational completion and stoppage authorities already approved.
 3. Stage and full-funding/start-authorization lifecycle, complete-performance evidence, advance release/offset, payout caps (partial acceptance prohibited), reconciliation, attributable unspent-share calculation and actual refund/transfer rules. No execution-plan amendment.
 4. Fund operating policy, investment/return model, and commercial/accounting rules for revenue; no invented percentages or calculations.
 5. Organization onboarding/account validation, tax certificate types/eligibility and issuer grants, issuance evidence, provider contracts.
 6. Detailed access and lifecycle rules (review/rejection/resubmission/suspension) and audit-preserving migration.
 
 No new public pages, rebranding, organization tags on the public site, production changes or payments. Review each panel for Business, Flow, API/backend, cross-panel transitions, UI/UX/responsiveness, Security and E2E. Next: explicit Business decisions for missing authorities, then Technical and Backlog; do not implement unapproved rules.
+
+## Owner-approved complete-project intake, stage publication and operational closeout (2026-11-28)
+
+Before project registration in Moon, the startup designs the complete operational and financial plan and coordinates/reviews it with Aineh outside the system. Only complete projects are registered: stage definitions, deliverables/KPIs, schedule, budgets, payment amounts/timing and any project-specific advance terms must be established in that plan. Moon is not a negotiation, co-design or incomplete-proposal development workspace. Retain formal Aineh approval/publication of the submitted complete version and all previously approved funding/start controls. A technical form draft is not an accepted registered project; its exact handling is not a new business approval. No in-execution amendment. Financial/advance terms are project-specific; no universal offset, recovery, percentage or payment formula is approved. Actual payment and reconciliation remain independent.
+
+Reports must be published for each stage defined at project registration, tied to the approved stage/version. Startup submits actual stage performance and evidence; Aineh reviews and approves the report and complete satisfactory performance under existing rules. Approval of the stage report authorizes automatic publication of the approved publishable representation, without another Moon or organization approval. Record report version, approving actor/time and actual publication outcome; never expose private beneficiary identifiers or protected evidence. Report publication and actual payment are distinct facts; do not imply publication proves settlement or automatically pays.
+
+After actual publication of each stage report, send SMS only to actual financial contributors of that same project (companies and individuals), derived from authoritative confirmed participation records, not all platform users or contributors of unrelated projects. SMS contains project name, stage title and report link; no fabricated delivery. Deduplication per contributor/report is proposed; exact recipient identity, contact resolution, delivery/idempotency and correction policy remain Technical. Existing stoppage notification remains project-scoped under DEC-0005. Final-report SMS is a proposal, not independently approved.
+
+Aineh confirms final operational completion after all approved stages are complete. Operational completion and financial settlement by the organization remain independent; Moon records/monitors both. No automatic settlement or inferred financial closure from operational approval. Final report/financial closeout exact evidence, residual balances, exceptions and reopening rules remain to be specified. No public-site or runtime changes authorized.

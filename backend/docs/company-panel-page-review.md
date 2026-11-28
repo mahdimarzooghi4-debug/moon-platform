@@ -33,3 +33,7 @@ Company panel existing route review complete (including intentionally unavailabl
 
 ## Amended execution requirements (DEC-0005)
 Full verified funding of the approved total project target is mandatory before Aineh explicitly authorizes execution and determines the official start date. No lower start threshold. Startup designs the operational and financial plan (stages, schedule, outputs/KPIs, budgets, payment amounts/timing, project-specific advance if needed); Aineh reviews and approves it. Complete fulfillment of stage obligations is required for satisfactory-performance approval; no partial approval or progress-proportional stage settlement. Actual organization payment and reconciliation remain distinct; approved advances are separate and their release/offset details remain open. No amendment during execution.
+
+## Complete project intake and stage reporting amendment (DEC-0004/0005)
+Show approved published report for each registered stage, with actual performance/payment states distinct. After actual stage report publication, SMS only to confirmed participants of that same project, not all companies. Final operational completion is approved by Aineh independently from financial settlement.
+No public-site/runtime change authorized; detailed technical evidence and delivery contracts remain open.
