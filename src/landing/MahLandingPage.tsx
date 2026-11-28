@@ -104,7 +104,7 @@ export default function Main() {
       <div className="flex pt-[96px] pr-[120px] pb-[96px] pl-[120px] flex-col gap-[64px] items-center self-stretch shrink-0 flex-nowrap bg-[#fcfbf8] relative overflow-hidden z-[17]">
         <div className="flex gap-[64px] items-center self-stretch shrink-0 flex-nowrap relative z-[18]">
           <div className="flex flex-col items-center grow shrink-0 basis-0 flex-nowrap relative z-[19]">
-            <div className="flex h-[380px] flex-col justify-center items-center self-stretch shrink-0 flex-nowrap bg-[rgba(17,30,48,0.06)] bg-[url(/assets/codia/rO73Py6N6q.png)] bg-cover bg-no-repeat rounded-[24px] relative overflow-hidden z-20">
+            <div className="flex h-[380px] flex-col justify-center items-center self-stretch shrink-0 flex-nowrap bg-[rgba(17,30,48,0.06)] bg-cover bg-no-repeat rounded-[24px] relative overflow-hidden z-20" style={{ backgroundImage: `url(${import.meta.env.PROD ? "/assets/mah-hero/landing.webp" : "/assets/codia/rO73Py6N6q.png"})` }}>
               <div className="flex h-[71px] pt-0 pr-0 pb-0 pl-0 justify-between items-start shrink-0 flex-nowrap absolute top-[19px] left-[19px] right-[19px] z-[21]" />
               <button
                 type="button"
@@ -402,7 +402,7 @@ export default function Main() {
           {(news ?? []).slice(0, 3).map((item) => (
             <article className="mah-home-news-card" key={item.id}>
               <div className="mah-home-news-image">
-                <img src={publicNewsImageUrl(item.id)} alt="" onError={(event) => { event.currentTarget.style.display = "none"; }} />
+                <img src={publicNewsImageUrl(item.id)} loading="lazy" decoding="async" alt="" onError={(event) => { event.currentTarget.style.display = "none"; }} />
               </div>
               <div className="mah-home-news-content">
                 <div className="mah-home-news-meta">

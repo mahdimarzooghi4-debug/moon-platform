@@ -1,6 +1,9 @@
 FROM public.ecr.aws/docker/library/node:22-alpine AS build
 WORKDIR /app
 
+# WebP encoder for the public hero build step.
+RUN apk add --no-cache libwebp-tools
+
 COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
 

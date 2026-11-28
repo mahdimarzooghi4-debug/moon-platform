@@ -38,6 +38,7 @@ docker build -t "moon-platform/api:$sha" -f backend/Dockerfile backend
 docker build --build-arg VITE_OIDC_AUTHORITY=https://mahcsr.ir/identity/realms/moon \
   --build-arg VITE_OIDC_CLIENT_ID=moon-web --build-arg VITE_API_BASE_URL=https://mahcsr.ir \
   --build-arg NODE_OPTIONS=--max-old-space-size=5120 -t "moon-platform/web:$sha" .
+bash deploy/production/check-public-asset-cache.sh "moon-platform/web:$sha"
 docker save "moon-platform/api:$sha" "moon-platform/web:$sha" "moon-platform/keycloak:$sha" | gzip -1 > "$archive.partial"
 mv "$archive.partial" "$archive"
 python3 deploy/production/sms-release-bundle.py create --release-sha "$sha" --archive "$archive" --manifest "$manifest"

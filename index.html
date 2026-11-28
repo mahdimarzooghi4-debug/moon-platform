@@ -6,6 +6,26 @@
     <meta name="description" content="سامانه ماه | پلتفرم مسئولیت اجتماعی هوشمند" />
     <link rel="icon" type="image/svg+xml" href="/moon-favicon.svg?v=1" />
     <title>سامانه ماه</title>
+    <script>
+      // Start only the current route's hero request before React initializes.
+      const heroPath = location.pathname.replace(/\/+$/, '').toLowerCase() || '/';
+      const heroAssets = {
+        '/': '/assets/codia/rO73Py6N6q.png',
+        '/startups': '/assets/mah-hero/startups.webp',
+        '/for-startups': '/assets/mah-hero/startups.webp',
+        '/companies': '/assets/mah-hero/companies.webp',
+        '/for-companies': '/assets/mah-hero/companies.webp',
+        '/about': '/assets/mah-hero/about.webp'
+      };
+      if (Object.prototype.hasOwnProperty.call(heroAssets, heroPath)) {
+        const heroPreload = document.createElement('link');
+        heroPreload.rel = 'preload';
+        heroPreload.as = 'image';
+        heroPreload.href = heroAssets[heroPath];
+        heroPreload.setAttribute('fetchpriority', 'high');
+        document.head.appendChild(heroPreload);
+      }
+    </script>
   </head>
   <body>
     <div id="app"></div>
