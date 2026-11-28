@@ -29,6 +29,12 @@ The startup proposes the minimum financial resources required to begin execution
 
 Technical must adapt the existing versioned funding-target, ledger-derived allocable balance and FundingThresholdReached controls without conflating the overall funding target with the execution-start threshold or treating an internal ledger posting as proof of external bank receipt. Specify version binding, amount/currency validation, handling of corrections, threshold revisions, the exact start transition and subsequent funding shortfalls before implementation. Reaching the threshold does not authorize automatic disbursement or waive Aineh performance approval.
 
+## Approved project-specific advance payment policy
+
+Advance payment requirements vary by project. No universal advance-payment amount, percentage or mandatory advance applies. In the context of the proposed planning flow, the startup proposes project-specific advance requirements, if any, and Aineh reviews them as part of the financial and execution plan. The organization remains the direct payer; Moon records and monitors the financial flow. Any approved advance is distinct from a payment following satisfactory-performance approval. Do not treat general plan approval or attainment of the execution-start funding threshold as an automatic advance release.
+
+The exact advance authorization and release prerequisites, whether advances are defined at project or stage level, treatment against later payments, insufficient funds, recovery/refund, and external payment evidence remain to be specified before implementation. No invented default amount, automatic transfer or double payment is authorized.
+
 ## Financial separation and integrity
 
 Project participation funds are independent of Moon's own revenue and of fund capital. Fund capital is supplied exclusively by Moon itself; neither incoming project participation nor organization-to-startup payments are automatically recognized as Moon income or fund capital.
@@ -37,6 +43,6 @@ Preserve the existing financial integrity controls: verified provider/bank evide
 
 ## Contracts still required
 
-Define project-to-organization association and assignment authority, verified beneficiary account mapping, stage plan lifecycle, performance evidence, partial approvals, amount validation and payment caps, payout confirmation/reconciliation evidence, exceptions, refunds/corrections, and exact financial permissions and controls. Determine the treatment of any advance payments and the conditions for project closure explicitly; do not infer them. The existing payment-provider boundary remains in force until real integrations and commercial/legal contracts are confirmed.
+Define project-to-organization association and assignment authority, verified beneficiary account mapping, stage plan lifecycle, performance evidence, partial approvals, amount validation and payment caps, payout confirmation/reconciliation evidence, exceptions, refunds/corrections, and exact financial permissions and controls. Determine the detailed treatment of project-specific advance payments and the conditions for project closure explicitly; do not infer them. The existing payment-provider boundary remains in force until real integrations and commercial/legal contracts are confirmed.
 
 Keep public pages unchanged for Emdad pilot, exactly five role types, and one creative house Aineh. No role addition, migration, application code change, merge or deployment is authorized by this documentation. Continue Business → Technical → Backlog → Sprint → Code → Code Review → Stage → QA → Release Approval.
