@@ -35,7 +35,44 @@ public sealed class DisplayImageOptimizerTests
         Assert.Equal(SKEncodedImageFormat.Webp, codec.EncodedFormat);
         Assert.Equal(expectedWidth, codec.Info.Width);
         Assert.Equal(expectedHeight, codec.Info.Height);
-        Assert.Equal(1, codec.FrameCount);
+        // Static images may report zero animation frames in the native codec.
+        // Verify the actual WebP container and decode every pixel instead.
+        Assert.InRange(codec.FrameCount, 0, 1);
+        AssertStaticWebp(result.Data);
+        using var bitmap = new SKBitmap(codec.Info);
+        Assert.Equal(SKCodecResult.Success, codec.GetPixels(codec.Info, bitmap.GetPixels()));
+    }
+
+
+    private static void AssertStaticWebp(byte[] bytes)
+    {
+        Assert.True(bytes.Length >= 12);
+        Assert.True(bytes.AsSpan(0, 4).SequenceEqual("RIFF"u8));
+        Assert.True(bytes.AsSpan(8, 4).SequenceEqual("WEBP"u8));
+        Assert.Equal((uint)(bytes.Length - 8),
+            System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(bytes.AsSpan(4, 4)));
+        var offset = 12;
+        var imageChunks = 0;
+        while (offset < bytes.Length)
+        {
+            Assert.True(bytes.Length - offset >= 8);
+            var type = bytes.AsSpan(offset, 4);
+            var size = System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(bytes.AsSpan(offset + 4, 4));
+            Assert.True(size <= (uint)(bytes.Length - offset - 8));
+            Assert.False(type.SequenceEqual("ANIM"u8) || type.SequenceEqual("ANMF"u8));
+            if (type.SequenceEqual("VP8X"u8))
+            {
+                Assert.Equal(10u, size);
+                Assert.Equal(0, bytes[offset + 8] & 0x02); // animation feature bit
+            }
+            if (type.SequenceEqual("VP8 "u8) || type.SequenceEqual("VP8L"u8))
+                imageChunks++;
+            var paddedSize = (long)size + (size & 1u);
+            Assert.True(paddedSize <= bytes.Length - offset - 8);
+            offset += checked(8 + (int)paddedSize);
+        }
+        Assert.Equal(bytes.Length, offset);
+        Assert.Equal(1, imageChunks);
     }
 
     [Fact]
