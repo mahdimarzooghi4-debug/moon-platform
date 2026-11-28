@@ -19,7 +19,13 @@ Moon's own revenue must be distinguishable from project-directed participation f
 
 The fund's capital (سرمایه صندوق) is supplied exclusively by Moon itself. No external party is a direct capital provider to the fund under this business model. This does not prohibit the separately approved sources of Moon's own revenue; it does not imply those receipts are automatically allocated to fund capital.
 
-Distinguish Moon operating revenue, Moon's allocation of its own resources as fund principal, fund income, and income actually attributable to Moon. Capital supplied by Moon is not revenue from the fund. Project participation funds from organizations, companies or individuals must not be treated as fund capital simply because they are received through Moon. Do not assume a capital amount, allocation ratio, timing, investment mandate, legal ownership structure, withdrawal authority, accounting treatment or automatic transfer. These require separate explicit contracts.
+Distinguish Moon operating revenue, Moon's allocation of its own resources as fund principal, fund income, and income actually attributable to Moon. Capital supplied by Moon is not revenue from the fund. Project participation funds from organizations, companies or individuals must not be treated as fund capital simply because they are received through Moon. Do not assume a capital amount, allocation ratio, timing, detailed investment terms, legal ownership structure, withdrawal authority, accounting treatment or automatic transfer. These require separate explicit contracts.
+
+## Approved investment scope and recording-only boundary
+
+The product owner explicitly approved that the fund is not restricted to Moon startups, projects or the Moon ecosystem. It may invest in opportunities inside or outside Moon, subject to applicable legal and contractual authority. Investment decisions and execution occur outside the software; the Moon administrator's fund section records investments and their actual financial history. The software is not an investment execution, brokerage, automated investment approval, payment or transfer platform. Do not require a Moon project/startup identifier for an external investment. Do not infer asset eligibility rules, investment limits, decision-maker/signatory authority, valuation methods, yields or return/distribution formulas.
+
+Fund capital remains exclusively supplied by Moon. Record actual capital allocations, investments, returns and income with authoritative supporting evidence, independently of project contributions and Moon operating revenue. No automatic financial movement or reclassification is authorized.
 
 ## Proposed detail for subsequent business/technical contract (not yet approved)
 

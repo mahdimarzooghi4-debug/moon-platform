@@ -1,0 +1,19 @@
+# Moon administrator — organization and fund sections
+
+Status: working Business design, 2026-11-28. Fund investment scope and recording-only boundary expressly approved in DEC-0003; other layout, fields, and lifecycle proposals below remain subject to owner review and Technical contracts. Baseline 73f934c62d8be2b59fe43c7cfaba8fd028dfa27b.
+
+## Organization management
+
+Approved foundations: Moon admin defines multiple organizations; Emdad first pilot; one reusable organization panel; Aineh alone assigns exactly one registered organization per project and approves publication; organization lock after first financial participation. Organization receives funds directly, pays startup and issues certificates within actual authority. No separate project acceptance. No public-site change.
+
+Proposed list: total/active organizations, associated projects, verified contributions; search name/representative/identifier, status filter and define organization. Proposed registration fields: official/short name, national identifier where applicable, organization type, logo, address/site, representative name/mobile/position/official authorization, verified official beneficiary account information, certificate types and legal authority evidence. No invented required field or bank credentials; no sensitive credentials in panel. Details: organization profile, representatives/access, verified account metadata, scoped projects, contributions, payouts, certificates, Moon revenue attributable to the organization, reports and audit history. Proposed registration → verification → authorized representative access → activation; exact lifecycle, eligibility, grant and account-change rules are open. No live onboarding, hard-coded organization type or automatic access grants.
+
+## Fund management
+
+Approved: one central admin section, no independent fund role; Moon exclusively supplies capital; investments may be anywhere, inside or outside Moon. Panel is recording and monitoring only; no investment execution, approval workflow, or money movement via the panel. Preserve real financial history and do not treat contribution funds as fund principal or all fund returns as Moon income.
+
+Proposed internal sections: dashboard, capital, investments, actual payments, principal returns, profit/loss, income attributable to Moon, financial history and reports. Proposed dashboard: verified capital allocated, invested capital, cash balance, active investment records, realized returns, revenue actually received by Moon. Exact metrics and accounting semantics require Technical and approved financial contracts. Proposed investment record: description, external counterparty/opportunity reference or optional internal reference, actual amount and currency, dates, evidence/contract, recorded returns and status; no requirement to link to a Moon project. Fields and status transitions are proposals. Record corrections with audit and reconciliation, not deletion or fictional bank settlement. Do not invent returns, percentages, risk policies or actual transactions.
+
+Existing src/panels/fund-manager route families include resources, investments, cycle returns, profit returns, profit split, financial history and reports. Inventory for migration, not approved legacy financial formulas. Retire independent operational fund role only through controlled technical migration; preserve historical data. Legacy organization-side fund-synergy and project payment workflows must not imply contributions finance the fund. No old 10% allocation or 30% profit formula assumed.
+
+PR #324 stays Draft/Open. No application code, runtime, live public site, bank/payment activation, merge or deploy. Consolidate owner approval of panel proposals, then review remaining four panels and cross-panel workflows before Technical and Backlog.
